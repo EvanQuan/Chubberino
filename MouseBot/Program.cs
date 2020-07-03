@@ -6,18 +6,29 @@ using System.Windows.Forms;
 
 namespace MouseBot
 {
-    static class Program
+    public static class Program
     {
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>
-        [STAThread]
-        static void Main()
+        // [STAThread]
+        public static void Main()
         {
-            Application.SetHighDpiMode(HighDpiMode.SystemAware);
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            //Application.SetHighDpiMode(HighDpiMode.SystemAware);
+            //Application.EnableVisualStyles();
+            //Application.SetCompatibleTextRenderingDefault(false);
+            //Application.Run(new Form1());
+
+            using var bot = new Bot();
+
+            bot.Start();
+
+            do
+            {
+                Console.Write($"[{bot.ChannelName}] > ");
+                bot.ReadCommand(Console.ReadLine());
+            }
+            while (bot.ShouldContinue);
         }
     }
 }
