@@ -1,5 +1,7 @@
 ﻿using MouseBot.Implementation.Abstractions;
+using MouseBot.Implementation.Commands;
 using System;
+using System.Collections.Concurrent;
 using TwitchLib.Client.Exceptions;
 using TwitchLib.Client.Interfaces;
 
@@ -15,11 +17,12 @@ namespace MouseBot.Implementation
         /// </summary>
         private const String EmptyCharacter = "⠀";
 
-        public String ChannelName { get; private set; }
+        public String ChannelName { get; private set; } = String.Empty;
 
-        private String LastMessage { get; set; }
+        private ConcurrentQueue<String> MessageQueue { get; set; }
+            = new ConcurrentQueue<String>();
 
-        private TimedQueue MessageQueue { get; set; } = new TimedQueue();
+        private MessageTimer Timer { get; }
 
         private String repeatMessage;
 
@@ -38,9 +41,11 @@ namespace MouseBot.Implementation
 
         public TimeSpan Interval
         {
-            get => MessageQueue.Interval;
-            set => MessageQueue.Interval = value;
+            get => Timer.Interval;
+            set => Timer.Interval = value;
         }
+
+        public Int32 QueueSize => MessageQueue.Count;
 
         public MessageSpooler(ITwitchClient client)
             : base(client)
@@ -59,7 +64,6 @@ namespace MouseBot.Implementation
             if (!TwitchClient.IsConnected)
             {
                 TwitchClient.Connect();
-
             }
 
             if (TwitchClient.JoinedChannels.Count == 0)
@@ -67,7 +71,7 @@ namespace MouseBot.Implementation
                 TwitchClient.JoinChannel(ChannelName);
             }
 
-            if (message == LastMessage)
+            if (message == TwitchClient.JoinedChannels?[0].PreviousMessage?.Message)
             {
                 message += " " + EmptyCharacter;
             }
@@ -81,27 +85,37 @@ namespace MouseBot.Implementation
                 Console.WriteLine("ERROR: Failed to send message");
                 Console.WriteLine(e.Message);
             }
-            LastMessage = message;
         }
 
-        public void SpoolMessage(String message)
+        public void SpoolMessage(String message, Priority priority)
         {
-            MessageQueue.Enqueue(message);
+            SendMessage(message);
+            //switch (priority)
+            //{
+                //case Priority.Low:
+                //    break;
+                //case Priority.High:
+                //    if (MessageQueue.Count < MaximumQueueSize)
+                //    {
+                //        MessageQueue.Enqueue(message);
+                //    }
+                //    break;
+            //}
         }
 
         protected override void ManageTasks()
         {
-            if (MessageQueue.Count == 0)
-            {
-                if (repeatMessage != null)
-                {
-                    SpoolMessage(repeatMessage);
-                }
-            }
-            if (MessageQueue.TryDequeue(out String message))
-            {
-                SendMessage(message);
-            }
+            //if (MessageQueue.Count == 0)
+            //{
+            //    if (repeatMessage != null)
+            //    {
+            //        SpoolMessage(repeatMessage, Priority.High);
+            //    }
+            //}
+            //if (MessageQueue.TryDequeue(out String message))
+            //{
+            //    SendMessage(message);
+            //}
         }
     }
 }

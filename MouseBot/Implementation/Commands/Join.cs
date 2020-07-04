@@ -1,5 +1,7 @@
 ﻿using MouseBot.Implementation.Abstractions;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using TwitchLib.Client.Interfaces;
 
 namespace MouseBot.Implementation.Commands
@@ -27,16 +29,16 @@ namespace MouseBot.Implementation.Commands
             Console.WriteLine($"Joined channel {JoinedChannelName}");
         }
 
-        public override void Execute(params String[] arguments)
+        public override void Execute(IEnumerable<String> arguments)
         {
-            if (arguments.Length < 1) { return; }
+            if (arguments.Count() == 0) { return; }
 
             
             if (!TwitchClient.IsConnected)
             {
                 TwitchClient.Connect();
             }
-            TwitchClient.JoinChannel(arguments[0]);
+            TwitchClient.JoinChannel(arguments.FirstOrDefault());
         }
     }
 }

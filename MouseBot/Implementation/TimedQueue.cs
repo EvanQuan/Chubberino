@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Timers;
 
 namespace MouseBot.Implementation
 {
+    [Obsolete("Use MessageTimer")]
     public sealed class TimedQueue : IDisposable
     {
         /// <summary>
         /// 20 messages in 30 seconds + buffer
         /// </summary>
-        public static TimeSpan RegularInterval { get; } = TimeSpan.FromSeconds(1.5);
+        public static TimeSpan RegularInterval { get; } = TimeSpan.FromSeconds(1.6);
 
         /// <summary>
         /// 100 messages in 30 seconds + buffer

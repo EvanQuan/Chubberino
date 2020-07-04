@@ -21,7 +21,11 @@ namespace MouseBot
 
             using var bot = new Bot();
 
-            bot.Start();
+            if (!bot.Start())
+            {
+                Console.WriteLine("Failed to join channel");
+                return;
+            }
 
             do
             {

@@ -14,10 +14,9 @@ namespace MouseBot.Implementation.Commands.Settings
 
         private void TwitchClient_OnLog(Object sender, TwitchLib.Client.Events.OnLogArgs e)
         {
-            if (IsEnabled)
-            {
-                Console.WriteLine($"{e.DateTime}: {e.BotUsername} - {e.Data}");
-            }
+            if (!IsEnabled) { return; }
+
+            Console.WriteLine($"{e.DateTime}: {e.BotUsername} - {e.Data}");
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using MouseBot.Implementation.Abstractions;
 using System;
+using System.Collections.Generic;
 using TwitchLib.Client.Interfaces;
 
 namespace MouseBot.Implementation.Commands
@@ -19,6 +20,10 @@ namespace MouseBot.Implementation.Commands
             Name = GetType().Name.ToLowerInvariant();
         }
 
-        public abstract void Execute(params String[] arguments);
+        public abstract void Execute(IEnumerable<String> arguments);
+
+        public virtual Boolean Set(String value, IEnumerable<String> arguments) { return false; }
+
+        public virtual String Get(IEnumerable<String> arguments) { return null; }
     }
 }

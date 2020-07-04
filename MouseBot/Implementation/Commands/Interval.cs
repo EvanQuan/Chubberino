@@ -1,5 +1,8 @@
 ﻿using MouseBot.Implementation.Abstractions;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using TwitchLib.Client.Interfaces;
 
 namespace MouseBot.Implementation.Commands
@@ -11,15 +14,15 @@ namespace MouseBot.Implementation.Commands
         {
         }
 
-        public override void Execute(params String[] arguments)
+        public override void Execute(IEnumerable<String> arguments)
         {
-            if (arguments.Length == 0)
+            if (arguments.Count() == 0)
             {
                 Console.WriteLine($"Message interval is {Spooler.Interval.TotalSeconds} seconds.");
                 return;
             }
 
-            if (Double.TryParse(arguments[0], out Double result))
+            if (Double.TryParse(arguments.FirstOrDefault(), out Double result))
             {
                 Spooler.Interval = TimeSpan.FromSeconds(result);
                 Console.WriteLine($"Message interval set to {result} seconds.");

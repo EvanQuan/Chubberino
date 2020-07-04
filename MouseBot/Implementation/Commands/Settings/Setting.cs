@@ -1,6 +1,7 @@
 ﻿using MouseBot.Implementation.Abstractions;
 using MouseBot.Implementation.Commands;
 using System;
+using System.Collections.Generic;
 using TwitchLib.Client.Interfaces;
 
 namespace MouseBot.Implementation.Commands.Settings
@@ -27,7 +28,7 @@ namespace MouseBot.Implementation.Commands.Settings
         {
         }
 
-        public override void Execute(params String[] arguments)
+        public override void Execute(IEnumerable<String> arguments)
         {
             IsEnabled = !IsEnabled;
         }

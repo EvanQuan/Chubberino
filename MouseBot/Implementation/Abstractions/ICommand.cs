@@ -8,6 +8,10 @@ namespace MouseBot.Implementation.Abstractions
     {
         String Name { get; }
 
-        void Execute(params String[] arguments);
+        void Execute(IEnumerable<String> arguments);
+
+        Boolean Set(String value, IEnumerable<String> arguments);
+
+        String Get(IEnumerable<String> arguments);
     }
 }

@@ -25,21 +25,16 @@ namespace MouseBot
 
         private CommandRepository Commands { get; }
 
-        private HashSet<String> RelevantUsersToJoin { get; } = new HashSet<String>
-        {
-            "whydew"
-        };
-
         private IMessageSpooler Spooler { get; set; }
 
-        public String ChannelName { get; set; }
+        public String ChannelName { get => Spooler.ChannelName; }
 
         public Bot()
         {
             var clientOptions = new ClientOptions
             {
-                MessagesAllowedInPeriod = 15,
-                ThrottlingPeriod = TimeSpan.FromSeconds(30)
+                MessagesAllowedInPeriod = 1,
+                ThrottlingPeriod = TimeSpan.FromSeconds(1.6)
             };
             WebSocketClient customClient = new WebSocketClient(clientOptions);
             TwitchClient = new TwitchClient(customClient);
@@ -50,26 +45,24 @@ namespace MouseBot
             TwitchClient.OnConnected += Client_OnConnected;
             TwitchClient.OnConnectionError += Client_OnConnectionError;
             TwitchClient.OnUserTimedout += Client_OnUserTimedout;
-            TwitchClient.OnUserJoined += Client_OnUserJoined;
 
             Spooler = new MessageSpooler(TwitchClient);
             Commands = new CommandRepository(TwitchClient, Spooler);
         }
 
-        public void Start()
+        public Boolean Start()
         {
             Console.WriteLine("Connecting to " + TwitchInfo.InitialChannelName);
             TwitchClient.Connect();
 
             Spooler.Start();
-        }
 
-        private void Client_OnUserJoined(Object sender, OnUserJoinedArgs e)
-        {
-            if (RelevantUsersToJoin.Contains(e.Username))
+            return SpinWait.SpinUntil(() =>
             {
-                TwitchClient.SendMessage(e.Channel, $"yyjYou @{e.Username}");
-            }
+                Thread.Sleep(TimeSpan.FromSeconds(1));
+                return !String.IsNullOrWhiteSpace(ChannelName);
+            },
+            TimeSpan.FromSeconds(30));
         }
 
         private void Client_OnUserTimedout(Object sender, OnUserTimedoutArgs e)
@@ -84,11 +77,6 @@ namespace MouseBot
 
         private void Client_OnConnected(Object sender, OnConnectedArgs e)
         {
-            Console.WriteLine($"Connected to {e.AutoJoinChannel}");
-
-            ChannelName = e.AutoJoinChannel;
-            Spooler.SetChannel(ChannelName);
-
             ShouldContinue = true;
         }
 
@@ -111,43 +99,17 @@ namespace MouseBot
 
             if (arguments.Length == 0) { return; }
 
-            switch (arguments[0].ToLower())
+            String commandName = arguments[0].ToLower();
+
+            switch (commandName)
             {
                 case "quit":
                     ShouldContinue = false;
                     break;
 
-                case "box":
-                    Int32 count = arguments.Length >= 2
-                        ? Int32.Parse(arguments[1])
-                        : 1;
-                    String surroundEmote = arguments.Length >= 3
-                        ? arguments[2]
-                        : "yyjW";
-
-                    SpoolJimboBox(surroundEmote, count);
-                    break;
-
                 default:
-                    if (arguments.Length < 1) { return; }
-                    Commands.Execute(arguments[0], arguments.Skip(1).ToArray());
+                    Commands.Execute(commandName, arguments.Skip(1));
                     break;
-            }
-        }
-
-        private void SetRepeatMessage(String repeatMessage)
-        {
-            Spooler.RepeatMessage = repeatMessage;
-        }
-
-        private void SpoolJimboBox(String surroundingEmote, Int32 count)
-        {
-            for (Int32 i = 0; i < count; i++)
-            {
-                Spooler.SpoolMessage($"{surroundingEmote} {surroundingEmote} {surroundingEmote} {surroundingEmote}");
-                Spooler.SpoolMessage($"{surroundingEmote} yyj1 yyj2 {surroundingEmote}");
-                Spooler.SpoolMessage($"{surroundingEmote} yyj3 yyj4 {surroundingEmote}");
-                Spooler.SpoolMessage($"{surroundingEmote} {surroundingEmote} {surroundingEmote} {surroundingEmote}");
             }
         }
 

@@ -10,9 +10,11 @@ namespace MouseBot.Implementation.Abstractions
 
         TimeSpan Interval { get; set; }
 
+        Int32 QueueSize { get; }
+
         void SetChannel(String channelName);
 
-        void SpoolMessage(String message);
+        void SpoolMessage(String message, Priority priority);
 
         void Start();
     }
