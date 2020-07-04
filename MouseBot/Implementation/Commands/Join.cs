@@ -8,7 +8,7 @@ namespace MouseBot.Implementation.Commands
 {
     public sealed class Join : Command
     {
-        private String JoinedChannelName { get; set; } = TwitchInfo.InitialChannelName;
+        private String JoinedChannelName { get; set; }
 
         public Join(ITwitchClient client, IMessageSpooler spooler)
             : base(client, spooler)
@@ -19,11 +19,14 @@ namespace MouseBot.Implementation.Commands
         private void TwitchClient_OnJoinedChannel(Object sender, TwitchLib.Client.Events.OnJoinedChannelArgs e)
         {
             // For simplicity, we can only be in 1 channel at a time.
-            if (!e.Channel.Equals(JoinedChannelName, StringComparison.OrdinalIgnoreCase))
+            if (e.Channel.Equals(JoinedChannelName, StringComparison.OrdinalIgnoreCase)) { return; }
+
+            if (JoinedChannelName != null)
             {
                 TwitchClient.LeaveChannel(JoinedChannelName);
                 Console.WriteLine($"Left channel {JoinedChannelName}");
             }
+
             JoinedChannelName = e.Channel;
             Spooler.SetChannel(JoinedChannelName);
             Console.WriteLine($"Joined channel {JoinedChannelName}");

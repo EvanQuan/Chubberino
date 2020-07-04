@@ -88,7 +88,7 @@ namespace MouseBot {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ChubbehMouse.
+        ///   Looks up a localized string similar to chubbehmouse.
         /// </summary>
         public static string InitialChannelName {
             get {

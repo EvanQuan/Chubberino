@@ -1,6 +1,7 @@
 ﻿using MouseBot.Implementation;
 using MouseBot.Implementation.Abstractions;
 using MouseBot.Implementation.Commands;
+using MouseBot.Implementation.TwitchLibExtensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,16 +54,20 @@ namespace MouseBot
         public Boolean Start()
         {
             Console.WriteLine("Connecting to " + TwitchInfo.InitialChannelName);
-            TwitchClient.Connect();
+            TwitchClient.EnsureJoinedToChannel(TwitchInfo.InitialChannelName);
 
             Spooler.Start();
 
-            return SpinWait.SpinUntil(() =>
+            Boolean channelJoined = SpinWait.SpinUntil(() =>
             {
                 Thread.Sleep(TimeSpan.FromSeconds(1));
                 return !String.IsNullOrWhiteSpace(ChannelName);
             },
             TimeSpan.FromSeconds(30));
+
+
+            return channelJoined;
+
         }
 
         private void Client_OnUserTimedout(Object sender, OnUserTimedoutArgs e)

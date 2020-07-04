@@ -1,4 +1,5 @@
 ﻿using MouseBot.Implementation.Abstractions;
+using MouseBot.Implementation.TwitchLibExtensions;
 using System;
 using TwitchLib.Client.Enums;
 using TwitchLib.Client.Events;
@@ -22,13 +23,14 @@ namespace MouseBot.Implementation.Commands.Settings
 
         private void TwitchClient_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
         {
-            if (IsEnabled)
+            if (!IsEnabled) { return; }
+
+
+            if (e.ChatMessage.Username.Equals(TwitchInfo.BotUsername, StringComparison.OrdinalIgnoreCase))
             {
-                if (e.ChatMessage.Username.Equals(TwitchInfo.BotUsername, StringComparison.OrdinalIgnoreCase))
-                {
-                    SetNextColor();
-                    TwitchClient.ChangeChatColor(TwitchClient.JoinedChannels[0], CurrentColor);
-                }
+                SetNextColor();
+                TwitchClient.EnsureJoinedToChannel(e.ChatMessage.Channel);
+                TwitchClient.ChangeChatColor(e.ChatMessage.Channel, CurrentColor);
             }
         }
 
