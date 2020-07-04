@@ -22,6 +22,7 @@ namespace MouseBot.Implementation
         public void Start()
         {
             if (IsRunning) { return; }
+
             if (TwitchClient.IsConnected)
             {
                 IsRunning = true;

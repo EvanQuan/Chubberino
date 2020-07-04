@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using TwitchLib.Client.Interfaces;
 
 namespace MouseBot.Implementation.Commands

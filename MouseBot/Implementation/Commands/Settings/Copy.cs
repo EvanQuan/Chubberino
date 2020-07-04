@@ -1,14 +1,13 @@
 ﻿using MouseBot.Implementation.Abstractions;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TwitchLib.Client.Events;
 using TwitchLib.Client.Interfaces;
 
-namespace MouseBot.Implementation.Commands
+namespace MouseBot.Implementation.Commands.Settings
 {
-    public sealed class Copy : Command
+    internal sealed class Copy : Setting
     {
         private String UserToMirror { get; set; }
 
@@ -22,6 +21,8 @@ namespace MouseBot.Implementation.Commands
         }
 
         private CopyMode Mode { get; set; }
+
+        public override String Status => UserToMirror ?? "disabled";
 
         public Copy(ITwitchClient client, IMessageSpooler spooler)
             : base(client, spooler)

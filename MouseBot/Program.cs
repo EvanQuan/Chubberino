@@ -29,7 +29,7 @@ namespace MouseBot
 
             do
             {
-                Console.Write($"[{bot.ChannelName}] > ");
+                Console.Write(bot.GetPrompt());
                 bot.ReadCommand(Console.ReadLine());
             }
             while (bot.ShouldContinue);

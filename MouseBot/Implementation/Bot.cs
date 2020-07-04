@@ -28,8 +28,6 @@ namespace MouseBot
 
         private IMessageSpooler Spooler { get; set; }
 
-        public String ChannelName { get => Spooler.ChannelName; }
-
         public Bot()
         {
             var clientOptions = new ClientOptions
@@ -61,13 +59,19 @@ namespace MouseBot
             Boolean channelJoined = SpinWait.SpinUntil(() =>
             {
                 Thread.Sleep(TimeSpan.FromSeconds(1));
-                return !String.IsNullOrWhiteSpace(ChannelName);
+                return !String.IsNullOrWhiteSpace(Spooler.ChannelName);
             },
-            TimeSpan.FromSeconds(30));
+            TimeSpan.FromSeconds(60));
 
 
             return channelJoined;
 
+        }
+
+        public String GetPrompt()
+        {
+            return Environment.NewLine + Environment.NewLine + Commands.GetStatus() + Environment.NewLine
+                + $"[{Spooler.ChannelName}]> ";
         }
 
         private void Client_OnUserTimedout(Object sender, OnUserTimedoutArgs e)

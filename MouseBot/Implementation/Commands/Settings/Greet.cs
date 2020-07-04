@@ -1,5 +1,6 @@
 ﻿using MouseBot.Implementation.Abstractions;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using TwitchLib.Client.Events;
@@ -16,48 +17,58 @@ namespace MouseBot.Implementation.Commands.Settings
         /// Twitch sends the joined users in groups. To lessen the spam, the
         /// number of joined users to queue can be throttled.
         /// </summary>
-        private Int32 GreetingLimit { get; set; }
+        private TimeSpan Cooldown { get; set; }
 
         /// <summary>
         /// Greeting to add after the user name.
         /// </summary>
         private String Greeting { get; set; }
 
+        private ConcurrentQueue<String> GreetingLimit { get; }
+
+        public override String Status => IsEnabled
+            ? $"\"{Greeting}\" Cooldown: {Cooldown.TotalSeconds} seconds"
+            : "disabled";
+
         public Greet(ITwitchClient client, IMessageSpooler spooler)
             : base(client, spooler)
         {
             TwitchClient.OnUserJoined += TwitchClient_OnUserJoined;
+            GreetingLimit = new ConcurrentQueue<String>();
         }
 
         private void TwitchClient_OnUserJoined(Object sender, OnUserJoinedArgs e)
         {
             if (!IsEnabled) { return; }
+
+            // Don't count self
             if (e.Username.Equals(TwitchInfo.BotUsername, StringComparison.OrdinalIgnoreCase)) { return; }
 
-            if (Spooler.QueueSize < GreetingLimit)
+
+            if (GreetingLimit.Count < 5)
             {
-                Spooler.SpoolMessage($"@{e.Username} {Greeting}", Priority.Low);
+                GreetingLimit.Enqueue(e.Username);
+                // Spooler.SpoolMessage($"@{e.Username} {Greeting}", Priority.Low);
+                if (GreetingLimit.TryDequeue(out String result))
+                {
+                    Spooler.SpoolMessage($"@{String.Join("", result.Reverse())} {Greeting}", Priority.Low);
+                }
             }
+
         }
 
         public override void Execute(IEnumerable<String> arguments)
         {
             IsEnabled = arguments.Count() > 0;
 
-            if (Int32.TryParse(arguments.FirstOrDefault(), out Int32 result))
+            if (IsEnabled)
             {
-                GreetingLimit = result;
-                Greeting = String.Join(" ", arguments.Skip(1));
+                Greeting = String.Join(" ", arguments);
+                Console.WriteLine($"Greeting message is \"{Greeting}\" with cooldown of {Cooldown.TotalSeconds} seconds.");
             }
             else
             {
-                GreetingLimit = 1;
-                Greeting = String.Join(" ", arguments);
-            }
-
-            if (IsEnabled)
-            {
-                Console.WriteLine($"Greeting message is \"{Greeting}\" with limit of {GreetingLimit}.");
+                Greeting = null;
             }
         }
     }

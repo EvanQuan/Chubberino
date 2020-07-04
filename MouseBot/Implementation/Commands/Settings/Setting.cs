@@ -8,20 +8,9 @@ namespace MouseBot.Implementation.Commands.Settings
 {
     internal abstract class Setting : Command, ISetting
     {
-        private Boolean isEnabled;
+        public Boolean IsEnabled { get; protected set; }
 
-        public Boolean IsEnabled
-        {
-            get
-            {
-                return isEnabled;
-            }
-            protected set
-            {
-                isEnabled = value;
-                Console.WriteLine($"{Name} {(isEnabled ? "enabled" : "disabled")}");
-            }
-        }
+        public virtual String Status => IsEnabled ? "enabled" : "disabled";
 
         protected Setting(ITwitchClient client, IMessageSpooler spooler)
             : base(client, spooler)

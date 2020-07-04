@@ -3,6 +3,8 @@ using MouseBot.Implementation.Commands.Settings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using TwitchLib.Api.Helix.Models.Entitlements;
 using TwitchLib.Client.Interfaces;
 
 namespace MouseBot.Implementation.Commands
@@ -17,12 +19,28 @@ namespace MouseBot.Implementation.Commands
             {
                 new Greet(client, spooler),
                 new Interval(client, spooler),
+                new Jimbox(client, spooler),
                 new Join(client, spooler),
                 new Log(client, spooler),
                 new Copy(client, spooler),
                 new RandomColors(client, spooler),
                 new Repeat(client, spooler),
             };
+        }
+
+        public String GetStatus()
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+
+            foreach (ICommand command in Commands)
+            {
+                if (command is Setting setting)
+                {
+                    stringBuilder.Append(setting.Name + ": " + setting.Status + Environment.NewLine);
+                }
+            }
+
+            return stringBuilder.ToString();
         }
 
         public void Execute(String commandName, IEnumerable<String> arguments)
