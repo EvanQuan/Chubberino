@@ -17,14 +17,17 @@ namespace MouseBot.Implementation.Commands
         {
             Commands = new List<ICommand>()
             {
+                new Copy(client, spooler),
                 new Greet(client, spooler),
-                new Interval(client, spooler),
                 new Jimbox(client, spooler),
                 new Join(client, spooler),
                 new Log(client, spooler),
-                new Copy(client, spooler),
+                new MockStreamElements(client, spooler),
                 new RandomColors(client, spooler),
                 new Repeat(client, spooler),
+                new Reply(client, spooler),
+                new TimeoutAlert(client, spooler),
+                new TrackPyramids(client, spooler),
             };
         }
 

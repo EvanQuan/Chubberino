@@ -1,7 +1,7 @@
 ﻿using MouseBot.Implementation;
 using MouseBot.Implementation.Abstractions;
 using MouseBot.Implementation.Commands;
-using MouseBot.Implementation.TwitchLibExtensions;
+using MouseBot.Implementation.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +33,7 @@ namespace MouseBot
             var clientOptions = new ClientOptions
             {
                 MessagesAllowedInPeriod = 1,
-                ThrottlingPeriod = TimeSpan.FromSeconds(1.6)
+                ThrottlingPeriod = TimeSpan.FromSeconds(1.55)
             };
             WebSocketClient customClient = new WebSocketClient(clientOptions);
             TwitchClient = new TwitchClient(customClient);
@@ -76,7 +76,6 @@ namespace MouseBot
 
         private void Client_OnUserTimedout(Object sender, OnUserTimedoutArgs e)
         {
-            TwitchClient.SendMessage(e.UserTimeout.Channel, $"WideHardo FREE MY MAN {e.UserTimeout.Username.ToUpper()}");
         }
 
         private void Client_OnConnectionError(Object sender, OnConnectionErrorArgs e)
@@ -91,12 +90,7 @@ namespace MouseBot
 
         private void Client_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
         {
-            if (e.ChatMessage.Username == "Th3Gazette")
-            {
-                TwitchClient.SendMessage(e.ChatMessage.Channel, $"@{e.ChatMessage.Username} PogO");
-            }
-
-            if (e.ChatMessage.Message == "PogO")
+            if (e.ChatMessage.Username.Equals("Th3Gazette", StringComparison.OrdinalIgnoreCase))
             {
                 TwitchClient.SendMessage(e.ChatMessage.Channel, $"@{e.ChatMessage.Username} PogO");
             }

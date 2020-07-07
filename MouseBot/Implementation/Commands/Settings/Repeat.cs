@@ -5,6 +5,11 @@ using TwitchLib.Client.Interfaces;
 
 namespace MouseBot.Implementation.Commands.Settings
 {
+    /// <summary>
+    /// Repeat a specified message at the throttle limit.
+    /// It is not recommended to sent messages manually while messages are
+    /// being repeated from this, or you may incur a global IP shadow ban.
+    /// </summary>
     internal sealed class Repeat : Setting
     {
         private String RepeatMessage { get; set; }

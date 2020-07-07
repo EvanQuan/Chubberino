@@ -1,6 +1,6 @@
 ﻿using MouseBot.Implementation.Abstractions;
 using MouseBot.Implementation.Commands;
-using MouseBot.Implementation.TwitchLibExtensions;
+using MouseBot.Implementation.Extensions;
 using System;
 using System.Collections.Concurrent;
 using TwitchLib.Client.Exceptions;
@@ -62,8 +62,7 @@ namespace MouseBot.Implementation
 
         private void SendMessage(String message)
         {
-            TwitchClient.EnsureJoinedToChannel(ChannelName);
-
+            // TwitchClient.EnsureJoinedToChannel(ChannelName);
             if (message == TwitchClient.JoinedChannels?[0].PreviousMessage?.Message)
             {
                 message += " " + EmptyCharacter;

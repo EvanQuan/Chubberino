@@ -1,4 +1,5 @@
 ﻿using MouseBot.Implementation.Abstractions;
+using MouseBot.Implementation.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,6 +43,8 @@ namespace MouseBot.Implementation.Commands
                 TwitchClient.Connect();
             }
             TwitchClient.JoinChannel(arguments.FirstOrDefault());
+
+            TwitchClient.EnsureJoinedToChannel(arguments.FirstOrDefault());
         }
     }
 }

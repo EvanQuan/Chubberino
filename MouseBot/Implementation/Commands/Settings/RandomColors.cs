@@ -1,5 +1,5 @@
 ﻿using MouseBot.Implementation.Abstractions;
-using MouseBot.Implementation.TwitchLibExtensions;
+using MouseBot.Implementation.Extensions;
 using System;
 using TwitchLib.Client.Enums;
 using TwitchLib.Client.Events;
@@ -8,6 +8,12 @@ using TwitchLib.Client.Interfaces;
 
 namespace MouseBot.Implementation.Commands.Settings
 {
+    /// <summary>
+    /// Sets the user color to a random <see cref="ChatColorPresets"/> after
+    /// each message. Since setting the color requires sending a message, the
+    /// color may not change quick enough if messages are being sent near the
+    /// throttle limit.
+    /// </summary>
     internal sealed class RandomColors : Setting
     {
         private ChatColorPresets CurrentColor { get; set; }

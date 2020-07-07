@@ -45,15 +45,16 @@ namespace MouseBot.Implementation.Commands.Settings
             if (e.Username.Equals(TwitchInfo.BotUsername, StringComparison.OrdinalIgnoreCase)) { return; }
 
 
-            if (GreetingLimit.Count < 5)
-            {
-                GreetingLimit.Enqueue(e.Username);
-                // Spooler.SpoolMessage($"@{e.Username} {Greeting}", Priority.Low);
-                if (GreetingLimit.TryDequeue(out String result))
-                {
-                    Spooler.SpoolMessage($"@{String.Join("", result.Reverse())} {Greeting}", Priority.Low);
-                }
-            }
+            // if (GreetingLimit.Count < 5)
+            //if (GreetingLimit.Count < 5)
+            //{
+                //GreetingLimit.Enqueue(e.Username);
+            Spooler.SpoolMessage($"@{e.Username} {Greeting}", Priority.Low);
+                //if (GreetingLimit.TryDequeue(out String result))
+                //{
+                //    Spooler.SpoolMessage($"@{String.Join("", result.Reverse())} {Greeting}", Priority.Low);
+                //}
+            //}
 
         }
 

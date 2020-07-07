@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Implementation\Commands\Commands\" />
     <Folder Include="UserInterface\" />
   </ItemGroup>
 

@@ -2,7 +2,7 @@
 using System.Threading;
 using TwitchLib.Client.Interfaces;
 
-namespace MouseBot.Implementation.TwitchLibExtensions
+namespace MouseBot.Implementation.Extensions
 {
     internal static class TwitchClientConnectionExtensions
     {
