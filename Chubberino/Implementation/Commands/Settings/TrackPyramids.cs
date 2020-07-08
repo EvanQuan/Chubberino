@@ -40,6 +40,7 @@ namespace Chubberino.Implementation.Commands.Settings
                 // If this is end of the current pyramid
                 if (block == PyramidBlock && MaximumPyramidHeight >= MinimumRelevantPyramidHeight)
                 {
+                    PyramidContributorUsernames.Add(e.ChatMessage.Username);
                     if (PyramidContributorUsernames.Count == 1)
                     {
                         Spooler.SpoolMessage($"@{e.ChatMessage.Username} Congratz on building a {MaximumPyramidHeight}-story tall {PyramidBlock} pyramid peepoClap", Priority.High);
@@ -48,12 +49,12 @@ namespace Chubberino.Implementation.Commands.Settings
                     {
                         Spooler.SpoolMessage($"@{String.Join(", @", PyramidContributorUsernames)} Congratz on working together to build a {MaximumPyramidHeight}-story tall {PyramidBlock} pyramid peepoClap", Priority.High);
                     }
+                    PyramidContributorUsernames.Clear();
                 }
                 // Successfully started a new pyramid
                 PyramidBlock = block;
                 CurrentPyramidHeight = 1;
                 MaximumPyramidHeight = 1;
-                PyramidContributorUsernames.Clear();
                 PyramidContributorUsernames.Add(e.ChatMessage.Username);
             }
             else if (PyramidBlock != null)
