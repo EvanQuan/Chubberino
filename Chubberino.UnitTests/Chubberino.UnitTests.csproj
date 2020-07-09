@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MouseBot\Chubberino.csproj" />
+    <ProjectReference Include="..\Chubberino\Chubberino.csproj" />
   </ItemGroup>
 
 </Project>
