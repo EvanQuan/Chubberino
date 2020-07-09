@@ -1,4 +1,4 @@
-using Chubberino.Implementation;
+using Chubberino.Client;
 using System;
 
 namespace Chubberino
