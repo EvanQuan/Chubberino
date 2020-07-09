@@ -12,11 +12,6 @@ namespace Chubberino.Implementation
     /// </summary>
     public sealed class MessageSpooler : Manager, IMessageSpooler
     {
-        /// <summary>
-        /// Empty character to evade identical message detection.
-        /// </summary>
-        private const String EmptyCharacter = "⠀";
-
         public String ChannelName { get; private set; } = String.Empty;
 
         private ConcurrentQueue<String> MessageQueue { get; set; }
@@ -64,7 +59,7 @@ namespace Chubberino.Implementation
             // TwitchClient.EnsureJoinedToChannel(ChannelName);
             if (message == TwitchClient.JoinedChannels?[0].PreviousMessage?.Message)
             {
-                message += " " + EmptyCharacter;
+                message += " " + Data.EmptyCharacter;
             }
 
             try
