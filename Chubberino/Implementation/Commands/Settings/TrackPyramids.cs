@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TwitchLib.Client.Events;
 using TwitchLib.Client.Interfaces;
 
 namespace Chubberino.Implementation.Commands.Settings
@@ -30,7 +31,7 @@ namespace Chubberino.Implementation.Commands.Settings
             IsEnabled = true;
         }
 
-        private void TwitchClient_OnMessageReceived(Object sender, TwitchLib.Client.Events.OnMessageReceivedArgs e)
+        private void TwitchClient_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
         {
             if (!IsEnabled) { return; }
 
