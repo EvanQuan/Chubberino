@@ -7,7 +7,7 @@ using TwitchLib.Client.Interfaces;
 
 namespace Chubberino.Client.Commands.Settings
 {
-    internal sealed class TrackPyramids : Setting
+    public sealed class TrackPyramids : Setting
     {
         /// <summary>
         /// Minimum height for a pyramid to be recognized.
@@ -16,10 +16,10 @@ namespace Chubberino.Client.Commands.Settings
 
         private HashSet<String> PyramidContributorUsernames { get; }
 
-        private String PyramidBlock { get; set; }
+        public String PyramidBlock { get; set; }
 
-        private Int32 CurrentPyramidHeight { get; set; } = 0;
-        private Int32 MaximumPyramidHeight { get; set; } = 0;
+        public Int32 CurrentPyramidHeight { get; set; } = 0;
+        public Int32 MaximumPyramidHeight { get; set; } = 0;
 
         private Boolean BuildingUp { get; set; } = true;
 
@@ -31,7 +31,7 @@ namespace Chubberino.Client.Commands.Settings
             IsEnabled = true;
         }
 
-        private void TwitchClient_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
+        public void TwitchClient_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
         {
             if (!IsEnabled) { return; }
 
@@ -39,7 +39,7 @@ namespace Chubberino.Client.Commands.Settings
             if (TryGetFirstPyramidBlock(e.ChatMessage.Message, out String block))
             {
                 // If this is end of the current pyramid
-                if (block == PyramidBlock && MaximumPyramidHeight >= MinimumRelevantPyramidHeight)
+                if (block == PyramidBlock && MaximumPyramidHeight >= MinimumRelevantPyramidHeight && CurrentPyramidHeight == 2)
                 {
                     PyramidContributorUsernames.Add(e.ChatMessage.Username);
                     if (PyramidContributorUsernames.Count == 1)
@@ -51,6 +51,7 @@ namespace Chubberino.Client.Commands.Settings
                         Spooler.SpoolMessage($"@{String.Join(", @", PyramidContributorUsernames)} Congratz on working together to build a {MaximumPyramidHeight}-story tall {PyramidBlock} pyramid peepoClap", Priority.High);
                     }
                 }
+
                 // Successfully started a new pyramid
                 PyramidBlock = block;
                 CurrentPyramidHeight = 1;
@@ -108,8 +109,6 @@ namespace Chubberino.Client.Commands.Settings
 
             return message == block;
         }
-
-        public override String Status => base.Status;
 
         public override void Execute(IEnumerable<String> arguments)
         {

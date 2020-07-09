@@ -5,7 +5,7 @@ using TwitchLib.Client.Interfaces;
 
 namespace Chubberino.Client.Commands.Settings
 {
-    internal abstract class Setting : Command, ISetting
+    public abstract class Setting : Command, ISetting
     {
         public Boolean IsEnabled { get; protected set; }
 
