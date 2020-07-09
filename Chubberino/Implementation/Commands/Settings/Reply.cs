@@ -7,16 +7,15 @@ using TwitchLib.Client.Interfaces;
 
 namespace Chubberino.Implementation.Commands.Settings
 {
-    /// <summary>
-    /// Given a 
-    /// </summary>
     internal sealed class Reply : Setting
     {
         private String ReplyMessage { get; set; }
+        private String CompareType { get; set; }
+        private Func<String, String, Boolean> Comparator { get; set; }
 
         public override String Status => String.IsNullOrWhiteSpace(ReplyMessage)
             ? "disabled"
-            : ReplyMessage;
+            : $"{CompareType} \"{ReplyMessage}\"";
 
         public Reply(ITwitchClient client, IMessageSpooler spooler)
             : base(client, spooler)
@@ -26,7 +25,9 @@ namespace Chubberino.Implementation.Commands.Settings
 
         private void TwitchClient_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
         {
-            if (e.ChatMessage.Message == ReplyMessage)
+            if (!IsEnabled) { return; }
+
+            if (Comparator(e.ChatMessage.Message, ReplyMessage))
             {
                 TwitchClient.SendMessage(e.ChatMessage.Channel, $"@{e.ChatMessage.Username} {ReplyMessage}");
             }
@@ -38,8 +39,26 @@ namespace Chubberino.Implementation.Commands.Settings
 
             if (IsEnabled)
             {
-                ReplyMessage = String.Join(" ", arguments);
-                Console.WriteLine($"Replying to \"{ReplyMessage}\"");
+                // Check for comparator
+                String comparatorString = arguments.FirstOrDefault();
+
+                Func<String, String, Boolean> comparator;
+
+                switch (comparatorString.ToLower())
+                {
+                    case "contains":
+                        Comparator = (actualMessage, replyMessage) => actualMessage.Contains(replyMessage);
+                        CompareType = "contain";
+                        ReplyMessage = String.Join(" ", arguments.Skip(1));
+                        break;
+                    default:
+                        Comparator = (actualMessage, replyMessage) => actualMessage == replyMessage;
+                        CompareType = "equal";
+                        ReplyMessage = String.Join(" ", arguments.Skip(1));
+                        break;
+                }
+
+                Console.WriteLine($"Replying to messages that {CompareType} \"{ReplyMessage}\"");
             }
             else
             {
