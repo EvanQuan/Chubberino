@@ -25,5 +25,7 @@ namespace Chubberino.Client.Commands
         public virtual Boolean Set(String value, IEnumerable<String> arguments) { return false; }
 
         public virtual String Get(IEnumerable<String> arguments) { return null; }
+
+        public virtual String Help() { return "No help implemented yet."; }
     }
 }

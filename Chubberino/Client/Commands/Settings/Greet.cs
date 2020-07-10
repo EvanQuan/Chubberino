@@ -72,5 +72,18 @@ namespace Chubberino.Client.Commands.Settings
                 Greeting = null;
             }
         }
+
+        public override String Help()
+        {
+            return @"
+Message users when they join the channel. Twitch sends this information in
+bunches, so this is not very effective at announcing when a user has joined the
+channel, but instead for tagging random viewers.
+
+usage: greet <message>
+
+    <message>   The message to append to the username greeted.
+";
+        }
     }
 }

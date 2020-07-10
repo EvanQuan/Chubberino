@@ -7,6 +7,6 @@ namespace Chubberino.Client
         /// <summary>
         /// Empty character to evade identical message detection.
         /// </summary>
-        public const Char EmptyCharacter = '⠀';
+        public const String EmptyCharacter = "⠀";
     }
 }

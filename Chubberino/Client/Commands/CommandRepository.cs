@@ -58,6 +58,10 @@ namespace Chubberino.Client.Commands
                 case "set":
                     Set(arguments.FirstOrDefault(), arguments.Skip(1));
                     break;
+                case "help":
+                    Help(arguments.FirstOrDefault());
+                    break;
+
 
                 // Regular commands
                 default:
@@ -116,6 +120,23 @@ namespace Chubberino.Client.Commands
             else
             {
                 Console.WriteLine($"Command \"{commandName}\" value \"{value}\" not set");
+            }
+        }
+
+        private void Help(String commandName)
+        {
+
+            ICommand commandToSet = GetCommand(commandName);
+
+            String message = commandToSet?.Help();
+
+            if (message != null)
+            {
+                Console.WriteLine(message);
+            }
+            else
+            {
+                Console.WriteLine($"Command \"{commandName}\" not found.");
             }
         }
 

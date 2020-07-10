@@ -96,5 +96,21 @@ namespace Chubberino.Client.Commands.Settings
             MessagePrefix = String.Join(" ", arguments.Skip(Mode == CopyMode.Default ? 1 : 2));
             Console.WriteLine($"Copying user \"{UserToMirror}\" Mode: \"{Mode}\" Prefix: \"{MessagePrefix}\"");
         }
+
+        public override String Help()
+        {
+            return @"
+Copy another user's chat messages.
+
+usage: copy <username> [mode] [message prefix]
+
+    <username>  The Twitch username to copy.
+
+    [mode]      default - Copy messages exactly.
+                mock - Randomly use upper and lowercase letters.
+
+    [prefix]    Text to prepend to the copied messages.
+";
+        }
     }
 }

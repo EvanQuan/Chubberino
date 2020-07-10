@@ -78,7 +78,7 @@ namespace Chubberino.Client
 
         private void Client_OnConnectionError(Object sender, OnConnectionErrorArgs e)
         {
-            Console.WriteLine($"Error!! {e.Error}");
+            Console.WriteLine($"!! Connection Error!! {e.Error.Message}");
         }
 
         private void Client_OnConnected(Object sender, OnConnectedArgs e)

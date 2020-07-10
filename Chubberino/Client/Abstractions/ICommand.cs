@@ -12,5 +12,11 @@ namespace Chubberino.Client.Abstractions
         Boolean Set(String value, IEnumerable<String> arguments);
 
         String Get(IEnumerable<String> arguments);
+
+        /// <summary>
+        /// Gets the help message explaining how to use the command.
+        /// </summary>
+        /// <returns>The help messag string.</returns>
+        String Help();
     }
 }
