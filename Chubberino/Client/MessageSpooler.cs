@@ -19,6 +19,8 @@ namespace Chubberino.Client
 
         private MessageTimer Timer { get; }
 
+        private String PreviousMessage { get; set; }
+
         private String repeatMessage;
 
         public String RepeatMessage
@@ -56,8 +58,7 @@ namespace Chubberino.Client
 
         private void SendMessage(String message)
         {
-            // TwitchClient.EnsureJoinedToChannel(ChannelName);
-            if (message == TwitchClient.JoinedChannels?[0].PreviousMessage?.Message)
+            if (message == PreviousMessage)
             {
                 message += " " + Data.EmptyCharacter;
             }
@@ -65,6 +66,7 @@ namespace Chubberino.Client
             try
             {
                 TwitchClient.SendMessage(ChannelName, message);
+                PreviousMessage = message;
             }
             catch (BadStateException e)
             {
