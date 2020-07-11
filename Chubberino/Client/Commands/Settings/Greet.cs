@@ -28,9 +28,10 @@ namespace Chubberino.Client.Commands.Settings
 
         private ComplimentGenerator Compliments { get; }
 
-        public override String Status => IsEnabled
-            ? $"\"{Greeting}\" Mode: {CurrentMode}"
-            : "disabled";
+        public override String Status => (IsEnabled
+            ? $"\"{Greeting}\""
+            : "disabled")
+            + $" Mode: {CurrentMode}";
 
         public Greet(ITwitchClient client, IMessageSpooler spooler)
             : base(client, spooler)
