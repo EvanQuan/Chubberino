@@ -14,7 +14,7 @@ namespace Chubberino.Client.Abstractions
 
         void SetChannel(String channelName);
 
-        void SpoolMessage(String message, Priority priority);
+        void SpoolMessage(String message);
 
         void Start();
     }

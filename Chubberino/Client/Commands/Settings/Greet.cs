@@ -11,30 +11,32 @@ namespace Chubberino.Client.Commands.Settings
     /// <summary>
     /// Greet a user immediately when they join the channel.
     /// </summary>
-    internal sealed class Greet : Setting
+    public sealed class Greet : Setting
     {
-        /// <summary>
-        /// Twitch sends the joined users in groups. To lessen the spam, the
-        /// number of joined users to queue can be throttled.
-        /// </summary>
-        private TimeSpan Cooldown { get; set; }
+        public enum Mode
+        {
+            Default = 0,
+            Wholesome = 1,
+        }
+
+        public Mode CurrentMode { get; set; }
 
         /// <summary>
         /// Greeting to add after the user name.
         /// </summary>
         private String Greeting { get; set; }
 
-        private ConcurrentQueue<String> GreetingLimit { get; }
+        private ComplimentGenerator Compliments { get; }
 
         public override String Status => IsEnabled
-            ? $"\"{Greeting}\" Cooldown: {Cooldown.TotalSeconds} seconds"
+            ? $"\"{Greeting}\" Mode: {CurrentMode}"
             : "disabled";
 
         public Greet(ITwitchClient client, IMessageSpooler spooler)
             : base(client, spooler)
         {
             TwitchClient.OnUserJoined += TwitchClient_OnUserJoined;
-            GreetingLimit = new ConcurrentQueue<String>();
+            Compliments = new ComplimentGenerator();
         }
 
         private void TwitchClient_OnUserJoined(Object sender, OnUserJoinedArgs e)
@@ -44,18 +46,7 @@ namespace Chubberino.Client.Commands.Settings
             // Don't count self
             if (e.Username.Equals(TwitchInfo.BotUsername, StringComparison.OrdinalIgnoreCase)) { return; }
 
-
-            // if (GreetingLimit.Count < 5)
-            //if (GreetingLimit.Count < 5)
-            //{
-            //GreetingLimit.Enqueue(e.Username);
-            Spooler.SpoolMessage($"@{e.Username} {Greeting}", Priority.Low);
-            //if (GreetingLimit.TryDequeue(out String result))
-            //{
-            //    Spooler.SpoolMessage($"@{String.Join("", result.Reverse())} {Greeting}", Priority.Low);
-            //}
-            //}
-
+            Spooler.SpoolMessage($"@{e.Username} {Greeting} {(CurrentMode == Mode.Wholesome ? Compliments.GetCompliment() : String.Empty)}");
         }
 
         public override void Execute(IEnumerable<String> arguments)
@@ -65,12 +56,37 @@ namespace Chubberino.Client.Commands.Settings
             if (IsEnabled)
             {
                 Greeting = String.Join(" ", arguments);
-                Console.WriteLine($"Greeting message is \"{Greeting}\" with cooldown of {Cooldown.TotalSeconds} seconds.");
+                Console.WriteLine($"Greeting message is \"{Greeting}\".");
             }
             else
             {
                 Greeting = null;
             }
+        }
+
+        public override Boolean Set(String value, IEnumerable<String> arguments)
+        {
+            switch (value.ToLower())
+            {
+                case "mode":
+                {
+
+                    switch (arguments.FirstOrDefault()?.ToLower())
+                    {
+                        case "w":
+                        case "wholesome":
+                                CurrentMode = Mode.Wholesome;
+                            break;
+                        default:
+                                CurrentMode = Mode.Default;
+                            break;
+                    }
+                }
+                break;
+                default:
+                    return false;
+            }
+            return true;
         }
 
         public override String Help()
@@ -83,6 +99,10 @@ channel, but instead for tagging random viewers.
 usage: greet <message>
 
     <message>   The message to append to the username greeted.
+
+set:
+    mode    default - No special effect
+            wholesome - Appends a random compliment and emote
 ";
         }
     }

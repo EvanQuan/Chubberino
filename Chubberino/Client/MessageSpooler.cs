@@ -75,7 +75,7 @@ namespace Chubberino.Client
             }
         }
 
-        public void SpoolMessage(String message, Priority priority)
+        public void SpoolMessage(String message)
         {
             SendMessage(message);
             //switch (priority)

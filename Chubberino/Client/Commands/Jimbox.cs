@@ -18,10 +18,10 @@ namespace Chubberino.Client.Commands
         {
             String surroundingEmote = arguments.FirstOrDefault() ?? "yyjW";
 
-            Spooler.SpoolMessage($"{surroundingEmote} {surroundingEmote} {surroundingEmote} {surroundingEmote}", Priority.High);
-            Spooler.SpoolMessage($"{surroundingEmote} yyj1 yyj2 {surroundingEmote}", Priority.High);
-            Spooler.SpoolMessage($"{surroundingEmote} yyj3 yyj4 {surroundingEmote}", Priority.High);
-            Spooler.SpoolMessage($"{surroundingEmote} {surroundingEmote} {surroundingEmote} {surroundingEmote}", Priority.High);
+            Spooler.SpoolMessage($"{surroundingEmote} {surroundingEmote} {surroundingEmote} {surroundingEmote}");
+            Spooler.SpoolMessage($"{surroundingEmote} yyj1 yyj2 {surroundingEmote}");
+            Spooler.SpoolMessage($"{surroundingEmote} yyj3 yyj4 {surroundingEmote}");
+            Spooler.SpoolMessage($"{surroundingEmote} {surroundingEmote} {surroundingEmote} {surroundingEmote}");
         }
     }
 }

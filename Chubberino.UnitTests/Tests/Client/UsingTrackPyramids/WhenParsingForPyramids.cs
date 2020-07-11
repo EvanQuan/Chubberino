@@ -38,8 +38,8 @@ namespace Chubberino.UnitTests.Tests.Client.UsingTrackPyramids
             String expectedPyramidBlock,
             Int32 expectedPyramidHeight)
         {
-            MessageSpooler.Setup(x => x.SpoolMessage(It.IsAny<String>(), It.IsAny<Priority>()))
-                .Callback((String message, Priority priority) =>
+            MessageSpooler.Setup(x => x.SpoolMessage(It.IsAny<String>()))
+                .Callback((String message) =>
                 {
                     Assert.Contains(expectedPyramidHeight.ToString(), message);
                     Assert.Contains(expectedPyramidBlock.ToString(), message);
@@ -87,7 +87,7 @@ namespace Chubberino.UnitTests.Tests.Client.UsingTrackPyramids
 
             Assert.Equal(expectedPyramidBlock, Sut.PyramidBlock);
 
-            MessageSpooler.Verify(x => x.SpoolMessage(It.IsAny<String>(), It.IsAny<Priority>()), Times.Once());
+            MessageSpooler.Verify(x => x.SpoolMessage(It.IsAny<String>()), Times.Once());
         }
 
         public static IEnumerable<Object[]> ValidPyramids { get; } = new List<Object[]>
@@ -219,7 +219,7 @@ namespace Chubberino.UnitTests.Tests.Client.UsingTrackPyramids
 
             Assert.Equal(expectedPyramidBlock, Sut.PyramidBlock);
 
-            MessageSpooler.Verify(x => x.SpoolMessage(It.IsAny<String>(), It.IsAny<Priority>()), Times.Never());
+            MessageSpooler.Verify(x => x.SpoolMessage(It.IsAny<String>()), Times.Never());
         }
 
         public static IEnumerable<Object[]> InvalidPyramids { get; } = new List<Object[]>

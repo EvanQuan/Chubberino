@@ -65,7 +65,7 @@ namespace Chubberino.Client.Commands.Settings
             const Int32 messageCharacterLimit = 300;
             String truncatedMessage = prefixAddedMessage.Substring(0, Math.Min(prefixAddedMessage.Length, messageCharacterLimit));
 
-            Spooler.SpoolMessage(truncatedMessage, Priority.High);
+            Spooler.SpoolMessage(truncatedMessage);
         }
 
         public override void Execute(IEnumerable<String> arguments)

@@ -44,11 +44,11 @@ namespace Chubberino.Client.Commands.Settings
                     PyramidContributorUsernames.Add(e.ChatMessage.Username);
                     if (PyramidContributorUsernames.Count == 1)
                     {
-                        Spooler.SpoolMessage($"@{e.ChatMessage.Username} Congratz on building a {MaximumPyramidHeight}-story tall {PyramidBlock} pyramid peepoClap", Priority.High);
+                        Spooler.SpoolMessage($"@{e.ChatMessage.Username} Congratz on building a {MaximumPyramidHeight}-story tall {PyramidBlock} pyramid. Great job! peepoClap");
                     }
                     else
                     {
-                        Spooler.SpoolMessage($"@{String.Join(", @", PyramidContributorUsernames)} Congratz on working together to build a {MaximumPyramidHeight}-story tall {PyramidBlock} pyramid peepoClap", Priority.High);
+                        Spooler.SpoolMessage($"@{String.Join(", @", PyramidContributorUsernames)} Congratz on working together to build a {MaximumPyramidHeight}-story tall {PyramidBlock} pyramid. Hooray teamwork! peepoClap");
                     }
                 }
 
