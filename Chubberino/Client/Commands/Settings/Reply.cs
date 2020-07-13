@@ -63,7 +63,21 @@ namespace Chubberino.Client.Commands.Settings
                 ReplyMessage = null;
                 Console.WriteLine("Reply disabled");
             }
+        }
 
+        public override String Help()
+        {
+            return @"
+Reply to any message that matches to a specified message, by copying the
+message back.
+
+usage: reply [contains] <message>
+
+    contains - replies to messages that contain <message> as a substring, as
+               opposed to being equal to <message>
+
+    message - the message to check against whether to reply to.
+";
         }
     }
 }
