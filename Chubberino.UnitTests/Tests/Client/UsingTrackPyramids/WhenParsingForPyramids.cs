@@ -1,6 +1,7 @@
 ﻿using Chubberino.Client;
 using Chubberino.Client.Abstractions;
 using Chubberino.Client.Commands.Settings;
+using Chubberino.UnitTests.Utilities.ChatMessages;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -36,7 +37,8 @@ namespace Chubberino.UnitTests.Tests.Client.UsingTrackPyramids
             String expectedPyramidBlock,
             Int32 expectedPyramidHeight)
         {
-            MessageSpooler.Setup(x => x.SpoolMessage(It.IsAny<String>()))
+            MessageSpooler
+                .Setup(x => x.SpoolMessage(It.IsAny<String>()))
                 .Callback((String message) =>
                 {
                     Assert.Contains(expectedPyramidHeight.ToString(), message);
@@ -50,38 +52,11 @@ namespace Chubberino.UnitTests.Tests.Client.UsingTrackPyramids
                     Assert.Contains("peepoClap", message);
                 });
 
-            foreach (var (Username, Message) in messages)
+            foreach ((String username, String message) in messages)
             {
-                var chatMessage = new ChatMessage(
-                    botUsername: default,
-                    userId: default,
-                    userName: Username,
-                    displayName: default,
-                    colorHex: default,
-                    color: default,
-                    emoteSet: default,
-                    message: Message,
-                    userType: default,
-                    channel: default,
-                    id: default,
-                    isSubscriber: default,
-                    subscribedMonthCount: default,
-                    roomId: default,
-                    isTurbo: default,
-                    isModerator: default,
-                    isMe: default,
-                    isBroadcaster: default,
-                    noisy: default,
-                    rawIrcMessage: default,
-                    emoteReplacedMessage: default,
-                    badges: default,
-                    cheerBadge: default,
-                    bits: default,
-                    bitsInDollars: default);
-
                 Sut.TwitchClient_OnMessageReceived(null, new OnMessageReceivedArgs()
                 {
-                    ChatMessage = chatMessage
+                    ChatMessage = ChatMessageUtilities.GetChatMessage(username, message)
                 });
             }
 
