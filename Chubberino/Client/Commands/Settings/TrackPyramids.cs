@@ -14,12 +14,18 @@ namespace Chubberino.Client.Commands.Settings
         /// </summary>
         private const Int32 MinimumRelevantPyramidHeight = 2;
 
+        /// <summary>
+        /// Minimum height for a pyramid to break for it be recognized as
+        /// breaking a pyramid.
+        /// </summary>
+        private const Int32 MinimumRelevantPyramidToBreakHeight = 3;
+
         private HashSet<String> PyramidContributorUsernames { get; }
 
         public String PyramidBlock { get; set; }
 
         public Int32 CurrentPyramidHeight { get; set; } = 0;
-        public Int32 MaximumPyramidHeight { get; set; } = 0;
+        public Int32 TallestPyramidHeight { get; set; } = 0;
 
         private Boolean BuildingUp { get; set; } = true;
 
@@ -39,23 +45,21 @@ namespace Chubberino.Client.Commands.Settings
             if (TryGetFirstPyramidBlock(e.ChatMessage.Message, out String block))
             {
                 // If this is end of the current pyramid
-                if (block == PyramidBlock && MaximumPyramidHeight >= MinimumRelevantPyramidHeight && CurrentPyramidHeight == 2)
+                if (block == PyramidBlock && TallestPyramidHeight >= MinimumRelevantPyramidHeight && CurrentPyramidHeight == 2)
                 {
                     PyramidContributorUsernames.Add(e.ChatMessage.Username);
-                    if (PyramidContributorUsernames.Count == 1)
-                    {
-                        Spooler.SpoolMessage($"@{e.ChatMessage.Username} Congratz on building a {MaximumPyramidHeight}-story tall {PyramidBlock} pyramid. Great job! peepoClap");
-                    }
-                    else
-                    {
-                        Spooler.SpoolMessage($"@{String.Join(", @", PyramidContributorUsernames)} Congratz on working together to build a {MaximumPyramidHeight}-story tall {PyramidBlock} pyramid. Hooray teamwork! peepoClap");
-                    }
+                    SpoolPyramidSuccessMessage();
+                }
+                else
+                {
+                    // If a previous pyramid was broken by starting a new pyramid
+                    SpoolPyramidFailedMessage(e.ChatMessage.Username);
                 }
 
                 // Successfully started a new pyramid
                 PyramidBlock = block;
                 CurrentPyramidHeight = 1;
-                MaximumPyramidHeight = 1;
+                TallestPyramidHeight = 1;
                 PyramidContributorUsernames.Clear();
                 PyramidContributorUsernames.Add(e.ChatMessage.Username);
             }
@@ -71,7 +75,7 @@ namespace Chubberino.Client.Commands.Settings
                     {
                         // Continuing to build up
                         CurrentPyramidHeight++;
-                        MaximumPyramidHeight++;
+                        TallestPyramidHeight++;
                         PyramidContributorUsernames.Add(e.ChatMessage.Username);
                     }
                     else if (tokens.Length == CurrentPyramidHeight - 1)
@@ -84,9 +88,10 @@ namespace Chubberino.Client.Commands.Settings
                     else
                     {
                         // Broke the pyramid in a way that does not start a new pyramid.
+                        SpoolPyramidFailedMessage(e.ChatMessage.Username);
                         BuildingUp = true; // for the next pyramid
                         CurrentPyramidHeight = 0;
-                        MaximumPyramidHeight = 0;
+                        TallestPyramidHeight = 0;
                         PyramidBlock = null;
                         PyramidContributorUsernames.Clear();
                     }
@@ -96,7 +101,7 @@ namespace Chubberino.Client.Commands.Settings
                     // Still not a pyramid
                     BuildingUp = true;
                     CurrentPyramidHeight = 0;
-                    MaximumPyramidHeight = 0;
+                    TallestPyramidHeight = 0;
                     PyramidBlock = null;
                     PyramidContributorUsernames.Clear();
                 }
@@ -113,6 +118,47 @@ namespace Chubberino.Client.Commands.Settings
         public override void Execute(IEnumerable<String> arguments)
         {
             base.Execute(arguments);
+        }
+
+        private void SpoolPyramidSuccessMessage()
+        {
+            if (PyramidContributorUsernames.Count == 1)
+            {
+                Spooler.SpoolMessage($"@{PyramidContributorUsernames.Single()} Congratz on building a {TallestPyramidHeight}-story tall {PyramidBlock} pyramid. Great job! peepoClap");
+            }
+            else
+            {
+                Spooler.SpoolMessage($"@{String.Join(", @", PyramidContributorUsernames)} Congratz on working together to build a {TallestPyramidHeight}-story tall {PyramidBlock} pyramid. Hooray teamwork! peepoClap");
+            }
+        }
+
+        /// <summary>
+        /// Notify when a pyramid has been broken.
+        /// </summary>
+        private void SpoolPyramidFailedMessage(String userThatBrokePyramid)
+        {
+            // Only send message on relavant pyramids to avoid false positives.
+            if (TallestPyramidHeight < MinimumRelevantPyramidToBreakHeight) { return; }
+
+            if (PyramidContributorUsernames.Contains(userThatBrokePyramid))
+            {
+                if (PyramidContributorUsernames.Count == 1)
+                {
+                    // User broke their own pyramid.
+                    Spooler.SpoolMessage($"@{userThatBrokePyramid} You just ruined your own {TallestPyramidHeight}-story tall pyramid. Sadge");
+                }
+                else
+                {
+                    // User broke co-operative pyramid.
+                    Spooler.SpoolMessage($"@{userThatBrokePyramid} Imagine working with @{String.Join(", @", PyramidContributorUsernames.Where(name => !name.Equals(userThatBrokePyramid, StringComparison.OrdinalIgnoreCase)))} to build a {TallestPyramidHeight}-story tall pyramid and then ruining it. 4WeirdW");
+                }
+            }
+            else
+            {
+                // User broke someone else's pyramid.
+                Spooler.SpoolMessage($"Imagine ruining a {TallestPyramidHeight}-story tall pyramid built by @{String.Join(", @", PyramidContributorUsernames)}. Oh wait, you just did. 4WeirdW");
+
+            }
         }
     }
 }
