@@ -1,10 +1,17 @@
 ﻿using System;
+using TwitchLib.Client.Events;
 using TwitchLib.Client.Models;
 
-namespace Chubberino.UnitTests.Utilities.ChatMessages
+namespace Chubberino.UnitTests.Utilities.TwitchLib
 {
-    public static class ChatMessageUtilities
+    public static class TwitchLibUtilities
     {
+        public static OnMessageReceivedArgs GetOnMessageReceivedArgs(String username, String message)
+            => new OnMessageReceivedArgs()
+            {
+                ChatMessage = GetChatMessage(username, message)
+            };
+
         public static ChatMessage GetChatMessage(String username, String message)
             => new ChatMessage(
                     botUsername: default,

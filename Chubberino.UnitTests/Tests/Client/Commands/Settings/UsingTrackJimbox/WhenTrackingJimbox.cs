@@ -1,7 +1,7 @@
 ﻿using Chubberino.Client;
 using Chubberino.Client.Abstractions;
 using Chubberino.Client.Commands.Settings;
-using Chubberino.UnitTests.Utilities.ChatMessages;
+using Chubberino.UnitTests.Utilities.TwitchLib;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -52,10 +52,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.UsingTrackJimbox
 
             foreach ((String username, String message) in messages)
             {
-                Sut.TwitchClient_OnMessageReceived(null, new OnMessageReceivedArgs()
-                {
-                    ChatMessage = ChatMessageUtilities.GetChatMessage(username, message)
-                });
+                Sut.TwitchClient_OnMessageReceived(null, TwitchLibUtilities.GetOnMessageReceivedArgs(username, message));
             }
 
             MessageSpooler.Verify(x => x.SpoolMessage(It.IsAny<String>()), Times.Once());
