@@ -60,7 +60,7 @@ namespace Chubberino.Client
         {
             if (message == PreviousMessage)
             {
-                message += " " + Data.EmptyCharacter;
+                message += " " + Data.InvisibleCharacter;
             }
 
             try

@@ -2,11 +2,11 @@
 
 namespace Chubberino.Client
 {
-    internal static class Data
+    public static class Data
     {
         /// <summary>
         /// Empty character to evade identical message detection.
         /// </summary>
-        public const String EmptyCharacter = "⠀";
+        public const Char InvisibleCharacter = '⠀';
     }
 }
