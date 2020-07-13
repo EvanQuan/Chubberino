@@ -69,9 +69,9 @@ namespace Chubberino.Client.Commands.Settings
         {
             switch (value.ToLower())
             {
+                case "m":
                 case "mode":
                 {
-
                     switch (arguments.FirstOrDefault()?.ToLower())
                     {
                         case "w":
