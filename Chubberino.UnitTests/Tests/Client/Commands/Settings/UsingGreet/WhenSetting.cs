@@ -7,6 +7,14 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.UsingGreet
     public sealed class WhenSetting : GreetTestBase
     {
         [Theory]
+        [InlineData("m", new String[] { "default" }, Greet.Mode.Default)]
+        [InlineData("M", new String[] { "DeFaUlt" }, Greet.Mode.Default)]
+        [InlineData("m", new String[] { "" }, Greet.Mode.Default)]
+        [InlineData("M", new String[] { }, Greet.Mode.Default)]
+        [InlineData("m", new String[] { "wholesome" }, Greet.Mode.Wholesome)]
+        [InlineData("M", new String[] { "WhOlEsOmE" }, Greet.Mode.Wholesome)]
+        [InlineData("m", new String[] { "w" }, Greet.Mode.Wholesome)]
+        [InlineData("M", new String[] { "W" }, Greet.Mode.Wholesome)]
         [InlineData("mode", new String[] { "default" }, Greet.Mode.Default)]
         [InlineData("mOdE", new String[] { "DeFaUlt" }, Greet.Mode.Default)]
         [InlineData("mode", new String[] { "" }, Greet.Mode.Default)]
