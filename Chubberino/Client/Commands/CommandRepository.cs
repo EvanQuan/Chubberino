@@ -26,6 +26,7 @@ namespace Chubberino.Client.Commands
                 new Repeat(client, spooler),
                 new Reply(client, spooler),
                 new TimeoutAlert(client, spooler),
+                new TrackJimbox(client, spooler),
                 new TrackPyramids(client, spooler),
             };
         }
