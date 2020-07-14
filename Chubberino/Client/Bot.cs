@@ -88,9 +88,9 @@ namespace Chubberino.Client
 
         private void Client_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
         {
-            if (e.ChatMessage.Username.Equals("Th3Gazette", StringComparison.OrdinalIgnoreCase))
+            if (e.ChatMessage.Username.Equals("YepKyle", StringComparison.OrdinalIgnoreCase))
             {
-                TwitchClient.SendMessage(e.ChatMessage.Channel, $"@{e.ChatMessage.Username} PogO");
+                TwitchClient.SendMessage(e.ChatMessage.Channel, $"YEP KYLE");
             }
         }
 
