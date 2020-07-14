@@ -22,12 +22,14 @@ namespace Chubberino.Client.Commands
                 new Join(client, spooler),
                 new Log(client, spooler),
                 new MockStreamElements(client, spooler),
+                new PogOTh3Gazette(client, spooler),
                 new RandomColors(client, spooler),
                 new Repeat(client, spooler),
                 new Reply(client, spooler),
                 new TimeoutAlert(client, spooler),
                 new TrackJimbox(client, spooler),
                 new TrackPyramids(client, spooler),
+                new YepKyle(client, spooler),
             };
         }
 
