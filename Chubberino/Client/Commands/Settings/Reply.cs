@@ -29,7 +29,7 @@ namespace Chubberino.Client.Commands.Settings
 
             if (Comparator(e.ChatMessage.Message, ReplyMessage))
             {
-                TwitchClient.SendMessage(e.ChatMessage.Channel, $"@{e.ChatMessage.Username} {ReplyMessage}");
+                Spooler.SpoolMessage($"@{e.ChatMessage.Username} {ReplyMessage}");
             }
         }
 
