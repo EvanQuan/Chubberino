@@ -38,7 +38,6 @@ namespace Chubberino.Client
 
             TwitchClient.Initialize(Credentials, TwitchInfo.InitialChannelName);
 
-            TwitchClient.OnMessageReceived += Client_OnMessageReceived;
             TwitchClient.OnConnected += Client_OnConnected;
             TwitchClient.OnConnectionError += Client_OnConnectionError;
             TwitchClient.OnUserTimedout += Client_OnUserTimedout;
@@ -84,14 +83,6 @@ namespace Chubberino.Client
         private void Client_OnConnected(Object sender, OnConnectedArgs e)
         {
             ShouldContinue = true;
-        }
-
-        private void Client_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
-        {
-            if (e.ChatMessage.Username.Equals("YepKyle", StringComparison.OrdinalIgnoreCase))
-            {
-                TwitchClient.SendMessage(e.ChatMessage.Channel, $"YEP KYLE");
-            }
         }
 
         public void ReadCommand(String command)
