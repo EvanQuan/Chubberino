@@ -83,9 +83,12 @@ namespace Chubberino.Client
             //}
         }
 
+        /// <summary>
+        /// Run repeat message task at interval.
+        /// </summary>
         protected override void ManageTasks()
         {
-            if (RepeatMessage != null)
+            if (!String.IsNullOrEmpty(RepeatMessage))
             {
                 SpoolMessage(RepeatMessage);
             }
