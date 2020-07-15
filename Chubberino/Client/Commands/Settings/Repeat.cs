@@ -51,5 +51,13 @@ namespace Chubberino.Client.Commands.Settings
             }
             return false;
         }
+
+        public override String GetHelp()
+        {
+            return @"
+It is recommended to not go below 2.25 seconds for long periods of time to
+avoid temporary shadow ban.
+";
+        }
     }
 }
