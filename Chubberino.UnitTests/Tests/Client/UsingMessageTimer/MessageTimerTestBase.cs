@@ -7,7 +7,7 @@ namespace Chubberino.UnitTests.Tests.Client.UsingMessageTimer
 {
     public abstract class MessageTimerTestBase
     {
-        protected MessageTimer Sut { get; }
+        protected ActionTimer Sut { get; }
 
         protected Mock<ITwitchClient> TwitchClient { get; }
 
@@ -16,7 +16,7 @@ namespace Chubberino.UnitTests.Tests.Client.UsingMessageTimer
         public MessageTimerTestBase()
         {
             TwitchClient = new Mock<ITwitchClient>();
-            Sut = new MessageTimer(TwitchClient.Object);
+            Sut = new ActionTimer(TwitchClient.Object);
         }
     }
 }

@@ -17,6 +17,6 @@ namespace Chubberino.Client.Abstractions
         /// Gets the help message explaining how to use the command.
         /// </summary>
         /// <returns>The help messag string.</returns>
-        String Help();
+        String GetHelp();
     }
 }

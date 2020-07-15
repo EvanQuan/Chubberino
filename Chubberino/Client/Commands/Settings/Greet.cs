@@ -90,7 +90,7 @@ namespace Chubberino.Client.Commands.Settings
             return true;
         }
 
-        public override String Help()
+        public override String GetHelp()
         {
             return @"
 Message users when they join the channel. Twitch sends this information in

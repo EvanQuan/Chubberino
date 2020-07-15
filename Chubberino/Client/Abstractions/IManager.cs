@@ -6,6 +6,10 @@ namespace Chubberino.Client.Abstractions
     {
         Boolean IsRunning { get; }
 
+        TimeSpan Interval { get; set; }
+
+        Action Task { get; set; }
+
         void Start();
     }
 }

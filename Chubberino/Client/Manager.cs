@@ -1,5 +1,6 @@
 ﻿using Chubberino.Client.Abstractions;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using TwitchLib.Client.Exceptions;
 using TwitchLib.Client.Interfaces;
@@ -13,6 +14,8 @@ namespace Chubberino.Client
         public Boolean IsRunning { get; private set; }
 
         protected ITwitchClient TwitchClient { get; private set; }
+        public TimeSpan Interval { get; set; }
+        public Action Task { get; set; }
 
         protected Manager(ITwitchClient client)
         {
@@ -26,7 +29,7 @@ namespace Chubberino.Client
             if (TwitchClient.IsConnected)
             {
                 IsRunning = true;
-                Task.Run(Manage);
+                System.Threading.Tasks.Task.Run(Manage);
             }
             else
             {
@@ -39,6 +42,7 @@ namespace Chubberino.Client
             while (IsRunning)
             {
                 ManageTasks();
+                Thread.Sleep(Interval);
             }
         }
 

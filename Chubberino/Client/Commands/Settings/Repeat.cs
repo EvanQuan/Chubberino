@@ -14,7 +14,6 @@ namespace Chubberino.Client.Commands.Settings
     /// </summary>
     internal sealed class Repeat : Setting
     {
-        public TimeSpan RepeatInterval { get; set; }
         private String RepeatMessage { get; set; }
         public Repeat(ITwitchClient client, IMessageSpooler spooler)
             : base(client, spooler)
@@ -24,7 +23,7 @@ namespace Chubberino.Client.Commands.Settings
         public override String Status => (String.IsNullOrWhiteSpace(RepeatMessage)
             ? "disabled"
             : RepeatMessage)
-            + $" Interval: {RepeatInterval.TotalSeconds} seconds";
+            + $" Interval: {Spooler.Interval.TotalSeconds} seconds";
 
         public override void Execute(IEnumerable<String> arguments)
         {
@@ -41,7 +40,7 @@ namespace Chubberino.Client.Commands.Settings
                 {
                     if (Double.TryParse(arguments.FirstOrDefault(), out Double result))
                     {
-                        RepeatInterval = result >= 0
+                        Spooler.Interval = result >= 0
                             ? TimeSpan.FromSeconds(result)
                             : TimeSpan.Zero;
 

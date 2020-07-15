@@ -131,7 +131,7 @@ namespace Chubberino.Client.Commands
 
             ICommand commandToSet = GetCommand(commandName);
 
-            String message = commandToSet?.Help();
+            String message = commandToSet?.GetHelp();
 
             if (message != null)
             {

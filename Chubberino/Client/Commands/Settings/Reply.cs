@@ -65,7 +65,7 @@ namespace Chubberino.Client.Commands.Settings
             }
         }
 
-        public override String Help()
+        public override String GetHelp()
         {
             return @"
 Reply to any message that matches to a specified message, by copying the

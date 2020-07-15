@@ -17,8 +17,6 @@ namespace Chubberino.Client
         private ConcurrentQueue<String> MessageQueue { get; set; }
             = new ConcurrentQueue<String>();
 
-        private MessageTimer Timer { get; }
-
         private String PreviousMessage { get; set; }
 
         private String repeatMessage;
@@ -34,12 +32,6 @@ namespace Chubberino.Client
                     ? "Repeat disabled."
                     : $"Repeating \"{repeatMessage}\"");
             }
-        }
-
-        public TimeSpan Interval
-        {
-            get => Timer.Interval;
-            set => Timer.Interval = value;
         }
 
         public Int32 QueueSize => MessageQueue.Count;
@@ -93,17 +85,10 @@ namespace Chubberino.Client
 
         protected override void ManageTasks()
         {
-            //if (MessageQueue.Count == 0)
-            //{
-            //    if (repeatMessage != null)
-            //    {
-            //        SpoolMessage(repeatMessage, Priority.High);
-            //    }
-            //}
-            //if (MessageQueue.TryDequeue(out String message))
-            //{
-            //    SendMessage(message);
-            //}
+            if (RepeatMessage != null)
+            {
+                SpoolMessage(RepeatMessage);
+            }
         }
     }
 }

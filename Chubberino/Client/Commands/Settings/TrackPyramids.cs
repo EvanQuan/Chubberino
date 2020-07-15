@@ -160,5 +160,11 @@ namespace Chubberino.Client.Commands.Settings
 
             }
         }
+
+        public override String GetHelp()
+        {
+            return @"
+";
+        }
     }
 }

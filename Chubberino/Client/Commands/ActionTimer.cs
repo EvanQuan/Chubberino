@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Timers;
 using TwitchLib.Client.Events;
 using TwitchLib.Client.Interfaces;
@@ -6,7 +7,7 @@ using TwitchLib.Communication.Events;
 
 namespace Chubberino.Client.Commands
 {
-    public sealed class MessageTimer : IDisposable
+    public sealed class ActionTimer : IDisposable
     {
         /// <summary>
         /// 20 messages in 30 seconds + buffer
@@ -30,7 +31,7 @@ namespace Chubberino.Client.Commands
 
         private ITwitchClient TwitchClient { get; }
 
-        public MessageTimer(ITwitchClient client)
+        public ActionTimer(ITwitchClient client)
         {
             Timer = new Timer(RegularInterval.TotalMilliseconds)
             {

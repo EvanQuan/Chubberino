@@ -97,7 +97,7 @@ namespace Chubberino.Client.Commands.Settings
             Console.WriteLine($"Copying user \"{UserToMirror}\" Mode: \"{Mode}\" Prefix: \"{MessagePrefix}\"");
         }
 
-        public override String Help()
+        public override String GetHelp()
         {
             return @"
 Copy another user's chat messages.
