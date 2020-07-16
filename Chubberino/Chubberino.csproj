@@ -11,14 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="TwitchInfo.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>TwitchInfo.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Update="TwitchInfo.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>TwitchInfo.Designer.cs</LastGenOutput>
