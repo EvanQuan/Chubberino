@@ -1,8 +1,5 @@
 ﻿using Chubberino.Client.Abstractions;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using TwitchLib.Client.Interfaces;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands
@@ -15,9 +12,9 @@ namespace Chubberino.UnitTests.Tests.Client.Commands
 
         public CommandTestBase()
         {
-            TwitchClient = new Mock<ITwitchClient>();
+            TwitchClient = new Mock<ITwitchClient>().SetupAllProperties();
 
-            Spooler = new Mock<IMessageSpooler>();
+            Spooler = new Mock<IMessageSpooler>().SetupAllProperties();
         }
 
     }
