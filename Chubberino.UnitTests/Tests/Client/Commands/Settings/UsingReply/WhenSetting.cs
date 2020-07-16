@@ -1,7 +1,5 @@
 ﻿using Chubberino.Client.Commands.Settings;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.UsingReply
