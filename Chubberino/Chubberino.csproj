@@ -11,10 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="UserInterface\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Update="TwitchInfo.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>

@@ -19,7 +19,6 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.UsingReply
         [InlineData("interval", "0", 0)]
         [InlineData("i", "-1", 0)]
         [InlineData("interval", "-1.25", 0)]
-
         public void ShouldSetInterval(String property, String value, Double expectedIntervalSeconds)
         {
             Sut.Set(property, new String[] { value });
