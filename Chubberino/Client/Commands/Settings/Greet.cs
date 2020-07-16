@@ -65,9 +65,9 @@ namespace Chubberino.Client.Commands.Settings
             }
         }
 
-        public override Boolean Set(String value, IEnumerable<String> arguments)
+        public override Boolean Set(String property, IEnumerable<String> arguments)
         {
-            switch (value.ToLower())
+            switch (property.ToLower())
             {
                 case "m":
                 case "mode":

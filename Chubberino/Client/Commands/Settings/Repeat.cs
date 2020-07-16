@@ -12,7 +12,7 @@ namespace Chubberino.Client.Commands.Settings
     /// It is not recommended to sent messages manually while messages are
     /// being repeated from this, or you may incur a global IP shadow ban.
     /// </summary>
-    internal sealed class Repeat : Setting
+    public sealed class Repeat : Setting
     {
         private String RepeatMessage { get; set; }
         public Repeat(ITwitchClient client, IMessageSpooler spooler)
@@ -31,9 +31,9 @@ namespace Chubberino.Client.Commands.Settings
             Spooler.RepeatMessage = RepeatMessage;
         }
 
-        public override Boolean Set(String value, IEnumerable<String> arguments)
+        public override Boolean Set(String property, IEnumerable<String> arguments)
         {
-            switch (value.ToLower())
+            switch (property.ToLower())
             {
                 case "i":
                 case "interval":

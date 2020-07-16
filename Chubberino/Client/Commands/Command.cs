@@ -22,7 +22,7 @@ namespace Chubberino.Client.Commands
 
         public abstract void Execute(IEnumerable<String> arguments);
 
-        public virtual Boolean Set(String value, IEnumerable<String> arguments) { return false; }
+        public virtual Boolean Set(String property, IEnumerable<String> arguments) { return false; }
 
         public virtual String Get(IEnumerable<String> arguments) { return null; }
 

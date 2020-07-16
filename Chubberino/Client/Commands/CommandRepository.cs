@@ -108,7 +108,7 @@ namespace Chubberino.Client.Commands
         private void Set(String commandName, IEnumerable<String> arguments)
         {
             ICommand commandToSet = GetCommand(commandName);
-            String value = arguments.FirstOrDefault();
+            String property = arguments.FirstOrDefault();
 
             arguments = arguments.Skip(1);
 
@@ -116,13 +116,13 @@ namespace Chubberino.Client.Commands
             {
                 Console.WriteLine($"Command \"{commandName}\" not found to set.");
             }
-            else if (commandToSet.Set(value, arguments))
+            else if (commandToSet.Set(property, arguments))
             {
-                Console.WriteLine($"Command \"{commandName}\" value \"{value}\" set to \"{String.Join(" ", arguments)}\"");
+                Console.WriteLine($"Command \"{commandName}\" property \"{property}\" set to \"{String.Join(" ", arguments)}\"");
             }
             else
             {
-                Console.WriteLine($"Command \"{commandName}\" value \"{value}\" not set");
+                Console.WriteLine($"Command \"{commandName}\" property \"{property}\" not set");
             }
         }
 

@@ -9,7 +9,7 @@ namespace Chubberino.Client.Abstractions
 
         void Execute(IEnumerable<String> arguments);
 
-        Boolean Set(String value, IEnumerable<String> arguments);
+        Boolean Set(String property, IEnumerable<String> arguments);
 
         String Get(IEnumerable<String> arguments);
 

@@ -23,9 +23,9 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.UsingGreet
         [InlineData("MoDe", new String[] { "WhOlEsOmE" }, Greet.Mode.Wholesome)]
         [InlineData("mode", new String[] { "w" }, Greet.Mode.Wholesome)]
         [InlineData("mOdE", new String[] { "W" }, Greet.Mode.Wholesome)]
-        public void ShouldSetMode(String value, String[] arguments, Greet.Mode expectedMode)
+        public void ShouldSetMode(String property, String[] arguments, Greet.Mode expectedMode)
         {
-            Sut.Set(value, arguments);
+            Sut.Set(property, arguments);
 
             Assert.Equal(expectedMode, Sut.CurrentMode);
         }
