@@ -28,7 +28,6 @@ namespace Chubberino.Client.Commands.Settings
         {
             PyramidContributorUsernames = new HashSet<String>();
             TwitchClient.OnMessageReceived += TwitchClient_OnMessageReceived;
-            IsEnabled = true;
         }
 
         public void TwitchClient_OnMessageReceived(Object sender, OnMessageReceivedArgs e)

@@ -10,7 +10,6 @@ namespace Chubberino.Client.Commands.Settings
             : base(client, spooler)
         {
             TwitchClient.OnMessageReceived += TwitchClient_OnMessageReceived;
-            IsEnabled = true;
         }
 
         private void TwitchClient_OnMessageReceived(Object sender, TwitchLib.Client.Events.OnMessageReceivedArgs e)

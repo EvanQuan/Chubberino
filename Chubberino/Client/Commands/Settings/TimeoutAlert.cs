@@ -10,7 +10,6 @@ namespace Chubberino.Client.Commands.Settings
             : base(client, spooler)
         {
             TwitchClient.OnUserTimedout += TwitchClient_OnUserTimedout;
-            IsEnabled = true;
         }
 
         private void TwitchClient_OnUserTimedout(Object sender, TwitchLib.Client.Events.OnUserTimedoutArgs e)
