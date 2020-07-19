@@ -1,5 +1,4 @@
 ﻿using Chubberino.Client.Abstractions;
-using Chubberino.Client.Commands;
 using System;
 using System.Collections.Concurrent;
 using TwitchLib.Client.Exceptions;
@@ -39,7 +38,7 @@ namespace Chubberino.Client
         public MessageSpooler(ITwitchClient client)
             : base(client)
         {
-
+            Interval = TimeSpan.FromSeconds(5);
         }
 
         public void SetChannel(String channelName)
