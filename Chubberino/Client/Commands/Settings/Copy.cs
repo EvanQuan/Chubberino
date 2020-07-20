@@ -18,7 +18,8 @@ namespace Chubberino.Client.Commands.Settings
         {
             Disabled = 0,
             Default = 1,
-            Mock = 2
+            Mock = 2,
+            Reverse = 3
         }
 
         private CopyMode Mode { get; set; }
@@ -54,6 +55,9 @@ namespace Chubberino.Client.Commands.Settings
                 case CopyMode.Mock:
                     modeModifiedMessage = "" + replacedUsernameMessage.ToRandomCase();
                     break;
+                case CopyMode.Reverse:
+                    modeModifiedMessage = String.Join(String.Empty, replacedUsernameMessage.Reverse());
+                    break;
             }
 
             String prefixAddedMessage = (String.IsNullOrWhiteSpace(MessagePrefix)
@@ -84,7 +88,10 @@ namespace Chubberino.Client.Commands.Settings
             {
                 Mode = (arguments.Skip(1).FirstOrDefault()?.ToLower()) switch
                 {
+                    "m" => CopyMode.Mock,
                     "mock" => CopyMode.Mock,
+                    "r" => CopyMode.Reverse,
+                    "reverse" => CopyMode.Reverse,
                     _ => CopyMode.Default,
                 };
             }
