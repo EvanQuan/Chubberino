@@ -14,6 +14,7 @@ namespace Chubberino.Client.Commands.Settings
 
         private void TwitchClient_OnUserTimedout(Object sender, TwitchLib.Client.Events.OnUserTimedoutArgs e)
         {
+            if (!IsEnabled) { return; }
             TwitchClient.SendMessage(e.UserTimeout.Channel, $"WideHardo FREE MY MAN {e.UserTimeout.Username.ToUpper()}");
         }
     }
