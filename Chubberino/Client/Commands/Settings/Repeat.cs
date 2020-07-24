@@ -33,7 +33,7 @@ namespace Chubberino.Client.Commands.Settings
 
         public override Boolean Set(String property, IEnumerable<String> arguments)
         {
-            switch (property.ToLower())
+            switch (property?.ToLower())
             {
                 case "i":
                 case "interval":
@@ -55,8 +55,9 @@ namespace Chubberino.Client.Commands.Settings
         public override String GetHelp()
         {
             return @"
-It is recommended to not go below 2.25 seconds for long periods of time to
-avoid temporary shadow ban.
+It is recommended to not go below 1.5 seconds or type any other messages
+manually, or have other settings enabled for short intervals  to avoid a global
+shadow ban.
 ";
         }
     }
