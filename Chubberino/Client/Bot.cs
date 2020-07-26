@@ -31,7 +31,7 @@ namespace Chubberino.Client
             var clientOptions = new ClientOptions
             {
                 MessagesAllowedInPeriod = 1,
-                ThrottlingPeriod = TimeSpan.FromSeconds(1.6)
+                ThrottlingPeriod = TimeSpan.FromSeconds(1.51)
             };
             WebSocketClient customClient = new WebSocketClient(clientOptions);
             TwitchClient = new TwitchClient(customClient);
