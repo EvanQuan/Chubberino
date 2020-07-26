@@ -43,7 +43,7 @@ namespace Chubberino.Client.Commands.Settings
         /// <summary>
         /// Current progression.
         /// </summary>
-        private JimboxStage Stage { get; set; }
+        private JimboxStage CurrentStage { get; set; }
 
 
         private HashSet<String> Contributors { get; }
@@ -63,23 +63,25 @@ namespace Chubberino.Client.Commands.Settings
 
         public void TwitchClient_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
         {
+            if (!IsEnabled) { return; }
+
             String cleanMessage = e.ChatMessage.Message.Trim(' ', Data.InvisibleCharacter);
 
             String[] tokens = cleanMessage.Split(' ');
 
-            if (tokens.Length != 4)
+            if (tokens.Length < 4)
             {
-                Stage = 0;
+                CurrentStage = JimboxStage.None;
                 return;
             }
 
             if (IsTop(tokens))
             {
                 // Differentiate between top and bottom.
-                if (Stage == JimboxStage.Mouth)
+                if (CurrentStage == JimboxStage.Mouth)
                 {
                     // We are at the bottom and have completed the jimbox.
-                    Stage = JimboxStage.Bottom;
+                    CurrentStage = JimboxStage.Bottom;
                     Contributors.Add(e.ChatMessage.Username);
                     SpoolSuccessMessage();
                     Border = null;
@@ -88,38 +90,27 @@ namespace Chubberino.Client.Commands.Settings
                 else
                 {
                     // We just started a new jimbox.
-                    Stage = JimboxStage.Top;
+                    CurrentStage = JimboxStage.Top;
                     Border = tokens[0];
+                    Contributors.Clear();
                     Contributors.Add(e.ChatMessage.Username);
                 }
             }
-            else if (IsEyes(tokens))
+            else if (CurrentStage == JimboxStage.Top && IsEyes(tokens))
             {
-                if (Stage == JimboxStage.Top)
-                {
-                    Stage = JimboxStage.Eyes;
-                    Contributors.Add(e.ChatMessage.Username);
-                }
-                else
-                {
-                    Stage = JimboxStage.None;
-                    Border = null;
-                    Contributors.Clear();
-                }
+                CurrentStage = JimboxStage.Eyes;
+                Contributors.Add(e.ChatMessage.Username);
             }
-            else if (IsMouth(tokens))
+            else if (CurrentStage == JimboxStage.Eyes && IsMouth(tokens))
             {
-                if (Stage == JimboxStage.Eyes)
-                {
-                    Stage = JimboxStage.Mouth;
-                    Contributors.Add(e.ChatMessage.Username);
-                }
-                else
-                {
-                    Stage = JimboxStage.None;
-                    Border = null;
-                    Contributors.Clear();
-                }
+                CurrentStage = JimboxStage.Mouth;
+                Contributors.Add(e.ChatMessage.Username);
+            }
+            else
+            {
+                CurrentStage = JimboxStage.None;
+                Border = null;
+                Contributors.Clear();
             }
         }
 
@@ -127,17 +118,19 @@ namespace Chubberino.Client.Commands.Settings
         {
             if (Contributors.Count == 1)
             {
-                Spooler.SpoolMessage($"@{Contributors.Single()} Congratz on making a {Border} jimbox. Great job! peepoClap");
+                Spooler.SpoolMessage($"@{Contributors.Single()} Nice {Border} jimbox! peepoClap");
             }
             else
             {
-                Spooler.SpoolMessage($"@{String.Join(", @", Contributors)} Congratz on working together to make a {Border} jimbox. Hooray teamwork! peepoClap");
+                Spooler.SpoolMessage($"@{String.Join(", @", Contributors)} Nice {Border} jimbox! Hooray teamwork! peepoClap");
             }
         }
 
         private Boolean IsTop(String[] tokens)
         {
-            return tokens.All(token => token == tokens[0]);
+            return tokens[1] == tokens[0]
+                && tokens[2] == tokens[0]
+                && tokens[3] == tokens[0];
         }
 
         private Boolean IsEyes(String[] tokens)
