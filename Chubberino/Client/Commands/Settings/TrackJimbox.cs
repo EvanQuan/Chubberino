@@ -58,7 +58,6 @@ namespace Chubberino.Client.Commands.Settings
         {
             TwitchClient.OnMessageReceived += TwitchClient_OnMessageReceived;
             Contributors = new HashSet<String>();
-            IsEnabled = true;
         }
 
         public void TwitchClient_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
