@@ -48,10 +48,11 @@ namespace Chubberino.Client.Commands.Settings
             = (actualMessage, triggerMessage) => triggerMessage.Contains(actualMessage);
 
         public override String Status => new StringBuilder()
-            .AppendLine((IsEnabled ? "enabled" : "disabled"))
-            .AppendLine($"\tmessage: {TriggerMessage}\n")
+            .AppendLine(base.Status)
+            .AppendLine($"\tto: {(String.IsNullOrWhiteSpace(TriggerMessage) ? "< Any message >" : TriggerMessage)}\n")
             .AppendLine($"\tcomparator: {CompareType}\n")
-            .AppendLine($"\tusers: {(UsersToReplyTo.Count == 0 ? "ANY" : "")}")
+            .AppendLine($"\twith: {(String.IsNullOrWhiteSpace(ReplyMessage) ? "< Mirroring user message >" : ReplyMessage)}\n")
+            .AppendLine($"\tusers: {(UsersToReplyTo.Count == 0 ? "< Any user >" : "\n\t\t" + String.Join("\n\t\t", UsersToReplyTo))}")
             .ToString();
 
         public Reply(ITwitchClient client, IMessageSpooler spooler)
@@ -65,10 +66,13 @@ namespace Chubberino.Client.Commands.Settings
         {
             if (!IsEnabled) { return; }
 
-            if (Comparator(e.ChatMessage.Message, TriggerMessage))
-            {
-                Spooler.SpoolMessage($"@{e.ChatMessage.Username} {TriggerMessage}");
-            }
+            if (!UsersToReplyTo.Contains(e.ChatMessage.Username)) { return; }
+
+            if (!Comparator(e.ChatMessage.Message, TriggerMessage)) { return; }
+
+            String replyMessage = String.IsNullOrWhiteSpace(ReplyMessage) ? TriggerMessage : ReplyMessage;
+
+            Spooler.SpoolMessage($"@{e.ChatMessage.Username} {replyMessage}");
         }
 
         public override void Execute(IEnumerable<String> arguments)
@@ -79,7 +83,9 @@ namespace Chubberino.Client.Commands.Settings
             {
                 TriggerMessage = String.Join(" ", arguments);
 
-                Console.WriteLine($"Replying to any message that {CompareType} \"{TriggerMessage}\"");
+                String replyMessage = String.IsNullOrWhiteSpace(ReplyMessage) ? TriggerMessage : ReplyMessage;
+
+                Console.WriteLine($"Replying to any message that {CompareType} \"{replyMessage}\"");
             }
             else
             {
@@ -102,7 +108,7 @@ namespace Chubberino.Client.Commands.Settings
                             String userToAdd = arguments.Skip(1).FirstOrDefault();
                             if (userToAdd != null)
                             {
-                                UsersToReplyTo.Add(userToAdd);
+                                UsersToReplyTo.Add(userToAdd.ToLower());
                             }
                             break;
                         case "r":
@@ -110,7 +116,7 @@ namespace Chubberino.Client.Commands.Settings
                             String userToRemove = arguments.Skip(1).FirstOrDefault();
                             if (userToRemove != null)
                             {
-                                UsersToReplyTo.Remove(userToRemove);
+                                UsersToReplyTo.Remove(userToRemove.ToLower());
                             }
                             break;
                         case "c":
@@ -140,6 +146,22 @@ namespace Chubberino.Client.Commands.Settings
                     }
                     break;
 
+                case "w":
+                case "with":
+                    // If there are no arguments, this will return empty string,
+                    // indicating the default behaviour of mirror the trigger
+                    // message.
+                    ReplyMessage = String.Join(' ', arguments);
+                    return true;
+
+                case "t":
+                case "to":
+                    // If there are no arguments, this will return empty string,
+                    // indicating the default behaviour of replying to any
+                    // message.
+                    TriggerMessage = String.Join(' ', arguments);
+                    return true;
+
                 default:
                     return false;
             }
@@ -160,7 +182,7 @@ usage: reply
 
 
 set:
-    message - the trigger message to check against whether to reply to.
+    to - the trigger message to check against whether to reply to.
 
     user [add|remove|clear]     - The users to reply to. If blank, will reply
                                   to any user.
