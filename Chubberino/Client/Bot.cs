@@ -22,11 +22,11 @@ namespace Chubberino.Client
 
         private ConnectionCredentials Credentials { get; } = new ConnectionCredentials(TwitchInfo.BotUsername, TwitchInfo.BotToken);
 
-        private CommandRepository Commands { get; }
+        private CommandRepository Commands { get; set; }
 
         private IMessageSpooler Spooler { get; set; }
 
-        public Bot()
+        private void CreateClient()
         {
             var clientOptions = new ClientOptions
             {
@@ -44,6 +44,11 @@ namespace Chubberino.Client
 
             Spooler = new MessageSpooler(TwitchClient);
             Commands = new CommandRepository(TwitchClient, Spooler);
+        }
+
+        public Bot()
+        {
+            CreateClient();
         }
 
         public Boolean Start()
@@ -78,6 +83,11 @@ namespace Chubberino.Client
         private void Client_OnConnectionError(Object sender, OnConnectionErrorArgs e)
         {
             Console.WriteLine($"!! Connection Error!! {e.Error.Message}");
+            Console.WriteLine($"Disconnecting...");
+            TwitchClient.Disconnect();
+            Console.WriteLine($"Reconnecting...");
+            TwitchClient.Reconnect();
+            Console.WriteLine($"Done.");
         }
 
         private void Client_OnConnected(Object sender, OnConnectedArgs e)

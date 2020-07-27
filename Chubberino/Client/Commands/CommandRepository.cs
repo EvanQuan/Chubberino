@@ -23,7 +23,7 @@ namespace Chubberino.Client.Commands
                 new Log(client, spooler),
                 new MockStreamElements(client, spooler),
                 new PogOTh3Gazette(client, spooler),
-                new RandomColors(client, spooler),
+                new Color(client, spooler),
                 new Repeat(client, spooler),
                 new Reply(client, spooler),
                 new TimeoutAlert(client, spooler),

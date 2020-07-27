@@ -123,11 +123,11 @@ namespace Chubberino.Client.Commands.Settings
         {
             if (PyramidContributorUsernames.Count == 1)
             {
-                Spooler.SpoolMessage($"@{PyramidContributorUsernames.Single()} Congratz on building a {TallestPyramidHeight}-story tall {PyramidBlock} pyramid. Great job! peepoClap");
+                Spooler.SpoolMessage($"@{PyramidContributorUsernames.Single()} Nice {TallestPyramidHeight}-story tall {PyramidBlock} pyramid! peepoClap");
             }
             else
             {
-                Spooler.SpoolMessage($"@{String.Join(", @", PyramidContributorUsernames)} Congratz on working together to build a {TallestPyramidHeight}-story tall {PyramidBlock} pyramid. Hooray teamwork! peepoClap");
+                Spooler.SpoolMessage($"@{String.Join(", @", PyramidContributorUsernames)} Nice {TallestPyramidHeight}-story tall {PyramidBlock} pyramid! Hooray teamwork! peepoClap");
             }
         }
 
