@@ -36,9 +36,9 @@ namespace Chubberino.Client.Commands.Settings
             Random = new Random();
             Selectors = new List<IColorSelector>()
             {
+                new RandomColorSelector(Random, () => CurrentColor),
                 new PresetColorSelector(Random, () => CurrentColor),
                 new RainbowColorSelector(),
-                new RandomColorSelector(Random, () => CurrentColor),
             };
             CurrentSelector = Selectors.FirstOrDefault();
         }
