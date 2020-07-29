@@ -26,7 +26,7 @@ namespace Chubberino.Client.Commands.Settings
         private IColorSelector CurrentSelector { get; set; }
 
         public override String Status => base.Status
-            + $"\n\tSelector: {CurrentSelector.Name}";
+            + $"\n\tType: {CurrentSelector.Name}";
 
         public Color(ITwitchClient client, IMessageSpooler spooler)
             : base(client, spooler)
@@ -84,7 +84,8 @@ namespace Chubberino.Client.Commands.Settings
         {
             switch (property.ToLower())
             {
-                case "selector":
+                case "t":
+                case "type":
                     IColorSelector proposedSelector = Selectors
                         .Where(x => x.Name == arguments.FirstOrDefault())
                         .FirstOrDefault();
