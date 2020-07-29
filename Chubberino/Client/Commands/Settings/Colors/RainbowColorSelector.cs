@@ -21,7 +21,9 @@ namespace Chubberino.Client.Commands.Settings.Colors
 
         public String GetNextColor()
         {
-            return RainbowColors[ColorIndex++ % RainbowColors.Length];
+            ColorIndex = (ColorIndex + 1) % RainbowColors.Length;
+
+            return RainbowColors[ColorIndex];
         }
     }
 }
