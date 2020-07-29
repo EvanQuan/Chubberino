@@ -52,6 +52,9 @@ namespace Chubberino.Client.Commands.Settings
         {
             if (!IsEnabled) { return; }
 
+            // Avoid infinite recursion.
+            if (e.SentMessage.Message.StartsWith('.')) { return; }
+
             ChangeColor();
         }
 
