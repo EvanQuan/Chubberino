@@ -155,7 +155,7 @@ namespace Chubberino.Client.Commands.Settings
             else
             {
                 // User broke someone else's pyramid.
-                Spooler.SpoolMessage($"@{userThatBrokePyramid} Imagine ruining a {TallestPyramidHeight}-story {PyramidBlock} tall pyramid built by @{String.Join(", @", PyramidContributorUsernames)}. Oh wait, you just did. PogO");
+                Spooler.SpoolMessage($"@{userThatBrokePyramid} Nice job ruining the {TallestPyramidHeight}-story {PyramidBlock} tall pyramid built by @{String.Join(", @", PyramidContributorUsernames)}. PogO");
 
             }
         }
