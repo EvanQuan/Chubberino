@@ -10,8 +10,6 @@ namespace Chubberino.Client.Abstractions
 
         TimeSpan Interval { get; set; }
 
-        Int32 QueueSize { get; }
-
         void SetChannel(String channelName);
 
         void SpoolMessage(String message);

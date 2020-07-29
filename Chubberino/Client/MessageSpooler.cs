@@ -13,9 +13,6 @@ namespace Chubberino.Client
     {
         public String ChannelName { get; private set; } = String.Empty;
 
-        private ConcurrentQueue<String> MessageQueue { get; set; }
-            = new ConcurrentQueue<String>();
-
         private String PreviousMessage { get; set; }
 
         private String repeatMessage;
@@ -25,15 +22,12 @@ namespace Chubberino.Client
             get => repeatMessage;
             set
             {
-                MessageQueue.Clear();
                 repeatMessage = value;
                 Console.WriteLine(repeatMessage is null
                     ? "Repeat disabled."
                     : $"Repeating \"{repeatMessage}\"");
             }
         }
-
-        public Int32 QueueSize => MessageQueue.Count;
 
         public MessageSpooler(ITwitchClient client)
             : base(client)
@@ -43,7 +37,6 @@ namespace Chubberino.Client
 
         public void SetChannel(String channelName)
         {
-            MessageQueue.Clear();
             ChannelName = channelName;
         }
 
@@ -69,17 +62,6 @@ namespace Chubberino.Client
         public void SpoolMessage(String message)
         {
             SendMessage(message);
-            //switch (priority)
-            //{
-            //case Priority.Low:
-            //    break;
-            //case Priority.High:
-            //    if (MessageQueue.Count < MaximumQueueSize)
-            //    {
-            //        MessageQueue.Enqueue(message);
-            //    }
-            //    break;
-            //}
         }
 
         /// <summary>
