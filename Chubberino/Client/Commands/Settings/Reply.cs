@@ -34,9 +34,9 @@ namespace Chubberino.Client.Commands.Settings
         /// </summary>
         private IStringComparator Comparator { get; set; }
 
-        private IStringComparator EqualsComparator { get; }
+        private IEqualsComparator EqualsComparator { get; }
 
-        private IStringComparator ContainsComparator { get; }
+        private IContainsComparator ContainsComparator { get; }
 
         public override String Status => new StringBuilder()
             .AppendLine(base.Status)
