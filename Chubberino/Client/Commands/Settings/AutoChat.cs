@@ -1,6 +1,7 @@
 ﻿using Chubberino.Client.Abstractions;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using TwitchLib.Client.Events;
 using TwitchLib.Client.Interfaces;
@@ -12,15 +13,11 @@ namespace Chubberino.Client.Commands.Settings
     {
         private ConcurrentQueue<String> PreviousMessages { get; }
 
-        private Int32 SpamMessageCount { get; set; } = 18;
+        private IEnumerable<Int32> SpamMessageCount { get; set; } = new Int32[] { 30, 25, 18 };
 
-        private Int32 GeneralMessageCount { get; set; } = 25;
+        private Int32 GeneralMessageCount { get; set; } = 35;
 
         private Int32 MinimumDuplicateCount { get; set; } = 3;
-
-        public override String Status => base.Status
-            + $"\n\tSpam count: {SpamMessageCount}"
-            + $"\n\tGeneral count: {GeneralMessageCount}";
 
         public AutoChat(ITwitchClient client, IMessageSpooler spooler)
             : base(client, spooler)
@@ -53,7 +50,7 @@ namespace Chubberino.Client.Commands.Settings
                 // avoid copying old messages.
                 PreviousMessages.Clear();
             }
-            else if (PreviousMessages.Count >= SpamMessageCount)
+            else if (SpamMessageCount.Any(count => PreviousMessages.Count >= count))
             {
                 // Get the most common message from the last SpamMessageCount
                 // number of messages, as long as there is more than one
