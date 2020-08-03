@@ -38,7 +38,7 @@ namespace Chubberino.Client.Commands.Settings
 
         private IStringComparator ContainsComparator { get; }
 
-            public override String Status => new StringBuilder()
+        public override String Status => new StringBuilder()
             .AppendLine(base.Status)
             .AppendLine($"\tto: {(String.IsNullOrWhiteSpace(TriggerMessage) ? "< Any message >" : TriggerMessage)}\n")
             .AppendLine($"\tcomparator: {Comparator.Name}\n")
