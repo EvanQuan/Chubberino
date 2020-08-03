@@ -1,7 +1,6 @@
 ﻿using Chubberino.Client.Abstractions;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq;
 using TwitchLib.Client.Events;
 using TwitchLib.Client.Interfaces;
@@ -13,9 +12,11 @@ namespace Chubberino.Client.Commands.Settings
     {
         private ConcurrentQueue<String> PreviousMessages { get; }
 
-        private Int32 SpamMessageCount { get; set; } = 10;
+        private Int32 SpamMessageCount { get; set; } = 18;
 
         private Int32 GeneralMessageCount { get; set; } = 25;
+
+        private Int32 MinimumDuplicateCount { get; set; } = 3;
 
         public override String Status => base.Status
             + $"\n\tSpam count: {SpamMessageCount}"
@@ -32,7 +33,7 @@ namespace Chubberino.Client.Commands.Settings
         {
             if (!IsEnabled) { return; }
 
-            if (!ShouldCountUser(e.ChatMessage)) { return; }
+            if (ShouldIgnore(e.ChatMessage)) { return; }
 
             PreviousMessages.Enqueue(e.ChatMessage.Message);
 
@@ -41,7 +42,7 @@ namespace Chubberino.Client.Commands.Settings
                 // Get the most common message from the last GeneralMessageCount
                 // number of messages, as long as there is more than one
                 // duplicate of it.
-                String message = GetMessageToSend(3);
+                String message = GetMessageToSend();
 
                 if (message != null)
                 {
@@ -57,7 +58,7 @@ namespace Chubberino.Client.Commands.Settings
                 // Get the most common message from the last SpamMessageCount
                 // number of messages, as long as there is more than one
                 // duplicate of it.
-                String message = GetMessageToSend(4);
+                String message = GetMessageToSend();
 
                 if (message != null)
                 {
@@ -69,23 +70,28 @@ namespace Chubberino.Client.Commands.Settings
             }
         }
 
-        private String GetMessageToSend(Int32 duplicateCount)
+        private String GetMessageToSend()
         {
             return PreviousMessages
                 .GroupBy(x => x)
                 .OrderByDescending(x => x.Count()).ThenBy(x => x.Key)
-                .Where(x => x.Count() >= duplicateCount)
+                .Where(x => x.Count() >= MinimumDuplicateCount)
                 .Select(x => x.Key)
                 .FirstOrDefault();
         }
 
-        private Boolean ShouldCountUser(ChatMessage chatMessage)
+        /// <summary>
+        /// Should ignore message. These messages should not be copied.
+        /// </summary>
+        /// <param name="chatMessage">Chat message.</param>
+        /// <returns>true if should ignore <paramref name="chatMessage"/>; false otherwise.</returns>
+        private Boolean ShouldIgnore(ChatMessage chatMessage)
         {
-            return !chatMessage.Username.Equals(chatMessage.BotUsername)
-                && !chatMessage.IsModerator
-                && !chatMessage.IsVip
-                && !chatMessage.Message.StartsWith('!') // Ignore channel bot commands
-                && !chatMessage.Message.Contains(TwitchInfo.BotUsername, StringComparison.OrdinalIgnoreCase);
+            return chatMessage.Username.Equals(chatMessage.BotUsername) // Don't copy messages from self
+                || chatMessage.IsModerator // Ignore channel bot responds, or mod spam (such as for links)
+                || chatMessage.IsVip // VIP spam may time you out
+                || chatMessage.Message.StartsWith('!') // Ignore channel bot commands
+                || chatMessage.Message.Contains(TwitchInfo.BotUsername, StringComparison.OrdinalIgnoreCase); // If being @'d, don't want to copy @ ing self.
         }
     }
 }
