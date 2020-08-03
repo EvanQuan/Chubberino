@@ -38,6 +38,7 @@ namespace Chubberino.Client.Commands.Settings
             {
                 case "u":
                 case "user":
+                case "users":
                     UsersToPogO.Clear();
                     String userToSet = arguments.FirstOrDefault();
                     if (userToSet != null)
@@ -56,6 +57,7 @@ namespace Chubberino.Client.Commands.Settings
             {
                 case "u":
                 case "user":
+                case "users":
                     Int32 beforeCount = UsersToPogO.Count;
                     foreach (String username in arguments)
                     {
