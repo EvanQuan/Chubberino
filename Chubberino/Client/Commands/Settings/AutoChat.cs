@@ -22,8 +22,15 @@ namespace Chubberino.Client.Commands.Settings
         public AutoChat(ITwitchClient client, IMessageSpooler spooler)
             : base(client, spooler)
         {
+            TwitchClient.OnHostingStarted += TwitchClient_OnHostingStarted;
             TwitchClient.OnMessageReceived += TwitchClient_OnMessageReceived;
             PreviousMessages = new ConcurrentQueue<String>();
+        }
+
+        private void TwitchClient_OnHostingStarted(Object sender, OnHostingStartedArgs e)
+        {
+            // Stop when stream ends and hosting another channel.
+            IsEnabled = false;
         }
 
         private void TwitchClient_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
