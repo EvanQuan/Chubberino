@@ -11,6 +11,10 @@ namespace Chubberino.Client.Abstractions
 
         Boolean Set(String property, IEnumerable<String> arguments);
 
+        Boolean Add(String property, IEnumerable<String> arguments);
+
+        Boolean Remove(String property, IEnumerable<String> arguments);
+
         String Get(IEnumerable<String> arguments);
 
         /// <summary>

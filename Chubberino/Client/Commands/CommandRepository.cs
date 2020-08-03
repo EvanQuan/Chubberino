@@ -2,6 +2,7 @@
 using Chubberino.Client.Commands.Settings;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using TwitchLib.Client.Interfaces;
@@ -17,6 +18,7 @@ namespace Chubberino.Client.Commands
             Commands = new List<ICommand>()
             {
                 new AutoChat(client, spooler),
+                new AutoPogO(client, spooler),
                 new Color(client, spooler),
                 new Copy(client, spooler),
                 new Greet(client, spooler),
@@ -24,7 +26,6 @@ namespace Chubberino.Client.Commands
                 new Join(client, spooler),
                 new Log(client, spooler),
                 new MockStreamElements(client, spooler),
-                new PogOTh3Gazette(client, spooler),
                 new Repeat(client, spooler),
                 new Reply(client, spooler),
                 new TimeoutAlert(client, spooler),
@@ -56,12 +57,23 @@ namespace Chubberino.Client.Commands
             switch (commandName)
             {
                 // Meta commands
+                case "g":
                 case "get":
                     Get(arguments.FirstOrDefault(), arguments.Skip(1));
                     break;
+                case "s":
                 case "set":
                     Set(arguments.FirstOrDefault(), arguments.Skip(1));
                     break;
+                case "a":
+                case "add":
+                    Add(arguments.FirstOrDefault(), arguments.Skip(1));
+                    break;
+                case "r":
+                case "remove":
+                    Remove(arguments.FirstOrDefault(), arguments.Skip(1));
+                    break;
+                case "h":
                 case "help":
                     Help(arguments.FirstOrDefault());
                     break;
@@ -97,11 +109,11 @@ namespace Chubberino.Client.Commands
                 String value = commandToSet.Get(arguments);
                 if (String.IsNullOrWhiteSpace(value))
                 {
-                    Console.WriteLine($"Command \"{commandName}\" value \"{String.Join(" ", arguments)}\" not found");
+                    Console.WriteLine($"Command \"{commandName}\" value \"{String.Join(" ", arguments)}\" not found.");
                 }
                 else
                 {
-                    Console.WriteLine($"Command \"{commandName}\" value \"{String.Join(" ", arguments)}\" is \"{value}\"");
+                    Console.WriteLine($"Command \"{commandName}\" value \"{String.Join(" ", arguments)}\" is \"{value}\".");
                 }
             }
         }
@@ -119,11 +131,53 @@ namespace Chubberino.Client.Commands
             }
             else if (commandToSet.Set(property, arguments))
             {
-                Console.WriteLine($"Command \"{commandName}\" property \"{property}\" set to \"{String.Join(" ", arguments)}\"");
+                Console.WriteLine($"Command \"{commandName}\" property \"{property}\" set to \"{String.Join(" ", arguments)}\".");
             }
             else
             {
-                Console.WriteLine($"Command \"{commandName}\" property \"{property}\" not set");
+                Console.WriteLine($"Command \"{commandName}\" property \"{property}\" not set.");
+            }
+        }
+
+        private void Add(String commandName, IEnumerable<String> arguments)
+        {
+            ICommand commandToAddTo = GetCommand(commandName);
+            String property = arguments.FirstOrDefault();
+
+            arguments = arguments.Skip(1);
+
+            if (commandToAddTo == null)
+            {
+                Console.WriteLine($"Command \"{commandName}\" not found to add to.");
+            }
+            else if (commandToAddTo.Add(property, arguments))
+            {
+                Console.WriteLine($"Command \"{commandName}\" property \"{property}\" added \"{String.Join(" ", arguments)}\".");
+            }
+            else
+            {
+                Console.WriteLine($"Command \"{commandName}\" property \"{property}\" not added to.");
+            }
+        }
+
+        private void Remove(String commandName, IEnumerable<String> arguments)
+        {
+            ICommand commandToRemoveFrom = GetCommand(commandName);
+            String property = arguments.FirstOrDefault();
+
+            arguments = arguments.Skip(1);
+
+            if (commandToRemoveFrom == null)
+            {
+                Console.WriteLine($"Command \"{commandName}\" not found to add remove from.");
+            }
+            else if (commandToRemoveFrom.Remove(property, arguments))
+            {
+                Console.WriteLine($"Command \"{commandName}\" property \"{property}\" removed \"{String.Join(" ", arguments)}\".");
+            }
+            else
+            {
+                Console.WriteLine($"Command \"{commandName}\" property \"{property}\" not removed from.");
             }
         }
 
