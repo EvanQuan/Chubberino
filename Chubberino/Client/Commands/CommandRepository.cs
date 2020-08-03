@@ -1,5 +1,6 @@
 ﻿using Chubberino.Client.Abstractions;
 using Chubberino.Client.Commands.Settings;
+using Chubberino.Client.Commands.Settings.Replies;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -27,7 +28,7 @@ namespace Chubberino.Client.Commands
                 new Log(client, spooler),
                 new MockStreamElements(client, spooler),
                 new Repeat(client, spooler),
-                new Reply(client, spooler),
+                new Reply(client, spooler, new EqualsComparator(), new ContainsComparator()),
                 new TimeoutAlert(client, spooler),
                 new TrackJimbox(client, spooler),
                 new TrackPyramids(client, spooler),

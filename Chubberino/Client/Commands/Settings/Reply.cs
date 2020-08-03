@@ -1,4 +1,5 @@
 ﻿using Chubberino.Client.Abstractions;
+using Chubberino.Client.Commands.Settings.Replies;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,38 +28,32 @@ namespace Chubberino.Client.Commands.Settings
         private String ReplyMessage { get; set; }
 
         /// <summary>
-        /// String representation of the comparator.
-        /// </summary>
-        private String CompareType { get; set; }
-
-        /// <summary>
         /// The function that compares the received message with the trigger
         /// message. If the comparator returns true, the received message
         /// matches.
         /// </summary>
-        private Func<String, String, Boolean> Comparator { get; set; }
+        private IStringComparator Comparator { get; set; }
 
-        private Func<String, String, Boolean> EqualsComparator { get; }
-            = (actualMessage, triggerMessage) => actualMessage == triggerMessage;
+        private IStringComparator EqualsComparator { get; }
 
-        /// <summary>
-        /// The 
-        /// </summary>
-        private Func<String, String, Boolean> ContainsComparator { get; }
-            = (actualMessage, triggerMessage) => triggerMessage.Contains(actualMessage);
+        private IStringComparator ContainsComparator { get; }
 
-        public override String Status => new StringBuilder()
+            public override String Status => new StringBuilder()
             .AppendLine(base.Status)
             .AppendLine($"\tto: {(String.IsNullOrWhiteSpace(TriggerMessage) ? "< Any message >" : TriggerMessage)}\n")
-            .AppendLine($"\tcomparator: {CompareType}\n")
+            .AppendLine($"\tcomparator: {Comparator.Name}\n")
             .AppendLine($"\twith: {(String.IsNullOrWhiteSpace(ReplyMessage) ? "< Mirroring user message >" : ReplyMessage)}\n")
             .AppendLine($"\tusers: {(UsersToReplyTo.Count == 0 ? "< Any user >" : "\n\t\t" + String.Join("\n\t\t", UsersToReplyTo))}")
             .ToString();
 
-        public Reply(ITwitchClient client, IMessageSpooler spooler)
+        public Reply(ITwitchClient client, IMessageSpooler spooler, IEqualsComparator equalsComparator, IContainsComparator containsComparator)
             : base(client, spooler)
         {
             UsersToReplyTo = new HashSet<String>();
+            EqualsComparator = equalsComparator;
+            ContainsComparator = containsComparator;
+            Comparator = ContainsComparator;
+
             TwitchClient.OnMessageReceived += TwitchClient_OnMessageReceived;
         }
 
@@ -68,7 +63,7 @@ namespace Chubberino.Client.Commands.Settings
 
             if (!UsersToReplyTo.Contains(e.ChatMessage.Username)) { return; }
 
-            if (!Comparator(e.ChatMessage.Message, TriggerMessage)) { return; }
+            if (!Comparator.Matches(e.ChatMessage.Message, TriggerMessage)) { return; }
 
             String replyMessage = String.IsNullOrWhiteSpace(ReplyMessage) ? TriggerMessage : ReplyMessage;
 
@@ -85,7 +80,7 @@ namespace Chubberino.Client.Commands.Settings
 
                 String replyMessage = String.IsNullOrWhiteSpace(ReplyMessage) ? TriggerMessage : ReplyMessage;
 
-                Console.WriteLine($"Replying to any message that {CompareType} \"{replyMessage}\"");
+                Console.WriteLine($"Replying to any message that {Comparator.Name} \"{replyMessage}\"");
             }
             else
             {
@@ -100,25 +95,9 @@ namespace Chubberino.Client.Commands.Settings
             {
                 case "u":
                 case "user":
+                case "users":
                     switch (arguments.FirstOrDefault())
                     {
-
-                        case "a":
-                        case "add":
-                            String userToAdd = arguments.Skip(1).FirstOrDefault();
-                            if (userToAdd != null)
-                            {
-                                UsersToReplyTo.Add(userToAdd.ToLower());
-                            }
-                            break;
-                        case "r":
-                        case "remove":
-                            String userToRemove = arguments.Skip(1).FirstOrDefault();
-                            if (userToRemove != null)
-                            {
-                                UsersToReplyTo.Remove(userToRemove.ToLower());
-                            }
-                            break;
                         case "c":
                         case "clear":
                             UsersToReplyTo.Clear();
@@ -133,15 +112,13 @@ namespace Chubberino.Client.Commands.Settings
                         case "c":
                         case "contain":
                         case "contains":
-                            Comparator = (actualMessage, replyMessage) => actualMessage.Contains(replyMessage);
-                            CompareType = "contains";
+                            Comparator = ContainsComparator;
                             break;
                         case "e":
                         case "equal":
                         case "equals":
                         default:
-                            Comparator = (actualMessage, replyMessage) => actualMessage == replyMessage;
-                            CompareType = "equals";
+                            Comparator = EqualsComparator;
                             break;
                     }
                     break;
@@ -167,7 +144,42 @@ namespace Chubberino.Client.Commands.Settings
             }
 
             return true;
+        }
 
+        public override Boolean Add(String property, IEnumerable<String> arguments)
+        {
+            switch (property)
+            {
+                case "u":
+                case "user":
+                case "users":
+                    Int32 beforeCount = UsersToReplyTo.Count;
+                    foreach (String username in arguments)
+                    {
+                        UsersToReplyTo.Add(username);
+                    }
+                    return beforeCount != UsersToReplyTo.Count;
+                default:
+                    return false;
+            }
+        }
+
+        public override Boolean Remove(String property, IEnumerable<String> arguments)
+        {
+            switch (property)
+            {
+                case "u":
+                case "user":
+                case "users":
+                    Int32 beforeCount = UsersToReplyTo.Count;
+                    foreach (String username in arguments)
+                    {
+                        UsersToReplyTo.Remove(username);
+                    }
+                    return beforeCount != UsersToReplyTo.Count;
+                default:
+                    return false;
+            }
         }
 
         public override String GetHelp()
@@ -184,11 +196,8 @@ usage: reply
 set:
     to - the trigger message to check against whether to reply to.
 
-    user [add|remove|clear]     - The users to reply to. If blank, will reply
+    user                        - The users to reply to. If blank, will reply
                                   to any user.
-        add (default)           - Add the specified user.
-        remove                  - Remove the specified user.
-        clear                   - Remove all listed users.
 
     comparator [equals|contains] - Specifies how to use compare the trigger
                                    message with any incoming messages
@@ -203,6 +212,12 @@ set:
     with - the message to reply with when a success match with the trigger
            message has been found. By default, '@ <message>', where @ is
            '@userNameToReplyTo'.
+
+add:
+    user        - The users to reply to.
+
+remove:
+    user        - The users to reply to.
 ";
         }
     }
