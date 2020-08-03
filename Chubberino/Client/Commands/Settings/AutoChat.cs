@@ -30,6 +30,7 @@ namespace Chubberino.Client.Commands.Settings
         private void TwitchClient_OnHostingStarted(Object sender, OnHostingStartedArgs e)
         {
             // Stop when stream ends and hosting another channel.
+            Console.WriteLine($"!!! {e.HostingStarted.HostingChannel} started hosting {e.HostingStarted.TargetChannel}. Stopped autochat.");
             IsEnabled = false;
         }
 
