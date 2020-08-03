@@ -83,11 +83,7 @@ namespace Chubberino.Client
         private void Client_OnConnectionError(Object sender, OnConnectionErrorArgs e)
         {
             Console.WriteLine($"!! Connection Error!! {e.Error.Message}");
-            Console.WriteLine($"Disconnecting...");
-            TwitchClient.Disconnect();
-            Console.WriteLine($"Reconnecting...");
-            TwitchClient.Reconnect();
-            Console.WriteLine($"Done.");
+            ShouldContinue = false;
         }
 
         private void Client_OnConnected(Object sender, OnConnectedArgs e)
