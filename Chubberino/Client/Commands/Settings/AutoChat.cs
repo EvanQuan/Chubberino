@@ -13,7 +13,7 @@ namespace Chubberino.Client.Commands.Settings
     {
         private ConcurrentQueue<String> PreviousMessages { get; }
 
-        private IEnumerable<Int32> SpamMessageCount { get; set; } = new Int32[] { 30, 25, 18 };
+        private IEnumerable<Int32> SpamMessageCounts { get; set; } = new Int32[] { 30, 25, 20 };
 
         private Int32 GeneralMessageCount { get; set; } = 35;
 
@@ -58,7 +58,7 @@ namespace Chubberino.Client.Commands.Settings
                 // avoid copying old messages.
                 PreviousMessages.Clear();
             }
-            else if (SpamMessageCount.Any(count => PreviousMessages.Count >= count))
+            else if (SpamMessageCounts.Any(count => PreviousMessages.Count >= count))
             {
                 // Get the most common message from the last SpamMessageCount
                 // number of messages, as long as there is more than one
