@@ -17,9 +17,12 @@ namespace Chubberino.Client.Commands.Settings
 
         private Int32 CurrentCount { get; set; }
 
+        private String Prefix { get; set; } = String.Empty;
+
         public override String Status => base.Status
             + $"\n\tstart: {StartingNumber}"
-            + $"\n\tinterval: {Repeater.Interval.TotalSeconds} seconds";
+            + $"\n\tinterval: {Repeater.Interval.TotalSeconds} seconds"
+            + $"\n\tprefix: {Prefix}";
 
         public Count(ITwitchClient client, IMessageSpooler spooler, IRepeater repeater)
             : base(client, spooler)
@@ -59,6 +62,10 @@ namespace Chubberino.Client.Commands.Settings
                         return true;
                     }
                     return false;
+                case "p":
+                case "prefix":
+                    Prefix = String.Join(" ", arguments);
+                    return true;
                 default:
                     return false;
             }
@@ -66,7 +73,7 @@ namespace Chubberino.Client.Commands.Settings
 
         private void SpoolCount()
         {
-            Spooler.SpoolMessage($"{CurrentCount++}");
+            Spooler.SpoolMessage($"{Prefix} {CurrentCount++}");
         }
     }
 }
