@@ -40,13 +40,13 @@ namespace Chubberino.Client.Commands.Settings
                 // If this is end of the current pyramid
                 if (block == PyramidBlock && TallestPyramidHeight >= MinimumRelevantPyramidHeight && CurrentPyramidHeight == 2)
                 {
-                    PyramidContributorUsernames.Add(e.ChatMessage.Username);
+                    PyramidContributorUsernames.Add(e.ChatMessage.DisplayName);
                     SpoolPyramidSuccessMessage();
                 }
                 else
                 {
                     // If a previous pyramid was broken by starting a new pyramid
-                    SpoolPyramidFailedMessage(e.ChatMessage.Username);
+                    SpoolPyramidFailedMessage(e.ChatMessage.DisplayName);
                 }
 
                 // Successfully started a new pyramid
@@ -54,7 +54,7 @@ namespace Chubberino.Client.Commands.Settings
                 CurrentPyramidHeight = 1;
                 TallestPyramidHeight = 1;
                 PyramidContributorUsernames.Clear();
-                PyramidContributorUsernames.Add(e.ChatMessage.Username);
+                PyramidContributorUsernames.Add(e.ChatMessage.DisplayName);
             }
             else if (PyramidBlock != null)
             {
@@ -75,19 +75,19 @@ namespace Chubberino.Client.Commands.Settings
                         // Continuing to build up
                         CurrentPyramidHeight++;
                         TallestPyramidHeight++;
-                        PyramidContributorUsernames.Add(e.ChatMessage.Username);
+                        PyramidContributorUsernames.Add(e.ChatMessage.DisplayName);
                     }
                     else if (cleanTokensCount == CurrentPyramidHeight - 1)
                     {
                         // Switched to build down or continuing down
                         BuildingUp = false;
                         CurrentPyramidHeight--;
-                        PyramidContributorUsernames.Add(e.ChatMessage.Username);
+                        PyramidContributorUsernames.Add(e.ChatMessage.DisplayName);
                     }
                     else
                     {
                         // Broke the pyramid in a way that does not start a new pyramid.
-                        SpoolPyramidFailedMessage(e.ChatMessage.Username);
+                        SpoolPyramidFailedMessage(e.ChatMessage.DisplayName);
                         BuildingUp = true; // for the next pyramid
                         CurrentPyramidHeight = 0;
                         TallestPyramidHeight = 0;

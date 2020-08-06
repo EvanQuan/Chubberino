@@ -81,7 +81,7 @@ namespace Chubberino.Client.Commands.Settings
                 {
                     // We are at the bottom and have completed the jimbox.
                     CurrentStage = JimboxStage.Bottom;
-                    Contributors.Add(e.ChatMessage.Username);
+                    Contributors.Add(e.ChatMessage.DisplayName);
                     SpoolSuccessMessage();
                     Border = null;
                     Contributors.Clear();
@@ -92,18 +92,18 @@ namespace Chubberino.Client.Commands.Settings
                     CurrentStage = JimboxStage.Top;
                     Border = tokens[0];
                     Contributors.Clear();
-                    Contributors.Add(e.ChatMessage.Username);
+                    Contributors.Add(e.ChatMessage.DisplayName);
                 }
             }
             else if (CurrentStage == JimboxStage.Top && IsEyes(tokens))
             {
                 CurrentStage = JimboxStage.Eyes;
-                Contributors.Add(e.ChatMessage.Username);
+                Contributors.Add(e.ChatMessage.DisplayName);
             }
             else if (CurrentStage == JimboxStage.Eyes && IsMouth(tokens))
             {
                 CurrentStage = JimboxStage.Mouth;
-                Contributors.Add(e.ChatMessage.Username);
+                Contributors.Add(e.ChatMessage.DisplayName);
             }
             else
             {

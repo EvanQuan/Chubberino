@@ -67,7 +67,7 @@ namespace Chubberino.Client.Commands.Settings
 
             String replyMessage = String.IsNullOrWhiteSpace(ReplyMessage) ? TriggerMessage : ReplyMessage;
 
-            Spooler.SpoolMessage($"@{e.ChatMessage.Username} {replyMessage}");
+            Spooler.SpoolMessage($"@{e.ChatMessage.DisplayName} {replyMessage}");
         }
 
         public override void Execute(IEnumerable<String> arguments)

@@ -28,7 +28,7 @@ namespace Chubberino.Client.Commands.Settings
 
             if (UsersToPogO.Contains(e.ChatMessage.Username))
             {
-                Spooler.SpoolMessage($"@{e.ChatMessage.Username} PogO");
+                Spooler.SpoolMessage($"@{e.ChatMessage.DisplayName} PogO");
             }
         }
 
