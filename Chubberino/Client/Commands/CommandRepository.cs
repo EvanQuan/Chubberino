@@ -22,6 +22,7 @@ namespace Chubberino.Client.Commands
                 new AutoPogO(client, spooler),
                 new Color(client, spooler),
                 new Copy(client, spooler),
+                new Count(client, spooler, new Repeater()),
                 new Greet(client, spooler),
                 new Jimbox(client, spooler),
                 new Join(client, spooler),

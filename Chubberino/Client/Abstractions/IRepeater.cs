@@ -8,9 +8,10 @@ namespace Chubberino.Client.Abstractions
     public interface IRepeater
     {
         /// <summary>
-        /// Specifies if the repeater has already started.
+        /// Specifies if the repeater is currently executing
+        /// <see cref="Action"/> at the specified <see cref="Interval"/>.
         /// </summary>
-        Boolean IsRunning { get; }
+        Boolean IsRunning { get; set; }
 
         /// <summary>
         /// Interval to repeat <see cref="Action"/>.
@@ -21,15 +22,5 @@ namespace Chubberino.Client.Abstractions
         /// Action to repeat at the specified <see cref="Interval"/>.
         /// </summary>
         Action Action { get; set; }
-
-        /// <summary>
-        /// Start executing <see cref="Action"/> at the specified <see cref="Interval"/>.
-        /// </summary>
-        void Start();
-
-        /// <summary>
-        /// Stop executing <see cref="Action"/>.
-        /// </summary>
-        void Stop();
     }
 }

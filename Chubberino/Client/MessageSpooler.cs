@@ -1,6 +1,5 @@
 ﻿using Chubberino.Client.Abstractions;
 using System;
-using System.Collections.Concurrent;
 using TwitchLib.Client.Exceptions;
 using TwitchLib.Client.Interfaces;
 
