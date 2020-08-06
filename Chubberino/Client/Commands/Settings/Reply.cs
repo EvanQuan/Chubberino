@@ -19,7 +19,7 @@ namespace Chubberino.Client.Commands.Settings
         /// <summary>
         /// The message to trigger a reply.
         /// </summary>
-        private String TriggerMessage { get; set; }
+        private String TriggerMessage { get; set; } = String.Empty;
 
         /// <summary>
         /// The message to reply with.
@@ -67,26 +67,9 @@ namespace Chubberino.Client.Commands.Settings
 
             String replyMessage = String.IsNullOrWhiteSpace(ReplyMessage) ? TriggerMessage : ReplyMessage;
 
-            Spooler.SpoolMessage($"@{e.ChatMessage.DisplayName} {replyMessage}");
-        }
+            String replyMessageWithUserName = replyMessage.Replace("@", $"@{e.ChatMessage.DisplayName}");
 
-        public override void Execute(IEnumerable<String> arguments)
-        {
-            IsEnabled = arguments.Count() > 0;
-
-            if (IsEnabled)
-            {
-                TriggerMessage = String.Join(" ", arguments);
-
-                String replyMessage = String.IsNullOrWhiteSpace(ReplyMessage) ? TriggerMessage : ReplyMessage;
-
-                Console.WriteLine($"Replying to any message that {Comparator.Name} \"{replyMessage}\"");
-            }
-            else
-            {
-                TriggerMessage = null;
-                Console.WriteLine("Reply disabled");
-            }
+            Spooler.SpoolMessage(replyMessageWithUserName);
         }
 
         public override Boolean Set(String property, IEnumerable<String> arguments)
