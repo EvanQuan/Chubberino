@@ -20,7 +20,10 @@ namespace Chubberino.Client.Commands.Settings
 
         private Int32 GeneralMessageCount { get; set; } = 35;
 
-        private Int32 MinimumDuplicateCount { get; set; } = 3;
+        private UInt32 MinimumDuplicateCount { get; set; } = 3;
+
+        public override String Status => base.Status
+            + $"\n\tCount: {MinimumDuplicateCount}";
 
         public AutoChat(ITwitchClient client, IMessageSpooler spooler, IStopSettingStrategy stopSettingStrategy)
             : base(client, spooler)
@@ -29,6 +32,22 @@ namespace Chubberino.Client.Commands.Settings
             StopSettingStrategy = stopSettingStrategy;
             TwitchClient.OnHostingStarted += TwitchClient_OnHostingStarted;
             TwitchClient.OnMessageReceived += TwitchClient_OnMessageReceived;
+        }
+
+        public override Boolean Set(String property, IEnumerable<String> arguments)
+        {
+            switch (property.ToLower())
+            {
+                case "c":
+                case "count":
+                    if (UInt32.TryParse(arguments.FirstOrDefault(), out UInt32 result))
+                    {
+                        MinimumDuplicateCount = result;
+                        return true;
+                    }
+                    break;
+            }
+            return false;
         }
 
         private void TwitchClient_OnHostingStarted(Object sender, OnHostingStartedArgs e)
