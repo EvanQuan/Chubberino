@@ -15,8 +15,6 @@ namespace Chubberino.Client.Commands.Strategies
             "stop",
             "clean",
             "ban",
-            "time",
-            "out",
             "timeout",
             TwitchInfo.BotUsername
         };
