@@ -10,7 +10,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.UsingReply
 
         public WhenSetting()
         {
-            Sut = new Repeat(TwitchClient.Object, Spooler.Object);
+            Sut = new Repeat(MockedTwitchClient.Object, MockedSpooler.Object, MockedRepeater.Object, MockedStopSettingStrategy.Object);
         }
 
         [Theory]
@@ -23,7 +23,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.UsingReply
         {
             Sut.Set(property, new String[] { value });
 
-            Assert.Equal(expectedIntervalSeconds, Spooler.Object.Interval.TotalSeconds);
+            Assert.Equal(expectedIntervalSeconds, MockedRepeater.Object.Interval.TotalSeconds);
         }
     }
 }

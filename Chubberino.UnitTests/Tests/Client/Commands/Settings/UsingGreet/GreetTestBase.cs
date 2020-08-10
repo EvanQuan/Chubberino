@@ -11,7 +11,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.UsingGreet
 
         public GreetTestBase()
         {
-            Sut = new Greet(TwitchClient.Object, Spooler.Object);
+            Sut = new Greet(MockedTwitchClient.Object, MockedSpooler.Object);
         }
     }
 }

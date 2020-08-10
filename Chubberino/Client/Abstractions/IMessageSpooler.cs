@@ -6,14 +6,8 @@ namespace Chubberino.Client.Abstractions
     {
         String ChannelName { get; }
 
-        String RepeatMessage { get; set; }
-
-        TimeSpan Interval { get; set; }
-
         void SetChannel(String channelName);
 
         void SpoolMessage(String message);
-
-        void Start();
     }
 }

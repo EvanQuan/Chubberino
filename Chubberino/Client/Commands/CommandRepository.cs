@@ -1,6 +1,7 @@
 ﻿using Chubberino.Client.Abstractions;
 using Chubberino.Client.Commands.Settings;
 using Chubberino.Client.Commands.Settings.Replies;
+using Chubberino.Client.Commands.Strategies;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,9 +17,11 @@ namespace Chubberino.Client.Commands
 
         public CommandRepository(ITwitchClient client, IMessageSpooler spooler)
         {
+            var stopSettingStrategy = new StopSettingStrategy();
+
             Commands = new List<ICommand>()
             {
-                new AutoChat(client, spooler),
+                new AutoChat(client, spooler, stopSettingStrategy),
                 new AutoPogO(client, spooler),
                 new Color(client, spooler),
                 new Copy(client, spooler),
@@ -28,7 +31,7 @@ namespace Chubberino.Client.Commands
                 new Join(client, spooler),
                 new Log(client, spooler),
                 new MockStreamElements(client, spooler),
-                new Repeat(client, spooler),
+                new Repeat(client, spooler, new Repeater(), stopSettingStrategy),
                 new Reply(client, spooler, new EqualsComparator(), new ContainsComparator()),
                 new TimeoutAlert(client, spooler),
                 new TrackJimbox(client, spooler),

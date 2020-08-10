@@ -19,6 +19,11 @@ namespace Chubberino.Client.Abstractions
         TimeSpan Interval { get; set; }
 
         /// <summary>
+        /// Interval variance for each <see cref="Action"/> repeated.
+        /// </summary>
+        TimeSpan Variance { get; set; }
+
+        /// <summary>
         /// Action to repeat at the specified <see cref="Interval"/>.
         /// </summary>
         Action Action { get; set; }

@@ -10,6 +10,8 @@ namespace Chubberino.Client.Commands
     /// </summary>
     public sealed class Repeater : IRepeater
     {
+        private Random Random { get; set; } = new Random();
+
         private Boolean isRunning = false;
 
         /// <summary>
@@ -40,6 +42,8 @@ namespace Chubberino.Client.Commands
         /// </summary>
         public Action Action { get; set; }
 
+        public TimeSpan Variance { get; set; } = TimeSpan.FromSeconds(0.3);
+
         /// <summary>
         /// Start executing <see cref="Action"/> at the specified <see cref="Interval"/>.
         /// </summary>
@@ -56,8 +60,13 @@ namespace Chubberino.Client.Commands
             while (isRunning)
             {
                 Action();
-                Thread.Sleep(Interval);
+                Thread.Sleep(Interval + GetVariance());
             }
+        }
+
+        private TimeSpan GetVariance()
+        {
+            return TimeSpan.FromMilliseconds(Random.Next(-(Int32)Variance.TotalMilliseconds, (Int32)Variance.TotalMilliseconds));
         }
     }
 }

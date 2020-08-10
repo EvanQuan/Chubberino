@@ -19,10 +19,14 @@ namespace Chubberino.Client.Commands.Settings
 
         private String Prefix { get; set; } = String.Empty;
 
+        private String Suffix { get; set; } = String.Empty;
+
         public override String Status => base.Status
             + $"\n\tstart: {StartingNumber}"
+            + $"\n\tcurrent: {CurrentCount}"
             + $"\n\tinterval: {Repeater.Interval.TotalSeconds} seconds"
-            + $"\n\tprefix: {Prefix}";
+            + $"\n\tprefix: {Prefix}"
+            + $"\n\tsuffix: {Suffix}";
 
         public Count(ITwitchClient client, IMessageSpooler spooler, IRepeater repeater)
             : base(client, spooler)
@@ -36,9 +40,6 @@ namespace Chubberino.Client.Commands.Settings
         {
             base.Execute(arguments);
 
-            // When both starting and stopping, reset the current count.
-            CurrentCount = StartingNumber;
-
             Repeater.IsRunning = IsEnabled;
         }
 
@@ -51,6 +52,8 @@ namespace Chubberino.Client.Commands.Settings
                     if (Int32.TryParse(arguments.FirstOrDefault(), out Int32 startigNumber))
                     {
                         StartingNumber = startigNumber;
+                        // Reset the current count.
+                        CurrentCount = StartingNumber;
                         return true;
                     }
                     return false;
@@ -66,6 +69,9 @@ namespace Chubberino.Client.Commands.Settings
                 case "prefix":
                     Prefix = String.Join(" ", arguments);
                     return true;
+                case "suffix":
+                    Suffix = String.Join(" ", arguments);
+                    return true;
                 default:
                     return false;
             }
@@ -73,7 +79,7 @@ namespace Chubberino.Client.Commands.Settings
 
         private void SpoolCount()
         {
-            Spooler.SpoolMessage($"{Prefix} {CurrentCount++}");
+            Spooler.SpoolMessage($"{Prefix} {CurrentCount++} {Suffix}");
         }
     }
 }

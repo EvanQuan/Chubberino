@@ -1,8 +1,10 @@
 ﻿using Chubberino.Client.Abstractions;
+using Chubberino.Client.Commands.Strategies;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms.Automation;
+using TwitchLib.Client.Events;
 using TwitchLib.Client.Interfaces;
 
 namespace Chubberino.Client.Commands.Settings
@@ -15,32 +17,78 @@ namespace Chubberino.Client.Commands.Settings
     public sealed class Repeat : Setting
     {
         private String RepeatMessage { get; set; }
-        public Repeat(ITwitchClient client, IMessageSpooler spooler)
+
+        private IRepeater Repeater { get; }
+
+        private IStopSettingStrategy StopSettingStrategy { get; }
+
+        public Repeat(ITwitchClient client, IMessageSpooler spooler, IRepeater repeater, IStopSettingStrategy stopSettingStrategy)
             : base(client, spooler)
         {
+            Repeater = repeater;
+            Repeater.Action = SpoolRepeatMessages;
+            Repeater.Interval = TimeSpan.FromSeconds(1.8);
+            StopSettingStrategy = stopSettingStrategy;
+            TwitchClient.OnMessageReceived += TwitchClient_OnMessageReceived;
+        }
+
+        private void SpoolRepeatMessages()
+        {
+            Spooler.SpoolMessage(RepeatMessage);
+        }
+
+        private void TwitchClient_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
+        {
+            if (!IsEnabled) { return; }
+
+            if (StopSettingStrategy.ShouldStop(e.ChatMessage))
+            {
+                IsEnabled = false;
+                Repeater.IsRunning = false;
+                Console.WriteLine("! ! ! STOPPED REPEAT ! ! !");
+                Console.WriteLine($"Moderator {e.ChatMessage.DisplayName} said: \"{e.ChatMessage.Message}\"");
+            }
         }
 
         public override String Status => (String.IsNullOrWhiteSpace(RepeatMessage)
             ? "disabled"
             : RepeatMessage)
-            + $" Interval: {Spooler.Interval.TotalSeconds} seconds";
+            + $"\n\tInterval: {Repeater.Interval.TotalSeconds} seconds"
+            + $"\n\tVariance: {Repeater.Variance.TotalSeconds} seconds";
 
         public override void Execute(IEnumerable<String> arguments)
         {
-            RepeatMessage = String.Join(" ", arguments);
-            Spooler.RepeatMessage = RepeatMessage;
+            String proposedRepeatMessage = String.Join(" ", arguments);
+
+            if (String.IsNullOrEmpty(proposedRepeatMessage))
+            {
+                // No arguments toggles.
+                IsEnabled = !IsEnabled;
+            }
+            else
+            {
+                // Update the message and keep repeating.
+                RepeatMessage = proposedRepeatMessage;
+                IsEnabled = true;
+            }
+
+            Repeater.IsRunning = IsEnabled;
         }
 
         public override Boolean Set(String property, IEnumerable<String> arguments)
         {
             switch (property?.ToLower())
             {
+                case "m":
+                case "message":
+                    RepeatMessage = String.Join(" ", arguments);
+                    return true;
                 case "i":
                 case "interval":
                 {
                     if (Double.TryParse(arguments.FirstOrDefault(), out Double result))
                     {
-                        Spooler.Interval = result >= 0
+                        Repeater.Interval = result >= 0
                             ? TimeSpan.FromSeconds(result)
                             : TimeSpan.Zero;
 

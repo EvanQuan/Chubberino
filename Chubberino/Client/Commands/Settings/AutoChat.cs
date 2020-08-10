@@ -1,4 +1,5 @@
 ﻿using Chubberino.Client.Abstractions;
+using Chubberino.Client.Commands.Strategies;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -15,16 +16,19 @@ namespace Chubberino.Client.Commands.Settings
 
         private IEnumerable<Int32> SpamMessageCounts { get; set; } = new Int32[] { 30, 25, 20 };
 
+        private IStopSettingStrategy StopSettingStrategy { get; }
+
         private Int32 GeneralMessageCount { get; set; } = 35;
 
         private Int32 MinimumDuplicateCount { get; set; } = 3;
 
-        public AutoChat(ITwitchClient client, IMessageSpooler spooler)
+        public AutoChat(ITwitchClient client, IMessageSpooler spooler, IStopSettingStrategy stopSettingStrategy)
             : base(client, spooler)
         {
+            PreviousMessages = new ConcurrentQueue<String>();
+            StopSettingStrategy = stopSettingStrategy;
             TwitchClient.OnHostingStarted += TwitchClient_OnHostingStarted;
             TwitchClient.OnMessageReceived += TwitchClient_OnMessageReceived;
-            PreviousMessages = new ConcurrentQueue<String>();
         }
 
         private void TwitchClient_OnHostingStarted(Object sender, OnHostingStartedArgs e)
@@ -37,6 +41,8 @@ namespace Chubberino.Client.Commands.Settings
         private void TwitchClient_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
         {
             if (!IsEnabled) { return; }
+
+            if (ShouldStop(e.ChatMessage)) { return; }
 
             if (ShouldIgnore(e.ChatMessage)) { return; }
 
@@ -73,6 +79,18 @@ namespace Chubberino.Client.Commands.Settings
                 }
 
             }
+        }
+
+        private Boolean ShouldStop(ChatMessage chatMessage)
+        {
+            if (StopSettingStrategy.ShouldStop(chatMessage))
+            {
+                IsEnabled = false;
+                Console.WriteLine("! ! ! STOPPED AUTOCHAT ! ! !");
+                Console.WriteLine($"Moderator {chatMessage.DisplayName} said: \"{chatMessage.Message}\"");
+                return true;
+            }
+            return false;
         }
 
         private String GetMessageToSend()
