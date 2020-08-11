@@ -50,6 +50,16 @@ namespace Chubberino.Client.Commands.Settings
             return false;
         }
 
+        public override void Execute(IEnumerable<String> arguments)
+        {
+            base.Execute(arguments);
+
+            if (!IsEnabled)
+            {
+                PreviousMessages.Clear();
+            }
+        }
+
         private void TwitchClient_OnHostingStarted(Object sender, OnHostingStartedArgs e)
         {
             // Stop when stream ends and hosting another channel.
@@ -65,7 +75,9 @@ namespace Chubberino.Client.Commands.Settings
 
             if (ShouldIgnore(e.ChatMessage)) { return; }
 
-            PreviousMessages.Enqueue(e.ChatMessage.Message);
+            String filteredMessage = FilterMessage(e.ChatMessage.Message);
+
+            PreviousMessages.Enqueue(filteredMessage);
 
             if (PreviousMessages.Count >= GeneralMessageCount)
             {
@@ -98,6 +110,11 @@ namespace Chubberino.Client.Commands.Settings
                 }
 
             }
+        }
+
+        private String FilterMessage(String message)
+        {
+            return message;
         }
 
         private Boolean ShouldStop(ChatMessage chatMessage)
