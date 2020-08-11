@@ -27,7 +27,7 @@ namespace Chubberino.Client.Commands.Settings
         {
             Repeater = repeater;
             Repeater.Action = SpoolRepeatMessages;
-            Repeater.Interval = TimeSpan.FromSeconds(1.8);
+            Repeater.Interval = TimeSpan.FromSeconds(1.9);
             StopSettingStrategy = stopSettingStrategy;
             TwitchClient.OnMessageReceived += TwitchClient_OnMessageReceived;
         }
