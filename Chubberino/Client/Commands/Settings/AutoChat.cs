@@ -14,7 +14,7 @@ namespace Chubberino.Client.Commands.Settings
     {
         private ConcurrentQueue<String> PreviousMessages { get; }
 
-        private IEnumerable<Int32> SpamMessageCounts { get; set; } = new Int32[] { 30, 25, 20 };
+        private IEnumerable<Int32> SpamMessageCounts { get; set; } = new Int32[] { 30, 25 };
 
         private IStopSettingStrategy StopSettingStrategy { get; }
 
@@ -75,9 +75,7 @@ namespace Chubberino.Client.Commands.Settings
 
             if (ShouldIgnore(e.ChatMessage)) { return; }
 
-            String filteredMessage = FilterMessage(e.ChatMessage.Message);
-
-            PreviousMessages.Enqueue(filteredMessage);
+            PreviousMessages.Enqueue(e.ChatMessage.Message);
 
             if (PreviousMessages.Count >= GeneralMessageCount)
             {
