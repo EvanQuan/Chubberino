@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using TwitchLib.Api.Core.Extensions.System;
 using TwitchLib.Client.Interfaces;
 
 namespace Chubberino.Client.Commands
@@ -19,7 +20,7 @@ namespace Chubberino.Client.Commands
         {
             var stopSettingStrategy = new StopSettingStrategy();
 
-            Commands = new List<ICommand>()
+            var commands = new List<ICommand>()
             {
                 new AutoChat(client, spooler, stopSettingStrategy),
                 new AutoPogO(client, spooler),
@@ -38,6 +39,12 @@ namespace Chubberino.Client.Commands
                 new TrackPyramids(client, spooler),
                 new YepKyle(client, spooler),
             };
+
+            var disableAll = new DisableAll(client, spooler, commands);
+
+            commands.Add(disableAll);
+
+            Commands = commands;
         }
 
         public String GetStatus()
@@ -46,7 +53,7 @@ namespace Chubberino.Client.Commands
 
             foreach (ICommand command in Commands)
             {
-                if (command is Setting setting)
+                if (command is ISetting setting)
                 {
                     stringBuilder.Append(setting.Name + ": " + setting.Status + Environment.NewLine);
                 }
