@@ -27,7 +27,7 @@ namespace Chubberino.Client.Commands.Settings
         {
             Repeater = repeater;
             Repeater.Action = SpoolRepeatMessages;
-            Repeater.Interval = TimeSpan.FromSeconds(1.9);
+            Repeater.Interval = TimeSpan.FromSeconds(2.0);
             StopSettingStrategy = stopSettingStrategy;
             TwitchClient.OnMessageReceived += TwitchClient_OnMessageReceived;
         }
@@ -50,9 +50,8 @@ namespace Chubberino.Client.Commands.Settings
             }
         }
 
-        public override String Status => (String.IsNullOrWhiteSpace(RepeatMessage)
-            ? "disabled"
-            : RepeatMessage)
+        public override String Status => base.Status
+            + $"\n\tMessage: {RepeatMessage}"
             + $"\n\tInterval: {Repeater.Interval.TotalSeconds} seconds"
             + $"\n\tVariance: {Repeater.Variance.TotalSeconds} seconds";
 
@@ -89,6 +88,19 @@ namespace Chubberino.Client.Commands.Settings
                     if (Double.TryParse(arguments.FirstOrDefault(), out Double result))
                     {
                         Repeater.Interval = result >= 0
+                            ? TimeSpan.FromSeconds(result)
+                            : TimeSpan.Zero;
+
+                        return true;
+                    }
+                }
+                break;
+                case "v":
+                case "variance":
+                {
+                    if (Double.TryParse(arguments.FirstOrDefault(), out Double result))
+                    {
+                        Repeater.Variance = result >= 0
                             ? TimeSpan.FromSeconds(result)
                             : TimeSpan.Zero;
 
