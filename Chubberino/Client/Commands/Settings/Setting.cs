@@ -7,12 +7,33 @@ namespace Chubberino.Client.Commands.Settings
 {
     public abstract class Setting : Command, ISetting
     {
-        public Boolean IsEnabled { get; protected set; }
+        private Boolean isEnabled;
+
+        protected Action<ITwitchClient> Enable { get; set; }
+
+        protected Action<ITwitchClient> Disable { get; set; }
+
+        public Boolean IsEnabled
+        {
+            get => isEnabled;
+            set
+            {
+                isEnabled = value;
+                if (isEnabled)
+                {
+                    Enable(TwitchClient);
+                }
+                else
+                {
+                    Disable(TwitchClient);
+                }
+            }
+        }
 
         public virtual String Status => IsEnabled ? "enabled" : "disabled";
 
-        protected Setting(ITwitchClient client, IMessageSpooler spooler)
-            : base(client, spooler)
+        protected Setting(IExtendedClient client)
+            : base(client)
         {
         }
 

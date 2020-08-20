@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using TwitchLib.Client.Interfaces;
 
 namespace Chubberino.Client.Commands.Settings
 {
@@ -28,8 +27,8 @@ namespace Chubberino.Client.Commands.Settings
             + $"\n\tprefix: {Prefix}"
             + $"\n\tsuffix: {Suffix}";
 
-        public Count(ITwitchClient client, IMessageSpooler spooler, IRepeater repeater)
-            : base(client, spooler)
+        public Count(IExtendedClient client, IRepeater repeater)
+            : base(client)
         {
             Repeater = repeater;
             Repeater.Action = SpoolCount;
@@ -79,7 +78,7 @@ namespace Chubberino.Client.Commands.Settings
 
         private void SpoolCount()
         {
-            Spooler.SpoolMessage($"{Prefix} {CurrentCount++} {Suffix}");
+            TwitchClient.SpoolMessage($"{Prefix} {CurrentCount++} {Suffix}");
         }
     }
 }

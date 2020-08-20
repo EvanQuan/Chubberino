@@ -29,7 +29,6 @@ namespace Chubberino.Client.Abstractions
         /// <see cref="IMessageSpooler"/>.
         /// </summary>
         /// <param name="twitchClient">New twitch client.</param>
-        /// <param name="messageSpooler">New message spooler.</param>
-        void Refresh(ITwitchClient twitchClient, IMessageSpooler messageSpooler);
+        void Refresh(IExtendedClient twitchClient);
     }
 }

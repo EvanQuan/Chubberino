@@ -7,9 +7,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands
 {
     public abstract class CommandTestBase
     {
-        protected Mock<ITwitchClient> MockedTwitchClient { get; }
-
-        protected Mock<IMessageSpooler> MockedSpooler { get; }
+        protected Mock<IExtendedClient> MockedTwitchClient { get; }
 
         protected Mock<IRepeater> MockedRepeater { get; }
 
@@ -17,9 +15,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands
 
         public CommandTestBase()
         {
-            MockedTwitchClient = new Mock<ITwitchClient>().SetupAllProperties();
-
-            MockedSpooler = new Mock<IMessageSpooler>().SetupAllProperties();
+            MockedTwitchClient = new Mock<IExtendedClient>().SetupAllProperties();
 
             MockedRepeater = new Mock<IRepeater>().SetupAllProperties();
 

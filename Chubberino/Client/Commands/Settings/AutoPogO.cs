@@ -3,7 +3,6 @@ using Chubberino.Client.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using TwitchLib.Client.Interfaces;
 
 namespace Chubberino.Client.Commands.Settings
 {
@@ -15,20 +14,25 @@ namespace Chubberino.Client.Commands.Settings
             + $"\n\tUsers:"
             + $"\n\t\t{UsersToPogO.ToLineDelimitedString(2)}";
 
-        public AutoPogO(ITwitchClient client, IMessageSpooler spooler)
-            : base(client, spooler)
+        public AutoPogO(IExtendedClient client)
+            : base(client)
         {
             UsersToPogO = new HashSet<String>();
-            TwitchClient.OnMessageReceived += TwitchClient_OnMessageReceived;
+            Enable = twitchClient =>
+            {
+                twitchClient.OnMessageReceived += TwitchClient_OnMessageReceived;
+            };
+            Disable = twitchClient =>
+            {
+                twitchClient.OnMessageReceived -= TwitchClient_OnMessageReceived;
+            };
         }
 
         private void TwitchClient_OnMessageReceived(Object sender, TwitchLib.Client.Events.OnMessageReceivedArgs e)
         {
-            if (!IsEnabled) { return; }
-
             if (UsersToPogO.Contains(e.ChatMessage.Username))
             {
-                Spooler.SpoolMessage($"@{e.ChatMessage.DisplayName} PogO");
+                TwitchClient.SpoolMessage($"@{e.ChatMessage.DisplayName} PogO");
             }
         }
 

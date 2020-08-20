@@ -3,7 +3,6 @@ using Chubberino.Client.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using TwitchLib.Client.Interfaces;
 
 namespace Chubberino.Client.Commands
 {
@@ -11,8 +10,8 @@ namespace Chubberino.Client.Commands
     {
         private String JoinedChannelName { get; set; }
 
-        public Join(ITwitchClient client, IMessageSpooler spooler)
-            : base(client, spooler)
+        public Join(IExtendedClient client)
+            : base(client)
         {
             TwitchClient.OnJoinedChannel += TwitchClient_OnJoinedChannel;
         }
@@ -29,7 +28,7 @@ namespace Chubberino.Client.Commands
             }
 
             JoinedChannelName = e.Channel;
-            Spooler.SetChannel(JoinedChannelName);
+            BotInfo.Instance.ChannelName = JoinedChannelName;
             Console.WriteLine($"Joined channel {JoinedChannelName}");
         }
 

@@ -5,7 +5,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using TwitchLib.Client.Events;
-using TwitchLib.Client.Interfaces;
 using TwitchLib.Client.Models;
 
 namespace Chubberino.Client.Commands.Settings
@@ -25,13 +24,21 @@ namespace Chubberino.Client.Commands.Settings
         public override String Status => base.Status
             + $"\n\tCount: {MinimumDuplicateCount}";
 
-        public AutoChat(ITwitchClient client, IMessageSpooler spooler, IStopSettingStrategy stopSettingStrategy)
-            : base(client, spooler)
+        public AutoChat(IExtendedClient client, IStopSettingStrategy stopSettingStrategy)
+            : base(client)
         {
             PreviousMessages = new ConcurrentQueue<String>();
             StopSettingStrategy = stopSettingStrategy;
-            TwitchClient.OnHostingStarted += TwitchClient_OnHostingStarted;
-            TwitchClient.OnMessageReceived += TwitchClient_OnMessageReceived;
+            Enable = twitchClient =>
+            {
+                twitchClient.OnHostingStarted += TwitchClient_OnHostingStarted;
+                twitchClient.OnMessageReceived += TwitchClient_OnMessageReceived;
+            };
+            Disable = twitchClient =>
+            {
+                twitchClient.OnHostingStarted -= TwitchClient_OnHostingStarted;
+                twitchClient.OnMessageReceived -= TwitchClient_OnMessageReceived;
+            };
         }
 
         public override Boolean Set(String property, IEnumerable<String> arguments)
@@ -86,7 +93,7 @@ namespace Chubberino.Client.Commands.Settings
 
                 if (message != null)
                 {
-                    Spooler.SpoolMessage(message);
+                    TwitchClient.SpoolMessage(message);
                 }
 
                 // Empty the last messages, whether one was sent or not to
@@ -102,7 +109,7 @@ namespace Chubberino.Client.Commands.Settings
 
                 if (message != null)
                 {
-                    Spooler.SpoolMessage(message);
+                    TwitchClient.SpoolMessage(message);
                     // Empty the last messages, if if one was sent.
                     PreviousMessages.Clear();
                 }

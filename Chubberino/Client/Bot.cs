@@ -4,9 +4,7 @@ using Chubberino.Client.Extensions;
 using System;
 using System.Linq;
 using System.Threading;
-using TwitchLib.Client;
 using TwitchLib.Client.Events;
-using TwitchLib.Client.Interfaces;
 using TwitchLib.Client.Models;
 using TwitchLib.Communication.Clients;
 using TwitchLib.Communication.Models;
@@ -15,48 +13,47 @@ namespace Chubberino.Client
 {
     internal class Bot : IDisposable
     {
-        private static TimeSpan ModeratorThrottlingPeriod { get; } = TimeSpan.FromSeconds(0.3);
+        public static Bot Instance { get; } = new Bot();
 
-        private static TimeSpan RegularThrottlingPeriod { get; } = TimeSpan.FromSeconds(1.5);
+        private TimeSpan CurrentThrottlingPeriod { get; set; }
 
         public BotState State { get; private set; }
 
-        private ITwitchClient TwitchClient { get; set; }
+        private IExtendedClient TwitchClient { get; set; }
 
         private ConnectionCredentials Credentials { get; } = new ConnectionCredentials(TwitchInfo.BotUsername, TwitchInfo.BotToken);
 
         private CommandRepository Commands { get; set; }
 
-        private IMessageSpooler Spooler { get; set; }
-
         private void CreateClient()
         {
-            InitializeTwitchClientAndSpooler();
-            Commands = new CommandRepository(TwitchClient, Spooler);
+            InitializeTwitchClientAndSpooler(BotInfo.Instance.RegularThrottlingPeriod);
+            Commands = new CommandRepository(TwitchClient);
         }
 
-        public Bot()
+        private Bot()
         {
             CreateClient();
         }
 
-        private void InitializeTwitchClientAndSpooler()
+        private void InitializeTwitchClientAndSpooler(TimeSpan throttlingPeriod)
         {
+            CurrentThrottlingPeriod = throttlingPeriod;
+
+            // Determine whether to throttle at regular or mod speed.
             var clientOptions = new ClientOptions
             {
                 MessagesAllowedInPeriod = 1,
-                ThrottlingPeriod = ModeratorThrottlingPeriod
+                ThrottlingPeriod = throttlingPeriod
             };
             WebSocketClient customClient = new WebSocketClient(clientOptions);
-            TwitchClient = new TwitchClient(customClient);
+            TwitchClient = new ExtendedClient(customClient);
 
             TwitchClient.Initialize(Credentials, TwitchInfo.InitialChannelName);
 
             TwitchClient.OnConnected += Client_OnConnected;
             TwitchClient.OnConnectionError += Client_OnConnectionError;
             TwitchClient.OnUserTimedout += Client_OnUserTimedout;
-
-            Spooler = new MessageSpooler(TwitchClient);
         }
 
         public Boolean Start()
@@ -67,7 +64,7 @@ namespace Chubberino.Client
             Boolean channelJoined = SpinWait.SpinUntil(() =>
             {
                 Thread.Sleep(TimeSpan.FromSeconds(1));
-                return !String.IsNullOrWhiteSpace(Spooler.ChannelName);
+                return !String.IsNullOrWhiteSpace(BotInfo.Instance.ChannelName);
             },
             TimeSpan.FromSeconds(60));
 
@@ -78,7 +75,7 @@ namespace Chubberino.Client
         public String GetPrompt()
         {
             return Environment.NewLine + Environment.NewLine + Commands.GetStatus() + Environment.NewLine
-                + $"[{Spooler.ChannelName}]> ";
+                + $"[{(BotInfo.Instance.IsModerator ? "Mod" : "Normal" )} {BotInfo.Instance.ChannelName}]> ";
         }
 
         private void Client_OnUserTimedout(Object sender, OnUserTimedoutArgs e)
@@ -88,9 +85,15 @@ namespace Chubberino.Client
         private void Client_OnConnectionError(Object sender, OnConnectionErrorArgs e)
         {
             Console.WriteLine($"!! Connection Error!! {e.Error.Message}");
-            InitializeTwitchClientAndSpooler();
-            Commands.RefreshAll(TwitchClient, Spooler);
+            Refresh(CurrentThrottlingPeriod);
             Console.WriteLine("!! Refreshed");
+        }
+
+        public void Refresh(TimeSpan throttlePeriod)
+        {
+            InitializeTwitchClientAndSpooler(throttlePeriod);
+            Commands.RefreshAll(TwitchClient);
+            Start();
         }
 
         private void Client_OnConnected(Object sender, OnConnectedArgs e)

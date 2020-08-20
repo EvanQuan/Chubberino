@@ -16,7 +16,7 @@ namespace Chubberino
             //Application.SetCompatibleTextRenderingDefault(false);
             //Application.Run(new Form1());
 
-            using var bot = new Bot();
+            using var bot = Bot.Instance;
 
             if (!bot.Start())
             {

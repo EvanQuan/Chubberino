@@ -53,17 +53,24 @@ namespace Chubberino.Client.Commands.Settings
         /// </summary>
         private String Border { get; set; }
 
-        public TrackJimbox(ITwitchClient client, IMessageSpooler spooler)
-            : base(client, spooler)
+        public TrackJimbox(IExtendedClient client)
+            : base(client)
         {
-            TwitchClient.OnMessageReceived += TwitchClient_OnMessageReceived;
+            Enable = twitchClient =>
+            {
+                twitchClient.OnMessageReceived += TwitchClient_OnMessageReceived;
+            };
+
+            Disable = twitchClient =>
+            {
+                twitchClient.OnMessageReceived -= TwitchClient_OnMessageReceived;
+            };
+
             Contributors = new HashSet<String>();
         }
 
         public void TwitchClient_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
         {
-            if (!IsEnabled) { return; }
-
             String cleanMessage = e.ChatMessage.Message.Trim(' ', Data.InvisibleCharacter);
 
             String[] tokens = cleanMessage.Split(' ');
@@ -117,11 +124,11 @@ namespace Chubberino.Client.Commands.Settings
         {
             if (Contributors.Count == 1)
             {
-                Spooler.SpoolMessage($"@{Contributors.Single()} Nice {Border} jimbox! peepoClap");
+                TwitchClient.SpoolMessage($"@{Contributors.Single()} Nice {Border} jimbox! peepoClap");
             }
             else
             {
-                Spooler.SpoolMessage($"@{String.Join(", @", Contributors)} Nice {Border} jimbox! Hooray teamwork! peepoClap");
+                TwitchClient.SpoolMessage($"@{String.Join(", @", Contributors)} Nice {Border} jimbox! Hooray teamwork! peepoClap");
             }
         }
 

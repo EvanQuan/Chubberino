@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using System.Timers;
 using TwitchLib.Client.Events;
 using TwitchLib.Client.Interfaces;

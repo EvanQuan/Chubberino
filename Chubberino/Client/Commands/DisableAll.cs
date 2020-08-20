@@ -9,8 +9,8 @@ namespace Chubberino.Client.Commands
     {
         public IEnumerable<ICommand> Commands { get; }
 
-        public DisableAll(ITwitchClient client, IMessageSpooler spooler, IEnumerable<ICommand> commands)
-            : base(client, spooler)
+        public DisableAll(IExtendedClient client, IEnumerable<ICommand> commands)
+            : base(client)
         {
             Commands = commands;
         }

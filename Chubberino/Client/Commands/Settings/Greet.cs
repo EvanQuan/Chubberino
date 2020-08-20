@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TwitchLib.Client.Events;
-using TwitchLib.Client.Interfaces;
 
 namespace Chubberino.Client.Commands.Settings
 {
@@ -32,21 +31,28 @@ namespace Chubberino.Client.Commands.Settings
             : "disabled")
             + $" Mode: {CurrentMode}";
 
-        public Greet(ITwitchClient client, IMessageSpooler spooler)
-            : base(client, spooler)
+        public Greet(IExtendedClient client)
+            : base(client)
         {
-            TwitchClient.OnUserJoined += TwitchClient_OnUserJoined;
+            Enable = twitchClient =>
+            {
+                twitchClient.OnUserJoined += TwitchClient_OnUserJoined;
+            };
+
+            Disable = twitchClient =>
+            {
+                twitchClient.OnUserJoined -= TwitchClient_OnUserJoined;
+            };
+
             Compliments = new ComplimentGenerator();
         }
 
         private void TwitchClient_OnUserJoined(Object sender, OnUserJoinedArgs e)
         {
-            if (!IsEnabled) { return; }
-
             // Don't count self
             if (e.Username.Equals(TwitchInfo.BotUsername, StringComparison.OrdinalIgnoreCase)) { return; }
 
-            Spooler.SpoolMessage($"@{e.Username} {Greeting} {(CurrentMode == Mode.Wholesome ? Compliments.GetCompliment() : String.Empty)}");
+            TwitchClient.SpoolMessage($"@{e.Username} {Greeting} {(CurrentMode == Mode.Wholesome ? Compliments.GetCompliment() : String.Empty)}");
         }
 
         public override void Execute(IEnumerable<String> arguments)

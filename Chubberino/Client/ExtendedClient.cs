@@ -1,28 +1,23 @@
 ﻿using Chubberino.Client.Abstractions;
+using Microsoft.Extensions.Logging;
 using System;
+using TwitchLib.Client;
+using TwitchLib.Client.Enums;
 using TwitchLib.Client.Exceptions;
-using TwitchLib.Client.Interfaces;
+using TwitchLib.Communication.Interfaces;
 
 namespace Chubberino.Client
 {
     /// <summary>
     /// Queues messages, and sends them over timed intervals.
     /// </summary>
-    public sealed class MessageSpooler : IMessageSpooler
+    public sealed class ExtendedClient : TwitchClient, IExtendedClient
     {
-        public String ChannelName { get; private set; } = String.Empty;
-
         private String PreviousMessage { get; set; }
-        public ITwitchClient TwitchClient { get; }
 
-        public MessageSpooler(ITwitchClient client)
+        public ExtendedClient(IClient client = null, ClientProtocol protocol = ClientProtocol.WebSocket, ILogger<TwitchClient> logger = null)
+            : base(client, protocol, logger)
         {
-            TwitchClient = client;
-        }
-
-        public void SetChannel(String channelName)
-        {
-            ChannelName = channelName;
         }
 
         private void SendMessage(String message)
@@ -34,7 +29,7 @@ namespace Chubberino.Client
 
             try
             {
-                TwitchClient.SendMessage(ChannelName, message);
+                SendMessage(BotInfo.Instance.ChannelName, message);
                 PreviousMessage = message;
             }
             catch (BadStateException e)

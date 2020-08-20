@@ -46,21 +46,27 @@ namespace Chubberino.Client.Commands.Settings
             .AppendLine($"\tusers: {(UsersToReplyTo.Count == 0 ? "< Any user >" : "\n\t\t" + String.Join("\n\t\t", UsersToReplyTo))}")
             .ToString();
 
-        public Reply(ITwitchClient client, IMessageSpooler spooler, IEqualsComparator equalsComparator, IContainsComparator containsComparator)
-            : base(client, spooler)
+        public Reply(IExtendedClient client, IEqualsComparator equalsComparator, IContainsComparator containsComparator)
+            : base(client)
         {
             UsersToReplyTo = new HashSet<String>();
             EqualsComparator = equalsComparator;
             ContainsComparator = containsComparator;
             Comparator = ContainsComparator;
 
-            TwitchClient.OnMessageReceived += TwitchClient_OnMessageReceived;
+            Enable = twitchClient =>
+            {
+                twitchClient.OnMessageReceived += TwitchClient_OnMessageReceived;
+            };
+
+            Disable = twitchClient =>
+            {
+                twitchClient.OnMessageReceived -= TwitchClient_OnMessageReceived;
+            };
         }
 
         private void TwitchClient_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
         {
-            if (!IsEnabled) { return; }
-
             if (!UsersToReplyTo.Contains(e.ChatMessage.Username)) { return; }
 
             if (!Comparator.Matches(e.ChatMessage.Message, TriggerMessage)) { return; }
@@ -69,7 +75,7 @@ namespace Chubberino.Client.Commands.Settings
 
             String replyMessageWithUserName = replyMessage.Replace("@", $"@{e.ChatMessage.DisplayName}");
 
-            Spooler.SpoolMessage(replyMessageWithUserName);
+            TwitchClient.SpoolMessage(replyMessageWithUserName);
         }
 
         public override Boolean Set(String property, IEnumerable<String> arguments)

@@ -4,11 +4,8 @@ using Chubberino.Client.Commands.Settings.Replies;
 using Chubberino.Client.Commands.Strategies;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Text;
-using TwitchLib.Api.Core.Extensions.System;
-using TwitchLib.Client.Interfaces;
 
 namespace Chubberino.Client.Commands
 {
@@ -16,42 +13,44 @@ namespace Chubberino.Client.Commands
     {
         private IReadOnlyList<ICommand> Commands { get; }
 
-        public CommandRepository(ITwitchClient client, IMessageSpooler spooler)
+        public CommandRepository(IExtendedClient client)
         {
             var stopSettingStrategy = new StopSettingStrategy();
 
             var commands = new List<ICommand>()
             {
-                new AutoChat(client, spooler, stopSettingStrategy),
-                new AutoPogO(client, spooler),
-                new Color(client, spooler),
-                new Copy(client, spooler),
-                new Count(client, spooler, new Repeater()),
-                new Greet(client, spooler),
-                new Jimbox(client, spooler),
-                new Join(client, spooler),
-                new Log(client, spooler),
-                new MockStreamElements(client, spooler),
-                new Repeat(client, spooler, new Repeater(), stopSettingStrategy),
-                new Reply(client, spooler, new EqualsComparator(), new ContainsComparator()),
-                new TimeoutAlert(client, spooler),
-                new TrackJimbox(client, spooler),
-                new TrackPyramids(client, spooler),
-                new YepKyle(client, spooler),
+                new AutoChat(client, stopSettingStrategy),
+                new AutoPogO(client),
+                new Color(client),
+                new Copy(client),
+                new Count(client, new Repeater()),
+                new Greet(client),
+                new Jimbox(client),
+                new Join(client),
+                new Log(client),
+                new MockStreamElements(client),
+                new Mode(client),
+                new Repeat(client, new Repeater(), stopSettingStrategy),
+                new Reply(client, new EqualsComparator(), new ContainsComparator()),
+                new Say(client),
+                new TimeoutAlert(client),
+                new TrackJimbox(client),
+                new TrackPyramids(client),
+                new YepKyle(client),
             };
 
-            var disableAll = new DisableAll(client, spooler, commands);
+            var disableAll = new DisableAll(client, commands);
 
             commands.Add(disableAll);
 
             Commands = commands;
         }
 
-        public void RefreshAll(ITwitchClient twitchClient, IMessageSpooler messageSpooler)
+        public void RefreshAll(IExtendedClient twitchClient)
         {
             foreach (ICommand command in Commands)
             {
-                command.Refresh(twitchClient, messageSpooler);
+                command.Refresh(twitchClient);
             }
         }
 

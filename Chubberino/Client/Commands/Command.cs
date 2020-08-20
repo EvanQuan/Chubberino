@@ -9,14 +9,11 @@ namespace Chubberino.Client.Commands
     {
         public String Name { get; }
 
-        protected ITwitchClient TwitchClient { get; private set; }
+        protected IExtendedClient TwitchClient { get; private set; }
 
-        protected IMessageSpooler Spooler { get; private set; }
-
-        protected Command(ITwitchClient client, IMessageSpooler spooler)
+        protected Command(IExtendedClient client)
         {
             TwitchClient = client;
-            Spooler = spooler;
             Name = GetType().Name.ToLowerInvariant();
         }
 
@@ -38,10 +35,9 @@ namespace Chubberino.Client.Commands
         /// </summary>
         /// <param name="twitchClient">New twitch client.</param>
         /// <param name="messageSpooler">New message spooler.</param>
-        public void Refresh(ITwitchClient twitchClient, IMessageSpooler messageSpooler)
+        public void Refresh(IExtendedClient twitchClient)
         {
             TwitchClient = twitchClient;
-            Spooler = messageSpooler;
         }
     }
 }

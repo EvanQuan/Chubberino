@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using TwitchLib.Client.Enums;
 using TwitchLib.Client.Events;
-using TwitchLib.Client.Interfaces;
 
 namespace Chubberino.Client.Commands.Settings
 {
@@ -28,11 +27,21 @@ namespace Chubberino.Client.Commands.Settings
         public override String Status => base.Status
             + $"\n\tType: {CurrentSelector.Name}";
 
-        public Color(ITwitchClient client, IMessageSpooler spooler)
-            : base(client, spooler)
+        public Color(IExtendedClient client)
+            : base(client)
         {
-            TwitchClient.OnMessageReceived += TwitchClient_OnMessageReceived;
-            TwitchClient.OnMessageSent += TwitchClient_OnMessageSent;
+            Enable = twitchClient =>
+            {
+                TwitchClient.OnMessageReceived += TwitchClient_OnMessageReceived;
+                TwitchClient.OnMessageSent += TwitchClient_OnMessageSent;
+            };
+
+            Disable = twitchClient =>
+            {
+                TwitchClient.OnMessageReceived -= TwitchClient_OnMessageReceived;
+                TwitchClient.OnMessageSent -= TwitchClient_OnMessageSent;
+            };
+
             Random = new Random();
             Selectors = new List<IColorSelector>()
             {
@@ -50,8 +59,6 @@ namespace Chubberino.Client.Commands.Settings
         /// <param name="e"></param>
         private void TwitchClient_OnMessageSent(Object sender, OnMessageSentArgs e)
         {
-            if (!IsEnabled) { return; }
-
             // Avoid infinite recursion.
             if (e.SentMessage.Message.StartsWith('.')) { return; }
 
@@ -65,8 +72,6 @@ namespace Chubberino.Client.Commands.Settings
         /// <param name="e"></param>
         private void TwitchClient_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
         {
-            if (!IsEnabled) { return; }
-
             if (e.ChatMessage.Username.Equals(TwitchInfo.BotUsername, StringComparison.OrdinalIgnoreCase))
             {
                 ChangeColor();
@@ -77,7 +82,7 @@ namespace Chubberino.Client.Commands.Settings
         {
             CurrentColor = CurrentSelector.GetNextColor();
 
-            Spooler.SpoolMessage($".color {CurrentColor}");
+            TwitchClient.SpoolMessage($".color {CurrentColor}");
         }
 
         public override Boolean Set(String property, IEnumerable<String> arguments)

@@ -3,7 +3,6 @@ using Chubberino.Client.Commands.Strategies;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Forms.Automation;
 using TwitchLib.Client.Events;
 using TwitchLib.Client.Interfaces;
 
@@ -22,32 +21,38 @@ namespace Chubberino.Client.Commands.Settings
 
         private IStopSettingStrategy StopSettingStrategy { get; }
 
-        public Repeat(ITwitchClient client, IMessageSpooler spooler, IRepeater repeater, IStopSettingStrategy stopSettingStrategy)
-            : base(client, spooler)
+        public Repeat(IExtendedClient client, IRepeater repeater, IStopSettingStrategy stopSettingStrategy)
+            : base(client)
         {
             Repeater = repeater;
             Repeater.Action = SpoolRepeatMessages;
-            Repeater.Interval = TimeSpan.FromSeconds(2.0);
+            Repeater.Interval = TimeSpan.FromSeconds(0.3);
             StopSettingStrategy = stopSettingStrategy;
-            TwitchClient.OnMessageReceived += TwitchClient_OnMessageReceived;
+            Enable = twitchClient =>
+            {
+                twitchClient.OnMessageReceived += TwitchClient_OnMessageReceived;
+            };
+
+            Disable = twitchClient =>
+            {
+                twitchClient.OnMessageReceived -= TwitchClient_OnMessageReceived;
+            };
         }
 
         private void SpoolRepeatMessages()
         {
-            Spooler.SpoolMessage(RepeatMessage);
+            TwitchClient.SpoolMessage(RepeatMessage);
         }
 
         private void TwitchClient_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
         {
-            if (!IsEnabled) { return; }
-
-            if (StopSettingStrategy.ShouldStop(e.ChatMessage))
-            {
-                IsEnabled = false;
-                Repeater.IsRunning = false;
-                Console.WriteLine("! ! ! STOPPED REPEAT ! ! !");
-                Console.WriteLine($"Moderator {e.ChatMessage.DisplayName} said: \"{e.ChatMessage.Message}\"");
-            }
+            //if (StopSettingStrategy.ShouldStop(e.ChatMessage))
+            //{
+            //    IsEnabled = false;
+            //    Repeater.IsRunning = false;
+            //    Console.WriteLine("! ! ! STOPPED REPEAT ! ! !");
+            //    Console.WriteLine($"Moderator {e.ChatMessage.DisplayName} said: \"{e.ChatMessage.Message}\"");
+            //}
         }
 
         public override String Status => base.Status

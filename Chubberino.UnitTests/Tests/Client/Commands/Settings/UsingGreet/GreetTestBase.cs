@@ -1,7 +1,4 @@
 ﻿using Chubberino.Client.Commands.Settings;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.UsingGreet
 {
@@ -11,7 +8,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.UsingGreet
 
         public GreetTestBase()
         {
-            Sut = new Greet(MockedTwitchClient.Object, MockedSpooler.Object);
+            Sut = new Greet(MockedTwitchClient.Object);
         }
     }
 }
