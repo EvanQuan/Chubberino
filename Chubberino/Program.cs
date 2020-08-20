@@ -24,12 +24,28 @@ namespace Chubberino
                 return;
             }
 
+            Boolean shouldContinue = true;
             do
             {
                 Console.Write(bot.GetPrompt());
                 bot.ReadCommand(Console.ReadLine());
+
+                switch (bot.State)
+                {
+                    // Continue onto the next prompt
+                    default:
+                    case BotState.ShouldContinue:
+                        break;
+                    // End the program.
+                    case BotState.ShouldStop:
+                        shouldContinue = false;
+                        break;
+                    case BotState.ShouldRestart:
+                        // TODO
+                        break;
+                }
             }
-            while (bot.ShouldContinue);
+            while (shouldContinue);
         }
     }
 }

@@ -15,8 +15,11 @@ namespace Chubberino.Client
 {
     internal class Bot : IDisposable
     {
+        private static TimeSpan ModeratorThrottlingPeriod { get; } = TimeSpan.FromSeconds(0.3);
 
-        public Boolean ShouldContinue { get; private set; }
+        private static TimeSpan RegularThrottlingPeriod { get; } = TimeSpan.FromSeconds(1.5);
+
+        public BotState State { get; private set; }
 
         private ITwitchClient TwitchClient { get; set; }
 
@@ -31,7 +34,7 @@ namespace Chubberino.Client
             var clientOptions = new ClientOptions
             {
                 MessagesAllowedInPeriod = 1,
-                ThrottlingPeriod = TimeSpan.FromSeconds(1.51)
+                ThrottlingPeriod = ModeratorThrottlingPeriod
             };
             WebSocketClient customClient = new WebSocketClient(clientOptions);
             TwitchClient = new TwitchClient(customClient);
@@ -81,12 +84,12 @@ namespace Chubberino.Client
         private void Client_OnConnectionError(Object sender, OnConnectionErrorArgs e)
         {
             Console.WriteLine($"!! Connection Error!! {e.Error.Message}");
-            ShouldContinue = false;
+            State = BotState.ShouldRestart;
         }
 
         private void Client_OnConnected(Object sender, OnConnectedArgs e)
         {
-            ShouldContinue = true;
+            State = BotState.ShouldContinue;
         }
 
         public void ReadCommand(String command)
@@ -100,7 +103,7 @@ namespace Chubberino.Client
             switch (commandName)
             {
                 case "quit":
-                    ShouldContinue = false;
+                    State = BotState.ShouldStop;
                     break;
 
                 default:
