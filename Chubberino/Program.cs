@@ -40,9 +40,9 @@ namespace Chubberino
                     case BotState.ShouldStop:
                         shouldContinue = false;
                         break;
-                    case BotState.ShouldRestart:
+                    // case BotState.ShouldRestart:
                         // TODO
-                        break;
+                        // break;
                 }
             }
             while (shouldContinue);

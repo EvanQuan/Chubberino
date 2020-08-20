@@ -31,6 +31,17 @@ namespace Chubberino.Client
 
         private void CreateClient()
         {
+            InitializeTwitchClientAndSpooler();
+            Commands = new CommandRepository(TwitchClient, Spooler);
+        }
+
+        public Bot()
+        {
+            CreateClient();
+        }
+
+        private void InitializeTwitchClientAndSpooler()
+        {
             var clientOptions = new ClientOptions
             {
                 MessagesAllowedInPeriod = 1,
@@ -46,12 +57,6 @@ namespace Chubberino.Client
             TwitchClient.OnUserTimedout += Client_OnUserTimedout;
 
             Spooler = new MessageSpooler(TwitchClient);
-            Commands = new CommandRepository(TwitchClient, Spooler);
-        }
-
-        public Bot()
-        {
-            CreateClient();
         }
 
         public Boolean Start()
@@ -65,7 +70,6 @@ namespace Chubberino.Client
                 return !String.IsNullOrWhiteSpace(Spooler.ChannelName);
             },
             TimeSpan.FromSeconds(60));
-
 
             return channelJoined;
 
@@ -84,7 +88,9 @@ namespace Chubberino.Client
         private void Client_OnConnectionError(Object sender, OnConnectionErrorArgs e)
         {
             Console.WriteLine($"!! Connection Error!! {e.Error.Message}");
-            State = BotState.ShouldRestart;
+            InitializeTwitchClientAndSpooler();
+            Commands.RefreshAll(TwitchClient, Spooler);
+            Console.WriteLine("!! Refreshed");
         }
 
         private void Client_OnConnected(Object sender, OnConnectedArgs e)
