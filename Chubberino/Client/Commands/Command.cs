@@ -31,5 +31,17 @@ namespace Chubberino.Client.Commands
         public virtual Boolean Add(String property, IEnumerable<String> arguments) { return false; }
 
         public virtual Boolean Remove(String property, IEnumerable<String> arguments) { return false; }
+
+        /// <summary>
+        /// Refresh the command with a new <see cref="ITwitchClient"/> and
+        /// <see cref="IMessageSpooler"/>.
+        /// </summary>
+        /// <param name="twitchClient">New twitch client.</param>
+        /// <param name="messageSpooler">New message spooler.</param>
+        public void Refresh(ITwitchClient twitchClient, IMessageSpooler messageSpooler)
+        {
+            TwitchClient = twitchClient;
+            Spooler = messageSpooler;
+        }
     }
 }

@@ -47,6 +47,14 @@ namespace Chubberino.Client.Commands
             Commands = commands;
         }
 
+        public void RefreshAll(ITwitchClient twitchClient, IMessageSpooler messageSpooler)
+        {
+            foreach (ICommand command in Commands)
+            {
+                command.Refresh(twitchClient, messageSpooler);
+            }
+        }
+
         public String GetStatus()
         {
             StringBuilder stringBuilder = new StringBuilder();

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using TwitchLib.Client.Interfaces;
 
 namespace Chubberino.Client.Abstractions
 {
@@ -22,5 +23,13 @@ namespace Chubberino.Client.Abstractions
         /// </summary>
         /// <returns>The help messag string.</returns>
         String GetHelp();
+
+        /// <summary>
+        /// Refresh the command with a new <see cref="ITwitchClient"/> and
+        /// <see cref="IMessageSpooler"/>.
+        /// </summary>
+        /// <param name="twitchClient">New twitch client.</param>
+        /// <param name="messageSpooler">New message spooler.</param>
+        void Refresh(ITwitchClient twitchClient, IMessageSpooler messageSpooler);
     }
 }
