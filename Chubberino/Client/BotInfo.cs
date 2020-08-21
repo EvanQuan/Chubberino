@@ -1,4 +1,6 @@
 ﻿using System;
+using TwitchLib.Communication.Interfaces;
+using TwitchLib.Communication.Models;
 
 namespace Chubberino.Client
 {
@@ -12,12 +14,20 @@ namespace Chubberino.Client
         /// <summary>
         /// 100 messages in 30 seconds ~1 message per 0.3 seconds.
         /// </summary>
-        public TimeSpan ModeratorThrottlingPeriod { get; } = TimeSpan.FromSeconds(0.3);
+        public IClientOptions ModeratorClientOptions { get; } = new ClientOptions()
+        {
+            MessagesAllowedInPeriod = 100,
+            ThrottlingPeriod = TimeSpan.FromSeconds(30)
+        };
 
         /// <summary>
         /// 20 messages in 30 seconds ~1 message per 1.5 second
         /// </summary>
-        public TimeSpan RegularThrottlingPeriod { get; } = TimeSpan.FromSeconds(1.5);
+        public IClientOptions RegularClientOptions { get; } = new ClientOptions()
+        {
+            MessagesAllowedInPeriod = 20,
+            ThrottlingPeriod = TimeSpan.FromSeconds(30)
+        };
 
         /// <summary>
         /// Is the bot a broadcaster/moderator/VIP?
@@ -27,7 +37,5 @@ namespace Chubberino.Client
         public static BotInfo Instance { get; } = new BotInfo();
 
         private BotInfo() { }
-
-
     }
 }

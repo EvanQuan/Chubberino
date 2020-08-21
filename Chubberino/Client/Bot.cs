@@ -7,7 +7,7 @@ using System.Threading;
 using TwitchLib.Client.Events;
 using TwitchLib.Client.Models;
 using TwitchLib.Communication.Clients;
-using TwitchLib.Communication.Models;
+using TwitchLib.Communication.Interfaces;
 
 namespace Chubberino.Client
 {
@@ -15,7 +15,7 @@ namespace Chubberino.Client
     {
         public static Bot Instance { get; } = new Bot();
 
-        private TimeSpan CurrentThrottlingPeriod { get; set; }
+        private IClientOptions CurrentClientOptions { get; set; }
 
         public BotState State { get; private set; }
 
@@ -27,7 +27,7 @@ namespace Chubberino.Client
 
         private void CreateClient()
         {
-            InitializeTwitchClientAndSpooler(BotInfo.Instance.RegularThrottlingPeriod);
+            InitializeTwitchClientAndSpooler(BotInfo.Instance.RegularClientOptions);
             Commands = new CommandRepository(TwitchClient);
         }
 
@@ -36,16 +36,10 @@ namespace Chubberino.Client
             CreateClient();
         }
 
-        private void InitializeTwitchClientAndSpooler(TimeSpan throttlingPeriod)
+        private void InitializeTwitchClientAndSpooler(IClientOptions clientOptions)
         {
-            CurrentThrottlingPeriod = throttlingPeriod;
+            CurrentClientOptions = clientOptions;
 
-            // Determine whether to throttle at regular or mod speed.
-            var clientOptions = new ClientOptions
-            {
-                MessagesAllowedInPeriod = 1,
-                ThrottlingPeriod = throttlingPeriod
-            };
             WebSocketClient customClient = new WebSocketClient(clientOptions);
             TwitchClient = new ExtendedClient(customClient);
 
@@ -85,13 +79,13 @@ namespace Chubberino.Client
         private void Client_OnConnectionError(Object sender, OnConnectionErrorArgs e)
         {
             Console.WriteLine($"!! Connection Error!! {e.Error.Message}");
-            Refresh(CurrentThrottlingPeriod);
+            Refresh(CurrentClientOptions);
             Console.WriteLine("!! Refreshed");
         }
 
-        public void Refresh(TimeSpan throttlePeriod)
+        public void Refresh(IClientOptions clientOptions)
         {
-            InitializeTwitchClientAndSpooler(throttlePeriod);
+            InitializeTwitchClientAndSpooler(clientOptions);
             Commands.RefreshAll(TwitchClient);
             Start();
         }
