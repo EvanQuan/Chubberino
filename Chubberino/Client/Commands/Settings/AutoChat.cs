@@ -76,8 +76,6 @@ namespace Chubberino.Client.Commands.Settings
 
         private void TwitchClient_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
         {
-            if (!IsEnabled) { return; }
-
             if (ShouldStop(e.ChatMessage)) { return; }
 
             if (ShouldIgnore(e.ChatMessage)) { return; }
