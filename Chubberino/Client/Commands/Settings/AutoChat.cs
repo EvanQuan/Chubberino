@@ -95,9 +95,15 @@ namespace Chubberino.Client.Commands.Settings
         {
             if (ShouldStop(e.ChatMessage)) { return; }
 
-            if (ShouldIgnore(e.ChatMessage)) { return; }
+            if (ShouldIgnore(e.ChatMessage))
+            {
+                PreviousMessages.Enqueue(null);
+            }
+            else
+            {
+                PreviousMessages.Enqueue(e.ChatMessage.Message);
+            }
 
-            PreviousMessages.Enqueue(e.ChatMessage.Message);
 
             if (PreviousMessages.Count >= MessageSampleCount)
             {
