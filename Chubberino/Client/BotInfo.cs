@@ -9,7 +9,7 @@ namespace Chubberino.Client
         /// <summary>
         /// Current channel joined.
         /// </summary>
-        public String ChannelName { get; set; }
+        public String ChannelName { get; set; } = TwitchInfo.InitialChannelName;
 
         /// <summary>
         /// 100 messages in 30 seconds ~1 message per 0.3 seconds.
