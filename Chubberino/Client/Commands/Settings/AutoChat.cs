@@ -13,16 +13,25 @@ namespace Chubberino.Client.Commands.Settings
     {
         private ConcurrentQueue<String> PreviousMessages { get; }
 
-        private IEnumerable<Int32> SpamMessageCounts { get; set; } = new Int32[] { 30, 25 };
+        private IEnumerable<UInt32> SpamMessageSampleCounts { get; set; } = new UInt32[]
+        {
+            25,
+            30,
+        };
 
         private IStopSettingStrategy StopSettingStrategy { get; }
 
-        private Int32 GeneralMessageCount { get; set; } = 35;
+        /// <summary>
+        /// The number of messages to sample before determining what message to
+        /// output.
+        /// </summary>
+        private UInt32 MessageSampleCount { get; set; } = 40;
 
-        private UInt32 MinimumDuplicateCount { get; set; } = 3;
+        private UInt32 MinimumDuplicateCount { get; set; } = 4;
 
         public override String Status => base.Status
-            + $"\n\tCount: {MinimumDuplicateCount}";
+            + $"\n\tSample count: {MessageSampleCount}"
+            + $"\n\tDuplicate count: {MinimumDuplicateCount}";
 
         public AutoChat(IExtendedClient client, IStopSettingStrategy stopSettingStrategy)
             : base(client)
@@ -45,11 +54,19 @@ namespace Chubberino.Client.Commands.Settings
         {
             switch (property.ToLower())
             {
-                case "c":
-                case "count":
-                    if (UInt32.TryParse(arguments.FirstOrDefault(), out UInt32 result))
+                case "d":
+                case "duplicate":
+                    if (UInt32.TryParse(arguments.FirstOrDefault(), out UInt32 duplicateCount))
                     {
-                        MinimumDuplicateCount = result;
+                        MinimumDuplicateCount = duplicateCount;
+                        return true;
+                    }
+                    break;
+                case "s":
+                case "sample":
+                    if (UInt32.TryParse(arguments.FirstOrDefault(), out UInt32 sampleCount))
+                    {
+                        MessageSampleCount = sampleCount;
                         return true;
                     }
                     break;
@@ -82,7 +99,7 @@ namespace Chubberino.Client.Commands.Settings
 
             PreviousMessages.Enqueue(e.ChatMessage.Message);
 
-            if (PreviousMessages.Count >= GeneralMessageCount)
+            if (PreviousMessages.Count >= MessageSampleCount)
             {
                 // Get the most common message from the last GeneralMessageCount
                 // number of messages, as long as there is more than one
@@ -98,7 +115,7 @@ namespace Chubberino.Client.Commands.Settings
                 // avoid copying old messages.
                 PreviousMessages.Clear();
             }
-            else if (SpamMessageCounts.Any(count => PreviousMessages.Count >= count))
+            else if (SpamMessageSampleCounts.Any(count => PreviousMessages.Count >= count))
             {
                 // Get the most common message from the last SpamMessageCount
                 // number of messages, as long as there is more than one
@@ -111,7 +128,6 @@ namespace Chubberino.Client.Commands.Settings
                     // Empty the last messages, if if one was sent.
                     PreviousMessages.Clear();
                 }
-
             }
         }
 
