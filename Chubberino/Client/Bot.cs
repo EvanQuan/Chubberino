@@ -52,8 +52,8 @@ namespace Chubberino.Client
 
         public Boolean Start()
         {
-            Console.WriteLine("Connecting to " + TwitchInfo.InitialChannelName);
-            TwitchClient.EnsureJoinedToChannel(TwitchInfo.InitialChannelName);
+            Console.WriteLine("Connecting to " + BotInfo.Instance.ChannelName);
+            TwitchClient.EnsureJoinedToChannel(BotInfo.Instance.ChannelName);
 
             Boolean channelJoined = SpinWait.SpinUntil(() =>
             {
