@@ -42,7 +42,7 @@ namespace Chubberino.Client.Commands
         /// </summary>
         public Action Action { get; set; }
 
-        public TimeSpan Variance { get; set; } = TimeSpan.FromSeconds(0.3);
+        public TimeSpan Variance { get; set; } = TimeSpan.FromSeconds(0.0);
 
         /// <summary>
         /// Start executing <see cref="Action"/> at the specified <see cref="Interval"/>.
