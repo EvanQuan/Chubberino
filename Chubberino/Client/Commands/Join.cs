@@ -36,14 +36,16 @@ namespace Chubberino.Client.Commands
         {
             if (arguments.Count() == 0) { return; }
 
-
             if (!TwitchClient.IsConnected)
             {
                 TwitchClient.Connect();
             }
-            TwitchClient.JoinChannel(arguments.FirstOrDefault());
 
-            TwitchClient.EnsureJoinedToChannel(arguments.FirstOrDefault());
+            String channelName = arguments.FirstOrDefault();
+
+            TwitchClient.JoinChannel(channelName);
+
+            TwitchClient.EnsureJoinedToChannel(channelName);
         }
     }
 }
