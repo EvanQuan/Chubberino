@@ -9,7 +9,7 @@ using System.Text;
 
 namespace Chubberino.Client.Commands
 {
-    public sealed class CommandRepository
+    public sealed class CommandRepository : ICommandRepository
     {
         private IReadOnlyList<ICommand> Commands { get; }
 
@@ -50,7 +50,7 @@ namespace Chubberino.Client.Commands
         /// <summary>
         /// Sets <see cref="ISetting.IsEnabled"/> to false for all settings.
         /// </summary>
-        internal void DisableAllSettings()
+        public void DisableAllSettings()
         {
             IEnumerable<ISetting> settings = GetSettings();
 

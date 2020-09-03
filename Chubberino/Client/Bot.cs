@@ -23,7 +23,7 @@ namespace Chubberino.Client
 
         private ConnectionCredentials Credentials { get; } = new ConnectionCredentials(TwitchInfo.BotUsername, TwitchInfo.BotToken);
 
-        private CommandRepository Commands { get; set; }
+        private ICommandRepository Commands { get; set; }
 
         private void CreateClient()
         {

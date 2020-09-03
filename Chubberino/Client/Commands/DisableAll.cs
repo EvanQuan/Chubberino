@@ -6,9 +6,9 @@ namespace Chubberino.Client.Commands
 {
     public sealed class DisableAll : Command
     {
-        public CommandRepository Commands { get; }
+        public ICommandRepository Commands { get; }
 
-        public DisableAll(IExtendedClient client, CommandRepository commands)
+        public DisableAll(IExtendedClient client, ICommandRepository commands)
             : base(client)
         {
             Commands = commands;

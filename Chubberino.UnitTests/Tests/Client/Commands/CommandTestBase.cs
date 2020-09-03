@@ -11,15 +11,11 @@ namespace Chubberino.UnitTests.Tests.Client.Commands
 
         protected Mock<IRepeater> MockedRepeater { get; }
 
-        protected Mock<IStopSettingStrategy> MockedStopSettingStrategy { get; }
-
         public CommandTestBase()
         {
             MockedTwitchClient = new Mock<IExtendedClient>().SetupAllProperties();
 
             MockedRepeater = new Mock<IRepeater>().SetupAllProperties();
-
-            MockedStopSettingStrategy = new Mock<IStopSettingStrategy>().SetupAllProperties();
         }
 
     }

@@ -21,7 +21,7 @@ namespace Chubberino.Client.Commands.Settings
                 if (value)
                 {
                     // Do not call Enable if already enabled, or multiple copies of the event will be added.
-                   if (!isEnabled)
+                    if (!isEnabled)
                     {
                         Enable(TwitchClient);
                     }
