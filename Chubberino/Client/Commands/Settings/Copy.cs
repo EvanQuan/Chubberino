@@ -15,17 +15,16 @@ namespace Chubberino.Client.Commands.Settings
 
         private enum CopyMode
         {
-            Disabled = 0,
-            Default = 1,
-            Mock = 2,
-            Reverse = 3
+            Default = 0,
+            Mock = 1,
+            Reverse = 2
         }
 
         private CopyMode Mode { get; set; }
 
-        public override String Status => Mode == CopyMode.Disabled
-            ? "disabled"
-            : $"{UserToMirror} Mode: {Mode} Prefix: {MessagePrefix}";
+        public override String Status => IsEnabled
+            ? $"{UserToMirror} Mode: {Mode} Prefix: {MessagePrefix}"
+            : "disabled";
 
         public Copy(IExtendedClient client)
             : base(client)
@@ -84,8 +83,8 @@ namespace Chubberino.Client.Commands.Settings
             if (arguments.Count() == 0)
             {
                 UserToMirror = null;
-                Mode = CopyMode.Disabled;
                 Console.WriteLine("Copy disabled");
+                IsEnabled = false;
                 return;
             }
 
@@ -109,6 +108,8 @@ namespace Chubberino.Client.Commands.Settings
 
             MessagePrefix = String.Join(" ", arguments.Skip(Mode == CopyMode.Default ? 1 : 2));
             Console.WriteLine($"Copying user \"{UserToMirror}\" Mode: \"{Mode}\" Prefix: \"{MessagePrefix}\"");
+
+            IsEnabled = true;
         }
 
         public override String GetHelp()

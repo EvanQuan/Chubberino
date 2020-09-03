@@ -9,24 +9,29 @@ namespace Chubberino.Client.Commands.Settings
     {
         private Boolean isEnabled;
 
-        protected Action<ITwitchClient> Enable { get; set; }
+        protected Action<ITwitchClient> Enable { get; set; } = client => { };
 
-        protected Action<ITwitchClient> Disable { get; set; }
+        protected Action<ITwitchClient> Disable { get; set; } = client => { };
 
         public Boolean IsEnabled
         {
             get => isEnabled;
             set
             {
-                isEnabled = value;
-                if (isEnabled)
+                if (value)
                 {
-                    Enable(TwitchClient);
+                    // Do not call Enable if already enabled, or multiple copies of the event will be added.
+                   if (!isEnabled)
+                    {
+                        Enable(TwitchClient);
+                    }
                 }
                 else
                 {
                     Disable(TwitchClient);
                 }
+
+                isEnabled = value;
             }
         }
 
