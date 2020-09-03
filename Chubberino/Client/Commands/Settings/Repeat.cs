@@ -28,31 +28,11 @@ namespace Chubberino.Client.Commands.Settings
             Repeater.Action = SpoolRepeatMessages;
             Repeater.Interval = TimeSpan.FromSeconds(0.3);
             StopSettingStrategy = stopSettingStrategy;
-            Enable = twitchClient =>
-            {
-                twitchClient.OnMessageReceived += TwitchClient_OnMessageReceived;
-            };
-
-            Disable = twitchClient =>
-            {
-                twitchClient.OnMessageReceived -= TwitchClient_OnMessageReceived;
-            };
         }
 
         private void SpoolRepeatMessages()
         {
             TwitchClient.SpoolMessage(RepeatMessage);
-        }
-
-        private void TwitchClient_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
-        {
-            //if (StopSettingStrategy.ShouldStop(e.ChatMessage))
-            //{
-            //    IsEnabled = false;
-            //    Repeater.IsRunning = false;
-            //    Console.WriteLine("! ! ! STOPPED REPEAT ! ! !");
-            //    Console.WriteLine($"Moderator {e.ChatMessage.DisplayName} said: \"{e.ChatMessage.Message}\"");
-            //}
         }
 
         public override String Status => base.Status
