@@ -1,10 +1,7 @@
 ﻿using Chubberino.Client.Abstractions;
-using Chubberino.Client.Commands.Strategies;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using TwitchLib.Client.Events;
-using TwitchLib.Client.Interfaces;
 
 namespace Chubberino.Client.Commands.Settings
 {
@@ -19,15 +16,12 @@ namespace Chubberino.Client.Commands.Settings
 
         private IRepeater Repeater { get; }
 
-        private IStopSettingStrategy StopSettingStrategy { get; }
-
-        public Repeat(IExtendedClient client, IRepeater repeater, IStopSettingStrategy stopSettingStrategy)
+        public Repeat(IExtendedClient client, IRepeater repeater)
             : base(client)
         {
             Repeater = repeater;
             Repeater.Action = SpoolRepeatMessages;
             Repeater.Interval = TimeSpan.FromSeconds(0.3);
-            StopSettingStrategy = stopSettingStrategy;
         }
 
         private void SpoolRepeatMessages()

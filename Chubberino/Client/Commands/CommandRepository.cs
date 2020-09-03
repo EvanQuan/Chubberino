@@ -9,9 +9,13 @@ using System.Text;
 
 namespace Chubberino.Client.Commands
 {
-    internal sealed class CommandRepository
+    public sealed class CommandRepository
     {
         private IReadOnlyList<ICommand> Commands { get; }
+
+        private CommandRepository()
+        {
+        }
 
         public CommandRepository(IExtendedClient client)
         {
@@ -30,20 +34,30 @@ namespace Chubberino.Client.Commands
                 new Log(client),
                 new MockStreamElements(client),
                 new Mode(client),
-                new Repeat(client, new Repeater(), stopSettingStrategy),
+                new Repeat(client, new Repeater()),
                 new Reply(client, new EqualsComparator(), new ContainsComparator()),
                 new Say(client),
                 new TimeoutAlert(client),
                 new TrackJimbox(client),
                 new TrackPyramids(client),
                 new YepKyle(client),
+                new DisableAll(client, this),
             };
 
-            var disableAll = new DisableAll(client, commands);
-
-            commands.Add(disableAll);
-
             Commands = commands;
+        }
+
+        /// <summary>
+        /// Sets <see cref="ISetting.IsEnabled"/> to false for all settings.
+        /// </summary>
+        internal void DisableAllSettings()
+        {
+            IEnumerable<ISetting> settings = GetSettings();
+
+            foreach (ISetting setting in settings)
+            {
+                setting.IsEnabled = false;
+            }
         }
 
         public void RefreshAll(IExtendedClient twitchClient)
@@ -67,6 +81,25 @@ namespace Chubberino.Client.Commands
             }
 
             return stringBuilder.ToString();
+        }
+
+        /// <summary>
+        /// Get all the <see cref="ISetting"/>s contained within <see cref="Commands"/>.
+        /// </summary>
+        /// <returns>all the <see cref="ISetting"/>s contained within <see cref="Commands"/>.</returns>
+        private IEnumerable<ISetting> GetSettings()
+        {
+            var settingList = new List<ISetting>();
+
+            foreach (ICommand command in Commands)
+            {
+                if (command is ISetting setting)
+                {
+                    settingList.Add(setting);
+                }
+            }
+
+            return settingList;
         }
 
         public void Execute(String commandName, IEnumerable<String> arguments)
