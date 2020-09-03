@@ -21,5 +21,10 @@ namespace Chubberino.Client.Commands
 
             Console.WriteLine("Disabled all settings");
         }
+
+        public override String GetHelp()
+        {
+            return "Disables all settings.";
+        }
     }
 }
