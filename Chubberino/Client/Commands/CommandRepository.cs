@@ -11,7 +11,7 @@ namespace Chubberino.Client.Commands
 {
     public sealed class CommandRepository : ICommandRepository
     {
-        private IReadOnlyList<ICommand> Commands { get; }
+        public IReadOnlyList<ICommand> Commands { get; }
 
         private CommandRepository()
         {
@@ -87,7 +87,7 @@ namespace Chubberino.Client.Commands
         /// Get all the <see cref="ISetting"/>s contained within <see cref="Commands"/>.
         /// </summary>
         /// <returns>all the <see cref="ISetting"/>s contained within <see cref="Commands"/>.</returns>
-        private IEnumerable<ISetting> GetSettings()
+        public IEnumerable<ISetting> GetSettings()
         {
             var settingList = new List<ISetting>();
 
