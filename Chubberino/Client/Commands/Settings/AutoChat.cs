@@ -19,8 +19,6 @@ namespace Chubberino.Client.Commands.Settings
             30,
         };
 
-        private IStopSettingStrategy StopSettingStrategy { get; }
-
         /// <summary>
         /// The number of messages to sample before determining what message to
         /// output.
@@ -33,11 +31,10 @@ namespace Chubberino.Client.Commands.Settings
             + $"\n\tSample count: {MessageSampleCount}"
             + $"\n\tDuplicate count: {MinimumDuplicateCount}";
 
-        public AutoChat(IExtendedClient client, IStopSettingStrategy stopSettingStrategy)
+        public AutoChat(IExtendedClient client)
             : base(client)
         {
             PreviousMessages = new ConcurrentQueue<String>();
-            StopSettingStrategy = stopSettingStrategy;
             Enable = twitchClient =>
             {
                 twitchClient.OnHostingStarted += TwitchClient_OnHostingStarted;
@@ -93,8 +90,6 @@ namespace Chubberino.Client.Commands.Settings
 
         private void TwitchClient_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
         {
-            if (ShouldStop(e.ChatMessage)) { return; }
-
             if (ShouldIgnore(e.ChatMessage))
             {
                 PreviousMessages.Enqueue(null);
@@ -140,18 +135,6 @@ namespace Chubberino.Client.Commands.Settings
         private String FilterMessage(String message)
         {
             return message;
-        }
-
-        private Boolean ShouldStop(ChatMessage chatMessage)
-        {
-            if (StopSettingStrategy.ShouldStop(chatMessage))
-            {
-                IsEnabled = false;
-                Console.WriteLine("! ! ! STOPPED AUTOCHAT ! ! !");
-                Console.WriteLine($"Moderator {chatMessage.DisplayName} said: \"{chatMessage.Message}\"");
-                return true;
-            }
-            return false;
         }
 
         private String GetMessageToSend()

@@ -32,14 +32,14 @@ namespace Chubberino.Client.Commands.Settings
         {
             Enable = twitchClient =>
             {
-                TwitchClient.OnMessageReceived += TwitchClient_OnMessageReceived;
-                TwitchClient.OnMessageSent += TwitchClient_OnMessageSent;
+                twitchClient.OnMessageReceived += TwitchClient_OnMessageReceived;
+                twitchClient.OnMessageSent += TwitchClient_OnMessageSent;
             };
 
             Disable = twitchClient =>
             {
-                TwitchClient.OnMessageReceived -= TwitchClient_OnMessageReceived;
-                TwitchClient.OnMessageSent -= TwitchClient_OnMessageSent;
+                twitchClient.OnMessageReceived -= TwitchClient_OnMessageReceived;
+                twitchClient.OnMessageSent -= TwitchClient_OnMessageSent;
             };
 
             Random = new Random();

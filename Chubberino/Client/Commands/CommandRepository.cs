@@ -28,11 +28,13 @@ namespace Chubberino.Client.Commands
                 new Color(client),
                 new Copy(client),
                 new Count(client, new Repeater()),
+                new DisableAll(client, this),
                 new Greet(client),
                 new Jimbox(client),
                 new Join(client),
                 new Log(client),
                 new MockStreamElements(client),
+                new ModCheck(client, this, stopSettingStrategy),
                 new Mode(client),
                 new Repeat(client, new Repeater()),
                 new Reply(client, new EqualsComparator(), new ContainsComparator()),
@@ -41,7 +43,6 @@ namespace Chubberino.Client.Commands
                 new TrackJimbox(client),
                 new TrackPyramids(client),
                 new YepKyle(client),
-                new DisableAll(client, this),
             };
 
             Commands = commands;
