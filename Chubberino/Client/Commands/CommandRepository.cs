@@ -21,9 +21,11 @@ namespace Chubberino.Client.Commands
         {
             var stopSettingStrategy = new StopSettingStrategy();
 
+            var textWriter = Console.Out;
+
             var commands = new List<ICommand>()
             {
-                new AutoChat(client, stopSettingStrategy),
+                new AutoChat(client),
                 new AutoPogO(client),
                 new Color(client),
                 new Copy(client),
@@ -34,7 +36,7 @@ namespace Chubberino.Client.Commands
                 new Join(client),
                 new Log(client),
                 new MockStreamElements(client),
-                new ModCheck(client, this, stopSettingStrategy),
+                new ModCheck(client, textWriter, this, stopSettingStrategy),
                 new Mode(client),
                 new Repeat(client, new Repeater()),
                 new Reply(client, new EqualsComparator(), new ContainsComparator()),
