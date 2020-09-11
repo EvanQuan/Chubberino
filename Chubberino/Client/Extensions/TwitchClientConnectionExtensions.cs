@@ -1,8 +1,6 @@
-﻿using Chubberino.Client.Abstractions;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading;
-using System.Threading.Channels;
 using TwitchLib.Client.Interfaces;
 
 namespace Chubberino.Client.Extensions
@@ -22,7 +20,7 @@ namespace Chubberino.Client.Extensions
                 return true;
 
             },
-            TimeSpan.FromSeconds(30));
+            TimeSpan.FromSeconds(10));
 
             Boolean isJoined = SpinWait.SpinUntil(() =>
             {
@@ -38,15 +36,9 @@ namespace Chubberino.Client.Extensions
                 }
 
             },
-            TimeSpan.FromSeconds(30));
+            TimeSpan.FromSeconds(10));
 
-            Boolean channelNameUpdated = SpinWait.SpinUntil(() =>
-            {
-                return BotInfo.Instance.ChannelName.Equals(channelName, StringComparison.OrdinalIgnoreCase);
-            },
-            TimeSpan.FromSeconds(30));
-
-            return isConnected && isJoined && channelNameUpdated;
+            return isConnected && isJoined;
         }
     }
 }
