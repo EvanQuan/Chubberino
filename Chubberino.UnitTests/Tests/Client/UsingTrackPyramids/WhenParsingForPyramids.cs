@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using TwitchLib.Client.Events;
 using TwitchLib.Client.Models;
+using TwitchLib.Client.Models.Builders;
 using Xunit;
 
 namespace Chubberino.UnitTests.Tests.Client.UsingTrackPyramids
@@ -203,32 +204,7 @@ namespace Chubberino.UnitTests.Tests.Client.UsingTrackPyramids
 
             foreach (var (Username, Message) in messages)
             {
-                var chatMessage = new ChatMessage(
-                    botUsername: default,
-                    userId: default,
-                    userName: Username,
-                    displayName: default,
-                    colorHex: default,
-                    color: default,
-                    emoteSet: default,
-                    message: Message,
-                    userType: default,
-                    channel: default,
-                    id: default,
-                    isSubscriber: default,
-                    subscribedMonthCount: default,
-                    roomId: default,
-                    isTurbo: default,
-                    isModerator: default,
-                    isMe: default,
-                    isBroadcaster: default,
-                    noisy: default,
-                    rawIrcMessage: default,
-                    emoteReplacedMessage: default,
-                    badges: default,
-                    cheerBadge: default,
-                    bits: default,
-                    bitsInDollars: default);
+                ChatMessage chatMessage = ChatMessageBuilder.Create().Build();
 
                 Sut.TwitchClient_OnMessageReceived(null, new OnMessageReceivedArgs()
                 {

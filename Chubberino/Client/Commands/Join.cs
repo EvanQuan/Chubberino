@@ -3,6 +3,7 @@ using Chubberino.Client.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TwitchLib.Client.Models.Builders;
 
 namespace Chubberino.Client.Commands
 {
