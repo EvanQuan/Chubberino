@@ -1,9 +1,10 @@
 ﻿using Chubberino.Client;
 using Chubberino.Client.Commands.Settings;
-using Chubberino.UnitTests.Utilities.TwitchLib;
 using Moq;
 using System;
 using System.Collections.Generic;
+using TwitchLib.Client.Events;
+using TwitchLib.Client.Models.Builders;
 using Xunit;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.TrackJimboxes
@@ -41,7 +42,14 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.TrackJimboxes
 
             foreach ((String username, String message) in messages)
             {
-                Sut.TwitchClient_OnMessageReceived(null, TwitchLibUtilities.GetOnMessageReceivedArgs(username, message));
+
+                Sut.TwitchClient_OnMessageReceived(null, new OnMessageReceivedArgs()
+                {
+                    ChatMessage = ChatMessageBuilder.Create()
+                        .WithTwitchLibMessage(TwitchLibMessageBuilder.Create().WithDisplayName(username).Build())
+                        .WithMessage(message)
+                        .Build()
+                });
             }
 
             MockedTwitchClient.Verify(x => x.SpoolMessage(It.IsAny<String>()), Times.Once());

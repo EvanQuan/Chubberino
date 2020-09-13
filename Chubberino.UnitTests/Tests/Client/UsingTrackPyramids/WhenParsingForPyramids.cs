@@ -46,7 +46,17 @@ namespace Chubberino.UnitTests.Tests.Client.UsingTrackPyramids
 
             foreach ((String username, String message) in messages)
             {
-                Sut.TwitchClient_OnMessageReceived(null, TwitchLibUtilities.GetOnMessageReceivedArgs(username, message));
+                Sut.TwitchClient_OnMessageReceived(null, new OnMessageReceivedArgs()
+                {
+                    ChatMessage = ChatMessageBuilder
+                    .Create()
+                    .WithTwitchLibMessage(TwitchLibMessageBuilder
+                        .Create()
+                        .WithDisplayName(username)
+                        .Build())
+                    .WithMessage(message)
+                    .Build()
+                });
             }
 
             Assert.Equal(expectedPyramidBlock, Sut.PyramidBlock);
