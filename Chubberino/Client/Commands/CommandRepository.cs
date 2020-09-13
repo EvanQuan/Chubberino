@@ -38,6 +38,7 @@ namespace Chubberino.Client.Commands
                 new MockStreamElements(client),
                 new ModCheck(client, textWriter, this, stopSettingStrategy),
                 new Mode(client),
+                new Pyramid(client),
                 new Repeat(client, new Repeater()),
                 new Reply(client, new EqualsComparator(), new ContainsComparator()),
                 new Say(client),

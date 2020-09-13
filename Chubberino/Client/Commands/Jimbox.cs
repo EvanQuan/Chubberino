@@ -12,6 +12,9 @@ namespace Chubberino.Client.Commands
         {
         }
 
+        /// <summary>Dank memes are cool</summary>
+        /// <example></example>
+        /// <param name="arguments"></param>
         public override void Execute(IEnumerable<String> arguments)
         {
             String surroundingEmote = arguments.FirstOrDefault() ?? "yyjW";
