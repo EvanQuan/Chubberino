@@ -1,7 +1,6 @@
 ﻿using Chubberino.Client;
 using Chubberino.Client.Commands.Settings;
 using Chubberino.UnitTests.Tests.Client.Commands;
-using Chubberino.UnitTests.Utilities.TwitchLib;
 using Moq;
 using System;
 using System.Collections.Generic;
