@@ -204,7 +204,14 @@ namespace Chubberino.UnitTests.Tests.Client.UsingTrackPyramids
 
             foreach (var (Username, Message) in messages)
             {
-                ChatMessage chatMessage = ChatMessageBuilder.Create().Build();
+                ChatMessage chatMessage = ChatMessageBuilder
+                    .Create()
+                    .WithTwitchLibMessage(TwitchLibMessageBuilder
+                        .Create()
+                        .WithUsername(Username)
+                        .WithDisplayName(Username))
+                    .WithMessage(Message)
+                    .Build();
 
                 Sut.TwitchClient_OnMessageReceived(null, new OnMessageReceivedArgs()
                 {
