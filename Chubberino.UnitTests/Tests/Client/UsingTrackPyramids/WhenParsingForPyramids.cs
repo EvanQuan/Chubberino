@@ -1,29 +1,23 @@
 ﻿using Chubberino.Client;
-using Chubberino.Client.Abstractions;
 using Chubberino.Client.Commands.Settings;
+using Chubberino.UnitTests.Tests.Client.Commands;
 using Chubberino.UnitTests.Utilities.TwitchLib;
 using Moq;
 using System;
 using System.Collections.Generic;
 using TwitchLib.Client.Events;
-using TwitchLib.Client.Interfaces;
 using TwitchLib.Client.Models;
 using Xunit;
 
 namespace Chubberino.UnitTests.Tests.Client.UsingTrackPyramids
 {
-    public sealed class WhenParsingForPyramids
+    public sealed class WhenParsingForPyramids : UsingCommand
     {
         private TrackPyramids Sut { get; }
 
-        private Mock<IExtendedClient> TwitchClient { get; }
-
-
         public WhenParsingForPyramids()
         {
-            TwitchClient = new Mock<IExtendedClient>();
-
-            Sut = new TrackPyramids(TwitchClient.Object);
+            Sut = new TrackPyramids(MockedTwitchClient.Object);
         }
 
         [Theory]
@@ -34,7 +28,7 @@ namespace Chubberino.UnitTests.Tests.Client.UsingTrackPyramids
             String expectedPyramidBlock,
             Int32 expectedPyramidHeight)
         {
-            TwitchClient
+            MockedTwitchClient
                 .Setup(x => x.SpoolMessage(It.IsAny<String>()))
                 .Callback((String message) =>
                 {
@@ -56,7 +50,7 @@ namespace Chubberino.UnitTests.Tests.Client.UsingTrackPyramids
 
             Assert.Equal(expectedPyramidBlock, Sut.PyramidBlock);
 
-            TwitchClient.Verify(x => x.SpoolMessage(It.IsAny<String>()), Times.Once());
+            MockedTwitchClient.Verify(x => x.SpoolMessage(It.IsAny<String>()), Times.Once());
         }
 
         public static IEnumerable<Object[]> ValidPyramids { get; } = new List<Object[]>
@@ -193,7 +187,7 @@ namespace Chubberino.UnitTests.Tests.Client.UsingTrackPyramids
             String expectedPyramidBlock,
             Int32 expectedPyramidHeight)
         {
-            TwitchClient.Setup(x => x.SpoolMessage(It.IsAny<String>()))
+            MockedTwitchClient.Setup(x => x.SpoolMessage(It.IsAny<String>()))
                 .Callback((String message) =>
                 {
                     Assert.Contains(expectedPyramidHeight.ToString(), message);
@@ -244,7 +238,7 @@ namespace Chubberino.UnitTests.Tests.Client.UsingTrackPyramids
 
             Assert.Equal(expectedPyramidBlock, Sut.PyramidBlock);
 
-            TwitchClient.Verify(x => x.SpoolMessage(It.IsAny<String>()), Times.Once());
+            MockedTwitchClient.Verify(x => x.SpoolMessage(It.IsAny<String>()), Times.Once());
         }
 
         public static IEnumerable<Object[]> RuinedPyramids { get; } = new List<Object[]>
@@ -310,7 +304,7 @@ namespace Chubberino.UnitTests.Tests.Client.UsingTrackPyramids
 
             Assert.Equal(expectedPyramidBlock, Sut.PyramidBlock);
 
-            TwitchClient.Verify(x => x.SpoolMessage(It.IsAny<String>()), Times.Never());
+            MockedTwitchClient.Verify(x => x.SpoolMessage(It.IsAny<String>()), Times.Never());
         }
 
         public static IEnumerable<Object[]> InvalidPyramids { get; } = new List<Object[]>
