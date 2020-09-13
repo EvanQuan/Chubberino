@@ -2,9 +2,9 @@
 using System;
 using Xunit;
 
-namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.UsingReply
+namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Replies
 {
-    public sealed class WhenSetting : CommandTestBase
+    public sealed class WhenSetting : UsingCommand
     {
         private Repeat Sut { get; }
 

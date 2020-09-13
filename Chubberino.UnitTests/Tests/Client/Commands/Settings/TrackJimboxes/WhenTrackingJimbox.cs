@@ -1,26 +1,20 @@
 ﻿using Chubberino.Client;
-using Chubberino.Client.Abstractions;
 using Chubberino.Client.Commands.Settings;
 using Chubberino.UnitTests.Utilities.TwitchLib;
 using Moq;
 using System;
 using System.Collections.Generic;
-using TwitchLib.Client.Interfaces;
 using Xunit;
 
-namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.UsingTrackJimbox
+namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.TrackJimboxes
 {
-    public sealed class WhenTrackingJimbox
+    public sealed class WhenTrackingJimbox : UsingCommand
     {
         private TrackJimbox Sut { get; }
 
-        private Mock<IExtendedClient> TwitchClient { get; }
-
         public WhenTrackingJimbox()
         {
-            TwitchClient = new Mock<IExtendedClient>();
-
-            Sut = new TrackJimbox(TwitchClient.Object);
+            Sut = new TrackJimbox(MockedTwitchClient.Object);
         }
 
         [Theory]
@@ -30,7 +24,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.UsingTrackJimbox
             String[] expectedContributors,
             String expectedBorder)
         {
-            TwitchClient
+            MockedTwitchClient
                 .Setup(x => x.SpoolMessage(It.IsAny<String>()))
                 .Callback((String message) =>
                 {
@@ -50,7 +44,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.UsingTrackJimbox
                 Sut.TwitchClient_OnMessageReceived(null, TwitchLibUtilities.GetOnMessageReceivedArgs(username, message));
             }
 
-            TwitchClient.Verify(x => x.SpoolMessage(It.IsAny<String>()), Times.Once());
+            MockedTwitchClient.Verify(x => x.SpoolMessage(It.IsAny<String>()), Times.Once());
         }
 
         public static IEnumerable<Object[]> ValidJimboxes { get; } = new List<Object[]>

@@ -1,12 +1,12 @@
 ﻿using Chubberino.Client.Commands.Settings;
 
-namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.UsingGreet
+namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Greets
 {
-    public abstract class GreetTestBase : CommandTestBase
+    public abstract class UsingGreet : UsingCommand
     {
         protected Greet Sut { get; }
 
-        public GreetTestBase()
+        public UsingGreet()
         {
             Sut = new Greet(MockedTwitchClient.Object);
         }

@@ -1,17 +1,15 @@
 ﻿using Chubberino.Client.Abstractions;
-using Chubberino.Client.Commands.Strategies;
 using Moq;
-using TwitchLib.Client.Interfaces;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands
 {
-    public abstract class CommandTestBase
+    public abstract class UsingCommand
     {
         protected Mock<IExtendedClient> MockedTwitchClient { get; }
 
         protected Mock<IRepeater> MockedRepeater { get; }
 
-        public CommandTestBase()
+        public UsingCommand()
         {
             MockedTwitchClient = new Mock<IExtendedClient>().SetupAllProperties();
 

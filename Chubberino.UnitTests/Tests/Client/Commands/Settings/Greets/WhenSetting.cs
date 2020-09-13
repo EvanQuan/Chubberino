@@ -2,9 +2,9 @@
 using System;
 using Xunit;
 
-namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.UsingGreet
+namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Greets
 {
-    public sealed class WhenSetting : GreetTestBase
+    public sealed class WhenSetting : UsingGreet
     {
         [Theory]
         [InlineData("m", new String[] { "default" }, Greet.Mode.Default)]
