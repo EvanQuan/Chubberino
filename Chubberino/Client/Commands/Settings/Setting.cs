@@ -1,6 +1,7 @@
 ﻿using Chubberino.Client.Abstractions;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using TwitchLib.Client.Interfaces;
 
 namespace Chubberino.Client.Commands.Settings
@@ -37,8 +38,8 @@ namespace Chubberino.Client.Commands.Settings
 
         public virtual String Status => IsEnabled ? "enabled" : "disabled";
 
-        protected Setting(IExtendedClient client)
-            : base(client)
+        protected Setting(IExtendedClient client, TextWriter console)
+            : base(client, console)
         {
         }
 

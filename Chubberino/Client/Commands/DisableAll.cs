@@ -1,6 +1,7 @@
 ﻿using Chubberino.Client.Abstractions;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Chubberino.Client.Commands
 {
@@ -8,8 +9,8 @@ namespace Chubberino.Client.Commands
     {
         public ICommandRepository Commands { get; }
 
-        public DisableAll(IExtendedClient client, ICommandRepository commands)
-            : base(client)
+        public DisableAll(IExtendedClient client, ICommandRepository commands, TextWriter console)
+            : base(client, console)
         {
             Commands = commands;
         }

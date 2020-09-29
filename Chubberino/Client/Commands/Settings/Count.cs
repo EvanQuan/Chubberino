@@ -1,6 +1,7 @@
 ﻿using Chubberino.Client.Abstractions;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace Chubberino.Client.Commands.Settings
@@ -27,8 +28,8 @@ namespace Chubberino.Client.Commands.Settings
             + $"\n\tprefix: {Prefix}"
             + $"\n\tsuffix: {Suffix}";
 
-        public Count(IExtendedClient client, IRepeater repeater)
-            : base(client)
+        public Count(IExtendedClient client, IRepeater repeater, TextWriter console)
+            : base(client, console)
         {
             Repeater = repeater;
             Repeater.Action = SpoolCount;

@@ -2,6 +2,7 @@
 using Chubberino.Client.Commands.Settings.Replies;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using TwitchLib.Client.Events;
@@ -46,8 +47,8 @@ namespace Chubberino.Client.Commands.Settings
             .AppendLine($"\tusers: {(UsersToReplyTo.Count == 0 ? "< Any user >" : "\n\t\t" + String.Join("\n\t\t", UsersToReplyTo))}")
             .ToString();
 
-        public Reply(IExtendedClient client, IEqualsComparator equalsComparator, IContainsComparator containsComparator)
-            : base(client)
+        public Reply(IExtendedClient client, IEqualsComparator equalsComparator, IContainsComparator containsComparator, TextWriter console)
+            : base(client, console)
         {
             UsersToReplyTo = new HashSet<String>();
             EqualsComparator = equalsComparator;

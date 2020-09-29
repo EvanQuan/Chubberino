@@ -2,8 +2,8 @@
 using Chubberino.Client.Extensions;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using TwitchLib.Client.Models.Builders;
 
 namespace Chubberino.Client.Commands
 {
@@ -11,8 +11,8 @@ namespace Chubberino.Client.Commands
     {
         private String JoinedChannelName { get; set; }
 
-        public Join(IExtendedClient client)
-            : base(client)
+        public Join(IExtendedClient client, TextWriter console)
+            : base(client, console)
         {
             TwitchClient.OnJoinedChannel += TwitchClient_OnJoinedChannel;
         }

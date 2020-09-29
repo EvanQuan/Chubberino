@@ -2,6 +2,7 @@
 using Chubberino.Client.Extensions;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace Chubberino.Client.Commands.Settings
@@ -14,8 +15,8 @@ namespace Chubberino.Client.Commands.Settings
             + $"\n\tUsers:"
             + $"\n\t\t{UsersToPogO.ToLineDelimitedString(2)}";
 
-        public AutoPogO(IExtendedClient client)
-            : base(client)
+        public AutoPogO(IExtendedClient client, TextWriter console)
+            : base(client, console)
         {
             UsersToPogO = new HashSet<String>();
             Enable = twitchClient =>

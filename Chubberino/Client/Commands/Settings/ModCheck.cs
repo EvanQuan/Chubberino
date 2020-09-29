@@ -10,14 +10,12 @@ namespace Chubberino.Client.Commands.Settings
 {
     public sealed class ModCheck : Setting
     {
-        private TextWriter TextWriter { get; }
-
         public ICommandRepository Commands { get; }
 
         private IStopSettingStrategy StopSettingStrategy { get; }
 
-        public ModCheck(IExtendedClient client, TextWriter textWriter, ICommandRepository commands, IStopSettingStrategy stopSettingStrategy)
-            : base(client)
+        public ModCheck(IExtendedClient client, TextWriter console, ICommandRepository commands, IStopSettingStrategy stopSettingStrategy)
+            : base(client, console)
         {
             Enable = twitchClient =>
             {
@@ -28,7 +26,6 @@ namespace Chubberino.Client.Commands.Settings
             {
                 twitchClient.OnMessageReceived -= TwitchClient_OnMessageReceived;
             };
-            TextWriter = textWriter;
             Commands = commands;
             StopSettingStrategy = stopSettingStrategy;
         }
@@ -38,8 +35,8 @@ namespace Chubberino.Client.Commands.Settings
             if (StopSettingStrategy.ShouldStop(e.ChatMessage))
             {
                 Commands.DisableAllSettings();
-                TextWriter.WriteLine("! ! ! DISABLED ALL SETTINGS ! ! !");
-                TextWriter.WriteLine($"Moderator {e.ChatMessage.DisplayName} said: \"{e.ChatMessage.Message}\"");
+                Console.WriteLine("! ! ! DISABLED ALL SETTINGS ! ! !");
+                Console.WriteLine($"Moderator {e.ChatMessage.DisplayName} said: \"{e.ChatMessage.Message}\"");
             }
         }
     }

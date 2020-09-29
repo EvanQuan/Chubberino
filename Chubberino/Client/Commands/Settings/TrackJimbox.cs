@@ -1,6 +1,7 @@
 ﻿using Chubberino.Client.Abstractions;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using TwitchLib.Client.Events;
 
@@ -52,8 +53,8 @@ namespace Chubberino.Client.Commands.Settings
         /// </summary>
         private String Border { get; set; }
 
-        public TrackJimbox(IExtendedClient client)
-            : base(client)
+        public TrackJimbox(IExtendedClient client, TextWriter console)
+            : base(client, console)
         {
             Enable = twitchClient =>
             {

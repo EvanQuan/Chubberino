@@ -1,6 +1,7 @@
 ﻿using Chubberino.Client.Abstractions;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using TwitchLib.Client.Events;
 
@@ -22,8 +23,8 @@ namespace Chubberino.Client.Commands.Settings
 
         private IRepeater Repeater { get; }
 
-        public Repeat(IExtendedClient client, IRepeater repeater)
-            : base(client)
+        public Repeat(IExtendedClient client, IRepeater repeater, TextWriter console)
+            : base(client, console)
         {
             Repeater = repeater;
             Repeater.Action = SpoolRepeatMessages;

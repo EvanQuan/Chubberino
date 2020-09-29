@@ -10,7 +10,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Replies
 
         public WhenSetting()
         {
-            Sut = new Repeat(MockedTwitchClient.Object, MockedRepeater.Object);
+            Sut = new Repeat(MockedTwitchClient.Object, MockedRepeater.Object, MockedConsole.Object);
         }
 
         [Theory]

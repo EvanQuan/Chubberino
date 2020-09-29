@@ -1,14 +1,15 @@
 ﻿using Chubberino.Client.Abstractions;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace Chubberino.Client.Commands.Settings
 {
     internal sealed class MockStreamElements : Copy
     {
-        public MockStreamElements(IExtendedClient client)
-            : base(client)
+        public MockStreamElements(IExtendedClient client, TextWriter console)
+            : base(client, console)
         {
         }
 

@@ -1,12 +1,13 @@
 ﻿using Chubberino.Client.Abstractions;
 using System;
+using System.IO;
 
 namespace Chubberino.Client.Commands.Settings
 {
     internal sealed class Log : Setting
     {
-        public Log(IExtendedClient client)
-            : base(client)
+        public Log(IExtendedClient client, TextWriter console)
+            : base(client, console)
         {
             Enable = twitchClient =>
             {
