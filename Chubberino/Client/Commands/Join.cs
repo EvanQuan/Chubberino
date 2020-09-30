@@ -48,8 +48,6 @@ namespace Chubberino.Client.Commands
 
             String channelName = arguments.FirstOrDefault();
 
-            TwitchClient.JoinChannel(channelName);
-
             TwitchClient.EnsureJoinedToChannel(channelName);
         }
     }

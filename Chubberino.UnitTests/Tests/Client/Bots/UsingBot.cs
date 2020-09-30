@@ -45,6 +45,8 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
             Username = Guid.NewGuid().ToString();
             TwitchOAuth = Guid.NewGuid().ToString();
 
+            Credentials = new ConnectionCredentials(Username, TwitchOAuth, disableUsernameCheck: true);
+
             MockedCommandRepository = new Mock<ICommandRepository>().SetupAllProperties();
 
             MockedExtendedClientFactory = new Mock<IExtendedClientFactory>().SetupAllProperties();
@@ -84,9 +86,13 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
             Sut = new Bot(
                 MockedConsole.Object,
                 MockedCommandRepository.Object,
-                new ConnectionCredentials(Username, TwitchOAuth, disableUsernameCheck: true),
+                Credentials,
                 BotInfo,
                 MockedExtendedClientFactory.Object);
+
+            MockedExtendedClientFactory.Invocations.Clear();
+            MockedCommandRepository.Invocations.Clear();
+            MockedClient.Invocations.Clear();
         }
     }
 }
