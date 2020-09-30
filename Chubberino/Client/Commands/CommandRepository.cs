@@ -20,7 +20,7 @@ namespace Chubberino.Client.Commands
         {
         }
 
-        public CommandRepository(IExtendedClient client, TextWriter console)
+        public CommandRepository(IExtendedClient client, TextWriter console, IBot bot)
         {
             Console = console;
 
@@ -40,7 +40,7 @@ namespace Chubberino.Client.Commands
                 new Log(client, console),
                 new MockStreamElements(client, console),
                 new ModCheck(client, console, this, stopSettingStrategy),
-                new Mode(client, console),
+                new Mode(client, console, bot),
                 new Pyramid(client, console),
                 new Repeat(client, new Repeater(), console),
                 new Reply(client, new EqualsComparator(), new ContainsComparator(), console),

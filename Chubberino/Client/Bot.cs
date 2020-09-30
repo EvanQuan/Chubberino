@@ -14,8 +14,6 @@ namespace Chubberino.Client
 {
     internal sealed class Bot : IBot
     {
-        public static Bot Instance { get; } = new Bot(System.Console.Out);
-
         private IClientOptions CurrentClientOptions { get; set; }
 
         public BotState State { get; private set; }
@@ -31,10 +29,10 @@ namespace Chubberino.Client
         private void CreateClient()
         {
             InitializeTwitchClientAndSpooler(BotInfo.Instance.RegularClientOptions);
-            Commands = new CommandRepository(TwitchClient, Console);
+            Commands = new CommandRepository(TwitchClient, Console, this);
         }
 
-        private Bot(TextWriter console)
+        public Bot(TextWriter console)
         {
             CreateClient();
             Console = console;

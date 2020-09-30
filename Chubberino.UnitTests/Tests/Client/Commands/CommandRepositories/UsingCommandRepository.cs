@@ -16,13 +16,17 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
 
         protected Mock<TextWriter> MockedConsole { get; }
 
+        protected Mock<IBot> MockedBot { get; }
+
         public UsingCommandRepository()
         {
             MockedClient = new Mock<IExtendedClient>();
 
             MockedConsole = new Mock<TextWriter>();
 
-            Sut = new CommandRepository(MockedClient.Object, MockedConsole.Object);
+            MockedBot = new Mock<IBot>();
+
+            Sut = new CommandRepository(MockedClient.Object, MockedConsole.Object, MockedBot.Object);
         }
     }
 }
