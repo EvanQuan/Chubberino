@@ -18,6 +18,7 @@ namespace Chubberino.Client
             : base(client, console)
         {
             Bot = bot;
+            BotInfo = botInfo;
         }
 
         public override void Execute(IEnumerable<String> arguments)
