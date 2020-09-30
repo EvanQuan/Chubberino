@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using TwitchLib.Client.Events;
 
 namespace Chubberino.Client.Commands
 {
@@ -17,7 +18,7 @@ namespace Chubberino.Client.Commands
             TwitchClient.OnJoinedChannel += TwitchClient_OnJoinedChannel;
         }
 
-        private void TwitchClient_OnJoinedChannel(Object sender, TwitchLib.Client.Events.OnJoinedChannelArgs e)
+        public void TwitchClient_OnJoinedChannel(Object sender, OnJoinedChannelArgs e)
         {
             // For simplicity, we can only be in 1 channel at a time.
             if (e.Channel.Equals(JoinedChannelName, StringComparison.OrdinalIgnoreCase)) { return; }
