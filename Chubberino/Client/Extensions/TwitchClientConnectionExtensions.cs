@@ -22,6 +22,8 @@ namespace Chubberino.Client.Extensions
             },
             TimeSpan.FromSeconds(10));
 
+            if (!isConnected) { return false; }
+
             Boolean isJoined = SpinWait.SpinUntil(() =>
             {
                 if (client.JoinedChannels.Count == 0)
@@ -38,7 +40,7 @@ namespace Chubberino.Client.Extensions
             },
             TimeSpan.FromSeconds(10));
 
-            return isConnected && isJoined;
+            return isJoined;
         }
     }
 }
