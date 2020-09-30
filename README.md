@@ -6,21 +6,19 @@
 
 ![Clone](/Images/Clone.png)
 
+### Copy TwitchInfo.resx file
+
+Execute `move_resx.sh`
+
+![FileExplorer](/Images/move_resx.sh.png)
+
 ### Open `Chubberino.sln` solution file
 
 ![FileExplorer](/Images/FileExplorer.png)
 
-### Go to the Solution Explorer
+### Go to the Solution Explorer to Open TwitchInfo.resx
 
 ![SolutionExplorer](/Images/SolutionExplorer.png)
-
-### Add New Item
-
-![AddNewItem](/Images/AddNewItem.png)
-
-### Add a Resource File named `TwitchInfo.resx`
-
-![AddResourceFile](/Images/AddResourceFile.png)
 
 ### Add Fields
 
