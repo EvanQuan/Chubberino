@@ -1,9 +1,7 @@
 ﻿using Chubberino.Client.Abstractions;
 using Chubberino.Client.Commands.Strategies;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using TwitchLib.Client.Events;
 
 namespace Chubberino.Client.Commands.Settings
@@ -30,7 +28,7 @@ namespace Chubberino.Client.Commands.Settings
             StopSettingStrategy = stopSettingStrategy;
         }
 
-        private void TwitchClient_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
+        public void TwitchClient_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
         {
             if (StopSettingStrategy.ShouldStop(e.ChatMessage))
             {
