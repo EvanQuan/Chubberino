@@ -20,8 +20,10 @@ jobs:
     - name: Install dependencies
       run: dotnet restore
     - name: Build
-      run: bash ./move_resx.sh
-      run: dotnet build --configuration Release --no-restore
+      run: |
+        bash ./move_resx.sh
+        dotnet build --configuration Release --no-restore
     - name: Test
-      run: bash ./move_resx.sh
-      run: dotnet test --no-restore --verbosity normal
+      run: |
+        bash ./move_resx.sh
+        dotnet test --no-restore --verbosity normal
