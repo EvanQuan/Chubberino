@@ -12,7 +12,7 @@ using TwitchLib.Communication.Interfaces;
 
 namespace Chubberino.Client
 {
-    internal class Bot : IDisposable
+    internal sealed class Bot : IBot
     {
         public static Bot Instance { get; } = new Bot(System.Console.Out);
 
