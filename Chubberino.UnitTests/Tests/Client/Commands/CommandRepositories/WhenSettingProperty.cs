@@ -1,7 +1,9 @@
-﻿using Chubberino.Client.Commands.Settings;
+﻿using Chubberino.Client.Commands;
+using Chubberino.Client.Commands.Settings;
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
@@ -54,6 +56,22 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
             Sut.Execute("set", commandWithArguments);
 
             MockedConsole.Verify(x => x.WriteLine($"Command \"{invalidCommandName}\" not found to set."), Times.Once());
+        }
+
+        [Theory]
+        [InlineData("message", "a")]
+        [InlineData("message", "a b")]
+        public void ShouldOutputPropertySetMessage(params String[] arguments)
+        {
+            String validCommandName = new Repeat(MockedClient.Object, new Repeater(), MockedConsole.Object).Name;
+            String propertyName = arguments[0];
+            IEnumerable<String> propertyValue = arguments.Skip(1);
+            List<String> commandWithArguments = new List<String>() { validCommandName };
+            commandWithArguments.AddRange(arguments);
+
+            Sut.Execute("set", commandWithArguments);
+
+            MockedConsole.Verify(x => x.WriteLine($"Command \"{validCommandName}\" property \"{propertyName}\" set to \"{String.Join(" ", propertyValue)}\"."), Times.Once());
         }
     }
 }
