@@ -26,7 +26,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
 
             MockedBot = new Mock<IBot>();
 
-            Sut = new CommandRepository(MockedClient.Object, MockedConsole.Object, MockedBot.Object);
+            Sut = new CommandRepository(MockedConsole.Object);
         }
     }
 }

@@ -1,7 +1,9 @@
-﻿using Chubberino.Client.Abstractions;
+﻿using Autofac;
+using Chubberino.Client.Abstractions;
 using Chubberino.Client.Commands;
 using Chubberino.Client.Extensions;
 using System;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -20,22 +22,20 @@ namespace Chubberino.Client
 
         private IExtendedClient TwitchClient { get; set; }
 
-        private ConnectionCredentials Credentials { get; } = new ConnectionCredentials(TwitchInfo.BotUsername, TwitchInfo.BotToken);
+        private ConnectionCredentials Credentials { get; }
 
         private ICommandRepository Commands { get; set; }
 
         private TextWriter Console { get; set; }
 
-        private void CreateClient()
-        {
-            InitializeTwitchClientAndSpooler(BotInfo.Instance.RegularClientOptions);
-            Commands = new CommandRepository(TwitchClient, Console, this);
-        }
+        public ILifetimeScope Scope { get; set; }
 
-        public Bot(TextWriter console)
+        public Bot(TextWriter console, ICommandRepository commands, ConnectionCredentials credentials)
         {
-            CreateClient();
+            Credentials = credentials;
             Console = console;
+            Commands = commands;
+            InitializeTwitchClientAndSpooler(BotInfo.Instance.RegularClientOptions);
         }
 
         private void InitializeTwitchClientAndSpooler(IClientOptions clientOptions)

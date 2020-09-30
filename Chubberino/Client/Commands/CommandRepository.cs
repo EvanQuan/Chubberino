@@ -1,7 +1,4 @@
 ﻿using Chubberino.Client.Abstractions;
-using Chubberino.Client.Commands.Settings;
-using Chubberino.Client.Commands.Settings.Replies;
-using Chubberino.Client.Commands.Strategies;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,46 +9,22 @@ namespace Chubberino.Client.Commands
 {
     public sealed class CommandRepository : ICommandRepository
     {
-        public IReadOnlyList<ICommand> Commands { get; }
+        public IReadOnlyList<ICommand> Commands => CommandList;
+
+        private List<ICommand> CommandList { get; }
 
         private TextWriter Console { get; }
 
-        private CommandRepository()
-        {
-        }
-
-        public CommandRepository(IExtendedClient client, TextWriter console, IBot bot)
+        public CommandRepository(TextWriter console)
         {
             Console = console;
+            CommandList = new List<ICommand>();
+        }
 
-            var stopSettingStrategy = new StopSettingStrategy();
-
-            var commands = new List<ICommand>()
-            {
-                new AutoChat(client, console),
-                new AutoPogO(client, console),
-                new Color(client, console),
-                new Copy(client, console),
-                new Count(client, new Repeater(), console),
-                new DisableAll(client, this, console),
-                new Greet(client, console),
-                new Jimbox(client, console),
-                new Join(client, console),
-                new Log(client, console),
-                new MockStreamElements(client, console),
-                new ModCheck(client, console, this, stopSettingStrategy),
-                new Mode(client, console, bot),
-                new Pyramid(client, console),
-                new Repeat(client, new Repeater(), console),
-                new Reply(client, new EqualsComparator(), new ContainsComparator(), console),
-                new Say(client, console),
-                new TimeoutAlert(client, console),
-                new TrackJimbox(client, console),
-                new TrackPyramids(client, console),
-                new YepKyle(client, console),
-            };
-
-            Commands = commands;
+        public ICommandRepository AddCommand(ICommand command)
+        {
+            CommandList.Add(command);
+            return this;
         }
 
         /// <summary>
@@ -69,7 +42,7 @@ namespace Chubberino.Client.Commands
 
         public void RefreshAll(IExtendedClient twitchClient)
         {
-            foreach (ICommand command in Commands)
+            foreach (ICommand command in CommandList)
             {
                 command.Refresh(twitchClient);
             }
@@ -79,7 +52,7 @@ namespace Chubberino.Client.Commands
         {
             StringBuilder stringBuilder = new StringBuilder();
 
-            foreach (ICommand command in Commands)
+            foreach (ICommand command in CommandList)
             {
                 if (command is ISetting setting)
                 {
@@ -91,14 +64,14 @@ namespace Chubberino.Client.Commands
         }
 
         /// <summary>
-        /// Get all the <see cref="ISetting"/>s contained within <see cref="Commands"/>.
+        /// Get all the <see cref="ISetting"/>s contained within <see cref="CommandList"/>.
         /// </summary>
-        /// <returns>all the <see cref="ISetting"/>s contained within <see cref="Commands"/>.</returns>
+        /// <returns>all the <see cref="ISetting"/>s contained within <see cref="CommandList"/>.</returns>
         public IEnumerable<ISetting> GetSettings()
         {
             var settingList = new List<ISetting>();
 
-            foreach (ICommand command in Commands)
+            foreach (ICommand command in CommandList)
             {
                 if (command is ISetting setting)
                 {
@@ -257,7 +230,7 @@ namespace Chubberino.Client.Commands
             }
         }
 
-        private ICommand GetCommand(String commandName) => Commands
+        private ICommand GetCommand(String commandName) => CommandList
                 .Where(command => command.Name.Equals(commandName, StringComparison.OrdinalIgnoreCase))
                 .FirstOrDefault();
     }

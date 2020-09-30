@@ -11,6 +11,7 @@ namespace Chubberino.Client
     public sealed class Mode : Command
     {
         private IBot Bot { get; }
+
         public Mode(IExtendedClient client, TextWriter console, IBot bot)
             : base(client, console)
         {

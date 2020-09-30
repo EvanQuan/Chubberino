@@ -1,4 +1,5 @@
-﻿using Chubberino.Client.Commands;
+﻿using Chubberino.Client.Abstractions;
+using Chubberino.Client.Commands;
 using Chubberino.Client.Commands.Settings;
 using Moq;
 using System;
@@ -13,6 +14,17 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
     /// </summary>
     public sealed class WhenSettingProperty : UsingCommandRepository
     {
+        private Mock<ISetting> MockedSetting { get; }
+        public WhenSettingProperty()
+        {
+            MockedSetting = new Mock<ISetting>().SetupAllProperties();
+            MockedSetting
+                .Setup(x => x.Name)
+                .Returns(Guid.NewGuid().ToString());
+
+            Sut.AddCommand(MockedSetting.Object);
+        }
+
         /// <summary>
         /// Should output a message indicating the property failed to be set.
         /// A property is not set if the value being set is invalid, or if the
@@ -21,14 +33,21 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
         /// <param name="arguments"></param>
         [Theory]
         // Invalid property
-        [InlineData("a", "1")]
+        [InlineData("invalid", "valid")]
         // Invalid property and value
-        [InlineData("a", "b")]
+        [InlineData("invalid", "invalid")]
         // Invalid value
-        [InlineData("s", "a")]
+        [InlineData("valid", "invalid")]
         public void ShouldOutputPropertyNotSetMessage(params String[] arguments)
         {
-            String validCommandName = new AutoChat(MockedClient.Object, MockedConsole.Object).Name;
+            MockedSetting
+                .Setup(x => x.Set(It.IsAny<String>(), It.IsAny<IEnumerable<String>>()))
+                .Returns((String property, IEnumerable<String> args) =>
+                {
+                    return property == "valid" && "valid" == args.FirstOrDefault();
+                });
+
+            String validCommandName = MockedSetting.Object.Name;
             String propertyName = arguments[0];
             List<String> commandWithArguments = new List<String>() { validCommandName };
             commandWithArguments.AddRange(arguments);
@@ -63,7 +82,11 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
         [InlineData("message", "a b")]
         public void ShouldOutputPropertySetMessage(params String[] arguments)
         {
-            String validCommandName = new Repeat(MockedClient.Object, new Repeater(), MockedConsole.Object).Name;
+            MockedSetting
+                .Setup(x => x.Set(It.IsAny<String>(), It.IsAny<IEnumerable<String>>()))
+                .Returns(true);
+
+            String validCommandName = MockedSetting.Object.Name;
             String propertyName = arguments[0];
             IEnumerable<String> propertyValue = arguments.Skip(1);
             List<String> commandWithArguments = new List<String>() { validCommandName };
