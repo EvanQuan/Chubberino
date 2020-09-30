@@ -14,12 +14,12 @@ namespace Chubberino.Client.Commands.Settings
     /// </summary>
     public sealed class Repeat : Setting
     {
-        private String RepeatMessage { get; set; }
+        public String RepeatMessage { get; set; }
 
         /// <summary>
         /// Indicates that we are waiting for the repeat message to be typed in chat.
         /// </summary>
-        private Boolean WaitingForRepeatMessage { get; set; }
+        public Boolean WaitingForRepeatMessage { get; set; }
 
         private IRepeater Repeater { get; }
 
@@ -107,7 +107,7 @@ namespace Chubberino.Client.Commands.Settings
             return false;
         }
 
-        private void TwitchClient_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
+        public void TwitchClient_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
         {
             if (!e.ChatMessage.Username.Equals(e.ChatMessage.BotUsername)) { return; }
 
