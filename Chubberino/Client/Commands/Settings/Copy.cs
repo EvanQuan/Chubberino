@@ -124,6 +124,7 @@ usage: copy <username> [mode] [message prefix]
 
     [mode]      default - Copy messages exactly.
                 mock - Randomly use upper and lowercase letters.
+                reverse - Reverse the message.
 
     [prefix]    Text to prepend to the copied messages.
 ";
