@@ -1,8 +1,13 @@
-﻿using System;
+﻿using Chubberino.Client.Commands.Settings;
+using System;
+using System.Collections.Generic;
 using Xunit;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Copies
 {
+    /// <summary>
+    /// When calling <see cref="Copy.Execute(IEnumerable{String})"/>
+    /// </summary>
     public sealed class WhenExecuting : UsingCopy
     {
         /// <summary>
@@ -20,6 +25,18 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Copies
             Sut.Execute(arguments);
 
             MockedConsole.Verify(x => x.WriteLine($"Copying user \"{userToCopy}\" Mode: \"{mode}\" Prefix: \"{prefix}\""));
+        }
+
+        /// <summary>
+        /// Should disable setting.
+        /// </summary>
+        [Fact]
+        public void ShouldDisable()
+        {
+            Sut.Execute(new String[] { });
+
+            MockedConsole.Verify(x => x.WriteLine("Copy disabled"));
+            Assert.False(Sut.IsEnabled);
         }
     }
 }
