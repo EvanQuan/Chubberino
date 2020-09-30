@@ -62,16 +62,18 @@ namespace Chubberino.Client
         public Boolean Start()
         {
             Console.WriteLine("Connecting to " + BotInfo.ChannelName);
-            TwitchClient.EnsureJoinedToChannel(BotInfo.ChannelName);
+            Boolean channelJoined = TwitchClient.EnsureJoinedToChannel(BotInfo.ChannelName);
 
-            Boolean channelJoined = SpinWait.SpinUntil(() =>
+            if (!channelJoined) { return false; }
+
+            Boolean channelNameUpdated = SpinWait.SpinUntil(() =>
             {
                 Thread.Sleep(TimeSpan.FromSeconds(1));
                 return !String.IsNullOrWhiteSpace(BotInfo.ChannelName);
             },
             TimeSpan.FromSeconds(60));
 
-            return channelJoined;
+            return channelNameUpdated;
 
         }
 
