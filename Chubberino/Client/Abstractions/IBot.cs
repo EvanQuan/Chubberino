@@ -5,6 +5,8 @@ namespace Chubberino.Client.Abstractions
 {
     public interface IBot : IDisposable
     {
+        BotState State { get; }
+
         Boolean Start();
 
         String GetPrompt();
