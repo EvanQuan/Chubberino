@@ -108,12 +108,11 @@ namespace Chubberino.Client
 
         public void ReadCommand(String command)
         {
-            String[] arguments = command.Split(" ");
+            String[] arguments = command.Split(" ", StringSplitOptions.RemoveEmptyEntries);
 
-            // arguments will always contain at least 1 element, even for empty string.
+            if (arguments.Length == 0) { return; }
+
             String commandName = arguments[0].ToLower();
-
-            if  (String.IsNullOrWhiteSpace(commandName)) { return; }
 
             switch (commandName)
             {
