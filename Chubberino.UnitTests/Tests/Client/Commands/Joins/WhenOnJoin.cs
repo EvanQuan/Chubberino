@@ -1,7 +1,5 @@
 ﻿using Moq;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using TwitchLib.Client.Events;
 using Xunit;
 
@@ -9,11 +7,6 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Joins
 {
     public sealed class WhenOnJoin : UsingJoin
     {
-        public WhenOnJoin()
-        {
-            
-        }
-
         /// <summary>
         /// Should output a message indicating a channel has been joined.
         /// With no prior joined channel, there should not be any left channel
