@@ -8,7 +8,7 @@ using TwitchLib.Client.Events;
 
 namespace Chubberino.Client.Commands.Settings
 {
-    internal class Copy : Setting
+    public class Copy : Setting
     {
         private String UserToMirror { get; set; }
 
