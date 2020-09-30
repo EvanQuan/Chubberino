@@ -12,6 +12,8 @@ namespace Chubberino.UnitTests.Tests.Client.Commands
 
         protected Mock<TextWriter> MockedConsole { get; }
 
+        protected Mock<ICommandRepository> MockedCommandRepository { get; }
+
         public UsingCommand()
         {
             MockedConsole = new Mock<TextWriter>().SetupAllProperties();
@@ -19,6 +21,8 @@ namespace Chubberino.UnitTests.Tests.Client.Commands
             MockedTwitchClient = new Mock<IExtendedClient>().SetupAllProperties();
 
             MockedRepeater = new Mock<IRepeater>().SetupAllProperties();
+
+            MockedCommandRepository = new Mock<ICommandRepository>().SetupAllProperties();
         }
 
     }

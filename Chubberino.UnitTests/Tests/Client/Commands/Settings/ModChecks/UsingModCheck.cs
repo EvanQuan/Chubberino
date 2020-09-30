@@ -9,13 +9,10 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.ModChecks
     {
         protected ModCheck Sut { get; private set; }
 
-        protected Mock<ICommandRepository> MockedCommandRepository { get; private set; }
-
         protected Mock<IStopSettingStrategy> MockedStopSettingStrategy { get; private set; }
 
         public UsingModCheck()
         {
-            MockedCommandRepository = new Mock<ICommandRepository>().SetupAllProperties();
             MockedStopSettingStrategy = new Mock<IStopSettingStrategy>().SetupAllProperties();
 
             Sut = new ModCheck(
