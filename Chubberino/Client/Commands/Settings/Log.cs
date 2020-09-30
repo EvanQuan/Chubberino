@@ -1,10 +1,11 @@
 ﻿using Chubberino.Client.Abstractions;
 using System;
 using System.IO;
+using TwitchLib.Client.Events;
 
 namespace Chubberino.Client.Commands.Settings
 {
-    internal sealed class Log : Setting
+    public sealed class Log : Setting
     {
         public Log(IExtendedClient client, TextWriter console)
             : base(client, console)
@@ -13,12 +14,14 @@ namespace Chubberino.Client.Commands.Settings
             {
                 twitchClient.OnLog += TwitchClient_OnLog;
             };
+            Disable = twitchClient =>
+            {
+                twitchClient.OnLog -= TwitchClient_OnLog;
+            };
         }
 
-        private void TwitchClient_OnLog(Object sender, TwitchLib.Client.Events.OnLogArgs e)
+        public void TwitchClient_OnLog(Object sender, OnLogArgs e)
         {
-            if (!IsEnabled) { return; }
-
             Console.WriteLine($"{e.DateTime}: {e.BotUsername} - {e.Data}");
         }
     }
