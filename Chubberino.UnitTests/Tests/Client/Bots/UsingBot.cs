@@ -2,8 +2,10 @@
 using Chubberino.Client.Abstractions;
 using Moq;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using TwitchLib.Client.Models;
+using TwitchLib.Communication.Interfaces;
 using TwitchLib.Communication.Models;
 
 namespace Chubberino.UnitTests.Tests.Client.Bots
@@ -24,9 +26,21 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
 
         protected Mock<IExtendedClientFactory> MockedExtendedClientFactory { get; }
 
+        protected BotInfo BotInfo { get; }
+
+        protected ClientOptions RegularClientOptions { get; }
+
+        protected ClientOptions ModeratorClientOptions { get; }
+
+        protected Mock<IExtendedClient> MockedClient { get; }
+
+        protected List<JoinedChannel> JoinedChannels { get; }
+
         public UsingBot()
         {
             MockedConsole = new Mock<TextWriter>().SetupAllProperties();
+
+            JoinedChannels = new List<JoinedChannel>();
 
             Username = Guid.NewGuid().ToString();
             TwitchOAuth = Guid.NewGuid().ToString();
@@ -35,11 +49,43 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
 
             MockedExtendedClientFactory = new Mock<IExtendedClientFactory>().SetupAllProperties();
 
+            MockedClient = new Mock<IExtendedClient>();
+
+            RegularClientOptions = new ClientOptions();
+
+            ModeratorClientOptions = new ClientOptions();
+
+            BotInfo = new BotInfo(ModeratorClientOptions, RegularClientOptions);
+
+            MockedExtendedClientFactory
+                .Setup(x => x.GetClient(It.IsAny<IClientOptions>()))
+                .Returns(MockedClient.Object);
+
+            MockedClient
+                .Setup(x => x.Connect())
+                .Callback(() =>
+                {
+                    MockedClient
+                        .Setup(x => x.IsConnected)
+                        .Returns(true);
+                });
+
+            MockedClient
+                .Setup(x => x.JoinedChannels)
+                .Returns(JoinedChannels);
+
+            MockedClient
+                .Setup(x => x.JoinChannel(It.IsAny<String>(), It.IsAny<Boolean>()))
+                .Callback((String channel, Boolean overrideCheck) =>
+                {
+                    JoinedChannels.Add(new JoinedChannel(channel));
+                });
+
             Sut = new Bot(
                 MockedConsole.Object,
                 MockedCommandRepository.Object,
                 new ConnectionCredentials(Username, TwitchOAuth, disableUsernameCheck: true),
-                new BotInfo(new ClientOptions(), new ClientOptions()),
+                BotInfo,
                 MockedExtendedClientFactory.Object);
         }
     }
