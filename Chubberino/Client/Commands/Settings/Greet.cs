@@ -1,6 +1,7 @@
 ﻿using Chubberino.Client.Abstractions;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using TwitchLib.Client.Events;
 
@@ -31,8 +32,8 @@ namespace Chubberino.Client.Commands.Settings
             : "disabled")
             + $" Mode: {CurrentMode}";
 
-        public Greet(IExtendedClient client)
-            : base(client)
+        public Greet(IExtendedClient client, TextWriter console)
+            : base(client, console)
         {
             Enable = twitchClient =>
             {

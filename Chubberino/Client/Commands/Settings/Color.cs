@@ -2,6 +2,7 @@
 using Chubberino.Client.Commands.Settings.Colors;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using TwitchLib.Client.Enums;
 using TwitchLib.Client.Events;
@@ -27,8 +28,8 @@ namespace Chubberino.Client.Commands.Settings
         public override String Status => base.Status
             + $"\n\tType: {CurrentSelector.Name}";
 
-        public Color(IExtendedClient client)
-            : base(client)
+        public Color(IExtendedClient client, TextWriter console)
+            : base(client, console)
         {
             Enable = twitchClient =>
             {

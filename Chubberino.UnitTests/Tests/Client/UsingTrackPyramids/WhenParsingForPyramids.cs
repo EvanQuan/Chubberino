@@ -17,7 +17,7 @@ namespace Chubberino.UnitTests.Tests.Client.UsingTrackPyramids
 
         public WhenParsingForPyramids()
         {
-            Sut = new TrackPyramids(MockedTwitchClient.Object);
+            Sut = new TrackPyramids(MockedTwitchClient.Object, MockedConsole.Object);
         }
 
         [Theory]

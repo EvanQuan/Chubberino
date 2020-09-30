@@ -15,7 +15,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.TrackJimboxes
 
         public WhenTrackingJimbox()
         {
-            Sut = new TrackJimbox(MockedTwitchClient.Object);
+            Sut = new TrackJimbox(MockedTwitchClient.Object, MockedConsole.Object);
         }
 
         [Theory]

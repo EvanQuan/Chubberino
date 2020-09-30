@@ -1,14 +1,15 @@
 ﻿using Chubberino.Client.Abstractions;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using TwitchLib.Client.Interfaces;
 
 namespace Chubberino.Client.Commands
 {
     public sealed class Say : Command
     {
-        public Say(IExtendedClient client)
-            : base(client)
+        public Say(IExtendedClient client, TextWriter console)
+            : base(client, console)
         {
         }
 

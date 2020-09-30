@@ -1,13 +1,14 @@
 ﻿using Chubberino.Client.Abstractions;
 using System;
+using System.IO;
 using TwitchLib.Client.Interfaces;
 
 namespace Chubberino.Client.Commands.Settings
 {
     internal class TimeoutAlert : Setting
     {
-        public TimeoutAlert(IExtendedClient client)
-            : base(client)
+        public TimeoutAlert(IExtendedClient client, TextWriter console)
+            : base(client, console)
         {
             Enable = twitchClient =>
             {

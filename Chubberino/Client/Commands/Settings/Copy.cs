@@ -2,12 +2,13 @@
 using Chubberino.Client.Extensions;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using TwitchLib.Client.Events;
 
 namespace Chubberino.Client.Commands.Settings
 {
-    internal class Copy : Setting
+    public class Copy : Setting
     {
         private String UserToMirror { get; set; }
 
@@ -26,8 +27,8 @@ namespace Chubberino.Client.Commands.Settings
             ? $"{UserToMirror} Mode: {Mode} Prefix: {MessagePrefix}"
             : "disabled";
 
-        public Copy(IExtendedClient client)
-            : base(client)
+        public Copy(IExtendedClient client, TextWriter console)
+            : base(client, console)
         {
             Enable = twitchClient =>
             {
@@ -123,6 +124,7 @@ usage: copy <username> [mode] [message prefix]
 
     [mode]      default - Copy messages exactly.
                 mock - Randomly use upper and lowercase letters.
+                reverse - Reverse the message.
 
     [prefix]    Text to prepend to the copied messages.
 ";

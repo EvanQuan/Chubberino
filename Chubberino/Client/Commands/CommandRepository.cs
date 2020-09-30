@@ -4,6 +4,7 @@ using Chubberino.Client.Commands.Settings.Replies;
 using Chubberino.Client.Commands.Strategies;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -13,39 +14,41 @@ namespace Chubberino.Client.Commands
     {
         public IReadOnlyList<ICommand> Commands { get; }
 
+        private TextWriter Console { get; }
+
         private CommandRepository()
         {
         }
 
-        public CommandRepository(IExtendedClient client)
+        public CommandRepository(IExtendedClient client, TextWriter console)
         {
-            var stopSettingStrategy = new StopSettingStrategy();
+            Console = console;
 
-            var textWriter = Console.Out;
+            var stopSettingStrategy = new StopSettingStrategy();
 
             var commands = new List<ICommand>()
             {
-                new AutoChat(client),
-                new AutoPogO(client),
-                new Color(client),
-                new Copy(client),
-                new Count(client, new Repeater()),
-                new DisableAll(client, this),
-                new Greet(client),
-                new Jimbox(client),
-                new Join(client),
-                new Log(client),
-                new MockStreamElements(client),
-                new ModCheck(client, textWriter, this, stopSettingStrategy),
-                new Mode(client),
-                new Pyramid(client),
-                new Repeat(client, new Repeater()),
-                new Reply(client, new EqualsComparator(), new ContainsComparator()),
-                new Say(client),
-                new TimeoutAlert(client),
-                new TrackJimbox(client),
-                new TrackPyramids(client),
-                new YepKyle(client),
+                new AutoChat(client, console),
+                new AutoPogO(client, console),
+                new Color(client, console),
+                new Copy(client, console),
+                new Count(client, new Repeater(), console),
+                new DisableAll(client, this, console),
+                new Greet(client, console),
+                new Jimbox(client, console),
+                new Join(client, console),
+                new Log(client, console),
+                new MockStreamElements(client, console),
+                new ModCheck(client, console, this, stopSettingStrategy),
+                new Mode(client, console),
+                new Pyramid(client, console),
+                new Repeat(client, new Repeater(), console),
+                new Reply(client, new EqualsComparator(), new ContainsComparator(), console),
+                new Say(client, console),
+                new TimeoutAlert(client, console),
+                new TrackJimbox(client, console),
+                new TrackPyramids(client, console),
+                new YepKyle(client, console),
             };
 
             Commands = commands;

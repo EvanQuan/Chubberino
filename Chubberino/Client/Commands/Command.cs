@@ -1,6 +1,7 @@
 ﻿using Chubberino.Client.Abstractions;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using TwitchLib.Client.Interfaces;
 
 namespace Chubberino.Client.Commands
@@ -11,9 +12,12 @@ namespace Chubberino.Client.Commands
 
         protected IExtendedClient TwitchClient { get; private set; }
 
-        protected Command(IExtendedClient client)
+        protected TextWriter Console { get; }
+
+        protected Command(IExtendedClient client, TextWriter console)
         {
             TwitchClient = client;
+            Console = console;
             Name = GetType().Name.ToLowerInvariant();
         }
 

@@ -1,6 +1,7 @@
 ﻿using Chubberino.Client.Abstractions;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using TwitchLib.Client.Events;
 using TwitchLib.Client.Interfaces;
@@ -23,8 +24,8 @@ namespace Chubberino.Client.Commands.Settings
 
         private Boolean BuildingUp { get; set; } = true;
 
-        public TrackPyramids(IExtendedClient client)
-            : base(client)
+        public TrackPyramids(IExtendedClient client, TextWriter console)
+            : base(client, console)
         {
             PyramidContributorUsernames = new HashSet<String>();
 

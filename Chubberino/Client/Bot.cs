@@ -2,6 +2,7 @@
 using Chubberino.Client.Commands;
 using Chubberino.Client.Extensions;
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using TwitchLib.Client.Events;
@@ -13,7 +14,7 @@ namespace Chubberino.Client
 {
     internal class Bot : IDisposable
     {
-        public static Bot Instance { get; } = new Bot();
+        public static Bot Instance { get; } = new Bot(System.Console.Out);
 
         private IClientOptions CurrentClientOptions { get; set; }
 
@@ -25,15 +26,18 @@ namespace Chubberino.Client
 
         private ICommandRepository Commands { get; set; }
 
+        private TextWriter Console { get; set; }
+
         private void CreateClient()
         {
             InitializeTwitchClientAndSpooler(BotInfo.Instance.RegularClientOptions);
-            Commands = new CommandRepository(TwitchClient);
+            Commands = new CommandRepository(TwitchClient, Console);
         }
 
-        private Bot()
+        private Bot(TextWriter console)
         {
             CreateClient();
+            Console = console;
         }
 
         private void InitializeTwitchClientAndSpooler(IClientOptions clientOptions)
