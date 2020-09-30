@@ -8,7 +8,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Greets
 
         public UsingGreet()
         {
-            Sut = new Greet(MockedTwitchClient.Object);
+            Sut = new Greet(MockedTwitchClient.Object, MockedConsole.Object);
         }
     }
 }

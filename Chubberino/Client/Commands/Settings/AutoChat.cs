@@ -1,8 +1,8 @@
 ﻿using Chubberino.Client.Abstractions;
-using Chubberino.Client.Commands.Strategies;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using TwitchLib.Client.Events;
 using TwitchLib.Client.Models;
@@ -31,8 +31,8 @@ namespace Chubberino.Client.Commands.Settings
             + $"\n\tSample count: {MessageSampleCount}"
             + $"\n\tDuplicate count: {MinimumDuplicateCount}";
 
-        public AutoChat(IExtendedClient client)
-            : base(client)
+        public AutoChat(IExtendedClient client, TextWriter console)
+            : base(client, console)
         {
             PreviousMessages = new ConcurrentQueue<String>();
             Enable = twitchClient =>

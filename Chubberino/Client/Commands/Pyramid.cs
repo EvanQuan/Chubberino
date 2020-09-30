@@ -1,6 +1,7 @@
 ﻿using Chubberino.Client.Abstractions;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace Chubberino.Client.Commands
@@ -11,7 +12,8 @@ namespace Chubberino.Client.Commands
 
         private Int32 CurrentPyramidHeight { get; set; }
 
-        public Pyramid(IExtendedClient client) : base(client)
+        public Pyramid(IExtendedClient client, TextWriter console)
+            : base(client, console)
         {
         }
 

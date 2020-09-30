@@ -1,12 +1,13 @@
 ﻿using Chubberino.Client.Abstractions;
 using System;
+using System.IO;
 
 namespace Chubberino.Client.Commands.Settings
 {
     public sealed class YepKyle : Setting
     {
-        public YepKyle(IExtendedClient client)
-            : base(client)
+        public YepKyle(IExtendedClient client, TextWriter console)
+            : base(client, console)
         {
             Enable = twitchClient =>
             {

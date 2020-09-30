@@ -2,6 +2,7 @@
 using Chubberino.Client.Commands;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using TwitchLib.Client.Interfaces;
 
@@ -9,8 +10,8 @@ namespace Chubberino.Client
 {
     public sealed class Mode : Command
     {
-        public Mode(IExtendedClient client)
-            : base(client)
+        public Mode(IExtendedClient client, TextWriter console)
+            : base(client, console)
         {
             
         }

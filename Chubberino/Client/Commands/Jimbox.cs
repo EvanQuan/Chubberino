@@ -1,14 +1,15 @@
 ﻿using Chubberino.Client.Abstractions;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace Chubberino.Client.Commands
 {
     public sealed class Jimbox : Command
     {
-        public Jimbox(IExtendedClient client)
-            : base(client)
+        public Jimbox(IExtendedClient client, TextWriter console)
+            : base(client, console)
         {
         }
 
