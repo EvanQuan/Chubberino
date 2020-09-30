@@ -7,29 +7,18 @@ namespace Chubberino.Client.Commands.Settings.Colors
     {
         private static Array ColorPresets { get; } = Enum.GetValues(typeof(ChatColorPresets));
 
-        private Func<String> CurrentColor { get; }
-
         private Random Random { get; }
 
         public String Name { get; } = "preset";
 
-        public PresetColorSelector(Random random, Func<String> currentColor)
+        public PresetColorSelector(Random random)
         {
             Random = random;
-            CurrentColor = currentColor;
         }
 
         public String GetNextColor()
         {
-            String currentColor = CurrentColor();
-            String presetColor;
-            do
-            {
-                presetColor = ColorPresets.GetValue(Random.Next(ColorPresets.Length)).ToString();
-            }
-            while (presetColor == currentColor);
-
-            return presetColor;
+            return ColorPresets.GetValue(Random.Next(ColorPresets.Length)).ToString();
         }
     }
 }

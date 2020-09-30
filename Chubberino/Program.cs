@@ -3,6 +3,7 @@ using Chubberino.Client;
 using Chubberino.Client.Abstractions;
 using Chubberino.Client.Commands;
 using Chubberino.Client.Commands.Settings;
+using Chubberino.Client.Commands.Settings.Colors;
 using Chubberino.Client.Commands.Settings.Replies;
 using Chubberino.Client.Commands.Strategies;
 using System;
@@ -32,7 +33,10 @@ namespace Chubberino
             builder.RegisterType<ContainsComparator>().As<IContainsComparator>().SingleInstance();
             builder.RegisterType<EqualsComparator>().As<IEqualsComparator>().SingleInstance();
             builder.RegisterType<Random>().AsSelf().SingleInstance();
-            builder.RegisterType<ComplimentGenerator>().AsSelf().SingleInstance();
+            builder.RegisterType<ComplimentGenerator>().As<IComplimentGenerator>().SingleInstance();
+            builder.RegisterType<RainbowColorSelector>().AsSelf().SingleInstance();
+            builder.RegisterType<RandomColorSelector>().AsSelf().SingleInstance();
+            builder.RegisterType<PresetColorSelector>().AsSelf().SingleInstance();
 
             // Commands
             builder.RegisterType<AutoChat>().AsSelf().SingleInstance();
@@ -88,6 +92,11 @@ namespace Chubberino
 
             var bot = scope.Resolve<IBot>();
 
+            var color = scope.Resolve<Color>();
+
+            color.AddColorSelector(scope.Resolve<RandomColorSelector>());
+            color.AddColorSelector(scope.Resolve<PresetColorSelector>());
+            color.AddColorSelector(scope.Resolve<RainbowColorSelector>());
 
             bot.Scope = scope;
 

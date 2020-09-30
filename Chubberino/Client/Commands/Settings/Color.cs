@@ -17,11 +17,9 @@ namespace Chubberino.Client.Commands.Settings
     /// </summary>
     internal sealed class Color : Setting
     {
-        private IEnumerable<IColorSelector> Selectors { get; }
+        private List<IColorSelector> Selectors { get; }
 
-        private String CurrentColor { get; set; }
-
-        private Random Random { get; }
+        public String CurrentColor { get; set; }
 
         private IColorSelector CurrentSelector { get; set; }
 
@@ -43,14 +41,15 @@ namespace Chubberino.Client.Commands.Settings
                 twitchClient.OnMessageSent -= TwitchClient_OnMessageSent;
             };
 
-            Random = new Random();
-            Selectors = new List<IColorSelector>()
-            {
-                new RandomColorSelector(Random, () => CurrentColor),
-                new PresetColorSelector(Random, () => CurrentColor),
-                new RainbowColorSelector(),
-            };
+            Selectors = new List<IColorSelector>();
             CurrentSelector = Selectors.FirstOrDefault();
+        }
+
+        public Color AddColorSelector(IColorSelector colorSelector)
+        {
+            Selectors.Add(colorSelector);
+            CurrentSelector = colorSelector;
+            return this;
         }
 
         /// <summary>
