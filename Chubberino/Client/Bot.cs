@@ -110,9 +110,10 @@ namespace Chubberino.Client
         {
             String[] arguments = command.Split(" ");
 
-            if (arguments.Length == 0) { return; }
-
+            // arguments will always contain at least 1 element, even for empty string.
             String commandName = arguments[0].ToLower();
+
+            if  (String.IsNullOrWhiteSpace(commandName)) { return; }
 
             switch (commandName)
             {
