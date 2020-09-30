@@ -12,7 +12,9 @@ namespace Chubberino.Client
     {
         private IBot Bot { get; }
 
-        public Mode(IExtendedClient client, TextWriter console, IBot bot)
+        private BotInfo BotInfo { get; }
+
+        public Mode(IExtendedClient client, TextWriter console, IBot bot, BotInfo botInfo)
             : base(client, console)
         {
             Bot = bot;
@@ -25,13 +27,13 @@ namespace Chubberino.Client
                 case "m":
                 case "mod":
                 case "moderator":
-                    Bot.Refresh(BotInfo.Instance.ModeratorClientOptions);
-                    BotInfo.Instance.IsModerator = true;
+                    Bot.Refresh(BotInfo.ModeratorClientOptions);
+                    BotInfo.IsModerator = true;
                     break;
                 case "n":
                 case "normal":
-                    Bot.Refresh(BotInfo.Instance.RegularClientOptions);
-                    BotInfo.Instance.IsModerator = false;
+                    Bot.Refresh(BotInfo.RegularClientOptions);
+                    BotInfo.IsModerator = false;
                     break;
 
             }

@@ -8,6 +8,8 @@ namespace Chubberino.Client.Abstractions
     {
         BotState State { get; }
 
+        IExtendedClient TwitchClient { get; set; }
+
         ILifetimeScope Scope { get; set; }
 
         Boolean Start();

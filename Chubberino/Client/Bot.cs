@@ -1,15 +1,12 @@
-using Autofac;
+﻿using Autofac;
 using Chubberino.Client.Abstractions;
-using Chubberino.Client.Commands;
 using Chubberino.Client.Extensions;
 using System;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using TwitchLib.Client.Events;
 using TwitchLib.Client.Models;
-using TwitchLib.Communication.Clients;
 using TwitchLib.Communication.Interfaces;
 
 namespace Chubberino.Client
@@ -30,22 +27,32 @@ namespace Chubberino.Client
 
         public ILifetimeScope Scope { get; set; }
 
-        public Bot(TextWriter console, ICommandRepository commands, ConnectionCredentials credentials)
+        private BotInfo BotInfo { get; }
+
+        private IExtendedClientFactory ClientFactory { get; }
+
+        public Bot(
+            TextWriter console,
+            ICommandRepository commands,
+            ConnectionCredentials credentials,
+            BotInfo botInfo,
+            IExtendedClientFactory clientFactory)
         {
             Credentials = credentials;
             Console = console;
             Commands = commands;
-            InitializeTwitchClientAndSpooler(BotInfo.Instance.RegularClientOptions);
+            BotInfo = botInfo;
+            ClientFactory = clientFactory;
+            InitializeTwitchClientAndSpooler(BotInfo.RegularClientOptions);
         }
 
         private void InitializeTwitchClientAndSpooler(IClientOptions clientOptions)
         {
             CurrentClientOptions = clientOptions;
 
-            var customClient = new WebSocketClient(clientOptions);
-            TwitchClient = new ExtendedClient(customClient);
+            TwitchClient = ClientFactory.GetClient(clientOptions);
 
-            TwitchClient.Initialize(Credentials, BotInfo.Instance.ChannelName);
+            TwitchClient.Initialize(Credentials, BotInfo.ChannelName);
 
             TwitchClient.OnConnected += Client_OnConnected;
             TwitchClient.OnConnectionError += Client_OnConnectionError;
@@ -54,13 +61,13 @@ namespace Chubberino.Client
 
         public Boolean Start()
         {
-            Console.WriteLine("Connecting to " + BotInfo.Instance.ChannelName);
-            TwitchClient.EnsureJoinedToChannel(BotInfo.Instance.ChannelName);
+            Console.WriteLine("Connecting to " + BotInfo.ChannelName);
+            TwitchClient.EnsureJoinedToChannel(BotInfo.ChannelName);
 
             Boolean channelJoined = SpinWait.SpinUntil(() =>
             {
                 Thread.Sleep(TimeSpan.FromSeconds(1));
-                return !String.IsNullOrWhiteSpace(BotInfo.Instance.ChannelName);
+                return !String.IsNullOrWhiteSpace(BotInfo.ChannelName);
             },
             TimeSpan.FromSeconds(60));
 
@@ -71,7 +78,7 @@ namespace Chubberino.Client
         public String GetPrompt()
         {
             return Environment.NewLine + Environment.NewLine + Commands.GetStatus() + Environment.NewLine
-                + $"[{(BotInfo.Instance.IsModerator ? "Mod" : "Normal" )} {BotInfo.Instance.ChannelName}]> ";
+                + $"[{(BotInfo.IsModerator ? "Mod" : "Normal" )} {BotInfo.ChannelName}]> ";
         }
 
         private void Client_OnUserTimedout(Object sender, OnUserTimedoutArgs e)

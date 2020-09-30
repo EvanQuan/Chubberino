@@ -34,8 +34,10 @@ namespace Chubberino.Client
         /// </summary>
         public Boolean IsModerator { get; set; }
 
-        public static BotInfo Instance { get; } = new BotInfo();
-
-        private BotInfo() { }
+        public BotInfo(IClientOptions moderatorOptions, IClientOptions regularOptions)
+        {
+            ModeratorClientOptions = moderatorOptions;
+            RegularClientOptions = regularOptions;
+        }
     }
 }

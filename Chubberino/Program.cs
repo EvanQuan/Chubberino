@@ -9,8 +9,7 @@ using Chubberino.Client.Commands.Strategies;
 using System;
 using System.IO;
 using TwitchLib.Client.Models;
-using TwitchLib.Communication.Clients;
-using TwitchLib.Communication.Interfaces;
+using TwitchLib.Communication.Models;
 
 namespace Chubberino
 {
@@ -37,6 +36,20 @@ namespace Chubberino
             builder.RegisterType<RainbowColorSelector>().AsSelf().SingleInstance();
             builder.RegisterType<RandomColorSelector>().AsSelf().SingleInstance();
             builder.RegisterType<PresetColorSelector>().AsSelf().SingleInstance();
+            builder
+                .Register(c => new BotInfo(
+                    new ClientOptions()
+                    {
+                        MessagesAllowedInPeriod = 100,
+                        ThrottlingPeriod = TimeSpan.FromSeconds(30)
+                    },
+                    new ClientOptions()
+                    {
+                        MessagesAllowedInPeriod = 20,
+                        ThrottlingPeriod = TimeSpan.FromSeconds(30)
+                    }))
+                .AsSelf()
+                .SingleInstance();
 
             // Commands
             builder.RegisterType<AutoChat>().AsSelf().SingleInstance();
