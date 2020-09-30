@@ -23,12 +23,15 @@ namespace Chubberino.Client.Commands
             get => isRunning;
             set
             {
-                isRunning = value;
-
-                if (isRunning)
+                if (value)
                 {
-                    Start();
+                    if (!isRunning)
+                    {
+                        Start();
+                    }
                 }
+
+                isRunning = value;
             }
         }
 
@@ -66,6 +69,10 @@ namespace Chubberino.Client.Commands
 
         private TimeSpan GetVariance()
         {
+            if (Variance == TimeSpan.Zero)
+            {
+                return TimeSpan.Zero;
+            }
             return TimeSpan.FromMilliseconds(Random.Next(-(Int32)Variance.TotalMilliseconds, (Int32)Variance.TotalMilliseconds));
         }
     }
