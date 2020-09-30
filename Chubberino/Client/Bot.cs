@@ -71,7 +71,7 @@ namespace Chubberino.Client
                 Thread.Sleep(TimeSpan.FromSeconds(1));
                 return !String.IsNullOrWhiteSpace(BotInfo.ChannelName);
             },
-            TimeSpan.FromSeconds(60));
+            TimeSpan.FromSeconds(5));
 
             return channelNameUpdated;
 
