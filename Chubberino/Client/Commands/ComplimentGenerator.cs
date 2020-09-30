@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Chubberino.Client.Abstractions;
+using System;
 using System.Collections.Generic;
 
 namespace Chubberino.Client.Commands
 {
-    internal sealed class ComplimentGenerator
+    public sealed class ComplimentGenerator : IComplimentGenerator
     {
         private static List<String> Compliments { get; } = new List<String>()
         {
@@ -74,9 +75,9 @@ namespace Chubberino.Client.Commands
 
         private Random Random { get; }
 
-        public ComplimentGenerator()
+        public ComplimentGenerator(Random random)
         {
-            Random = new Random();
+            Random = random;
         }
 
         public String GetCompliment()

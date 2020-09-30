@@ -42,7 +42,7 @@ namespace Chubberino.Client
         {
             CurrentClientOptions = clientOptions;
 
-            WebSocketClient customClient = new WebSocketClient(clientOptions);
+            var customClient = new WebSocketClient(clientOptions);
             TwitchClient = new ExtendedClient(customClient);
 
             TwitchClient.Initialize(Credentials, BotInfo.Instance.ChannelName);

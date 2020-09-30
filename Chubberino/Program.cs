@@ -31,6 +31,8 @@ namespace Chubberino
             builder.RegisterType<Repeater>().As<IRepeater>();
             builder.RegisterType<ContainsComparator>().As<IContainsComparator>().SingleInstance();
             builder.RegisterType<EqualsComparator>().As<IEqualsComparator>().SingleInstance();
+            builder.RegisterType<Random>().AsSelf().SingleInstance();
+            builder.RegisterType<ComplimentGenerator>().AsSelf().SingleInstance();
 
             // Commands
             builder.RegisterType<AutoChat>().AsSelf().SingleInstance();
