@@ -11,7 +11,7 @@ using TwitchLib.Communication.Interfaces;
 
 namespace Chubberino.Client
 {
-    internal sealed class Bot : IBot
+    public sealed class Bot : IBot
     {
         private IClientOptions CurrentClientOptions { get; set; }
 
