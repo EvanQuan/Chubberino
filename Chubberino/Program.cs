@@ -25,8 +25,8 @@ namespace Chubberino
             builder.RegisterType<Bot>().As<IBot>().SingleInstance();
             builder.RegisterInstance(Console.Out).As<TextWriter>().SingleInstance();
             builder.RegisterType<CommandRepository>().As<ICommandRepository>().SingleInstance();
-            builder.RegisterType<ExtendedClient>().As<IExtendedClient>();
-            builder.RegisterType<WebSocketClient>().As<IClient>();
+            builder.RegisterType<ExtendedClientFactory>().As<IExtendedClientFactory>().SingleInstance();
+            builder.Register(c => c.Resolve<IBot>().TwitchClient).As<IExtendedClient>().SingleInstance();
             builder.Register(c => new ConnectionCredentials(TwitchInfo.BotUsername, TwitchInfo.BotToken)).As<ConnectionCredentials>().SingleInstance();
             builder.RegisterType<StopSettingStrategy>().As<IStopSettingStrategy>().SingleInstance();
             builder.RegisterType<Repeater>().As<IRepeater>();

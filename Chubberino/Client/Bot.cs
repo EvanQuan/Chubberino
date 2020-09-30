@@ -1,4 +1,4 @@
-﻿using Autofac;
+using Autofac;
 using Chubberino.Client.Abstractions;
 using Chubberino.Client.Commands;
 using Chubberino.Client.Extensions;
@@ -20,7 +20,7 @@ namespace Chubberino.Client
 
         public BotState State { get; private set; }
 
-        private IExtendedClient TwitchClient { get; set; }
+        public IExtendedClient TwitchClient { get; set; }
 
         private ConnectionCredentials Credentials { get; }
 
