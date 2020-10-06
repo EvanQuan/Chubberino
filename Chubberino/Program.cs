@@ -37,6 +37,7 @@ namespace Chubberino
                     ThrottlingPeriod = TimeSpan.FromSeconds(30)
                 },
                 c.Resolve<IExtendedClientFactory>(),
+                c.Resolve<ISpinWait>(),
                 TwitchInfo.InitialChannelName))
                 .As<IBot>()
                 .SingleInstance();
