@@ -1,11 +1,11 @@
 ﻿using Chubberino.Client.Abstractions;
 using System;
 using System.IO;
-using TwitchLib.Client.Interfaces;
+using TwitchLib.Client.Events;
 
 namespace Chubberino.Client.Commands.Settings
 {
-    internal class TimeoutAlert : Setting
+    public sealed class TimeoutAlert : Setting
     {
         public TimeoutAlert(IExtendedClient client, TextWriter console)
             : base(client, console)
@@ -21,9 +21,9 @@ namespace Chubberino.Client.Commands.Settings
             };
         }
 
-        private void TwitchClient_OnUserTimedout(Object sender, TwitchLib.Client.Events.OnUserTimedoutArgs e)
+        public void TwitchClient_OnUserTimedout(Object sender, OnUserTimedoutArgs e)
         {
-            TwitchClient.SendMessage(e.UserTimeout.Channel, $"WideHardo FREE MY MAN {e.UserTimeout.Username.ToUpper()}");
+            TwitchClient.SpoolMessage($"WideHardo FREE MY MAN {e.UserTimeout.Username.ToUpper()}");
         }
     }
 }
