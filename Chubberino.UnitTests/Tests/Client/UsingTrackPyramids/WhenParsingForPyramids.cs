@@ -58,7 +58,7 @@ namespace Chubberino.UnitTests.Tests.Client.UsingTrackPyramids
                 });
             }
 
-            Assert.Equal(expectedPyramidBlock, Sut.PyramidBlock);
+            Assert.Equal(expectedPyramidBlock, Sut.Pyramid.Block);
 
             MockedTwitchClient.Verify(x => x.SpoolMessage(It.IsAny<String>()), Times.Once());
         }
@@ -228,7 +228,7 @@ namespace Chubberino.UnitTests.Tests.Client.UsingTrackPyramids
                 });
             }
 
-            Assert.Equal(expectedPyramidBlock, Sut.PyramidBlock);
+            Assert.Equal(expectedPyramidBlock, Sut.Pyramid.Block);
 
             MockedTwitchClient.Verify(x => x.SpoolMessage(It.IsAny<String>()), Times.Once());
         }
@@ -294,7 +294,7 @@ namespace Chubberino.UnitTests.Tests.Client.UsingTrackPyramids
                 });
             }
 
-            Assert.Equal(expectedPyramidBlock, Sut.PyramidBlock);
+            Assert.Equal(expectedPyramidBlock, Sut.Pyramid.Block);
 
             MockedTwitchClient.Verify(x => x.SpoolMessage(It.IsAny<String>()), Times.Never());
         }

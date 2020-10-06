@@ -15,7 +15,7 @@ namespace Chubberino.Client.Commands.Settings
         /// </summary>
         private const Int32 MinimumRelevantPyramidHeight = 3;
 
-        private PyramidTracker Pyramid { get; }
+        public PyramidTracker Pyramid { get; }
 
         public TrackPyramids(IExtendedClient client, TextWriter console)
             : base(client, console)
@@ -51,11 +51,7 @@ namespace Chubberino.Client.Commands.Settings
                 }
 
                 // Successfully started a new pyramid
-                Pyramid.Block = block;
-                Pyramid.CurrentHeight = 1;
-                Pyramid.TallestHeight = 1;
-                Pyramid.ContributorDisplayNames.Clear();
-                Pyramid.ContributorDisplayNames.Add(e.ChatMessage.DisplayName);
+                Pyramid.Start(e.ChatMessage.DisplayName, block);
             }
             else if (Pyramid.Block != null)
             {
@@ -74,16 +70,12 @@ namespace Chubberino.Client.Commands.Settings
                     if (Pyramid.BuildingUp && cleanTokensCount == Pyramid.CurrentHeight + 1)
                     {
                         // Continuing to build up
-                        Pyramid.CurrentHeight++;
-                        Pyramid.TallestHeight++;
-                        Pyramid.ContributorDisplayNames.Add(e.ChatMessage.DisplayName);
+                        Pyramid.BuildUp(e.ChatMessage.DisplayName);
                     }
                     else if (cleanTokensCount == Pyramid.CurrentHeight - 1)
                     {
                         // Switched to build down or continuing down
-                        Pyramid.BuildingUp = false;
-                        Pyramid.CurrentHeight--;
-                        Pyramid.ContributorDisplayNames.Add(e.ChatMessage.DisplayName);
+                        Pyramid.BuildDown(e.ChatMessage.DisplayName);
                     }
                     else
                     {
