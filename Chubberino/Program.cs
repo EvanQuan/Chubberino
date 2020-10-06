@@ -21,7 +21,24 @@ namespace Chubberino
         public static void Main()
         {
             var builder = new ContainerBuilder();
-            builder.RegisterType<Bot>().As<IBot>().SingleInstance();
+            builder.Register(c => new Bot(
+                c.Resolve<TextWriter>(),
+                c.Resolve<ICommandRepository>(),
+                c.Resolve<ConnectionCredentials>(),
+                new ClientOptions()
+                {
+                    MessagesAllowedInPeriod = 100,
+                    ThrottlingPeriod = TimeSpan.FromSeconds(30)
+                },
+                new ClientOptions()
+                {
+                    MessagesAllowedInPeriod = 20,
+                    ThrottlingPeriod = TimeSpan.FromSeconds(30)
+                },
+                c.Resolve<IExtendedClientFactory>(),
+                TwitchInfo.InitialChannelName))
+                .As<IBot>()
+                .SingleInstance();
             builder.RegisterInstance(Console.Out).As<TextWriter>().SingleInstance();
             builder.RegisterType<CommandRepository>().As<ICommandRepository>().SingleInstance();
             builder.RegisterType<ExtendedClientFactory>().As<IExtendedClientFactory>().SingleInstance();
@@ -36,23 +53,6 @@ namespace Chubberino
             builder.RegisterType<RainbowColorSelector>().AsSelf().SingleInstance();
             builder.RegisterType<RandomColorSelector>().AsSelf().SingleInstance();
             builder.RegisterType<PresetColorSelector>().AsSelf().SingleInstance();
-            builder
-                .Register(c => new BotInfo(
-                    new ClientOptions()
-                    {
-                        MessagesAllowedInPeriod = 100,
-                        ThrottlingPeriod = TimeSpan.FromSeconds(30)
-                    },
-                    new ClientOptions()
-                    {
-                        MessagesAllowedInPeriod = 20,
-                        ThrottlingPeriod = TimeSpan.FromSeconds(30)
-                    })
-                    {
-                        ChannelName = TwitchInfo.InitialChannelName
-                    })
-                .AsSelf()
-                .SingleInstance();
 
             // Commands
             builder.RegisterType<AutoChat>().AsSelf().SingleInstance();

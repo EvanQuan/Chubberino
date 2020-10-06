@@ -10,7 +10,7 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
         [InlineData(false, "Normal")]
         public void ShouldContainRelevantInformation(Boolean isModerator, String expectedModeratorText)
         {
-            BotInfo.IsModerator = isModerator;
+            Sut.IsModerator = isModerator;
 
             var commandStatus = Guid.NewGuid().ToString();
 
@@ -20,7 +20,7 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
 
             Assert.Contains(commandStatus, prompt);
             Assert.Contains(expectedModeratorText, prompt);
-            Assert.Contains(BotInfo.ChannelName, prompt);
+            Assert.Contains(Sut.ChannelName, prompt);
         }
     }
 }

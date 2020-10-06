@@ -28,8 +28,6 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
 
         protected Mock<IExtendedClientFactory> MockedExtendedClientFactory { get; }
 
-        protected BotInfo BotInfo { get; }
-
         protected ClientOptions RegularClientOptions { get; }
 
         protected ClientOptions ModeratorClientOptions { get; }
@@ -60,11 +58,6 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
 
             ModeratorClientOptions = new ClientOptions();
 
-            BotInfo = new BotInfo(ModeratorClientOptions, RegularClientOptions)
-            {
-                ChannelName = ChannelName
-            };
-
             MockedExtendedClientFactory
                 .Setup(x => x.GetClient(It.IsAny<IClientOptions>()))
                 .Returns(MockedClient.Object);
@@ -87,15 +80,17 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
                 .Callback((String channel, Boolean overrideCheck) =>
                 {
                     JoinedChannels.Add(new JoinedChannel(channel));
-                    BotInfo.ChannelName = channel;
+                    Sut.ChannelName = channel;
                 });
 
             Sut = new Bot(
                 MockedConsole.Object,
                 MockedCommandRepository.Object,
                 Credentials,
-                BotInfo,
-                MockedExtendedClientFactory.Object);
+                ModeratorClientOptions,
+                RegularClientOptions,
+                MockedExtendedClientFactory.Object,
+                ChannelName);
 
             MockedExtendedClientFactory.Invocations.Clear();
             MockedCommandRepository.Invocations.Clear();

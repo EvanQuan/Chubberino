@@ -17,14 +17,24 @@ namespace Chubberino.UnitTests.Tests.Client.Commands
 
         protected Mock<ICommandRepository> MockedCommandRepository { get; }
 
-        protected BotInfo BotInfo { get; }
+        protected Mock<IBot> MockedBot { get; }
 
         public UsingCommand()
         {
-            BotInfo = new BotInfo(new ClientOptions(), new ClientOptions())
-            {
-                ChannelName = Guid.NewGuid().ToString()
-            };
+            MockedBot = new Mock<IBot>().SetupAllProperties();
+
+            var moderatorOptions =  new ClientOptions();
+            var regularOptions = new ClientOptions();
+
+            MockedBot
+                .Setup(x => x.ModeratorClientOptions)
+                .Returns(moderatorOptions);
+
+            MockedBot
+                .Setup(x => x.RegularClientOptions)
+                .Returns(regularOptions);
+
+            MockedBot.Object.ChannelName = Guid.NewGuid().ToString();
 
             MockedConsole = new Mock<TextWriter>().SetupAllProperties();
 
