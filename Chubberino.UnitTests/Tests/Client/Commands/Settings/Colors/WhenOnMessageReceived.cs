@@ -8,25 +8,15 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Colors
 {
     public sealed class WhenOnMessageReceived : UsingColor
     {
-        private String Message { get; } = Guid.NewGuid().ToString();
-        private String Username { get; } = Guid.NewGuid().ToString();
-        private String BotUsername { get; } = Guid.NewGuid().ToString();
-        private String Color { get; } = Guid.NewGuid().ToString();
-
-        private OnMessageReceivedArgs Args { get; set; }
-
         public WhenOnMessageReceived()
         {
-            MockedSelector1.Setup(x => x.GetNextColor())
-                .Returns(Color);
-
             Sut.AddColorSelector(MockedSelector1.Object);
         }
 
         [Fact]
         public void ShouldIgnoreNonBotUsername()
         {
-            Args = new OnMessageReceivedArgs()
+            var args = new OnMessageReceivedArgs()
             {
                 ChatMessage = ChatMessageBuilder
                     .Create()
@@ -38,7 +28,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Colors
                     .Build()
             };
 
-            Sut.TwitchClient_OnMessageReceived(null, Args);
+            Sut.TwitchClient_OnMessageReceived(null, args);
 
             MockedTwitchClient
                 .Verify(x => x.SpoolMessage(It.IsAny<String>()), Times.Never());
@@ -47,7 +37,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Colors
         [Fact]
         public void ShouldSetColorFromColorSelector()
         {
-            Args = new OnMessageReceivedArgs()
+            var args = new OnMessageReceivedArgs()
             {
                 ChatMessage = ChatMessageBuilder
                     .Create()
@@ -59,10 +49,10 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Colors
                     .Build()
             };
 
-            Sut.TwitchClient_OnMessageReceived(null, Args);
+            Sut.TwitchClient_OnMessageReceived(null, args);
 
             MockedTwitchClient
-                .Verify(x => x.SpoolMessage($".color {Color}"), Times.Once());
+                .Verify(x => x.SpoolMessage($".color {Color1}"), Times.Once());
         }
     }
 }
