@@ -11,13 +11,10 @@ namespace Chubberino.Client
     {
         private IBot Bot { get; }
 
-        private BotInfo BotInfo { get; }
-
-        public Mode(IExtendedClient client, TextWriter console, IBot bot, BotInfo botInfo)
+        public Mode(IExtendedClient client, TextWriter console, IBot bot)
             : base(client, console)
         {
             Bot = bot;
-            BotInfo = botInfo;
         }
 
         public override void Execute(IEnumerable<String> arguments)
@@ -27,13 +24,13 @@ namespace Chubberino.Client
                 case "m":
                 case "mod":
                 case "moderator":
-                    Bot.Refresh(BotInfo.ModeratorClientOptions);
-                    BotInfo.IsModerator = true;
+                    Bot.Refresh(Bot.ModeratorClientOptions);
+                    Bot.IsModerator = true;
                     break;
                 case "n":
                 case "normal":
-                    Bot.Refresh(BotInfo.RegularClientOptions);
-                    BotInfo.IsModerator = false;
+                    Bot.Refresh(Bot.RegularClientOptions);
+                    Bot.IsModerator = false;
                     break;
 
             }

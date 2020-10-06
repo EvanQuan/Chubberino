@@ -6,16 +6,16 @@ namespace Chubberino.Client
 {
     public sealed class ExtendedClientFactory : IExtendedClientFactory
     {
-        private BotInfo BotInfo { get; }
+        private IBot Bot { get; }
 
-        public ExtendedClientFactory(BotInfo botInfo)
+        public ExtendedClientFactory(IBot bot)
         {
-            BotInfo = botInfo;
+            Bot = bot;
         }
 
         public IExtendedClient GetClient(IClientOptions options)
         {
-            return new ExtendedClient(BotInfo, new WebSocketClient(options));
+            return new ExtendedClient(Bot, new WebSocketClient(options));
         }
     }
 }

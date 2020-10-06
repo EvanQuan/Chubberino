@@ -10,7 +10,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Joins
 
         public UsingJoin()
         {
-            Sut = new Join(MockedTwitchClient.Object, MockedConsole.Object, BotInfo);
+            Sut = new Join(MockedTwitchClient.Object, MockedConsole.Object, MockedBot.Object);
         }
     }
 }
