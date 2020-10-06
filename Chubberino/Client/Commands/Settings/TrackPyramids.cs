@@ -57,9 +57,9 @@ namespace Chubberino.Client.Commands.Settings
             {
                 // We already have a pyramid
 
-                String[] tokens = e.ChatMessage.Message.Split(" ");
+                String[] tokens = e.ChatMessage.Message.Split(" ", StringSplitOptions.RemoveEmptyEntries);
 
-                IEnumerable<String> uncleanTokens = tokens.Where(element => element == Pyramid.Block || String.IsNullOrWhiteSpace(element) || element[0] == Data.InvisibleCharacter);
+                IEnumerable<String> uncleanTokens = tokens.Where(element => element == Pyramid.Block || element[0] == Data.InvisibleCharacter);
 
                 Int32 uncleanTokensCount = uncleanTokens.Count();
 
