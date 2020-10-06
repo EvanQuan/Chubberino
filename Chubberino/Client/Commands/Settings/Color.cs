@@ -15,9 +15,9 @@ namespace Chubberino.Client.Commands.Settings
     /// color may not change quick enough if messages are being sent near the
     /// throttle limit.
     /// </summary>
-    internal sealed class Color : Setting
+    public sealed class Color : Setting
     {
-        private List<IColorSelector> Selectors { get; }
+        public IList<IColorSelector> Selectors { get; }
 
         public String CurrentColor { get; set; }
 
@@ -57,7 +57,7 @@ namespace Chubberino.Client.Commands.Settings
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void TwitchClient_OnMessageSent(Object sender, OnMessageSentArgs e)
+        public void TwitchClient_OnMessageSent(Object sender, OnMessageSentArgs e)
         {
             // Avoid infinite recursion.
             if (e.SentMessage.Message.StartsWith('.')) { return; }
@@ -70,7 +70,7 @@ namespace Chubberino.Client.Commands.Settings
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void TwitchClient_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
+        public void TwitchClient_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
         {
             if (e.ChatMessage.Username.Equals(TwitchInfo.BotUsername, StringComparison.OrdinalIgnoreCase))
             {
