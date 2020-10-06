@@ -53,7 +53,7 @@ namespace Chubberino.Client.Commands.Settings
                 // Successfully started a new pyramid
                 Pyramid.Start(e.ChatMessage.DisplayName, block);
             }
-            else if (Pyramid.Block != null)
+            else if (Pyramid.HasStarted)
             {
                 // We already have a pyramid
 

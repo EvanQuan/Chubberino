@@ -15,6 +15,11 @@ namespace Chubberino.Client.Commands.Settings.Pyramids
 
         public Boolean BuildingUp { get; private set; }
 
+        /// <summary>
+        /// Indicates that a pyramid has already started.
+        /// </summary>
+        public Boolean HasStarted => Block != null;
+
         public PyramidTracker()
         {
             ContributorDisplayNames = new HashSet<String>();
