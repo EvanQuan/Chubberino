@@ -1,7 +1,7 @@
 ﻿using System;
 using TwitchLib.Api.Core.Enums;
 
-namespace Chubberino.Client.Commands.Settings.Colors
+namespace Chubberino.Client.Commands.Settings.ColorSelectors
 {
     public sealed class PresetColorSelector : IColorSelector
     {

@@ -3,7 +3,7 @@ using Chubberino.Client;
 using Chubberino.Client.Abstractions;
 using Chubberino.Client.Commands;
 using Chubberino.Client.Commands.Settings;
-using Chubberino.Client.Commands.Settings.Colors;
+using Chubberino.Client.Commands.Settings.ColorSelectors;
 using Chubberino.Client.Commands.Settings.Replies;
 using Chubberino.Client.Commands.Strategies;
 using System;

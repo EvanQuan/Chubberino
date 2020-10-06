@@ -1,6 +1,6 @@
-﻿using Chubberino.Client.Commands.Settings.Colors;
+﻿using Chubberino.Client.Commands.Settings.ColorSelectors;
 
-namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Colors
+namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.ColorSelectors
 {
     public abstract class UsingRainbowColorSelector
     {

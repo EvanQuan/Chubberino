@@ -1,5 +1,5 @@
 ﻿using Chubberino.Client.Abstractions;
-using Chubberino.Client.Commands.Settings.Colors;
+using Chubberino.Client.Commands.Settings.ColorSelectors;
 using System;
 using System.Collections.Generic;
 using System.IO;
