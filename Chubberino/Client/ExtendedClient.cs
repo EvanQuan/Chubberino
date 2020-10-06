@@ -1,6 +1,9 @@
 ﻿using Chubberino.Client.Abstractions;
 using Microsoft.Extensions.Logging;
 using System;
+using System.IO;
+using System.Linq;
+using System.Threading;
 using TwitchLib.Client;
 using TwitchLib.Client.Enums;
 using TwitchLib.Client.Exceptions;
@@ -17,14 +20,22 @@ namespace Chubberino.Client
 
         private IBot Bot { get; }
 
+        private TextWriter Console { get; }
+
+        private ISpinWait SpinWait { get; }
+
         public ExtendedClient(
             IBot bot,
-            IClient client = null,
-            ClientProtocol protocol = ClientProtocol.WebSocket,
-            ILogger<TwitchClient> logger = null)
+            IClient client,
+            ClientProtocol protocol,
+            TextWriter console,
+            ISpinWait spinWait,
+            ILogger<TwitchClient> logger)
             : base(client, protocol, logger)
         {
             Bot = bot;
+            Console = console;
+            SpinWait = spinWait;
         }
 
         private void SendMessage(String message)
@@ -49,6 +60,34 @@ namespace Chubberino.Client
         public void SpoolMessage(String message)
         {
             SendMessage(message);
+        }
+
+        public Boolean EnsureJoinedToChannel(String channelName)
+        {
+            Boolean isConnected = SpinWait.SpinUntil(() =>
+            {
+                if (!IsConnected)
+                {
+                    Connect();
+                    Thread.Sleep(TimeSpan.FromSeconds(1));
+                    return IsConnected;
+                }
+                return true;
+
+            },
+            TimeSpan.FromSeconds(10));
+
+            if (!isConnected) { return false; }
+
+            Boolean isJoined = SpinWait.SpinUntil(() =>
+            {
+                JoinChannel(channelName);
+                return JoinedChannels.Any(x => x.Channel.Equals(channelName, StringComparison.OrdinalIgnoreCase));
+
+            },
+            TimeSpan.FromSeconds(10));
+
+            return isJoined;
         }
     }
 }
