@@ -1,4 +1,6 @@
-﻿using Chubberino.Client.Commands.Settings;
+﻿using Chubberino.Client.Abstractions;
+using Chubberino.Client.Commands.Settings;
+using Moq;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Greets
 {
@@ -6,9 +8,13 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Greets
     {
         protected Greet Sut { get; }
 
+        protected Mock<IComplimentGenerator> MockedCompliments { get; }
+
         public UsingGreet()
         {
-            Sut = new Greet(MockedTwitchClient.Object, MockedConsole.Object);
+            MockedCompliments = new Mock<IComplimentGenerator>();
+
+            Sut = new Greet(MockedTwitchClient.Object, MockedConsole.Object, MockedCompliments.Object);
         }
     }
 }

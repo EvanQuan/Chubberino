@@ -15,9 +15,16 @@ namespace Chubberino.Client
     {
         private String PreviousMessage { get; set; }
 
-        public ExtendedClient(IClient client = null, ClientProtocol protocol = ClientProtocol.WebSocket, ILogger<TwitchClient> logger = null)
+        private BotInfo BotInfo { get; set; }
+
+        public ExtendedClient(
+            BotInfo botInfo,
+            IClient client = null,
+            ClientProtocol protocol = ClientProtocol.WebSocket,
+            ILogger<TwitchClient> logger = null)
             : base(client, protocol, logger)
         {
+            BotInfo = botInfo;
         }
 
         private void SendMessage(String message)
@@ -29,7 +36,7 @@ namespace Chubberino.Client
 
             try
             {
-                SendMessage(BotInfo.Instance.ChannelName, message);
+                SendMessage(BotInfo.ChannelName, message);
                 PreviousMessage = message;
             }
             catch (BadStateException e)

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using TwitchLib.Client.Events;
 
 namespace Chubberino.Client.Commands.Settings
 {
@@ -29,7 +30,7 @@ namespace Chubberino.Client.Commands.Settings
             };
         }
 
-        private void TwitchClient_OnMessageReceived(Object sender, TwitchLib.Client.Events.OnMessageReceivedArgs e)
+        private void TwitchClient_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
         {
             if (UsersToPogO.Contains(e.ChatMessage.Username))
             {

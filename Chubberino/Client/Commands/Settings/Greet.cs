@@ -25,14 +25,14 @@ namespace Chubberino.Client.Commands.Settings
         /// </summary>
         private String Greeting { get; set; }
 
-        private ComplimentGenerator Compliments { get; }
+        private IComplimentGenerator Compliments { get; }
 
         public override String Status => (IsEnabled
             ? $"\"{Greeting}\""
             : "disabled")
             + $" Mode: {CurrentMode}";
 
-        public Greet(IExtendedClient client, TextWriter console)
+        public Greet(IExtendedClient client, TextWriter console, IComplimentGenerator compliments)
             : base(client, console)
         {
             Enable = twitchClient =>
@@ -45,7 +45,7 @@ namespace Chubberino.Client.Commands.Settings
                 twitchClient.OnUserJoined -= TwitchClient_OnUserJoined;
             };
 
-            Compliments = new ComplimentGenerator();
+            Compliments = compliments;
         }
 
         private void TwitchClient_OnUserJoined(Object sender, OnUserJoinedArgs e)

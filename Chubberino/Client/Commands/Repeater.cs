@@ -10,7 +10,7 @@ namespace Chubberino.Client.Commands
     /// </summary>
     public sealed class Repeater : IRepeater
     {
-        private Random Random { get; set; } = new Random();
+        private Random Random { get; set; }
 
         private Boolean isRunning = false;
 
@@ -46,6 +46,11 @@ namespace Chubberino.Client.Commands
         public Action Action { get; set; }
 
         public TimeSpan Variance { get; set; } = TimeSpan.FromSeconds(0.0);
+
+        public Repeater(Random random)
+        {
+            Random = random;
+        }
 
         /// <summary>
         /// Start executing <see cref="Action"/> at the specified <see cref="Interval"/>.

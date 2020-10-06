@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Chubberino.Client.Commands.Settings.Colors
+namespace Chubberino.Client.Commands.Settings.ColorSelectors
 {
     public interface IColorSelector
     {

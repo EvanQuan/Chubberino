@@ -22,23 +22,17 @@ namespace Chubberino.Client.Extensions
             },
             TimeSpan.FromSeconds(10));
 
+            if (!isConnected) { return false; }
+
             Boolean isJoined = SpinWait.SpinUntil(() =>
             {
-                if (client.JoinedChannels.Count == 0)
-                {
-                    client.JoinChannel(channelName);
-                    Thread.Sleep(TimeSpan.FromSeconds(1));
-                    return client.JoinedChannels.Any(x => x.Channel.Equals(channelName, StringComparison.OrdinalIgnoreCase));
-                }
-                else
-                {
-                    return true;
-                }
+                client.JoinChannel(channelName);
+                return client.JoinedChannels.Any(x => x.Channel.Equals(channelName, StringComparison.OrdinalIgnoreCase));
 
             },
             TimeSpan.FromSeconds(10));
 
-            return isConnected && isJoined;
+            return isJoined;
         }
     }
 }

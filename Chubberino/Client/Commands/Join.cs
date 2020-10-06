@@ -12,9 +12,12 @@ namespace Chubberino.Client.Commands
     {
         private String JoinedChannelName { get; set; }
 
-        public Join(IExtendedClient client, TextWriter console)
+        private BotInfo BotInfo { get; }
+
+        public Join(IExtendedClient client, TextWriter console, BotInfo botInfo)
             : base(client, console)
         {
+            BotInfo = botInfo;
             TwitchClient.OnJoinedChannel += TwitchClient_OnJoinedChannel;
         }
 
@@ -30,7 +33,7 @@ namespace Chubberino.Client.Commands
             }
 
             JoinedChannelName = e.Channel;
-            BotInfo.Instance.ChannelName = JoinedChannelName;
+            BotInfo.ChannelName = JoinedChannelName;
             Console.WriteLine($"Joined channel {JoinedChannelName}");
         }
 
@@ -44,8 +47,6 @@ namespace Chubberino.Client.Commands
             }
 
             String channelName = arguments.FirstOrDefault();
-
-            TwitchClient.JoinChannel(channelName);
 
             TwitchClient.EnsureJoinedToChannel(channelName);
         }

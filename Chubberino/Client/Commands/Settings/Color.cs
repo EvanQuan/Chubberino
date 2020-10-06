@@ -1,5 +1,5 @@
 ﻿using Chubberino.Client.Abstractions;
-using Chubberino.Client.Commands.Settings.Colors;
+using Chubberino.Client.Commands.Settings.ColorSelectors;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,13 +15,11 @@ namespace Chubberino.Client.Commands.Settings
     /// color may not change quick enough if messages are being sent near the
     /// throttle limit.
     /// </summary>
-    internal sealed class Color : Setting
+    public sealed class Color : Setting
     {
-        private IEnumerable<IColorSelector> Selectors { get; }
+        public IList<IColorSelector> Selectors { get; }
 
-        private String CurrentColor { get; set; }
-
-        private Random Random { get; }
+        public String CurrentColor { get; set; }
 
         private IColorSelector CurrentSelector { get; set; }
 
@@ -43,14 +41,15 @@ namespace Chubberino.Client.Commands.Settings
                 twitchClient.OnMessageSent -= TwitchClient_OnMessageSent;
             };
 
-            Random = new Random();
-            Selectors = new List<IColorSelector>()
-            {
-                new RandomColorSelector(Random, () => CurrentColor),
-                new PresetColorSelector(Random, () => CurrentColor),
-                new RainbowColorSelector(),
-            };
+            Selectors = new List<IColorSelector>();
             CurrentSelector = Selectors.FirstOrDefault();
+        }
+
+        public Color AddColorSelector(IColorSelector colorSelector)
+        {
+            Selectors.Add(colorSelector);
+            CurrentSelector = colorSelector;
+            return this;
         }
 
         /// <summary>
@@ -58,7 +57,7 @@ namespace Chubberino.Client.Commands.Settings
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void TwitchClient_OnMessageSent(Object sender, OnMessageSentArgs e)
+        public void TwitchClient_OnMessageSent(Object sender, OnMessageSentArgs e)
         {
             // Avoid infinite recursion.
             if (e.SentMessage.Message.StartsWith('.')) { return; }
@@ -71,9 +70,9 @@ namespace Chubberino.Client.Commands.Settings
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void TwitchClient_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
+        public void TwitchClient_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
         {
-            if (e.ChatMessage.Username.Equals(TwitchInfo.BotUsername, StringComparison.OrdinalIgnoreCase))
+            if (e.ChatMessage.Username.Equals(e.ChatMessage.BotUsername, StringComparison.OrdinalIgnoreCase))
             {
                 ChangeColor();
             }

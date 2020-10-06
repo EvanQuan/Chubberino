@@ -13,6 +13,8 @@ namespace Chubberino.Client.Abstractions
 
         IEnumerable<ISetting> GetSettings();
 
+        ICommandRepository AddCommand(ICommand command);
+
         void Execute(String commandName, IEnumerable<String> arguments);
 
         void DisableAllSettings();
