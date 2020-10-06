@@ -49,6 +49,8 @@ namespace Chubberino.Client
 
         private IExtendedClientFactory ClientFactory { get; }
 
+        public ISpinWait SpinWait { get; }
+
         public Bot(
             TextWriter console,
             ICommandRepository commands,
@@ -56,6 +58,7 @@ namespace Chubberino.Client
             IClientOptions moderatorOptions,
             IClientOptions regularOptions,
             IExtendedClientFactory clientFactory,
+            ISpinWait spinWait,
             String channelName)
         {
             Credentials = credentials;
@@ -64,6 +67,7 @@ namespace Chubberino.Client
             ModeratorClientOptions = moderatorOptions;
             RegularClientOptions = regularOptions;
             ClientFactory = clientFactory;
+            SpinWait = spinWait;
             ChannelName = channelName;
             InitializeTwitchClientAndSpooler(regularOptions);
         }
