@@ -36,6 +36,8 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
 
         protected List<JoinedChannel> JoinedChannels { get; }
 
+        protected Mock<ISpinWait> MockedSpinWait { get; }
+
         public UsingBot()
         {
             MockedConsole = new Mock<TextWriter>().SetupAllProperties();
@@ -57,6 +59,12 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
             RegularClientOptions = new ClientOptions();
 
             ModeratorClientOptions = new ClientOptions();
+
+            MockedSpinWait = new Mock<ISpinWait>();
+
+            MockedSpinWait
+                .Setup(x => x.SpinUntil(It.IsAny<Func<Boolean>>(), It.IsAny<TimeSpan>()))
+                .Returns((Func<Boolean> func, TimeSpan timeout) => func());
 
             MockedExtendedClientFactory
                 .Setup(x => x.GetClient(It.IsAny<IClientOptions>()))
@@ -90,6 +98,7 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
                 ModeratorClientOptions,
                 RegularClientOptions,
                 MockedExtendedClientFactory.Object,
+                MockedSpinWait.Object,
                 ChannelName);
 
             MockedExtendedClientFactory.Invocations.Clear();
