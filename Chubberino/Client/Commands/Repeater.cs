@@ -11,6 +11,7 @@ namespace Chubberino.Client.Commands
     public sealed class Repeater : IRepeater
     {
         private Random Random { get; set; }
+        private ISpinWait SpinWait { get; }
 
         private Boolean isRunning = false;
 
@@ -47,9 +48,10 @@ namespace Chubberino.Client.Commands
 
         public TimeSpan Variance { get; set; } = TimeSpan.FromSeconds(0.0);
 
-        public Repeater(Random random)
+        public Repeater(Random random, ISpinWait spinWait)
         {
             Random = random;
+            SpinWait = spinWait;
         }
 
         /// <summary>
@@ -68,7 +70,7 @@ namespace Chubberino.Client.Commands
             while (isRunning)
             {
                 Action();
-                Thread.Sleep(Interval + GetVariance());
+                SpinWait.Sleep(Interval + GetVariance());
             }
         }
 

@@ -69,7 +69,7 @@ namespace Chubberino.Client
                 if (!IsConnected)
                 {
                     Connect();
-                    Thread.Sleep(TimeSpan.FromSeconds(1));
+                    SpinWait.Sleep(TimeSpan.FromSeconds(1));
                     return IsConnected;
                 }
                 return true;
