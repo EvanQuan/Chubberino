@@ -47,7 +47,10 @@ namespace Chubberino
                     {
                         MessagesAllowedInPeriod = 20,
                         ThrottlingPeriod = TimeSpan.FromSeconds(30)
-                    }))
+                    })
+                    {
+                        ChannelName = TwitchInfo.InitialChannelName
+                    })
                 .AsSelf()
                 .SingleInstance();
 
