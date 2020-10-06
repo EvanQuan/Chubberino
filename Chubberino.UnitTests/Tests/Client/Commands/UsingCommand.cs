@@ -1,6 +1,9 @@
-﻿using Chubberino.Client.Abstractions;
+﻿using Chubberino.Client;
+using Chubberino.Client.Abstractions;
 using Moq;
+using System;
 using System.IO;
+using TwitchLib.Communication.Models;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands
 {
@@ -14,8 +17,15 @@ namespace Chubberino.UnitTests.Tests.Client.Commands
 
         protected Mock<ICommandRepository> MockedCommandRepository { get; }
 
+        protected BotInfo BotInfo { get; }
+
         public UsingCommand()
         {
+            BotInfo = new BotInfo(new ClientOptions(), new ClientOptions())
+            {
+                ChannelName = Guid.NewGuid().ToString()
+            };
+
             MockedConsole = new Mock<TextWriter>().SetupAllProperties();
 
             MockedTwitchClient = new Mock<IExtendedClient>().SetupAllProperties();

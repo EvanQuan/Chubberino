@@ -22,6 +22,8 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
 
         protected String TwitchOAuth { get; }
 
+        protected String ChannelName { get; }
+
         protected Mock<ICommandRepository> MockedCommandRepository { get; }
 
         protected Mock<IExtendedClientFactory> MockedExtendedClientFactory { get; }
@@ -44,6 +46,7 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
 
             Username = Guid.NewGuid().ToString();
             TwitchOAuth = Guid.NewGuid().ToString();
+            ChannelName = Guid.NewGuid().ToString();
 
             Credentials = new ConnectionCredentials(Username, TwitchOAuth, disableUsernameCheck: true);
 
@@ -57,7 +60,10 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
 
             ModeratorClientOptions = new ClientOptions();
 
-            BotInfo = new BotInfo(ModeratorClientOptions, RegularClientOptions);
+            BotInfo = new BotInfo(ModeratorClientOptions, RegularClientOptions)
+            {
+                ChannelName = ChannelName
+            };
 
             MockedExtendedClientFactory
                 .Setup(x => x.GetClient(It.IsAny<IClientOptions>()))
@@ -81,6 +87,7 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
                 .Callback((String channel, Boolean overrideCheck) =>
                 {
                     JoinedChannels.Add(new JoinedChannel(channel));
+                    BotInfo.ChannelName = channel;
                 });
 
             Sut = new Bot(
