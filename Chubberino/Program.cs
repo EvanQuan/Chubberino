@@ -9,7 +9,10 @@ using Chubberino.Client.Commands.Strategies;
 using Chubberino.Client.Threading;
 using System;
 using System.IO;
+using TwitchLib.Client.Enums;
 using TwitchLib.Client.Models;
+using TwitchLib.Communication.Clients;
+using TwitchLib.Communication.Interfaces;
 using TwitchLib.Communication.Models;
 
 namespace Chubberino
@@ -43,7 +46,13 @@ namespace Chubberino
                 .SingleInstance();
             builder.RegisterInstance(Console.Out).As<TextWriter>().SingleInstance();
             builder.RegisterType<CommandRepository>().As<ICommandRepository>().SingleInstance();
-            builder.RegisterType<ExtendedClientFactory>().As<IExtendedClientFactory>().SingleInstance();
+            builder.Register(c => new ExtendedClientFactory(
+                c.Resolve<IBot>(),
+                (IClientOptions options) => new WebSocketClient(options),
+                ClientProtocol.WebSocket,
+                c.Resolve<TextWriter>(),
+                c.Resolve<ISpinWait>(),
+                null)).As<IExtendedClientFactory>().SingleInstance();
             builder.Register(c => c.Resolve<IBot>().TwitchClient).As<IExtendedClient>().SingleInstance();
             builder.Register(c => new ConnectionCredentials(TwitchInfo.BotUsername, TwitchInfo.BotToken)).As<ConnectionCredentials>().SingleInstance();
             builder.RegisterType<StopSettingStrategy>().As<IStopSettingStrategy>().SingleInstance();

@@ -94,7 +94,7 @@ namespace Chubberino.Client
 
             Boolean channelNameUpdated = SpinWait.SpinUntil(() =>
             {
-                Thread.Sleep(TimeSpan.FromSeconds(1));
+                SpinWait.Sleep(TimeSpan.FromSeconds(1));
                 return !String.IsNullOrWhiteSpace(ChannelName);
             },
             TimeSpan.FromSeconds(5));

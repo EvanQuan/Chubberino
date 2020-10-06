@@ -27,6 +27,10 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
                     .Setup(x => x.IsConnected)
                     .Returns(false));
 
+            MockedClient
+                .Setup(x => x.EnsureJoinedToChannel(It.IsAny<String>()))
+                .Returns(false);
+
             Boolean result = Sut.Start();
 
             Assert.False(result);

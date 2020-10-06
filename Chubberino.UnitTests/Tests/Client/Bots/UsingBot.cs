@@ -91,6 +91,15 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
                     Sut.ChannelName = channel;
                 });
 
+            MockedClient
+                .Setup(x => x.EnsureJoinedToChannel(It.IsAny<String>()))
+                .Callback((String channel) =>
+                {
+                    MockedClient.Object.JoinChannel(channel);
+                    MockedClient.Setup(x => x.IsConnected).Returns(true);
+                })
+                .Returns(true);
+
             Sut = new Bot(
                 MockedConsole.Object,
                 MockedCommandRepository.Object,
