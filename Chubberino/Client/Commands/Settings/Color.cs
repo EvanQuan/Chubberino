@@ -72,7 +72,7 @@ namespace Chubberino.Client.Commands.Settings
         /// <param name="e"></param>
         public void TwitchClient_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
         {
-            if (e.ChatMessage.Username.Equals(TwitchInfo.BotUsername, StringComparison.OrdinalIgnoreCase))
+            if (e.ChatMessage.Username.Equals(e.ChatMessage.BotUsername, StringComparison.OrdinalIgnoreCase))
             {
                 ChangeColor();
             }
