@@ -6,6 +6,7 @@ using Chubberino.Client.Commands.Settings;
 using Chubberino.Client.Commands.Settings.ColorSelectors;
 using Chubberino.Client.Commands.Settings.Replies;
 using Chubberino.Client.Commands.Strategies;
+using Chubberino.Client.Threading;
 using System;
 using System.IO;
 using TwitchLib.Client.Models;
@@ -53,6 +54,7 @@ namespace Chubberino
             builder.RegisterType<RainbowColorSelector>().AsSelf().SingleInstance();
             builder.RegisterType<RandomColorSelector>().AsSelf().SingleInstance();
             builder.RegisterType<PresetColorSelector>().AsSelf().SingleInstance();
+            builder.RegisterType<SpinWait>().As<ISpinWait>().SingleInstance();
 
             // Commands
             builder.RegisterType<AutoChat>().AsSelf().SingleInstance();
