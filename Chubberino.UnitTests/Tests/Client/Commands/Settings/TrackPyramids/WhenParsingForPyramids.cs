@@ -261,7 +261,7 @@ namespace Chubberino.UnitTests.Tests.Client.UsingTrackPyramids
         [Theory]
         [MemberData(nameof(InvalidPyramids))]
         public void ShouldNotDetectPyramid(
-            (String DisplayName, String message)[] messages,
+            (String displayName, String message)[] messages,
             String[] expectedContributors,
             String expectedPyramidBlock,
             Int32 expectedPyramidHeight)
