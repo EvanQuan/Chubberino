@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Chubberino.Client.Commands.Settings.Pyramids
+namespace Chubberino.Client.Commands.Settings.PyramidTrackers
 {
     public sealed class PyramidTracker
     {
