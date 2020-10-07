@@ -1,4 +1,4 @@
-﻿using Chubberino.Client.Commands.Settings.Pyramids;
+﻿using Chubberino.Client.Commands.Settings.PyramidTrackers;
 using System;
 using System.Collections.Generic;
 using System.Text;
