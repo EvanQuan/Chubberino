@@ -6,22 +6,19 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Pyramids
 {
     public sealed class WhenBuildingUp : UsingPyramidTracker
     {
-        public const String ExpectedName = "name";
-        public const String ExpectedBlock = "block";
-
         public WhenBuildingUp()
         {
-            Sut.Start(ExpectedName, ExpectedBlock);
+            Sut.Start(ExpectedName1, ExpectedBlock1);
         }
 
         [Fact]
         public void ShouldIncreaseHeight()
         {
-            Sut.BuildUp(ExpectedName);
+            Sut.BuildUp(ExpectedName1);
 
             Assert.Single(Sut.ContributorDisplayNames);
-            Assert.Equal(ExpectedName, Sut.ContributorDisplayNames.Single());
-            Assert.Equal(ExpectedBlock, Sut.Block);
+            Assert.Equal(ExpectedName1, Sut.ContributorDisplayNames.Single());
+            Assert.Equal(ExpectedBlock1, Sut.Block);
             Assert.Equal(2, Sut.TallestHeight);
             Assert.Equal(2, Sut.CurrentHeight);
         }
@@ -29,11 +26,11 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Pyramids
         [Fact]
         public void ShouldAddContributor()
         {
-            Sut.BuildUp("name2");
+            Sut.BuildUp(ExpectedName2);
 
             Assert.Equal(2, Sut.ContributorDisplayNames.Count);
-            Assert.Equal(new String[] { ExpectedName, "name2" }, Sut.ContributorDisplayNames);
-            Assert.Equal(ExpectedBlock, Sut.Block);
+            Assert.Equal(new String[] { ExpectedName1, ExpectedName2 }, Sut.ContributorDisplayNames);
+            Assert.Equal(ExpectedBlock1, Sut.Block);
             Assert.Equal(2, Sut.TallestHeight);
             Assert.Equal(2, Sut.CurrentHeight);
         }
