@@ -7,11 +7,14 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Pyramids
 {
     public sealed class WhenReseting : UsingPyramidTracker
     {
+        public WhenReseting()
+        {
+            Sut.Start(ExpectedName1, ExpectedBlock1);
+        }
+
         [Fact]
         public void ShouldResetValuesForSingleContributor()
         {
-            Sut.Start("name", "block");
-
             Sut.Reset();
 
             Assert.Empty(Sut.ContributorDisplayNames);
@@ -23,9 +26,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Pyramids
         [Fact]
         public void ShouldResetValuesForMultipleContributors()
         {
-            Sut.Start("name", "block");
-
-            Sut.BuildUp("name2");
+            Sut.BuildUp(ExpectedName2);
 
             Sut.Reset();
 
