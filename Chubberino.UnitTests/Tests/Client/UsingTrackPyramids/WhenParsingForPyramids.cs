@@ -1,4 +1,4 @@
-﻿using Chubberino.Client;
+using Chubberino.Client;
 using Chubberino.Client.Commands.Settings;
 using Chubberino.UnitTests.Tests.Client.Commands;
 using Moq;
@@ -251,42 +251,32 @@ namespace Chubberino.UnitTests.Tests.Client.UsingTrackPyramids
             },
         };
 
+        /// <summary>
+        /// Invalid pyramids should not be detected. The last starting pyramid
+        /// block detected should be considered as starting a new pyramid.
+        /// </summary>
+        /// <param name="messages">Display name and message pairs for all messages received.</param>
+        /// <param name="expectedContributors">Expected pyramid contributors.</param>
+        /// <param name="expectedPyramidBlock">Expected pyramid block.</param>
+        /// <param name="expectedPyramidHeight">Expected tallest pyramid height.</param>
         [Theory]
         [MemberData(nameof(InvalidPyramids))]
         public void ShouldNotDetectPyramid(
-            (String Username, String Message)[] messages,
+            (String DisplayName, String message)[] messages,
             String[] expectedContributors,
             String expectedPyramidBlock,
             Int32 expectedPyramidHeight)
         {
-            foreach (var (Username, Message) in messages)
+            foreach ((String displayName, String message) in messages)
             {
-                var chatMessage = new ChatMessage(
-                    botUsername: default,
-                    userId: default,
-                    userName: Username,
-                    displayName: default,
-                    colorHex: default,
-                    color: default,
-                    emoteSet: default,
-                    message: Message,
-                    userType: default,
-                    channel: default,
-                    id: default,
-                    isSubscriber: default,
-                    subscribedMonthCount: default,
-                    roomId: default,
-                    isTurbo: default,
-                    isModerator: default,
-                    isMe: default,
-                    isBroadcaster: default,
-                    noisy: default,
-                    rawIrcMessage: default,
-                    emoteReplacedMessage: default,
-                    badges: default,
-                    cheerBadge: default,
-                    bits: default,
-                    bitsInDollars: default);
+                var chatMessage = ChatMessageBuilder
+                    .Create()
+                    .WithTwitchLibMessage(TwitchLibMessageBuilder
+                        .Create()
+                        .WithDisplayName(displayName)
+                        .Build())
+                    .WithMessage(message)
+                    .Build();
 
                 Sut.TwitchClient_OnMessageReceived(null, new OnMessageReceivedArgs()
                 {
@@ -295,6 +285,8 @@ namespace Chubberino.UnitTests.Tests.Client.UsingTrackPyramids
             }
 
             Assert.Equal(expectedPyramidBlock, Sut.Pyramid.Block);
+            Assert.Equal(expectedContributors, Sut.Pyramid.ContributorDisplayNames);
+            Assert.Equal(expectedPyramidHeight, Sut.Pyramid.TallestHeight);
 
             MockedTwitchClient.Verify(x => x.SpoolMessage(It.IsAny<String>()), Times.Never());
         }
@@ -323,7 +315,7 @@ namespace Chubberino.UnitTests.Tests.Client.UsingTrackPyramids
                 },
                 new String[] { "a" },
                 "x",
-                2
+                1
             },
             // 2 authors
             new Object[]
@@ -358,9 +350,9 @@ namespace Chubberino.UnitTests.Tests.Client.UsingTrackPyramids
                     ("b", "x x"),
                     ("a", "x"),
                 },
-                new String[] { "a", "b", },
+                new String[] { "a" },
                 "x",
-                2
+                1
             },
             // 2 authors
             new Object[]
@@ -371,9 +363,9 @@ namespace Chubberino.UnitTests.Tests.Client.UsingTrackPyramids
                     ("a", "x x"),
                     ("b", "x"),
                 },
-                new String[] { "a", "b", },
+                new String[] { "b", },
                 "x",
-                2
+                1
             },
             // 2 authors
             new Object[]
@@ -384,9 +376,9 @@ namespace Chubberino.UnitTests.Tests.Client.UsingTrackPyramids
                     ("b", "x x"),
                     ("b", "x"),
                 },
-                new String[] { "a", "b", },
+                new String[] { "b" },
                 "x",
-                2
+                1
             },
             // 3 authors
             new Object[]
@@ -397,9 +389,9 @@ namespace Chubberino.UnitTests.Tests.Client.UsingTrackPyramids
                     ("b", "x x"),
                     ("c", "x"),
                 },
-                new String[] { "a", "b", "c", },
+                new String[] { "c", },
                 "x",
-                2
+                1
             },
             // 3 height
             new Object[]
@@ -413,7 +405,7 @@ namespace Chubberino.UnitTests.Tests.Client.UsingTrackPyramids
                 },
                 new String[] { "a" },
                 "x",
-                3
+                1
             },
         };
     }
