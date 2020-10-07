@@ -16,6 +16,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Pyramids
             Assert.Equal(ExpectedBlock1, Sut.Block);
             Assert.Equal(1, Sut.TallestHeight);
             Assert.Equal(1, Sut.CurrentHeight);
+            Assert.True(Sut.HasStarted);
         }
 
         [Fact]
@@ -30,6 +31,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Pyramids
             Assert.Equal(ExpectedBlock2, Sut.Block);
             Assert.Equal(1, Sut.TallestHeight);
             Assert.Equal(1, Sut.CurrentHeight);
+            Assert.True(Sut.HasStarted);
         }
     }
 }

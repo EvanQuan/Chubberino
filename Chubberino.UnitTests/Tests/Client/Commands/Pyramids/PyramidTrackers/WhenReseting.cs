@@ -21,6 +21,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Pyramids
             Assert.Equal(0, Sut.CurrentHeight);
             Assert.Equal(0, Sut.TallestHeight);
             Assert.Null(Sut.Block);
+            Assert.False(Sut.HasStarted);
         }
 
         [Fact]
@@ -34,6 +35,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Pyramids
             Assert.Equal(0, Sut.CurrentHeight);
             Assert.Equal(0, Sut.TallestHeight);
             Assert.Null(Sut.Block);
+            Assert.False(Sut.HasStarted);
         }
     }
 }
