@@ -10,7 +10,7 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
         {
             Sut.Refresh(RegularClientOptions);
 
-            MockedExtendedClientFactory.Verify(x => x.GetClient(RegularClientOptions), Times.Once());
+            MockedExtendedClientFactory.Verify(x => x.GetClient(Sut, RegularClientOptions), Times.Once());
             MockedClient.Verify(x => x.Initialize(Credentials, Sut.ChannelName, '!', '!', true), Times.Once());
             MockedClient.Verify(x => x.JoinChannel(Sut.ChannelName, false), Times.Once());
             MockedCommandRepository.Verify(x => x.RefreshAll(MockedClient.Object), Times.Once());

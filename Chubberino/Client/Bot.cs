@@ -76,7 +76,7 @@ namespace Chubberino.Client
         {
             CurrentClientOptions = clientOptions;
 
-            TwitchClient = ClientFactory.GetClient(clientOptions);
+            TwitchClient = ClientFactory.GetClient(this, clientOptions);
 
             TwitchClient.Initialize(Credentials, ChannelName);
 

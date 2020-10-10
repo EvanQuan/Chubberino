@@ -19,6 +19,12 @@ namespace Chubberino.Client.Commands.Settings
             30,
         };
 
+        private UInt32 MessageCooldownCount { get; set; } = 100;
+
+        private UInt32 MessageCooldownTracker { get; set; }
+
+        private Boolean OnCooldown { get; set; } = false;
+
         /// <summary>
         /// The number of messages to sample before determining what message to
         /// output.
@@ -29,7 +35,8 @@ namespace Chubberino.Client.Commands.Settings
 
         public override String Status => base.Status
             + $"\n\tSample count: {MessageSampleCount}"
-            + $"\n\tDuplicate count: {MinimumDuplicateCount}";
+            + $"\n\tDuplicate count: {MinimumDuplicateCount}"
+            + $"\n\tCooldown count: {MessageCooldownCount}";
 
         public AutoChat(IExtendedClient client, TextWriter console)
             : base(client, console)
@@ -67,6 +74,14 @@ namespace Chubberino.Client.Commands.Settings
                         return true;
                     }
                     break;
+                case "c":
+                case "cooldown":
+                    if (UInt32.TryParse(arguments.FirstOrDefault(), out UInt32 cooldownLimit))
+                    {
+                        MessageCooldownCount = cooldownLimit;
+                        return true;
+                    }
+                    break;
             }
             return false;
         }
@@ -94,6 +109,15 @@ namespace Chubberino.Client.Commands.Settings
             {
                 PreviousMessages.Enqueue(null);
             }
+            else if (OnCooldown)
+            {
+                MessageCooldownTracker++;
+                if (MessageCooldownTracker > MessageCooldownCount)
+                {
+                    OnCooldown = false;
+                    MessageCooldownTracker = 0;
+                }
+            }
             else
             {
                 PreviousMessages.Enqueue(e.ChatMessage.Message);
@@ -110,6 +134,7 @@ namespace Chubberino.Client.Commands.Settings
                 if (message != null)
                 {
                     TwitchClient.SpoolMessage(message);
+                    OnCooldown = true;
                 }
 
                 // Empty the last messages, whether one was sent or not to
@@ -126,8 +151,9 @@ namespace Chubberino.Client.Commands.Settings
                 if (message != null)
                 {
                     TwitchClient.SpoolMessage(message);
-                    // Empty the last messages, if if one was sent.
+                    // Empty the last messages, if one was sent.
                     PreviousMessages.Clear();
+                    OnCooldown = true;
                 }
             }
         }

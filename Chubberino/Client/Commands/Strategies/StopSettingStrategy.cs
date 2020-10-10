@@ -11,11 +11,11 @@ namespace Chubberino.Client.Commands.Strategies
         {
             "bot",
             "check",
-            "spam",
-            "stop",
-            "clean",
-            "ban",
-            "timeout",
+            // "spam",
+            // "stop",
+            // "clean",
+            // "ban",
+            // "timeout",
             TwitchInfo.BotUsername
         };
 

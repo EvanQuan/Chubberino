@@ -47,7 +47,6 @@ namespace Chubberino
             builder.RegisterInstance(Console.Out).As<TextWriter>().SingleInstance();
             builder.RegisterType<CommandRepository>().As<ICommandRepository>().SingleInstance();
             builder.Register(c => new ExtendedClientFactory(
-                c.Resolve<IBot>(),
                 (IClientOptions options) => new WebSocketClient(options),
                 ClientProtocol.WebSocket,
                 c.Resolve<TextWriter>(),

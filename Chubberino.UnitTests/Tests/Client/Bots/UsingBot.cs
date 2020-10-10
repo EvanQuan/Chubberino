@@ -67,7 +67,7 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
                 .Returns((Func<Boolean> func, TimeSpan timeout) => func());
 
             MockedExtendedClientFactory
-                .Setup(x => x.GetClient(It.IsAny<IClientOptions>()))
+                .Setup(x => x.GetClient(It.IsAny<IBot>(), It.IsAny<IClientOptions>()))
                 .Returns(MockedClient.Object);
 
             MockedClient
