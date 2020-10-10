@@ -32,4 +32,4 @@ jobs:
       with:
         name: dist-with-all
         path: |
-          ./bin/Release/netcoreapp3.1
+          ./Chubberino/bin/Release/netcoreapp3.1/
