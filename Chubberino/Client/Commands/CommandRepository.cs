@@ -83,12 +83,27 @@ namespace Chubberino.Client.Commands
         {
             StringBuilder stringBuilder = new StringBuilder();
 
-            foreach (ICommand command in CommandList)
-            {
-                if (command is ISetting setting)
+            // Disabled settings are first.
+            var disabledSettingsFirst = Settings
+                .OrderBy(x => x.IsEnabled);
+
+            var enabledSettings = disabledSettingsFirst
+                .SkipWhile(setting =>
                 {
-                    stringBuilder.Append(setting.Name + ": " + setting.Status + Environment.NewLine);
-                }
+                    if (setting.IsEnabled) { return false; }
+
+                    stringBuilder.AppendLine(setting.Name + ": " + setting.Status);
+
+                    return true;
+                })
+                .OrderBy(x => x.Name)
+                .ToArray();
+
+            stringBuilder.AppendLine("=================");
+
+            foreach (ISetting setting in enabledSettings)
+            {
+                stringBuilder.AppendLine(setting.Name + ": " + setting.Status);
             }
 
             return stringBuilder.ToString();
