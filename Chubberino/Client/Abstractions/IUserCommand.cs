@@ -1,6 +1,6 @@
 ﻿namespace Chubberino.Client.Abstractions
 {
-    interface IUserCommand : ISetting
+    public interface IUserCommand : ISetting
     {
     }
 }

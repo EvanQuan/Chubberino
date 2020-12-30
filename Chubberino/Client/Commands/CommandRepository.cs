@@ -15,13 +15,15 @@ namespace Chubberino.Client.Commands
 
         private TextWriter Console { get; }
 
-        private Lazy<IEnumerable<ISetting>> LazySettingsList { get; }
+        private Lazy<IEnumerable<ISetting>> LazySettings { get; }
+
+        private Lazy<IEnumerable<IUserCommand>> LazyUserCommands { get; }
 
         public CommandRepository(TextWriter console)
         {
             Console = console;
             CommandList = new List<ICommand>();
-            LazySettingsList = new Lazy<IEnumerable<ISetting>>(() =>
+            LazySettings = new Lazy<IEnumerable<ISetting>>(() =>
             {
                 var settingList = new List<ISetting>();
 
@@ -34,6 +36,21 @@ namespace Chubberino.Client.Commands
                 }
 
                 return settingList;
+            });
+
+            LazyUserCommands = new Lazy<IEnumerable<IUserCommand>>(() =>
+            {
+                var userCommandList = new List<IUserCommand>();
+
+                foreach (ISetting setting in Settings)
+                {
+                    if (setting is IUserCommand userCommand)
+                    {
+                        userCommandList.Add(userCommand);
+                    }
+                }
+
+                return userCommandList;
             });
         }
 
@@ -81,7 +98,13 @@ namespace Chubberino.Client.Commands
         /// Get all the <see cref="ISetting"/>s contained within <see cref="CommandList"/>.
         /// </summary>
         /// <returns>all the <see cref="ISetting"/>s contained within <see cref="CommandList"/>.</returns>
-        public IEnumerable<ISetting> Settings => LazySettingsList.Value;
+        public IEnumerable<ISetting> Settings => LazySettings.Value;
+
+        /// <summary>
+        /// Get all the <see cref="IUserCommand"/>s contained within <see cref="CommandList"/>.
+        /// </summary>
+        /// <returns>all the <see cref="IUserCommand"/>s contained within <see cref="CommandList"/>.</returns>
+        public IEnumerable<IUserCommand> UserCommands => LazyUserCommands.Value;
 
         public void Execute(String commandName, IEnumerable<String> arguments)
         {
