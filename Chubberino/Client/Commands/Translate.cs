@@ -1,6 +1,6 @@
 ﻿using Chubberino.Client.Abstractions;
-using Chubberino.Client.Commands.Settings;
-using Chubberino.Client.Commands.UserCommands.Translations;
+using Chubberino.Client.Commands.Settings.UserCommands;
+using Chubberino.Client.Commands.Settings.UserCommands.Translations;
 using Jering.Javascript.NodeJS;
 using System;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ using TwitchLib.Client.Events;
 
 namespace Chubberino.Client.Commands
 {
-    public sealed class Translate : Setting
+    public sealed class Translate : UserCommand
     {
         private INodeJSService NodeService { get; }
 

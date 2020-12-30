@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Chubberino.Client.Commands.UserCommands.Translations
+namespace Chubberino.Client.Commands.Settings.UserCommands.Translations
 {
     public static class JavaScript
     {
