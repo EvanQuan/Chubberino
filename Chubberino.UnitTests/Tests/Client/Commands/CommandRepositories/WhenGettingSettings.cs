@@ -10,7 +10,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
         [Fact]
         public void ShouldReturnNothing()
         {
-            IEnumerable<ISetting> settings = Sut.GetSettings();
+            IEnumerable<ISetting> settings = Sut.Settings;
 
             Assert.Empty(settings);
         }

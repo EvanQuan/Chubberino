@@ -11,7 +11,7 @@ namespace Chubberino.Client.Abstractions
 
         String GetStatus();
 
-        IEnumerable<ISetting> GetSettings();
+        IEnumerable<ISetting> Settings { get; }
 
         ICommandRepository AddCommand(ICommand command);
 

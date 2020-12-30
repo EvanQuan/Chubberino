@@ -6,7 +6,6 @@ using Chubberino.Client.Commands.Settings;
 using Chubberino.Client.Commands.Settings.ColorSelectors;
 using Chubberino.Client.Commands.Settings.Replies;
 using Chubberino.Client.Commands.Strategies;
-using Chubberino.Client.Commands.UserCommands.Translations;
 using Chubberino.Client.Threading;
 using Jering.Javascript.NodeJS;
 using Microsoft.Extensions.DependencyInjection;

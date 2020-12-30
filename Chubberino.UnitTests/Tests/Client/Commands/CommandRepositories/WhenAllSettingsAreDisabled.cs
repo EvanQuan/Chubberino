@@ -12,7 +12,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
         [Fact]
         public void ShouldDoNothing()
         {
-            IEnumerable<ISetting> settings = Sut.GetSettings();
+            IEnumerable<ISetting> settings = Sut.Settings;
 
             Sut.DisableAllSettings();
 

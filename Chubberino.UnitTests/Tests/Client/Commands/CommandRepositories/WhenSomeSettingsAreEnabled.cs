@@ -23,7 +23,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
             Sut.AddCommand(command.Object);
             Sut.AddCommand(setting2.Object);
 
-            IEnumerable<ISetting> settings = Sut.GetSettings();
+            IEnumerable<ISetting> settings = Sut.Settings;
 
             settings.First().IsEnabled = true;
 

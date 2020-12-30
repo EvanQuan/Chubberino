@@ -15,10 +15,26 @@ namespace Chubberino.Client.Commands
 
         private TextWriter Console { get; }
 
+        private Lazy<IEnumerable<ISetting>> LazySettingsList { get; }
+
         public CommandRepository(TextWriter console)
         {
             Console = console;
             CommandList = new List<ICommand>();
+            LazySettingsList = new Lazy<IEnumerable<ISetting>>(() =>
+            {
+                var settingList = new List<ISetting>();
+
+                foreach (ICommand command in CommandList)
+                {
+                    if (command is ISetting setting)
+                    {
+                        settingList.Add(setting);
+                    }
+                }
+
+                return settingList;
+            });
         }
 
         public ICommandRepository AddCommand(ICommand command)
@@ -32,9 +48,7 @@ namespace Chubberino.Client.Commands
         /// </summary>
         public void DisableAllSettings()
         {
-            IEnumerable<ISetting> settings = GetSettings();
-
-            foreach (ISetting setting in settings)
+            foreach (ISetting setting in Settings)
             {
                 setting.IsEnabled = false;
             }
@@ -67,20 +81,7 @@ namespace Chubberino.Client.Commands
         /// Get all the <see cref="ISetting"/>s contained within <see cref="CommandList"/>.
         /// </summary>
         /// <returns>all the <see cref="ISetting"/>s contained within <see cref="CommandList"/>.</returns>
-        public IEnumerable<ISetting> GetSettings()
-        {
-            var settingList = new List<ISetting>();
-
-            foreach (ICommand command in CommandList)
-            {
-                if (command is ISetting setting)
-                {
-                    settingList.Add(setting);
-                }
-            }
-
-            return settingList;
-        }
+        public IEnumerable<ISetting> Settings => LazySettingsList.Value;
 
         public void Execute(String commandName, IEnumerable<String> arguments)
         {
