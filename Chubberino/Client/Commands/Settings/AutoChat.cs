@@ -19,7 +19,7 @@ namespace Chubberino.Client.Commands.Settings
             30,
         };
 
-        private UInt32 MessageCooldownCount { get; set; } = 100;
+        private UInt32 MessageCooldownCount { get; set; } = 20;
 
         private UInt32 MessageCooldownTracker { get; set; }
 
@@ -31,7 +31,7 @@ namespace Chubberino.Client.Commands.Settings
         /// </summary>
         private UInt32 MessageSampleCount { get; set; } = 40;
 
-        private UInt32 MinimumDuplicateCount { get; set; } = 4;
+        private UInt32 MinimumDuplicateCount { get; set; } = 3;
 
         public override String Status => base.Status
             + $"\n\tSample count: {MessageSampleCount}"
