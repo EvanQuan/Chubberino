@@ -30,10 +30,7 @@ namespace Chubberino.Client.Commands
 
         private void TwitchClient_OnMessageReceived(object sender, OnMessageReceivedArgs e)
         {
-            String message = e.ChatMessage.Message;
-            if (!message.StartsWith("!translate")) { return; }
-
-            IEnumerable<String> words = message.Split(' ').Skip(1);
+            if (!TryValidateCommand(e, out var words)) { return; }
 
             String translatedText = NodeService.InvokeFromStringAsync<String>(moduleString: JavaScript.Translate, args: words.ToArray()).Result;
 
