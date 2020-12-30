@@ -6,9 +6,14 @@ using Chubberino.Client.Commands.Settings;
 using Chubberino.Client.Commands.Settings.ColorSelectors;
 using Chubberino.Client.Commands.Settings.Replies;
 using Chubberino.Client.Commands.Strategies;
+using Chubberino.Client.Commands.UserCommands.Translations;
 using Chubberino.Client.Threading;
+using Jering.Javascript.NodeJS;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.IO;
+using System.Net;
+using System.Text;
 using TwitchLib.Client.Enums;
 using TwitchLib.Client.Models;
 using TwitchLib.Communication.Clients;
@@ -60,9 +65,17 @@ namespace Chubberino
             builder.RegisterType<EqualsComparator>().As<IEqualsComparator>().SingleInstance();
             builder.RegisterType<Random>().AsSelf().SingleInstance();
             builder.RegisterType<ComplimentGenerator>().As<IComplimentGenerator>().SingleInstance();
+            builder.RegisterType<ComplimentGenerator>().As<IComplimentGenerator>().SingleInstance();
             builder.RegisterType<RainbowColorSelector>().AsSelf().SingleInstance();
             builder.RegisterType<RandomColorSelector>().AsSelf().SingleInstance();
             builder.RegisterType<PresetColorSelector>().AsSelf().SingleInstance();
+            builder.Register(c =>
+            {
+                var services = new ServiceCollection().AddNodeJS();
+
+                var serviceProvider = services.BuildServiceProvider();
+                return serviceProvider.GetRequiredService<INodeJSService>();
+            }).As<INodeJSService>().SingleInstance();
             builder.RegisterType<SpinWait>().As<ISpinWait>().SingleInstance();
 
             // Commands
@@ -86,6 +99,7 @@ namespace Chubberino
             builder.RegisterType<TimeoutAlert>().AsSelf().SingleInstance();
             builder.RegisterType<TrackJimbox>().AsSelf().SingleInstance();
             builder.RegisterType<TrackPyramids>().AsSelf().SingleInstance();
+            builder.RegisterType<Translate>().AsSelf().SingleInstance();
             builder.RegisterType<YepKyle>().AsSelf().SingleInstance();
 
             IContainer container = builder.Build();
@@ -114,6 +128,7 @@ namespace Chubberino
                 .AddCommand(scope.Resolve<TimeoutAlert>())
                 .AddCommand(scope.Resolve<TrackJimbox>())
                 .AddCommand(scope.Resolve<TrackPyramids>())
+                .AddCommand(scope.Resolve<Translate>())
                 .AddCommand(scope.Resolve<YepKyle>());
 
 
