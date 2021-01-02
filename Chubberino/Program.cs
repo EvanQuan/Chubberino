@@ -12,8 +12,6 @@ using Jering.Javascript.NodeJS;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.IO;
-using System.Net;
-using System.Text;
 using TwitchLib.Api;
 using TwitchLib.Api.Interfaces;
 using TwitchLib.Client.Enums;

@@ -2,8 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using TwitchLib.Api;
+using TwitchLib.Api.Core.Enums;
 using TwitchLib.Api.Core.Models.Undocumented.Chatters;
 using TwitchLib.Api.Interfaces;
 using TwitchLib.Client.Events;
@@ -26,12 +28,41 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
 
         public override void Execute(IEnumerable<String> arguments)
         {
-            List<ChatterFormatted> chatters = Api.Undocumented.GetChattersAsync(Bot.ChannelName).Result;
+            Char userTypeString = arguments.FirstOrDefault()?.ToLower()[0] ?? default;
+
+            var userType = userTypeString switch
+            {
+                'm' => UserType.Moderator,
+                'v' => UserType.VIP,
+                _ => UserType.Viewer,
+            };
+
+            // Remove user type parameter from message.
+            if (userType != UserType.Viewer)
+            {
+                arguments = arguments.Skip(1);
+            }
+
+            var chatters = Api.Undocumented.GetChattersAsync(Bot.ChannelName).Result
+                .Where(user => user.UserType >= userType);
 
             foreach (var user in chatters)
             {
                 TwitchClient.SpoolMessage(user.Username + " " + String.Join(' ', arguments));
             };
+        }
+
+        public override string GetHelp()
+        {
+            return @"
+@'s all chatters in the channel.
+
+usage: atall [user type] <message>
+
+[user type]     - [m]ods and staff
+                - [v]ips, mods and staff
+                - Defaults to all users
+";
         }
     }
 }
