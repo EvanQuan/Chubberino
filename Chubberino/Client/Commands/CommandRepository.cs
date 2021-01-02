@@ -71,6 +71,22 @@ namespace Chubberino.Client.Commands
             }
         }
 
+        public void DisableAllUserCommands()
+        {
+            foreach (IUserCommand command in UserCommands)
+            {
+                command.IsEnabled = false;
+            }
+        }
+
+        public void EnableAllUserCommands()
+        {
+            foreach (IUserCommand command in UserCommands)
+            {
+                command.IsEnabled = true;
+            }
+        }
+
         public void RefreshAll(IExtendedClient twitchClient)
         {
             foreach (ICommand command in CommandList)

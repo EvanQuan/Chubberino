@@ -4,7 +4,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Pyramids
 {
     public abstract class UsingPyramid : UsingCommand
     {
-        protected Pyramid Sut { get; private set; }
+        protected PyramidBuild Sut { get; private set; }
 
         public UsingPyramid()
         {

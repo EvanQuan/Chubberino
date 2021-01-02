@@ -28,5 +28,9 @@ namespace Chubberino.Client.Abstractions
         void Execute(String commandName, IEnumerable<String> arguments);
 
         void DisableAllSettings();
+
+        void DisableAllUserCommands();
+
+        void EnableAllUserCommands();
     }
 }

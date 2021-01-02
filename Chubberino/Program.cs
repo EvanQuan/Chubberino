@@ -2,6 +2,7 @@ using Autofac;
 using Chubberino.Client;
 using Chubberino.Client.Abstractions;
 using Chubberino.Client.Commands;
+using Chubberino.Client.Commands.Pyramids;
 using Chubberino.Client.Commands.Settings;
 using Chubberino.Client.Commands.Settings.ColorSelectors;
 using Chubberino.Client.Commands.Settings.Replies;
@@ -78,6 +79,7 @@ namespace Chubberino
                 return serviceProvider.GetRequiredService<INodeJSService>();
             }).As<INodeJSService>().SingleInstance();
             builder.RegisterType<SpinWait>().As<ISpinWait>().SingleInstance();
+            builder.RegisterType<PyramidBuilder>().AsSelf().SingleInstance();
 
             builder.Register(c =>
             {
@@ -106,7 +108,7 @@ namespace Chubberino
             builder.RegisterType<MockStreamElements>().AsSelf().SingleInstance();
             builder.RegisterType<ModCheck>().AsSelf().SingleInstance();
             builder.RegisterType<Mode>().AsSelf().SingleInstance();
-            builder.RegisterType<Pyramid>().AsSelf().SingleInstance();
+            builder.RegisterType<PyramidBuild>().AsSelf().SingleInstance();
             builder.RegisterType<Repeat>().AsSelf().SingleInstance();
             builder.RegisterType<Reply>().AsSelf().SingleInstance();
             builder.RegisterType<Say>().AsSelf().SingleInstance();
@@ -137,7 +139,7 @@ namespace Chubberino
                 .AddCommand(scope.Resolve<MockStreamElements>())
                 .AddCommand(scope.Resolve<ModCheck>())
                 .AddCommand(scope.Resolve<Mode>())
-                .AddCommand(scope.Resolve<Pyramid>())
+                .AddCommand(scope.Resolve<PyramidBuild>())
                 .AddCommand(scope.Resolve<Repeat>())
                 .AddCommand(scope.Resolve<Reply>())
                 .AddCommand(scope.Resolve<Say>())
