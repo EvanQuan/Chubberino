@@ -108,6 +108,7 @@ namespace Chubberino
             builder.RegisterType<MockStreamElements>().AsSelf().SingleInstance();
             builder.RegisterType<ModCheck>().AsSelf().SingleInstance();
             builder.RegisterType<Mode>().AsSelf().SingleInstance();
+            builder.RegisterType<Pyramid>().AsSelf().SingleInstance();
             builder.RegisterType<PyramidBuild>().AsSelf().SingleInstance();
             builder.RegisterType<Repeat>().AsSelf().SingleInstance();
             builder.RegisterType<Reply>().AsSelf().SingleInstance();
@@ -139,6 +140,7 @@ namespace Chubberino
                 .AddCommand(scope.Resolve<MockStreamElements>())
                 .AddCommand(scope.Resolve<ModCheck>())
                 .AddCommand(scope.Resolve<Mode>())
+                .AddCommand(scope.Resolve<Pyramid>())
                 .AddCommand(scope.Resolve<PyramidBuild>())
                 .AddCommand(scope.Resolve<Repeat>())
                 .AddCommand(scope.Resolve<Reply>())
