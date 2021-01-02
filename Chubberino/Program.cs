@@ -5,6 +5,7 @@ using Chubberino.Client.Commands;
 using Chubberino.Client.Commands.Settings;
 using Chubberino.Client.Commands.Settings.ColorSelectors;
 using Chubberino.Client.Commands.Settings.Replies;
+using Chubberino.Client.Commands.Settings.UserCommands;
 using Chubberino.Client.Commands.Strategies;
 using Chubberino.Client.Threading;
 using Jering.Javascript.NodeJS;
@@ -13,6 +14,8 @@ using System;
 using System.IO;
 using System.Net;
 using System.Text;
+using TwitchLib.Api;
+using TwitchLib.Api.Interfaces;
 using TwitchLib.Client.Enums;
 using TwitchLib.Client.Models;
 using TwitchLib.Communication.Clients;
@@ -77,7 +80,18 @@ namespace Chubberino
             }).As<INodeJSService>().SingleInstance();
             builder.RegisterType<SpinWait>().As<ISpinWait>().SingleInstance();
 
+            builder.Register(c =>
+            {
+                var api = new TwitchAPI();
+
+                api.Settings.ClientId = TwitchInfo.ClientId;
+                api.Settings.AccessToken = TwitchInfo.BotToken;
+
+                return api;
+            }).As<ITwitchAPI>().SingleInstance();
+
             // Commands
+            builder.RegisterType<AtAll>().AsSelf().SingleInstance();
             builder.RegisterType<AutoChat>().AsSelf().SingleInstance();
             builder.RegisterType<AutoPogO>().AsSelf().SingleInstance();
             builder.RegisterType<Color>().AsSelf().SingleInstance();
@@ -107,6 +121,7 @@ namespace Chubberino
 
             var commandRepository = scope.Resolve<ICommandRepository>();
             commandRepository
+                .AddCommand(scope.Resolve<AtAll>())
                 .AddCommand(scope.Resolve<AutoChat>())
                 .AddCommand(scope.Resolve<AutoPogO>())
                 .AddCommand(scope.Resolve<Color>())
