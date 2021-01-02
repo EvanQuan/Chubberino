@@ -3,7 +3,6 @@ using Chubberino.Client.Commands.Settings.UserCommands;
 using Chubberino.Client.Commands.Settings.UserCommands.Translations;
 using Jering.Javascript.NodeJS;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using TwitchLib.Client.Events;
