@@ -26,9 +26,13 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
             {
                 twitchClient.OnMessageReceived += TwitchClient_OnMessageReceived;
             };
+            Disable = twitchClient =>
+            {
+                twitchClient.OnMessageReceived -= TwitchClient_OnMessageReceived;
+            };
         }
 
-        private void TwitchClient_OnMessageReceived(object sender, OnMessageReceivedArgs e)
+        private void TwitchClient_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
         {
             if (!TryValidateCommand(e, out var words)) { return; }
 
