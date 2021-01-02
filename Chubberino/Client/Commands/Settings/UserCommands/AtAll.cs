@@ -3,12 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using TwitchLib.Api;
 using TwitchLib.Api.Core.Enums;
-using TwitchLib.Api.Core.Models.Undocumented.Chatters;
 using TwitchLib.Api.Interfaces;
-using TwitchLib.Client.Events;
 
 namespace Chubberino.Client.Commands.Settings.UserCommands
 {
@@ -46,9 +42,11 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
             var chatters = Api.Undocumented.GetChattersAsync(Bot.ChannelName).Result
                 .Where(user => user.UserType >= userType);
 
+            var message = " " + String.Join(' ', arguments);
+
             foreach (var user in chatters)
             {
-                TwitchClient.SpoolMessage(user.Username + " " + String.Join(' ', arguments));
+                TwitchClient.SpoolMessage(user.Username + message);
             };
         }
 

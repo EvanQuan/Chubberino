@@ -13,6 +13,12 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
         {
         }
 
+        /// <summary>
+        /// Tries to validate whether the message received successfully triggers this command.
+        /// </summary>
+        /// <param name="args">On message received arguments.</param>
+        /// <param name="words"></param>
+        /// <returns></returns>
         protected Boolean TryValidateCommand(OnMessageReceivedArgs args, out IEnumerable<String> words)
         {
             String message = args.ChatMessage.Message;   

@@ -19,6 +19,7 @@ using TwitchLib.Client.Models;
 using TwitchLib.Communication.Clients;
 using TwitchLib.Communication.Interfaces;
 using TwitchLib.Communication.Models;
+using WolframAlphaNet;
 
 namespace Chubberino
 {
@@ -88,6 +89,8 @@ namespace Chubberino
                 return api;
             }).As<ITwitchAPI>().SingleInstance();
 
+            builder.Register(c => new WolframAlpha(TwitchInfo.WolframAlphaAppId)).AsSelf().SingleInstance();
+
             // Commands
             builder.RegisterType<AtAll>().AsSelf().SingleInstance();
             builder.RegisterType<AutoChat>().AsSelf().SingleInstance();
@@ -112,6 +115,7 @@ namespace Chubberino
             builder.RegisterType<TrackPyramids>().AsSelf().SingleInstance();
             builder.RegisterType<Translate>().AsSelf().SingleInstance();
             builder.RegisterType<YepKyle>().AsSelf().SingleInstance();
+            builder.RegisterType<Wolfram>().AsSelf().SingleInstance();
 
             IContainer container = builder.Build();
 
@@ -141,6 +145,7 @@ namespace Chubberino
                 .AddCommand(scope.Resolve<TrackJimbox>())
                 .AddCommand(scope.Resolve<TrackPyramids>())
                 .AddCommand(scope.Resolve<Translate>())
+                .AddCommand(scope.Resolve<Wolfram>())
                 .AddCommand(scope.Resolve<YepKyle>());
 
 
