@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Autofac" Version="6.0.0" />
     <PackageReference Include="Jering.Javascript.NodeJS" Version="5.4.3" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />

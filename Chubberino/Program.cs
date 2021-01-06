@@ -113,6 +113,7 @@ namespace Chubberino
             builder.RegisterType<Moya>().AsSelf().SingleInstance();
             builder.RegisterType<Pyramid>().AsSelf().SingleInstance();
             builder.RegisterType<PyramidBuild>().AsSelf().SingleInstance();
+            builder.RegisterType<Refresh>().AsSelf().SingleInstance();
             builder.RegisterType<Repeat>().AsSelf().SingleInstance();
             builder.RegisterType<Reply>().AsSelf().SingleInstance();
             builder.RegisterType<Say>().AsSelf().SingleInstance();
@@ -148,6 +149,7 @@ namespace Chubberino
                 .AddCommand(scope.Resolve<Moya>())
                 .AddCommand(scope.Resolve<Pyramid>())
                 .AddCommand(scope.Resolve<PyramidBuild>())
+                .AddCommand(scope.Resolve<Refresh>())
                 .AddCommand(scope.Resolve<Repeat>())
                 .AddCommand(scope.Resolve<Reply>())
                 .AddCommand(scope.Resolve<Say>())

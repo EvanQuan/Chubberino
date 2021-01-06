@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using Chubberino.Client.Abstractions;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using TwitchLib.Client.Events;
@@ -70,25 +71,49 @@ namespace Chubberino.Client
             InitializeTwitchClientAndSpooler(regularOptions);
         }
 
-        private void InitializeTwitchClientAndSpooler(IClientOptions clientOptions)
+        private IReadOnlyList<JoinedChannel> InitializeTwitchClientAndSpooler( IClientOptions? clientOptions = null)
         {
-            CurrentClientOptions = clientOptions;
+            if (clientOptions != null)
+            {
+                CurrentClientOptions = clientOptions;
+            }
 
-            TwitchClient = ClientFactory.GetClient(this, clientOptions);
+            // We need to get all the channel that the old client was connected to,
+            // so we can rejoin those channels on the new client.
+            var oldJoinedChannels = TwitchClient == null 
+                ? new List<JoinedChannel>()
+                : TwitchClient.JoinedChannels;
+
+            TwitchClient = ClientFactory.GetClient(this, CurrentClientOptions);
 
             TwitchClient.Initialize(Credentials, PrimaryChannelName);
 
             TwitchClient.OnConnected += Client_OnConnected;
             TwitchClient.OnConnectionError += Client_OnConnectionError;
             TwitchClient.OnUserTimedout += Client_OnUserTimedout;
+
+            return oldJoinedChannels;
         }
 
-        public Boolean Start()
+        public Boolean Start(IReadOnlyList<JoinedChannel>? joinedChannels = null)
         {
             Console.WriteLine("Connecting to " + PrimaryChannelName);
             Boolean channelJoined = TwitchClient.EnsureJoinedToChannel(PrimaryChannelName);
 
             if (!channelJoined) { return false; }
+
+            if (joinedChannels != null)
+            {
+                foreach (var channel in joinedChannels)
+                {
+                    var channelName = channel.Channel;
+
+                    Console.WriteLine("Connecting to " + channelName);
+                    channelJoined = TwitchClient.EnsureJoinedToChannel(channelName);
+
+                    if (!channelJoined) { return false; }
+                }
+            }
 
             Boolean channelNameUpdated = SpinWait.SpinUntil(() =>
             {
@@ -104,7 +129,7 @@ namespace Chubberino.Client
         public String GetPrompt()
         {
             return Environment.NewLine + Environment.NewLine + Commands.GetStatus() + Environment.NewLine
-                + $"[{(IsModerator ? "Mod" : "Normal" )} {PrimaryChannelName}]> ";
+                + $"[{(IsModerator ? "Mod" : "Normal")} {PrimaryChannelName}]> ";
         }
 
         private void Client_OnUserTimedout(Object sender, OnUserTimedoutArgs e)
@@ -118,11 +143,16 @@ namespace Chubberino.Client
             Console.WriteLine("!! Refreshed");
         }
 
-        public void Refresh(IClientOptions clientOptions)
+
+        public void Refresh(IClientOptions? clientOptions = null)
         {
-            InitializeTwitchClientAndSpooler(clientOptions);
+            var oldJoinedChannels = InitializeTwitchClientAndSpooler(clientOptions);
+
             Commands.RefreshAll(TwitchClient);
-            Start();
+
+            Boolean successful = Start(oldJoinedChannels);
+
+            Console.WriteLine("Refresh " + (successful ? "successful" : "failed"));
         }
 
         private void Client_OnConnected(Object sender, OnConnectedArgs e)
