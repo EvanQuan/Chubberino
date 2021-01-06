@@ -47,5 +47,19 @@ namespace Chubberino.Client.Commands.Settings
         {
             IsEnabled = !IsEnabled;
         }
+
+        public override void Refresh(IExtendedClient twitchClient)
+        {
+            if (IsEnabled)
+            {
+                IsEnabled = false;
+                base.Refresh(twitchClient);
+                IsEnabled = true;
+            }
+            else
+            {
+                base.Refresh(twitchClient);
+            }
+        }
     }
 }

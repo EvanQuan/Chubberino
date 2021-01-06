@@ -2,18 +2,25 @@ using Autofac;
 using Chubberino.Client;
 using Chubberino.Client.Abstractions;
 using Chubberino.Client.Commands;
+using Chubberino.Client.Commands.Pyramids;
 using Chubberino.Client.Commands.Settings;
 using Chubberino.Client.Commands.Settings.ColorSelectors;
 using Chubberino.Client.Commands.Settings.Replies;
+using Chubberino.Client.Commands.Settings.UserCommands;
 using Chubberino.Client.Commands.Strategies;
 using Chubberino.Client.Threading;
+using Jering.Javascript.NodeJS;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.IO;
+using TwitchLib.Api;
+using TwitchLib.Api.Interfaces;
 using TwitchLib.Client.Enums;
 using TwitchLib.Client.Models;
 using TwitchLib.Communication.Clients;
 using TwitchLib.Communication.Interfaces;
 using TwitchLib.Communication.Models;
+using WolframAlphaNet;
 
 namespace Chubberino
 {
@@ -47,7 +54,6 @@ namespace Chubberino
             builder.RegisterInstance(Console.Out).As<TextWriter>().SingleInstance();
             builder.RegisterType<CommandRepository>().As<ICommandRepository>().SingleInstance();
             builder.Register(c => new ExtendedClientFactory(
-                c.Resolve<IBot>(),
                 (IClientOptions options) => new WebSocketClient(options),
                 ClientProtocol.WebSocket,
                 c.Resolve<TextWriter>(),
@@ -61,14 +67,37 @@ namespace Chubberino
             builder.RegisterType<EqualsComparator>().As<IEqualsComparator>().SingleInstance();
             builder.RegisterType<Random>().AsSelf().SingleInstance();
             builder.RegisterType<ComplimentGenerator>().As<IComplimentGenerator>().SingleInstance();
+            builder.RegisterType<ComplimentGenerator>().As<IComplimentGenerator>().SingleInstance();
             builder.RegisterType<RainbowColorSelector>().AsSelf().SingleInstance();
             builder.RegisterType<RandomColorSelector>().AsSelf().SingleInstance();
             builder.RegisterType<PresetColorSelector>().AsSelf().SingleInstance();
+            builder.Register(c =>
+            {
+                var services = new ServiceCollection().AddNodeJS();
+
+                var serviceProvider = services.BuildServiceProvider();
+                return serviceProvider.GetRequiredService<INodeJSService>();
+            }).As<INodeJSService>().SingleInstance();
             builder.RegisterType<SpinWait>().As<ISpinWait>().SingleInstance();
+            builder.RegisterType<PyramidBuilder>().AsSelf().SingleInstance();
+
+            builder.Register(c =>
+            {
+                var api = new TwitchAPI();
+
+                api.Settings.ClientId = TwitchInfo.ClientId;
+                api.Settings.AccessToken = TwitchInfo.BotToken;
+
+                return api;
+            }).As<ITwitchAPI>().SingleInstance();
+
+            builder.Register(c => new WolframAlpha(TwitchInfo.WolframAlphaAppId)).AsSelf().SingleInstance();
 
             // Commands
+            builder.RegisterType<AtAll>().AsSelf().SingleInstance();
             builder.RegisterType<AutoChat>().AsSelf().SingleInstance();
             builder.RegisterType<AutoPogO>().AsSelf().SingleInstance();
+            builder.RegisterType<Channel>().AsSelf().SingleInstance();
             builder.RegisterType<Color>().AsSelf().SingleInstance();
             builder.RegisterType<Copy>().AsSelf().SingleInstance();
             builder.RegisterType<Count>().AsSelf().SingleInstance();
@@ -76,18 +105,24 @@ namespace Chubberino
             builder.RegisterType<Greet>().AsSelf().SingleInstance();
             builder.RegisterType<Jimbox>().AsSelf().SingleInstance();
             builder.RegisterType<Join>().AsSelf().SingleInstance();
+            builder.RegisterType<Leave>().AsSelf().SingleInstance();
             builder.RegisterType<Log>().AsSelf().SingleInstance();
             builder.RegisterType<MockStreamElements>().AsSelf().SingleInstance();
             builder.RegisterType<ModCheck>().AsSelf().SingleInstance();
             builder.RegisterType<Mode>().AsSelf().SingleInstance();
+            builder.RegisterType<Moya>().AsSelf().SingleInstance();
             builder.RegisterType<Pyramid>().AsSelf().SingleInstance();
+            builder.RegisterType<PyramidBuild>().AsSelf().SingleInstance();
+            builder.RegisterType<Refresh>().AsSelf().SingleInstance();
             builder.RegisterType<Repeat>().AsSelf().SingleInstance();
             builder.RegisterType<Reply>().AsSelf().SingleInstance();
             builder.RegisterType<Say>().AsSelf().SingleInstance();
             builder.RegisterType<TimeoutAlert>().AsSelf().SingleInstance();
             builder.RegisterType<TrackJimbox>().AsSelf().SingleInstance();
             builder.RegisterType<TrackPyramids>().AsSelf().SingleInstance();
+            builder.RegisterType<Translate>().AsSelf().SingleInstance();
             builder.RegisterType<YepKyle>().AsSelf().SingleInstance();
+            builder.RegisterType<Wolfram>().AsSelf().SingleInstance();
 
             IContainer container = builder.Build();
 
@@ -95,8 +130,10 @@ namespace Chubberino
 
             var commandRepository = scope.Resolve<ICommandRepository>();
             commandRepository
+                .AddCommand(scope.Resolve<AtAll>())
                 .AddCommand(scope.Resolve<AutoChat>())
                 .AddCommand(scope.Resolve<AutoPogO>())
+                .AddCommand(scope.Resolve<Channel>())
                 .AddCommand(scope.Resolve<Color>())
                 .AddCommand(scope.Resolve<Copy>())
                 .AddCommand(scope.Resolve<Count>())
@@ -104,17 +141,23 @@ namespace Chubberino
                 .AddCommand(scope.Resolve<Greet>())
                 .AddCommand(scope.Resolve<Jimbox>())
                 .AddCommand(scope.Resolve<Join>())
+                .AddCommand(scope.Resolve<Leave>())
                 .AddCommand(scope.Resolve<Log>())
                 .AddCommand(scope.Resolve<MockStreamElements>())
                 .AddCommand(scope.Resolve<ModCheck>())
                 .AddCommand(scope.Resolve<Mode>())
+                .AddCommand(scope.Resolve<Moya>())
                 .AddCommand(scope.Resolve<Pyramid>())
+                .AddCommand(scope.Resolve<PyramidBuild>())
+                .AddCommand(scope.Resolve<Refresh>())
                 .AddCommand(scope.Resolve<Repeat>())
                 .AddCommand(scope.Resolve<Reply>())
                 .AddCommand(scope.Resolve<Say>())
                 .AddCommand(scope.Resolve<TimeoutAlert>())
                 .AddCommand(scope.Resolve<TrackJimbox>())
                 .AddCommand(scope.Resolve<TrackPyramids>())
+                .AddCommand(scope.Resolve<Translate>())
+                .AddCommand(scope.Resolve<Wolfram>())
                 .AddCommand(scope.Resolve<YepKyle>());
 
 

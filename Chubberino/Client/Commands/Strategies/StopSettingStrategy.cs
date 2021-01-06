@@ -10,13 +10,7 @@ namespace Chubberino.Client.Commands.Strategies
         private static ISet<String> StopWords { get; } = new HashSet<String>()
         {
             "bot",
-            "check",
-            "spam",
-            "stop",
-            "clean",
-            "ban",
-            "timeout",
-            TwitchInfo.BotUsername
+            TwitchInfo.BotUsername,
         };
 
         public Boolean ShouldStop(ChatMessage chatMessage)

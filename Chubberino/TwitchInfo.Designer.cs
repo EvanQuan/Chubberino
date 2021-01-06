@@ -61,7 +61,7 @@ namespace Chubberino {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to qq618zu7ab4nrimd5b6cje6a5njynj.
+        ///   Looks up a localized string similar to 43370u6sgfctzlmly2va5q4fdfzfqw.
         /// </summary>
         public static string BotToken {
             get {
@@ -70,7 +70,7 @@ namespace Chubberino {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ChubbehMouse.
+        ///   Looks up a localized string similar to chubbehmouse.
         /// </summary>
         public static string BotUsername {
             get {
@@ -93,6 +93,15 @@ namespace Chubberino {
         public static string InitialChannelName {
             get {
                 return ResourceManager.GetString("InitialChannelName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A55H2A-YLH45XGW8J.
+        /// </summary>
+        public static string WolframAlphaAppId {
+            get {
+                return ResourceManager.GetString("WolframAlphaAppId", resourceCulture);
             }
         }
     }

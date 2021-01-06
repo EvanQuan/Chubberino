@@ -1,5 +1,4 @@
 ﻿using Chubberino.Client.Abstractions;
-using Chubberino.Client.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,31 +9,15 @@ namespace Chubberino.Client.Commands
 {
     public sealed class Join : Command
     {
-        private String JoinedChannelName { get; set; }
-
-        private IBot Bot { get; }
-
-        public Join(IExtendedClient client, TextWriter console, IBot bot)
+        public Join(IExtendedClient client, TextWriter console)
             : base(client, console)
         {
-            Bot = bot;
             TwitchClient.OnJoinedChannel += TwitchClient_OnJoinedChannel;
         }
 
         public void TwitchClient_OnJoinedChannel(Object sender, OnJoinedChannelArgs e)
         {
-            // For simplicity, we can only be in 1 channel at a time.
-            if (e.Channel.Equals(JoinedChannelName, StringComparison.OrdinalIgnoreCase)) { return; }
-
-            if (JoinedChannelName != null)
-            {
-                TwitchClient.LeaveChannel(JoinedChannelName);
-                Console.WriteLine($"Left channel {JoinedChannelName}");
-            }
-
-            JoinedChannelName = e.Channel;
-            Bot.ChannelName = JoinedChannelName;
-            Console.WriteLine($"Joined channel {JoinedChannelName}");
+            Console.WriteLine($"Joined channel {e.Channel}");
         }
 
         public override void Execute(IEnumerable<String> arguments)
@@ -48,7 +31,20 @@ namespace Chubberino.Client.Commands
 
             String channelName = arguments.FirstOrDefault();
 
+            // If the user inputs any second argument, it will join that channel and not leave the existing channel.
+
             TwitchClient.EnsureJoinedToChannel(channelName);
+        }
+
+        public override string GetHelp()
+        {
+            return @"
+Join a twitch channel.
+
+usage: join <channel name>
+
+    <channel name>                      Name of the twitch channel to join.
+";
         }
     }
 }

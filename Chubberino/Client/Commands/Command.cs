@@ -39,7 +39,7 @@ namespace Chubberino.Client.Commands
         /// </summary>
         /// <param name="twitchClient">New twitch client.</param>
         /// <param name="messageSpooler">New message spooler.</param>
-        public void Refresh(IExtendedClient twitchClient)
+        public virtual void Refresh(IExtendedClient twitchClient)
         {
             TwitchClient = twitchClient;
         }

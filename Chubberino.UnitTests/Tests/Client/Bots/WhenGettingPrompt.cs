@@ -20,7 +20,7 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
 
             Assert.Contains(commandStatus, prompt);
             Assert.Contains(expectedModeratorText, prompt);
-            Assert.Contains(Sut.ChannelName, prompt);
+            Assert.Contains(Sut.PrimaryChannelName, prompt);
         }
     }
 }

@@ -34,7 +34,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands
                 .Setup(x => x.RegularClientOptions)
                 .Returns(regularOptions);
 
-            MockedBot.Object.ChannelName = Guid.NewGuid().ToString();
+            MockedBot.Object.PrimaryChannelName = Guid.NewGuid().ToString();
 
             MockedConsole = new Mock<TextWriter>().SetupAllProperties();
 

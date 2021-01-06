@@ -29,16 +29,15 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Joins
         }
 
         /// <summary>
-        /// Should output a message indicating a channel has been joined.
-        /// With a prior joined channel, there should not a left channel
-        /// message with the old channel name.
+        /// Should output a message indicating a channel has been joined, even
+        /// when a channel has already been joined.
         /// </summary>
         /// <param name="oldChannel"></param>
         /// <param name="newChannel"></param>
         [Theory]
         [InlineData("b", "a")]
         [InlineData("a", "b")]
-        public void ShouldOutputLeftChannelAndJoinedChannelMessages(String oldChannel, String newChannel)
+        public void ShouldOutputOldAndNewJoinedChannelMessages(String oldChannel, String newChannel)
         {
             var args1 = new OnJoinedChannelArgs()
             {
@@ -55,9 +54,8 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Joins
             Sut.TwitchClient_OnJoinedChannel(null, args2);
 
             MockedConsole.Verify(x => x.WriteLine($"Joined channel {oldChannel}"), Times.Once());
-            MockedConsole.Verify(x => x.WriteLine($"Left channel {oldChannel}"), Times.Once());
             MockedConsole.Verify(x => x.WriteLine($"Joined channel {newChannel}"), Times.Once());
-            MockedConsole.Verify(x => x.WriteLine(It.IsAny<String>()), Times.Exactly(3));
+            MockedConsole.Verify(x => x.WriteLine(It.IsAny<String>()), Times.Exactly(2));
         }
 
     }

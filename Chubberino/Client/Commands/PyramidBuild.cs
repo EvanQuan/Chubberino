@@ -1,4 +1,5 @@
 ﻿using Chubberino.Client.Abstractions;
+using Chubberino.Client.Commands.Pyramids;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,15 +7,14 @@ using System.Linq;
 
 namespace Chubberino.Client.Commands
 {
-    public sealed class Pyramid : Command
+    public sealed class PyramidBuild : Command
     {
-        private Int32 MaximumPyramidHeight { get; set; }
+        private PyramidBuilder Builder { get; set; }
 
-        private Int32 CurrentPyramidHeight { get; set; }
-
-        public Pyramid(IExtendedClient client, TextWriter console)
+        public PyramidBuild(IExtendedClient client, TextWriter console, PyramidBuilder builder)
             : base(client, console)
         {
+            Builder = builder;
         }
 
         public override void Execute(IEnumerable<String> arguments)
@@ -25,7 +25,7 @@ namespace Chubberino.Client.Commands
                 return;
             }
 
-            if (!Int32.TryParse(arguments.First(), out Int32 result))
+            if (!Int32.TryParse(arguments.First(), out Int32 height))
             {
                 Console.WriteLine($"Pyramid height of \"{arguments.First()}\" must be an integer");
                 return;
@@ -42,21 +42,11 @@ namespace Chubberino.Client.Commands
 
             String pyramidBlock = String.Join(' ', pyramidBlockArguments);
 
-            MaximumPyramidHeight = result;
-            CurrentPyramidHeight = 0;
+            var pyramid = Builder.GetPyramid(pyramidBlock, height);
 
-            // Build pyramid up
-            while (CurrentPyramidHeight < MaximumPyramidHeight)
+            foreach (var line in pyramid)
             {
-                String message = String.Join(' ', Enumerable.Repeat(pyramidBlock, ++CurrentPyramidHeight));
-                TwitchClient.SpoolMessage(message);
-            }
-
-            // Build pyramid down
-            while (CurrentPyramidHeight > 0)
-            {
-                String message = String.Join(' ', Enumerable.Repeat(pyramidBlock, --CurrentPyramidHeight));
-                TwitchClient.SpoolMessage(message);
+                TwitchClient.SpoolMessage(line);
             }
         }
 

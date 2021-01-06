@@ -4,6 +4,6 @@ namespace Chubberino.Client.Abstractions
 {
     public interface IExtendedClientFactory
     {
-        IExtendedClient GetClient(IClientOptions options);
+        IExtendedClient GetClient(IBot bot, IClientOptions options);
     }
 }

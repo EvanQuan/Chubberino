@@ -1,5 +1,7 @@
 ﻿using Autofac;
 using System;
+using System.Collections.Generic;
+using TwitchLib.Client.Models;
 using TwitchLib.Communication.Interfaces;
 
 namespace Chubberino.Client.Abstractions
@@ -15,7 +17,7 @@ namespace Chubberino.Client.Abstractions
         /// <summary>
         /// Current channel joined.
         /// </summary>
-        public String ChannelName { get; set; }
+        public String PrimaryChannelName { get; set; }
 
         /// <summary>
         /// 100 messages in 30 seconds ~1 message per 0.3 seconds.
@@ -32,11 +34,11 @@ namespace Chubberino.Client.Abstractions
         /// </summary>
         public Boolean IsModerator { get; set; }
 
-        Boolean Start();
+        Boolean Start(IReadOnlyList<JoinedChannel>? joinedChannels = null);
 
         String GetPrompt();
 
-        void Refresh(IClientOptions clientOptions);
+        void Refresh(IClientOptions? clientOptions = null);
 
         void ReadCommand(String command);
     }
