@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands.Pyramids
 {
-    public sealed class WhenExecuting : UsingPyramid
+    public sealed class WhenExecuting : UsingPyramidBuild
     {
         [Fact]
         public void ShouldOutputHelpMessage()
