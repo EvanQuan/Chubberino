@@ -88,7 +88,7 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
                 .Callback((String channel, Boolean overrideCheck) =>
                 {
                     JoinedChannels.Add(new JoinedChannel(channel));
-                    Sut.ChannelName = channel;
+                    Sut.PrimaryChannelName = channel;
                 });
 
             MockedClient

@@ -47,7 +47,7 @@ namespace Chubberino.Client
 
             try
             {
-                SendMessage(Bot.ChannelName, message);
+                SendMessage(Bot.PrimaryChannelName, message);
                 PreviousMessage = message;
             }
             catch (BadStateException e)

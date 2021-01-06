@@ -15,7 +15,7 @@ namespace Chubberino.Client.Abstractions
         /// <summary>
         /// Current channel joined.
         /// </summary>
-        public String ChannelName { get; set; }
+        public String PrimaryChannelName { get; set; }
 
         /// <summary>
         /// 100 messages in 30 seconds ~1 message per 0.3 seconds.

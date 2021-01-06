@@ -97,6 +97,7 @@ namespace Chubberino
             builder.RegisterType<AtAll>().AsSelf().SingleInstance();
             builder.RegisterType<AutoChat>().AsSelf().SingleInstance();
             builder.RegisterType<AutoPogO>().AsSelf().SingleInstance();
+            builder.RegisterType<Channel>().AsSelf().SingleInstance();
             builder.RegisterType<Color>().AsSelf().SingleInstance();
             builder.RegisterType<Copy>().AsSelf().SingleInstance();
             builder.RegisterType<Count>().AsSelf().SingleInstance();
@@ -104,6 +105,7 @@ namespace Chubberino
             builder.RegisterType<Greet>().AsSelf().SingleInstance();
             builder.RegisterType<Jimbox>().AsSelf().SingleInstance();
             builder.RegisterType<Join>().AsSelf().SingleInstance();
+            builder.RegisterType<Leave>().AsSelf().SingleInstance();
             builder.RegisterType<Log>().AsSelf().SingleInstance();
             builder.RegisterType<MockStreamElements>().AsSelf().SingleInstance();
             builder.RegisterType<ModCheck>().AsSelf().SingleInstance();
@@ -129,6 +131,7 @@ namespace Chubberino
                 .AddCommand(scope.Resolve<AtAll>())
                 .AddCommand(scope.Resolve<AutoChat>())
                 .AddCommand(scope.Resolve<AutoPogO>())
+                .AddCommand(scope.Resolve<Channel>())
                 .AddCommand(scope.Resolve<Color>())
                 .AddCommand(scope.Resolve<Copy>())
                 .AddCommand(scope.Resolve<Count>())
@@ -136,6 +139,7 @@ namespace Chubberino
                 .AddCommand(scope.Resolve<Greet>())
                 .AddCommand(scope.Resolve<Jimbox>())
                 .AddCommand(scope.Resolve<Join>())
+                .AddCommand(scope.Resolve<Leave>())
                 .AddCommand(scope.Resolve<Log>())
                 .AddCommand(scope.Resolve<MockStreamElements>())
                 .AddCommand(scope.Resolve<ModCheck>())

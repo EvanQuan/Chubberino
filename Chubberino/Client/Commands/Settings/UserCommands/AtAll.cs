@@ -39,7 +39,7 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
                 arguments = arguments.Skip(1);
             }
 
-            var chatters = Api.Undocumented.GetChattersAsync(Bot.ChannelName).Result
+            var chatters = Api.Undocumented.GetChattersAsync(Bot.PrimaryChannelName).Result
                 .Where(user => user.UserType >= userType);
 
             var message = " " + String.Join(' ', arguments);
