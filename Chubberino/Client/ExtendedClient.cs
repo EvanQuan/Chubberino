@@ -38,7 +38,13 @@ namespace Chubberino.Client
             SpinWait = spinWait;
         }
 
-        private void SendMessage(String message)
+
+        public void SpoolMessage(String message)
+        {
+            SpoolMessage(Bot.PrimaryChannelName, message);
+        }
+
+        public void SpoolMessage(String channelName, String message)
         {
             if (message == PreviousMessage)
             {
@@ -47,7 +53,7 @@ namespace Chubberino.Client
 
             try
             {
-                SendMessage(Bot.PrimaryChannelName, message);
+                SendMessage(channelName, message);
                 PreviousMessage = message;
             }
             catch (BadStateException e)
@@ -55,11 +61,6 @@ namespace Chubberino.Client
                 Console.WriteLine("ERROR: Failed to send message");
                 Console.WriteLine(e.Message);
             }
-        }
-
-        public void SpoolMessage(String message)
-        {
-            SendMessage(message);
         }
 
         public Boolean EnsureJoinedToChannel(String channelName)
