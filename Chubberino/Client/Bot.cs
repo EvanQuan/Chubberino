@@ -81,8 +81,8 @@ namespace Chubberino.Client
             // We need to get all the channel that the old client was connected to,
             // so we can rejoin those channels on the new client.
             var oldJoinedChannels = TwitchClient == null 
-                ? new List<JoinedChannel>()
-                : TwitchClient.JoinedChannels;
+                ? new JoinedChannel[] {}
+                : TwitchClient.JoinedChannels.Select(x => x).ToArray();
 
             TwitchClient = ClientFactory.GetClient(this, CurrentClientOptions);
 

@@ -24,7 +24,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
             Sut.AddCommand(mockedSetting.Object);
             Sut.AddCommand(mockedCommand.Object);
 
-            IEnumerable<ISetting> settings = Sut.GetSettings();
+            IEnumerable<ISetting> settings = Sut.Settings;
 
             Assert.Contains(mockedSetting.Object, settings);
             Assert.Single(settings);
