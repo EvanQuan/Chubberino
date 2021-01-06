@@ -207,26 +207,44 @@ namespace Chubberino.Client.Commands
 
         private void Set(String commandName, IEnumerable<String> arguments)
         {
-            ICommand commandToSet = GetCommand(commandName);
-            String property = arguments.FirstOrDefault();
-
-            arguments = arguments.Skip(1);
-
-            if (commandToSet == null)
-            {
-                Console.WriteLine($"Command \"{commandName}\" not found to set.");
-            }
-            else if (commandToSet.Set(property, arguments))
-            {
-                Console.WriteLine($"Command \"{commandName}\" property \"{property}\" set to \"{String.Join(" ", arguments)}\".");
-            }
-            else
-            {
-                Console.WriteLine($"Command \"{commandName}\" property \"{property}\" not set.");
-            }
+            ApplyMetaCommand(
+                commandName,
+                arguments,
+                (command, property, arguments) => command.Set(property, arguments),
+                commandName => $"Command \"{commandName}\" not found to set.",
+                (commandName, property, arguments) => $"Command \"{commandName}\" property \"{property}\" set to \"{arguments}\".",
+                (commandName, property) => $"Command \"{commandName}\" property \"{property}\" not set.");
         }
 
         private void Add(String commandName, IEnumerable<String> arguments)
+        {
+            ApplyMetaCommand(
+                commandName,
+                arguments,
+                (command, property, arguments) => command.Add(property, arguments),
+                commandName => $"Command \"{commandName}\" not found to add to.",
+                (commandName, property, arguments) => $"Command \"{commandName}\" property \"{property}\" added \"{arguments}\".",
+                (commandName, property) => $"Command \"{commandName}\" property \"{property}\" not added to.");
+        }
+
+        private void Remove(String commandName, IEnumerable<String> arguments)
+        {
+            ApplyMetaCommand(
+                commandName,
+                arguments,
+                (command, property, arguments) => command.Remove(property, arguments),
+                commandName => $"Command \"{commandName}\" not found to remove from.",
+                (commandName, property, arguments) => $"Command \"{commandName}\" property \"{property}\" removed \"{arguments}\".",
+                (commandName, property) => $"Command \"{commandName}\" property \"{property}\" not removed from.");
+        }
+
+        private void ApplyMetaCommand(
+            String commandName,
+            IEnumerable<String> arguments,
+            Func<ICommand, String, IEnumerable<String>, Boolean> metaCommand,
+            Func<String, String> notFoundMessage,
+            Func<String, String, String, String> successMessage,
+            Func<String, String, String> failureMessage)
         {
             ICommand commandToAddTo = GetCommand(commandName);
             String property = arguments.FirstOrDefault();
@@ -235,36 +253,15 @@ namespace Chubberino.Client.Commands
 
             if (commandToAddTo == null)
             {
-                Console.WriteLine($"Command \"{commandName}\" not found to add to.");
+                Console.WriteLine(notFoundMessage(commandName));
             }
-            else if (commandToAddTo.Add(property, arguments))
+            else if (metaCommand(commandToAddTo, property, arguments))
             {
-                Console.WriteLine($"Command \"{commandName}\" property \"{property}\" added \"{String.Join(" ", arguments)}\".");
-            }
-            else
-            {
-                Console.WriteLine($"Command \"{commandName}\" property \"{property}\" not added to.");
-            }
-        }
-
-        private void Remove(String commandName, IEnumerable<String> arguments)
-        {
-            ICommand commandToRemoveFrom = GetCommand(commandName);
-            String property = arguments.FirstOrDefault();
-
-            arguments = arguments.Skip(1);
-
-            if (commandToRemoveFrom == null)
-            {
-                Console.WriteLine($"Command \"{commandName}\" not found to add remove from.");
-            }
-            else if (commandToRemoveFrom.Remove(property, arguments))
-            {
-                Console.WriteLine($"Command \"{commandName}\" property \"{property}\" removed \"{String.Join(" ", arguments)}\".");
+                Console.WriteLine(successMessage(commandName, property, String.Join(" ", arguments)));
             }
             else
             {
-                Console.WriteLine($"Command \"{commandName}\" property \"{property}\" not removed from.");
+                Console.WriteLine(failureMessage(commandName, property));
             }
         }
 
