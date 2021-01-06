@@ -49,13 +49,13 @@ namespace Chubberino.Client.Commands.Settings
                 if (translatedText == e.ChatMessage.Message)
                 {
                     TwitchClient.SpoolMessage($"TearChub New {ListenUsername} message in {ListenChannel}'s chat!");
-                    TwitchClient.SpoolMessage("Message:" + e.ChatMessage.Message);
+                    TwitchClient.SpoolMessage("Message: " + e.ChatMessage.Message);
                 }
                 else
                 {
                     TwitchClient.SpoolMessage($"TearChub New non-english {ListenUsername} message in {ListenChannel}'s chat!");
-                    TwitchClient.SpoolMessage("Original message:" + e.ChatMessage.Message);
-                    TwitchClient.SpoolMessage("Translated message:" + translatedText);
+                    TwitchClient.SpoolMessage("Original message: " + e.ChatMessage.Message);
+                    TwitchClient.SpoolMessage("Translated message: " + translatedText);
                     String replacedMessage = e.ChatMessage.Message.Replace(" ", "%20");
                     TwitchClient.SpoolMessage("View on google translate: https://translate.google.com/?um=1&ie=UTF-8&hl=en&client=tw-ob#view=home&op=translate&sl=zh-CN&tl=en&text=" + replacedMessage);
                 }
