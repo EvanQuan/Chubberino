@@ -111,6 +111,7 @@ namespace Chubberino
             builder.RegisterType<ModCheck>().AsSelf().SingleInstance();
             builder.RegisterType<Mode>().AsSelf().SingleInstance();
             builder.RegisterType<Moya>().AsSelf().SingleInstance();
+            builder.RegisterType<Permutations>().AsSelf().SingleInstance();
             builder.RegisterType<Pyramid>().AsSelf().SingleInstance();
             builder.RegisterType<PyramidBuild>().AsSelf().SingleInstance();
             builder.RegisterType<Refresh>().AsSelf().SingleInstance();
@@ -147,6 +148,7 @@ namespace Chubberino
                 .AddCommand(scope.Resolve<ModCheck>())
                 .AddCommand(scope.Resolve<Mode>())
                 .AddCommand(scope.Resolve<Moya>())
+                .AddCommand(scope.Resolve<Permutations>())
                 .AddCommand(scope.Resolve<Pyramid>())
                 .AddCommand(scope.Resolve<PyramidBuild>())
                 .AddCommand(scope.Resolve<Refresh>())

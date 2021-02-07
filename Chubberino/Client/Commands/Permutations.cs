@@ -1,10 +1,9 @@
 ﻿using Chubberino.Client.Abstractions;
+using Chubberino.Utility;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Chubberino.Client.Commands
 {
@@ -16,14 +15,18 @@ namespace Chubberino.Client.Commands
 
         public override void Execute(IEnumerable<String> arguments)
         {
-            if (arguments.Count() == 0)
+            if (!arguments.Any())
             {
                 Console.WriteLine(GetHelp());
                 return;
             }
 
+            var permutations = arguments.First().GetPermutations();
 
-            throw new NotImplementedException();
+            foreach (var permutation in permutations)
+            {
+                TwitchClient.SpoolMessage(permutation);
+            }
         }
     }
 }
