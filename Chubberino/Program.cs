@@ -111,12 +111,14 @@ namespace Chubberino
             builder.RegisterType<ModCheck>().AsSelf().SingleInstance();
             builder.RegisterType<Mode>().AsSelf().SingleInstance();
             builder.RegisterType<Moya>().AsSelf().SingleInstance();
+            builder.RegisterType<Permutations>().AsSelf().SingleInstance();
             builder.RegisterType<Pyramid>().AsSelf().SingleInstance();
             builder.RegisterType<PyramidBuild>().AsSelf().SingleInstance();
             builder.RegisterType<Refresh>().AsSelf().SingleInstance();
             builder.RegisterType<Repeat>().AsSelf().SingleInstance();
             builder.RegisterType<Reply>().AsSelf().SingleInstance();
             builder.RegisterType<Say>().AsSelf().SingleInstance();
+            builder.RegisterType<Switch>().AsSelf().SingleInstance();
             builder.RegisterType<TimeoutAlert>().AsSelf().SingleInstance();
             builder.RegisterType<TrackJimbox>().AsSelf().SingleInstance();
             builder.RegisterType<TrackPyramids>().AsSelf().SingleInstance();
@@ -147,12 +149,14 @@ namespace Chubberino
                 .AddCommand(scope.Resolve<ModCheck>())
                 .AddCommand(scope.Resolve<Mode>())
                 .AddCommand(scope.Resolve<Moya>())
+                .AddCommand(scope.Resolve<Permutations>())
                 .AddCommand(scope.Resolve<Pyramid>())
                 .AddCommand(scope.Resolve<PyramidBuild>())
                 .AddCommand(scope.Resolve<Refresh>())
                 .AddCommand(scope.Resolve<Repeat>())
                 .AddCommand(scope.Resolve<Reply>())
                 .AddCommand(scope.Resolve<Say>())
+                .AddCommand(scope.Resolve<Switch>())
                 .AddCommand(scope.Resolve<TimeoutAlert>())
                 .AddCommand(scope.Resolve<TrackJimbox>())
                 .AddCommand(scope.Resolve<TrackPyramids>())

@@ -22,7 +22,7 @@ namespace Chubberino.Client.Commands
 
         public override void Execute(IEnumerable<String> arguments)
         {
-            if (arguments.Count() == 0) { return; }
+            if (!arguments.Any()) { return; }
 
             if (!TwitchClient.IsConnected)
             {
