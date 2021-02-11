@@ -129,4 +129,10 @@
   <data name="InitialChannelName" xml:space="preserve">
     <value></value>
   </data>
+  <data name="WolframAlphaAppId" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="DatabaseConnectionString" xml:space="preserve">
+    <value></value>
+  </data>
 </root>

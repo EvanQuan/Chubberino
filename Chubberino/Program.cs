@@ -9,7 +9,10 @@ using Chubberino.Client.Commands.Settings.Replies;
 using Chubberino.Client.Commands.Settings.UserCommands;
 using Chubberino.Client.Commands.Strategies;
 using Chubberino.Client.Threading;
+using Chubberino.Modules.CheeseGame;
+using Chubberino.Modules.CheeseGame.Database.Contexts;
 using Jering.Javascript.NodeJS;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.IO;
@@ -24,13 +27,19 @@ using WolframAlphaNet;
 
 namespace Chubberino
 {
-    public static class Program
+    public class Program
     {
+        public ApplicationContext Context { get; }
+
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>
         public static void Main()
         {
+            var services = new ServiceCollection();
+
+            // services.AddTransient<ISiteInterface, SiteRepo>
+
             var builder = new ContainerBuilder();
             builder.Register(c => new Bot(
                 c.Resolve<TextWriter>(),
@@ -38,7 +47,7 @@ namespace Chubberino
                 c.Resolve<ConnectionCredentials>(),
                 new ClientOptions()
                 {
-                    MessagesAllowedInPeriod = 100,
+                    MessagesAllowedInPeriod = 90, // 100
                     ThrottlingPeriod = TimeSpan.FromSeconds(30)
                 },
                 new ClientOptions()
@@ -126,6 +135,11 @@ namespace Chubberino
             builder.RegisterType<YepKyle>().AsSelf().SingleInstance();
             builder.RegisterType<Wolfram>().AsSelf().SingleInstance();
 
+            // Cheese game database context
+            builder.RegisterType<ApplicationContext>().AsSelf().InstancePerLifetimeScope();
+
+            builder.Register(x => new Game(x.Resolve<ApplicationContext>())).AsSelf().SingleInstance();
+
             IContainer container = builder.Build();
 
             using ILifetimeScope scope = container.BeginLifetimeScope();
@@ -164,6 +178,7 @@ namespace Chubberino
                 .AddCommand(scope.Resolve<Wolfram>())
                 .AddCommand(scope.Resolve<YepKyle>());
 
+            var cheeseGame = scope.Resolve<Game>();
 
             var bot = scope.Resolve<IBot>();
 

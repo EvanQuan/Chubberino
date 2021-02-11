@@ -88,6 +88,15 @@ namespace Chubberino {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Server=localhost\SQLEXPRESS;Database=master;Trusted_Connection=True;.
+        /// </summary>
+        public static string DatabaseConnectionString {
+            get {
+                return ResourceManager.GetString("DatabaseConnectionString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to chubbehmouse.
         /// </summary>
         public static string InitialChannelName {
