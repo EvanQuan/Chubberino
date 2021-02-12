@@ -2,11 +2,7 @@
 using Chubberino.Modules.CheeseGame.Database.Contexts;
 using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.PlayerExtensions;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TwitchLib.Client.Models;
 
 namespace Chubberino.Modules.CheeseGame

@@ -1,5 +1,6 @@
 ﻿using Chubberino.Client.Abstractions;
 using Chubberino.Modules.CheeseGame;
+using Chubberino.Modules.CheeseGame.Shops;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,10 +11,10 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
 {
     public sealed class Cheese : UserCommand
     {
-        public Cheese(IExtendedClient client, TextWriter console, IGame game) : base(client, console)
+        public Cheese(IExtendedClient client, TextWriter console, IAddPointStrategy addPointStrategy, IShop shop) : base(client, console)
         {
-            Game = game;
-
+            AddPointStrategy = addPointStrategy;
+            Shop = shop;
             Enable = twitchClient => twitchClient.OnMessageReceived += TwitchClient_OnMessageReceived;
             Disable = twitchClient => twitchClient.OnMessageReceived -= TwitchClient_OnMessageReceived;
         }
@@ -24,11 +25,33 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
 
             if (!words.Any())
             {
-                Game.AddPoints(e.ChatMessage);
+                AddPointStrategy.AddPoints(e.ChatMessage);
+                return;
             }
 
+            var cheeseCommand = words.First().ToLower();
+            switch (cheeseCommand)
+            {
+                case "s":
+                case "shop":
+                    Shop.ListInventory(e.ChatMessage);
+                    break;
+                case "b":
+                case "buy":
+                    Shop.BuyItem(e.ChatMessage);
+                    break;
+                case "h":
+                case "help":
+                    Shop.HelpItem(e.ChatMessage);
+                    break;
+                default:
+                    TwitchClient.SpoolMessage($"Invalid parameter \"{cheeseCommand}\"");
+                    break;
+
+            }
         }
 
-        public IGame Game { get; }
+        public IAddPointStrategy AddPointStrategy { get; }
+        public IShop Shop { get; }
     }
 }

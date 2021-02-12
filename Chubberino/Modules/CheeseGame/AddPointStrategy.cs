@@ -29,7 +29,7 @@ namespace Chubberino.Modules.CheeseGame
             {
                 if (player.Points >= player.MaximumPointStorage)
                 {
-                    Spooler.SpoolMessage($"{message.DisplayName}, you have {player.Points} cheese, which is the maximum amount of cheese you can hold. Consider buying more cheese storage with \"!cheese shop\".");
+                    Spooler.SpoolMessage($"{message.DisplayName}, you have {player.Points}/{player.MaximumPointStorage} cheese. Consider buying more cheese storage with \"!cheese shop\".");
                 }
                 else
                 {
@@ -45,7 +45,7 @@ namespace Chubberino.Modules.CheeseGame
                     player.LastPointsGained = DateTime.Now;
 
                     Context.SaveChanges();
-                    Spooler.SpoolMessage($"{message.DisplayName}, you found {cheese} ({points}), and now have {player.Points} cheese.");
+                    Spooler.SpoolMessage($"{message.DisplayName}, you found {cheese} ({points}), and now have {player.Points}/{player.MaximumPointStorage} cheese.");
                 }
             }
             else

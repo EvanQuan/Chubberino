@@ -11,6 +11,7 @@ using Chubberino.Client.Commands.Strategies;
 using Chubberino.Client.Threading;
 using Chubberino.Modules.CheeseGame;
 using Chubberino.Modules.CheeseGame.Database.Contexts;
+using Chubberino.Modules.CheeseGame.Shops;
 using Jering.Javascript.NodeJS;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -138,7 +139,7 @@ namespace Chubberino
             // Cheese game database context
             builder.RegisterType<ApplicationContext>().AsSelf().InstancePerLifetimeScope();
 
-            builder.RegisterType<Game>().As<IGame>().SingleInstance();
+            builder.RegisterType<Shop>().As<IShop>().SingleInstance();
             builder.RegisterType<AddPointStrategy>().As<IAddPointStrategy>().SingleInstance();
             builder.RegisterType<CheeseRepository>().As<ICheeseRepository>().SingleInstance();
 
@@ -180,8 +181,6 @@ namespace Chubberino
                 .AddCommand(scope.Resolve<Translate>())
                 .AddCommand(scope.Resolve<Wolfram>())
                 .AddCommand(scope.Resolve<YepKyle>());
-
-            var cheeseGame = scope.Resolve<IGame>();
 
             var bot = scope.Resolve<IBot>();
 
