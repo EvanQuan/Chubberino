@@ -36,6 +36,8 @@ namespace Chubberino.Modules.CheeseGame
                 Context.Add(player);
 
                 Context.SaveChanges();
+
+                Spooler.SpoolMessage($"!!! NEW CHEESE FACTORY !!! {GetPlayerDisplayName(player, message)} You have just begun building your own cheese factory in the land of Mookanda, where {player.ID - 1} other cheese factories already reside here. Begin producing cheese with \"!cheese\". You can get help with \"!cheese help\". Good luck!");
             }
 
             return player;

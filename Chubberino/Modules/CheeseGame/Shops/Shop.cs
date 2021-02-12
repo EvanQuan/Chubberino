@@ -157,7 +157,7 @@ namespace Chubberino.Modules.CheeseGame.Shops
 
             if (String.IsNullOrWhiteSpace(arguments))
             {
-                Spooler.SpoolMessage($"{GetPlayerDisplayName(player, message)} Please enter an item name. Type \"!cheese shop\" to see the items available for purchase.");
+                Spooler.SpoolMessage($"{GetPlayerDisplayName(player, message)} Commands: !cheese <command> where command is | shop - look at what is available to buy with cheese | buy <item> - buy an item at the shop | help <item> - get information about an item in the shop | rank - show information about your rank | rankup - Spend cheese to unlock new items to buy at the shop. Eventually prestige back to the start to climb again but with a permanent boost to your cheese gains.");
                 return;
             }
 
