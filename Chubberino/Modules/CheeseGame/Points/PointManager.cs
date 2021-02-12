@@ -1,20 +1,20 @@
 ﻿using Chubberino.Client.Abstractions;
 using Chubberino.Modules.CheeseGame.Database.Contexts;
+using Chubberino.Modules.CheeseGame.Emotes;
+using Chubberino.Modules.CheeseGame.PlayerExtensions;
 using System;
-using System.Collections.Generic;
 using TwitchLib.Client.Models;
 
 namespace Chubberino.Modules.CheeseGame.Points
 {
     public sealed class PointManager : AbstractCommandStrategy, IPointManager
     {
-
-        public TimeSpan PointGainCooldown { get; set; } = TimeSpan.FromMinutes(1);
+        public static TimeSpan PointGainCooldown { get; set; } = TimeSpan.FromMinutes(1);
 
         public ICheeseRepository CheeseRepository { get; }
 
-        public PointManager(ApplicationContext context, IMessageSpooler spooler, ICheeseRepository cheeseRepository, Random random)
-            : base(context, spooler, random)
+        public PointManager(ApplicationContext context, IMessageSpooler spooler, ICheeseRepository cheeseRepository, Random random, IEmoteManager emoteManager)
+            : base(context, spooler, random, emoteManager)
         {
             CheeseRepository = cheeseRepository;
         }
@@ -30,7 +30,7 @@ namespace Chubberino.Modules.CheeseGame.Points
             {
                 if (player.Points >= player.MaximumPointStorage)
                 {
-                    Spooler.SpoolMessage($"{GetPlayerDisplayName(player, message)}, you have {player.Points}/{player.MaximumPointStorage} cheese and cannot store any more. Consider buying more cheese storage with \"!cheese buy storage\".");
+                    Spooler.SpoolMessage($"{player.GetDisplayName()}, you have {player.Points}/{player.MaximumPointStorage} cheese and cannot store any more. Consider buying more cheese storage with \"!cheese buy storage\".");
                 }
                 else
                 {
@@ -47,26 +47,23 @@ namespace Chubberino.Modules.CheeseGame.Points
 
                     var workerMessage = player.WorkerCount == 0
                         ? String.Empty
-                        : $"Your worker{(player.WorkerCount == 1 ? String.Empty : "s")} made +{player.WorkerCount} cheese. {GetRandomPositiveEmote()} ";
+                        : $"Your worker{(player.WorkerCount == 1 ? String.Empty : "s")} made +{player.WorkerCount} cheese. {EmoteManager.GetRandomPositiveEmote()} ";
 
                     Boolean isPositive = cheese.PointValue > 0;
                     String emote = isPositive
-                        ? GetRandomPositiveEmote()
-                        : GetRandomNegativeEmote();
+                        ? EmoteManager.GetRandomPositiveEmote()
+                        : EmoteManager.GetRandomNegativeEmote();
 
-                    Spooler.SpoolMessage($"{GetPlayerDisplayName(player, message)}, you made {cheese.Name} cheese ({(isPositive ? "+" : String.Empty)}{cheese.PointValue}). {emote} {workerMessage}You now have {player.Points}/{player.MaximumPointStorage} cheese. StinkyCheese");
+                    Spooler.SpoolMessage($"{player.GetDisplayName()}, you made {cheese.Name} cheese ({(isPositive ? "+" : String.Empty)}{cheese.PointValue}). {emote} {workerMessage}You now have {player.Points}/{player.MaximumPointStorage} cheese. StinkyCheese");
                 }
             }
             else
             {
                 var timeUntilNextValidPointGain = PointGainCooldown - timeSinceLastPointGain;
 
-                var timeToWait = (timeUntilNextValidPointGain.TotalMinutes > 1
-                    ? (Math.Ceiling(timeUntilNextValidPointGain.TotalMinutes) + " minutes and ")
-                    : String.Empty)
-                    + timeUntilNextValidPointGain.Seconds + " seconds";
+                var timeToWait = Format(timeUntilNextValidPointGain);
 
-                Spooler.SpoolMessage($"{GetPlayerDisplayName(player, message)}, wait {timeToWait} for your next cheese.");
+                Spooler.SpoolMessage($"{player.GetDisplayName()}, you must wait {timeToWait} until you can make more cheese.");
             }
         }
     }

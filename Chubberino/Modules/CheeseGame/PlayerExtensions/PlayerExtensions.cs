@@ -20,5 +20,32 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
 
             return player;
         }
+
+        public static String GetDisplayName(this Player player)
+        {
+            return $"{player.Name} [P{player.Prestige} {player.Rank}, {player.Points}/{player.MaximumPointStorage} cheese, {player.WorkerCount}/{player.PopulationCount} workers]";
+        }
+
+        /// <summary>
+        /// Add or substract points from the player. Does not save the database.
+        /// Ensures that points cannot exceed <see cref="Player.MaximumPointStorage"/> or go below 0.
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="points"></param>
+        public static void AddPoints(this Player player, Double points)
+        {
+            player.AddPoints((Int32) points);
+        }
+
+        /// <summary>
+        /// Add or substract points from the player. Does not save the database.
+        /// Ensures that points cannot exceed <see cref="Player.MaximumPointStorage"/> or go below 0.
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="points"></param>
+        public static void AddPoints(this Player player, Int32 points)
+        {
+            player.Points = Math.Max(Math.Min(player.Points + points, player.MaximumPointStorage), 0);
+        }
     }
 }

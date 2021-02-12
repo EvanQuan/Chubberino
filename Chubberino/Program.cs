@@ -9,8 +9,11 @@ using Chubberino.Client.Commands.Settings.Replies;
 using Chubberino.Client.Commands.Settings.UserCommands;
 using Chubberino.Client.Commands.Strategies;
 using Chubberino.Client.Threading;
+using Chubberino.Modules.CheeseGame;
 using Chubberino.Modules.CheeseGame.Database.Contexts;
+using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Points;
+using Chubberino.Modules.CheeseGame.Quests;
 using Chubberino.Modules.CheeseGame.Rankings;
 using Chubberino.Modules.CheeseGame.Shops;
 using Jering.Javascript.NodeJS;
@@ -143,11 +146,19 @@ namespace Chubberino
             builder.RegisterType<Shop>().As<IShop>().SingleInstance();
             builder.RegisterType<PointManager>().As<IPointManager>().SingleInstance();
             builder.RegisterType<RankManager>().As<IRankManager>().SingleInstance();
+            builder.RegisterType<QuestManager>().As<IQuestManager>().SingleInstance();
+            builder.RegisterType<EmoteManager>().As<IEmoteManager>().SingleInstance();
             builder.RegisterType<CheeseRepository>().As<ICheeseRepository>().SingleInstance();
+
+            builder.RegisterType<CheeseMountainQuest>().AsSelf().SingleInstance();
 
             IContainer container = builder.Build();
 
             using ILifetimeScope scope = container.BeginLifetimeScope();
+
+            var questManager = scope.Resolve<IQuestManager>();
+            questManager
+                .AddQuest(scope.Resolve<CheeseMountainQuest>());
 
             var commandRepository = scope.Resolve<ICommandRepository>();
             commandRepository

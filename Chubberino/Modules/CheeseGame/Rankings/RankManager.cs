@@ -1,5 +1,6 @@
 ﻿using Chubberino.Client.Abstractions;
 using Chubberino.Modules.CheeseGame.Database.Contexts;
+using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.PlayerExtensions;
 using Chubberino.Utility;
 using System;
@@ -22,7 +23,8 @@ namespace Chubberino.Modules.CheeseGame.Rankings
             {  Rank.Legend, 25600 },
         };
 
-        public RankManager(ApplicationContext context, IMessageSpooler spooler, Random random) : base(context, spooler, random)
+        public RankManager(ApplicationContext context, IMessageSpooler spooler, Random random, IEmoteManager emoteManager)
+            : base(context, spooler, random, emoteManager)
         {
         }
 
@@ -43,25 +45,25 @@ namespace Chubberino.Modules.CheeseGame.Rankings
                         player.ResetRank();
                         player.Prestige++;
                         Context.SaveChanges();
-                        Spooler.SpoolMessage($"{GetPlayerDisplayName(player, message)} You prestiged back to {Rank.Bronze} and have gained a permanent {(Int32)(Constants.PrestigeBonus * 100)}% cheese gain boost.");
+                        Spooler.SpoolMessage($"{player.GetDisplayName()} You prestiged back to {Rank.Bronze} and have gained a permanent {(Int32)(Constants.PrestigeBonus * 100)}% cheese gain boost.");
                     }
                     else
                     {
                         player.Points -= pointsToRank;
                         player.Rank = newRank;
                         Context.SaveChanges();
-                        Spooler.SpoolMessage($"{GetPlayerDisplayName(player, message)} You ranked up to {newRank} (-{pointsToRank} cheese).");
+                        Spooler.SpoolMessage($"{player.GetDisplayName()} You ranked up to {newRank} (-{pointsToRank} cheese).");
                     }
                 }
                 else
                 {
                     var pointsNeededToRank = pointsToRank - player.Points;
-                    Spooler.SpoolMessage($"{GetPlayerDisplayName(player, message)} You need {pointsNeededToRank} more cheese in order to rank up to {newRank}.");
+                    Spooler.SpoolMessage($"{player.GetDisplayName()} You need {pointsNeededToRank} more cheese in order to rank up to {newRank}.");
                 }
             }
             else
             {
-                Spooler.SpoolMessage($"{GetPlayerDisplayName(player, message)} Uh oh, you broke something. You have an invalid rank of {player.Rank}.");
+                Spooler.SpoolMessage($"{player.GetDisplayName()} Uh oh, you broke something. You have an invalid rank of {player.Rank}.");
             }
         }
 
@@ -94,11 +96,11 @@ namespace Chubberino.Modules.CheeseGame.Rankings
                     nextRankInformation += $"{nextRank} rank.";
                 }
 
-                Spooler.SpoolMessage($"{GetPlayerDisplayName(player, message)} You are currently in {player.Rank} rank. {nextRankInformation}");
+                Spooler.SpoolMessage($"{player.GetDisplayName()} You are currently in {player.Rank} rank. {nextRankInformation}");
             }
             else
             {
-                Spooler.SpoolMessage($"{GetPlayerDisplayName(player, message)} Uh oh, you broke something. You have an invalid rank of {player.Rank}.");
+                Spooler.SpoolMessage($"{player.GetDisplayName()} Uh oh, you broke something. You have an invalid rank of {player.Rank}.");
             }
         }
     }

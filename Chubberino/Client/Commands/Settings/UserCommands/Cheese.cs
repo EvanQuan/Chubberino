@@ -1,5 +1,6 @@
 ﻿using Chubberino.Client.Abstractions;
 using Chubberino.Modules.CheeseGame.Points;
+using Chubberino.Modules.CheeseGame.Quests;
 using Chubberino.Modules.CheeseGame.Rankings;
 using Chubberino.Modules.CheeseGame.Shops;
 using System;
@@ -12,11 +13,19 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
 {
     public sealed class Cheese : UserCommand
     {
-        public Cheese(IExtendedClient client, TextWriter console, IPointManager pointManager, IShop shop, IRankManager rankManager) : base(client, console)
+        public Cheese(
+            IExtendedClient client,
+            TextWriter console,
+            IPointManager pointManager,
+            IShop shop,
+            IRankManager rankManager,
+            IQuestManager questManager)
+            : base(client, console)
         {
             PointManager = pointManager;
             Shop = shop;
             RankManager = rankManager;
+            QuestManager = questManager;
             Enable = twitchClient => twitchClient.OnMessageReceived += TwitchClient_OnMessageReceived;
             Disable = twitchClient => twitchClient.OnMessageReceived -= TwitchClient_OnMessageReceived;
         }
@@ -62,10 +71,10 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
                 case "rankup":
                     RankManager.RankUp(e.ChatMessage);
                     break;
-                case "c":
-                case "command":
-                case "commands":
-                    TwitchClient.SpoolMessage($"{e.ChatMessage.DisplayName} Commands: !cheese <command> where command is | shop - look at what is available to buy with cheese | buy <item> - buy an item at the shop | help <item> - get information about an item in the shop | rank - show information about your rank | rankup - Spend cheese to unlock new items to buy at the shop. Eventually prestige back to the start to climb again but with a permanent boost to your cheese gains.");
+                case "q":
+                case "quest":
+                case "quests":
+                    QuestManager.StartQuest(e.ChatMessage);
                     break;
                 default:
                     PointManager.AddPoints(e.ChatMessage);
@@ -76,5 +85,6 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
         public IPointManager PointManager { get; }
         public IShop Shop { get; }
         public IRankManager RankManager { get; }
+        public IQuestManager QuestManager { get; }
     }
 }
