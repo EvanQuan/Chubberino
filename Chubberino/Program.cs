@@ -12,7 +12,6 @@ using Chubberino.Client.Threading;
 using Chubberino.Modules.CheeseGame;
 using Chubberino.Modules.CheeseGame.Database.Contexts;
 using Jering.Javascript.NodeJS;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.IO;
@@ -68,7 +67,7 @@ namespace Chubberino
                 c.Resolve<TextWriter>(),
                 c.Resolve<ISpinWait>(),
                 null)).As<IExtendedClientFactory>().SingleInstance();
-            builder.Register(c => c.Resolve<IBot>().TwitchClient).As<IExtendedClient>().SingleInstance();
+            builder.Register(c => c.Resolve<IBot>().TwitchClient).As<IExtendedClient>().As<IMessageSpooler>().SingleInstance();
             builder.Register(c => new ConnectionCredentials(TwitchInfo.BotUsername, TwitchInfo.BotToken)).As<ConnectionCredentials>().SingleInstance();
             builder.RegisterType<StopSettingStrategy>().As<IStopSettingStrategy>().SingleInstance();
             builder.RegisterType<Repeater>().As<IRepeater>();
@@ -107,6 +106,7 @@ namespace Chubberino
             builder.RegisterType<AutoChat>().AsSelf().SingleInstance();
             builder.RegisterType<AutoPogO>().AsSelf().SingleInstance();
             builder.RegisterType<Channel>().AsSelf().SingleInstance();
+            builder.RegisterType<Cheese>().AsSelf().SingleInstance();
             builder.RegisterType<Color>().AsSelf().SingleInstance();
             builder.RegisterType<Copy>().AsSelf().SingleInstance();
             builder.RegisterType<Count>().AsSelf().SingleInstance();
@@ -138,7 +138,9 @@ namespace Chubberino
             // Cheese game database context
             builder.RegisterType<ApplicationContext>().AsSelf().InstancePerLifetimeScope();
 
-            builder.Register(x => new Game(x.Resolve<ApplicationContext>())).AsSelf().SingleInstance();
+            builder.RegisterType<Game>().As<IGame>().SingleInstance();
+            builder.RegisterType<AddPointStrategy>().As<IAddPointStrategy>().SingleInstance();
+            builder.RegisterType<CheeseRepository>().As<ICheeseRepository>().SingleInstance();
 
             IContainer container = builder.Build();
 
@@ -150,6 +152,7 @@ namespace Chubberino
                 .AddCommand(scope.Resolve<AutoChat>())
                 .AddCommand(scope.Resolve<AutoPogO>())
                 .AddCommand(scope.Resolve<Channel>())
+                .AddCommand(scope.Resolve<Cheese>())
                 .AddCommand(scope.Resolve<Color>())
                 .AddCommand(scope.Resolve<Copy>())
                 .AddCommand(scope.Resolve<Count>())
@@ -178,7 +181,7 @@ namespace Chubberino
                 .AddCommand(scope.Resolve<Wolfram>())
                 .AddCommand(scope.Resolve<YepKyle>());
 
-            var cheeseGame = scope.Resolve<Game>();
+            var cheeseGame = scope.Resolve<IGame>();
 
             var bot = scope.Resolve<IBot>();
 
