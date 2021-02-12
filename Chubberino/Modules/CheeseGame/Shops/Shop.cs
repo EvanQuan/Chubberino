@@ -73,24 +73,31 @@ namespace Chubberino.Modules.CheeseGame.Shops
                         player.PopulationCount += 5;
                         player.Points -= populationCost;
                         Context.SaveChanges();
-                        Spooler.SpoolMessage($"{message.DisplayName} You bought 5 population slots for {populationCost} cheese. (Current: {player.MaximumPointStorage})");
+                        Spooler.SpoolMessage($"{message.DisplayName} You bought 5 population slots for {populationCost} cheese. (Current: {player.PopulationCount})");
                     }
                     else
                     {
-                        Spooler.SpoolMessage($"{message.DisplayName} You need {populationCost} cheese to buy 5 population slots. (Current: {player.MaximumPointStorage})");
+                        Spooler.SpoolMessage($"{message.DisplayName} You do not have enough population slots for another worker. Consider buying more population slots. (Current: {player.PopulationCount})");
                     }
                     break;
                 case 'w':
                     if (player.Points >= workerCost)
                     {
-                        player.WorkerCount += 1;
-                        player.Points -= workerCost;
-                        Context.SaveChanges();
-                        Spooler.SpoolMessage($"{message.DisplayName} You bought 1 worker for {workerCost} cheese. (Current: {player.MaximumPointStorage})");
+                        if (player.WorkerCount < player.PopulationCount)
+                        {
+                            player.WorkerCount += 1;
+                            player.Points -= workerCost;
+                            Context.SaveChanges();
+                            Spooler.SpoolMessage($"{message.DisplayName} You bought 1 worker for {workerCost} cheese. (Current: {player.WorkerCount})");
+                        }
+                        else
+                        {
+                            Spooler.SpoolMessage($"{message.DisplayName} You bought 1 worker for {workerCost} cheese. (Current: {player.WorkerCount})");
+                        }
                     }
                     else
                     {
-                        Spooler.SpoolMessage($"{message.DisplayName} You need {workerCost} cheese to buy 1 worker. (Current: {player.MaximumPointStorage})");
+                        Spooler.SpoolMessage($"{message.DisplayName} You need {workerCost} cheese to buy 1 worker. (Current: {player.WorkerCount})");
                     }
                     break;
                 default:
