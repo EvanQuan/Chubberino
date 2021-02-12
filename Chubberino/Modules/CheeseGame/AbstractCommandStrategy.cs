@@ -2,6 +2,7 @@
 using Chubberino.Modules.CheeseGame.Database.Contexts;
 using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.PlayerExtensions;
+using System;
 using System.Linq;
 using TwitchLib.Client.Models;
 
@@ -38,6 +39,11 @@ namespace Chubberino.Modules.CheeseGame
             }
 
             return player;
+        }
+
+        protected static String GetPlayerDisplayName(Player player, ChatMessage message)
+        {
+            return $"{message.DisplayName} [P{player.Prestige} {player.Rank} | {player.Points}/{player.MaximumPointStorage} cheese, {player.WorkerCount}/{player.PopulationCount} workers]";
         }
     }
 }

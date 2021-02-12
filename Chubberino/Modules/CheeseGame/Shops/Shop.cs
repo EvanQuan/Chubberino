@@ -27,12 +27,12 @@ namespace Chubberino.Modules.CheeseGame.Shops
 
             var (storageCost, populationCost, workerCost) = GetCosts(player);
 
-            Spooler.SpoolMessage($"{message.DisplayName} Cheese Shop (Current cheese: {player.Points})" +
+            Spooler.SpoolMessage($"{GetPlayerDisplayName(player, message)} Cheese Shop" +
                 $" | Buy with \"!cheese buy <item>\"" +
                 $" | Get details with \"!cheese help <item>\"" +
-                $" | Storage (current: {player.MaximumPointStorage}) +100 @ {storageCost} cheese" +
-                $" | Population (current: {player.PopulationCount}) +5 population @ {populationCost} cheese" +
-                $" | Worker (current: {player.WorkerCount} +1 worker @ {workerCost} cheese");
+                $" | Storage [+100] for {storageCost} cheese" +
+                $" | Population [+5] for {populationCost} cheese" +
+                $" | Worker [+1] for {workerCost} cheese");
         }
 
         public void BuyItem(ChatMessage message)
@@ -40,15 +40,16 @@ namespace Chubberino.Modules.CheeseGame.Shops
             // Cut out "!cheese buy" start.
             var arguments = message.Message[11..];
 
+            var player = GetPlayer(message);
+
             if (String.IsNullOrWhiteSpace(arguments))
             {
-                Spooler.SpoolMessage($"{message.DisplayName} Please enter an item to buy. Type \"!cheese shop\" to see the items available for purchase.");
+                Spooler.SpoolMessage($"{GetPlayerDisplayName(player, message)} Please enter an item to buy. Type \"!cheese shop\" to see the items available for purchase.");
                 return;
             }
 
             var itemToBuy = arguments[1..].ToLower();
 
-            var player = GetPlayer(message);
 
             var (storageCost, populationCost, workerCost) = GetCosts(player);
 
@@ -60,11 +61,11 @@ namespace Chubberino.Modules.CheeseGame.Shops
                         player.MaximumPointStorage += 100;
                         player.Points -= storageCost;
                         Context.SaveChanges();
-                        Spooler.SpoolMessage($"{message.DisplayName} You bought 100 storage space for {storageCost} cheese. (Current: {player.MaximumPointStorage})");
+                        Spooler.SpoolMessage($"{GetPlayerDisplayName(player, message)} You bought 100 storage space for {storageCost} cheese. (Current: {player.MaximumPointStorage})");
                     }
                     else
                     {
-                        Spooler.SpoolMessage($"{message.DisplayName} You need {storageCost} cheese to buy 100 storage. (Current: {player.MaximumPointStorage})");
+                        Spooler.SpoolMessage($"{GetPlayerDisplayName(player, message)} You need {storageCost} cheese to buy 100 storage. (Current: {player.MaximumPointStorage})");
                     }
                     break;
                 case 'p':
@@ -73,11 +74,11 @@ namespace Chubberino.Modules.CheeseGame.Shops
                         player.PopulationCount += 5;
                         player.Points -= populationCost;
                         Context.SaveChanges();
-                        Spooler.SpoolMessage($"{message.DisplayName} You bought 5 population slots for {populationCost} cheese. (Current: {player.PopulationCount})");
+                        Spooler.SpoolMessage($"{GetPlayerDisplayName(player, message)} You bought 5 population slots for {populationCost} cheese. (Current: {player.PopulationCount})");
                     }
                     else
                     {
-                        Spooler.SpoolMessage($"{message.DisplayName} You do not have enough population slots for another worker. Consider buying more population slots. (Current: {player.PopulationCount})");
+                        Spooler.SpoolMessage($"{GetPlayerDisplayName(player, message)} You do not have enough population slots for another worker. Consider buying more population slots. (Current: {player.PopulationCount})");
                     }
                     break;
                 case 'w':
@@ -88,20 +89,20 @@ namespace Chubberino.Modules.CheeseGame.Shops
                             player.WorkerCount += 1;
                             player.Points -= workerCost;
                             Context.SaveChanges();
-                            Spooler.SpoolMessage($"{message.DisplayName} You bought 1 worker for {workerCost} cheese. (Current: {player.WorkerCount})");
+                            Spooler.SpoolMessage($"{GetPlayerDisplayName(player, message)} You bought 1 worker for {workerCost} cheese. (Current: {player.WorkerCount})");
                         }
                         else
                         {
-                            Spooler.SpoolMessage($"{message.DisplayName} You bought 1 worker for {workerCost} cheese. (Current: {player.WorkerCount})");
+                            Spooler.SpoolMessage($"{GetPlayerDisplayName(player, message)} You bought 1 worker for {workerCost} cheese. (Current: {player.WorkerCount})");
                         }
                     }
                     else
                     {
-                        Spooler.SpoolMessage($"{message.DisplayName} You need {workerCost} cheese to buy 1 worker. (Current: {player.WorkerCount})");
+                        Spooler.SpoolMessage($"{GetPlayerDisplayName(player, message)} You need {workerCost} cheese to buy 1 worker. (Current: {player.WorkerCount})");
                     }
                     break;
                 default:
-                    Spooler.SpoolMessage($"{message.DisplayName} Invalid item \"{itemToBuy}\" to buy. Type \"!cheese shop\" to see the items available for purchase.");
+                    Spooler.SpoolMessage($"{GetPlayerDisplayName(player, message)} Invalid item \"{itemToBuy}\" to buy. Type \"!cheese shop\" to see the items available for purchase.");
                     break;
             }
         }
@@ -111,9 +112,11 @@ namespace Chubberino.Modules.CheeseGame.Shops
             // Cut out "!cheese help" start.
             var arguments = message.Message[12..];
 
+            var player = GetPlayer(message);
+
             if (String.IsNullOrWhiteSpace(arguments))
             {
-                Spooler.SpoolMessage($"{message.DisplayName} Please enter an item name. Type \"!cheese shop\" to see the items available for purchase.");
+                Spooler.SpoolMessage($"{GetPlayerDisplayName(player, message)} Please enter an item name. Type \"!cheese shop\" to see the items available for purchase.");
                 return;
             }
 
@@ -122,16 +125,16 @@ namespace Chubberino.Modules.CheeseGame.Shops
             switch (itemToBuy[0])
             {
                 case 's':
-                    Spooler.SpoolMessage($"{message.DisplayName} Storage increases the maximum amount of cheese you can have.");
+                    Spooler.SpoolMessage($"{GetPlayerDisplayName(player, message)} Storage increases the maximum amount of cheese you can have.");
                     break;
                 case 'p':
-                    Spooler.SpoolMessage($"{message.DisplayName} Population increases the maximum number of workers you can have.");
+                    Spooler.SpoolMessage($"{GetPlayerDisplayName(player, message)} Population increases the maximum number of workers you can have.");
                     break;
                 case 'w':
-                    Spooler.SpoolMessage($"{message.DisplayName} Workers increase the amount of cheese you get every time you gain cheese with \"!cheese\".");
+                    Spooler.SpoolMessage($"{GetPlayerDisplayName(player, message)} Workers increase the amount of cheese you get every time you gain cheese with \"!cheese\".");
                     break;
                 default:
-                    Spooler.SpoolMessage($"{message.DisplayName} Invalid item \"{itemToBuy}\" name. Type \"!cheese shop\" to see the items available for purchase.");
+                    Spooler.SpoolMessage($"{GetPlayerDisplayName(player, message)} Invalid item \"{itemToBuy}\" name. Type \"!cheese shop\" to see the items available for purchase.");
                     break;
             }
         }

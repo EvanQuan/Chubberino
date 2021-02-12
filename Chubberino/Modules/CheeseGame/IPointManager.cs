@@ -3,7 +3,7 @@ using TwitchLib.Client.Models;
 
 namespace Chubberino.Modules.CheeseGame
 {
-    public interface IAddPointStrategy
+    public interface IPointManager
     {
         void AddPoints(ChatMessage message);
     }

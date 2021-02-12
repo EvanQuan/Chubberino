@@ -11,6 +11,7 @@ using Chubberino.Client.Commands.Strategies;
 using Chubberino.Client.Threading;
 using Chubberino.Modules.CheeseGame;
 using Chubberino.Modules.CheeseGame.Database.Contexts;
+using Chubberino.Modules.CheeseGame.Rankings;
 using Chubberino.Modules.CheeseGame.Shops;
 using Jering.Javascript.NodeJS;
 using Microsoft.Extensions.DependencyInjection;
@@ -140,7 +141,8 @@ namespace Chubberino
             builder.RegisterType<ApplicationContext>().AsSelf().InstancePerLifetimeScope();
 
             builder.RegisterType<Shop>().As<IShop>().SingleInstance();
-            builder.RegisterType<AddPointStrategy>().As<IAddPointStrategy>().SingleInstance();
+            builder.RegisterType<PointManager>().As<IPointManager>().SingleInstance();
+            builder.RegisterType<RankManager>().As<IRankManager>().SingleInstance();
             builder.RegisterType<CheeseRepository>().As<ICheeseRepository>().SingleInstance();
 
             IContainer container = builder.Build();

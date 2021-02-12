@@ -5,13 +5,13 @@ using TwitchLib.Client.Models;
 
 namespace Chubberino.Modules.CheeseGame
 {
-    public sealed class AddPointStrategy : AbstractCommandStrategy, IAddPointStrategy
+    public sealed class PointManager : AbstractCommandStrategy, IPointManager
     {
         public TimeSpan PointGainCooldown { get; set; } = TimeSpan.FromSeconds(60);
 
         public ICheeseRepository CheeseRepository { get; }
 
-        public AddPointStrategy(ApplicationContext context, IMessageSpooler spooler, ICheeseRepository cheeseRepository)
+        public PointManager(ApplicationContext context, IMessageSpooler spooler, ICheeseRepository cheeseRepository)
             : base(context, spooler)
         {
             CheeseRepository = cheeseRepository;
@@ -29,7 +29,7 @@ namespace Chubberino.Modules.CheeseGame
             {
                 if (player.Points >= player.MaximumPointStorage)
                 {
-                    Spooler.SpoolMessage($"{message.DisplayName}, you have {player.Points}/{player.MaximumPointStorage} cheese. Consider buying more cheese storage with \"!cheese shop\".");
+                    Spooler.SpoolMessage($"{GetPlayerDisplayName(player, message)}, you have {player.Points}/{player.MaximumPointStorage} cheese. Consider buying more cheese storage with \"!cheese shop\".");
                 }
                 else
                 {
@@ -47,7 +47,7 @@ namespace Chubberino.Modules.CheeseGame
                         ? String.Empty
                         : $"Your workers made {player.WorkerCount} cheese. ";
 
-                    Spooler.SpoolMessage($"{message.DisplayName}, you made {cheese.Name} ({cheese.PointValue}). {workerMessage}You now have {player.Points}/{player.MaximumPointStorage} cheese.");
+                    Spooler.SpoolMessage($"{GetPlayerDisplayName(player, message)}, you made {cheese.Name} ({cheese.PointValue}). {workerMessage}You now have {player.Points}/{player.MaximumPointStorage} cheese.");
                 }
             }
             else
@@ -58,7 +58,7 @@ namespace Chubberino.Modules.CheeseGame
                     ? Math.Ceiling(timeUntilNextValidPointGain.TotalMinutes) + " minutes"
                     : Math.Ceiling(timeUntilNextValidPointGain.TotalSeconds) + " seconds";
 
-                Spooler.SpoolMessage($"{message.DisplayName}, wait {timeToWait} for your next cheese.");
+                Spooler.SpoolMessage($"{GetPlayerDisplayName(player, message)}, wait {timeToWait} for your next cheese.");
             }
         }
     }

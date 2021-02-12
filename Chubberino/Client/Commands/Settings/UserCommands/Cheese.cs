@@ -1,5 +1,6 @@
 ﻿using Chubberino.Client.Abstractions;
 using Chubberino.Modules.CheeseGame;
+using Chubberino.Modules.CheeseGame.Rankings;
 using Chubberino.Modules.CheeseGame.Shops;
 using System;
 using System.Collections.Generic;
@@ -11,10 +12,11 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
 {
     public sealed class Cheese : UserCommand
     {
-        public Cheese(IExtendedClient client, TextWriter console, IAddPointStrategy addPointStrategy, IShop shop) : base(client, console)
+        public Cheese(IExtendedClient client, TextWriter console, IPointManager pointManager, IShop shop, IRankManager rankManager) : base(client, console)
         {
-            AddPointStrategy = addPointStrategy;
+            PointManager = pointManager;
             Shop = shop;
+            RankManager = rankManager;
             Enable = twitchClient => twitchClient.OnMessageReceived += TwitchClient_OnMessageReceived;
             Disable = twitchClient => twitchClient.OnMessageReceived -= TwitchClient_OnMessageReceived;
         }
@@ -25,7 +27,7 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
 
             if (!words.Any())
             {
-                AddPointStrategy.AddPoints(e.ChatMessage);
+                PointManager.AddPoints(e.ChatMessage);
                 return;
             }
 
@@ -44,14 +46,19 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
                 case "help":
                     Shop.HelpItem(e.ChatMessage);
                     break;
+                case "r":
+                case "rank":
+                case "rankup":
+                    RankManager.RankUp(e.ChatMessage);
+                    break;
                 default:
                     TwitchClient.SpoolMessage($"Invalid parameter \"{cheeseCommand}\"");
                     break;
-
             }
         }
 
-        public IAddPointStrategy AddPointStrategy { get; }
+        public IPointManager PointManager { get; }
         public IShop Shop { get; }
+        public IRankManager RankManager { get; }
     }
 }
