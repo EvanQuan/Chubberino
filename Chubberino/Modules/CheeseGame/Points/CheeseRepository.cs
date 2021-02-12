@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Chubberino.Modules.CheeseGame.Models;
+using Chubberino.Modules.CheeseGame.Rankings;
+using System;
 using System.Collections.Generic;
 
 namespace Chubberino.Modules.CheeseGame.Points
@@ -12,20 +14,20 @@ namespace Chubberino.Modules.CheeseGame.Points
             new CheeseType("Stinking Bishop", -6),
             new CheeseType("Blue Castello", -2),
 
-            new CheeseType("American Cheese", 2),
+            new CheeseType("American", 2),
             new CheeseType("Cheddar", 6),
             new CheeseType("Mozzarella", 10),
             new CheeseType("Swiss", 14),
 
             // Unlockable cheese types
-            new CheeseType("Gouda", 18),
-            new CheeseType("Stilton", 22),
-            new CheeseType("Brie", 26),
-            new CheeseType("Mascarpone", 30),
-            new CheeseType("Gorgonzola", 34),
-            new CheeseType("Garroxta", 38),
-            new CheeseType("Kashkaval", 42),
-            new CheeseType("Myzithra", 46),
+            new CheeseType("Gouda", 18, Rank.Bronze, 100),
+            new CheeseType("Stilton", 22, Rank.Silver, 200),
+            new CheeseType("Brie", 26, Rank.Gold, 400),
+            new CheeseType("Mascarpone", 30, Rank.Platinum, 800),
+            new CheeseType("Gorgonzola", 34, Rank.Diamond, 1600),
+            new CheeseType("Garroxta", 38, Rank.Master, 3200),
+            new CheeseType("Kashkaval", 42, Rank.Grandmaster, 6400),
+            new CheeseType("Myzithra", 46, Rank.Legend, 12800),
         };
 
         public static IReadOnlyList<CheeseVariant> Variants { get; } = new List<CheeseVariant>()
@@ -42,6 +44,13 @@ namespace Chubberino.Modules.CheeseGame.Points
         }
 
         public Random Random { get; }
+
+        public CheeseType GetNextCheeseToUnlock(Player player)
+        {
+            if (player.CheeseUnlocked + CheeseUnlockedOffset >= Cheeses.Count) { return null; }
+
+            return Cheeses[CheeseUnlockedOffset + player.CheeseUnlocked];
+        }
 
         public CheeseType GetRandomType(Int32 cheeseUnlocked)
         {

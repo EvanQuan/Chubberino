@@ -8,11 +8,11 @@ using TwitchLib.Client.Models;
 
 namespace Chubberino.Modules.CheeseGame
 {
-    public abstract class AbstractCommandStrategy
+    public abstract class AbstractCommandStrategy : ICommandStrategy
     {
         protected ApplicationContext Context { get; }
 
-        public IMessageSpooler Spooler { get; }
+        public IMessageSpooler Spooler { get; set; }
 
         public AbstractCommandStrategy(ApplicationContext context, IMessageSpooler spooler)
         {
@@ -43,7 +43,7 @@ namespace Chubberino.Modules.CheeseGame
 
         protected static String GetPlayerDisplayName(Player player, ChatMessage message)
         {
-            return $"{message.DisplayName} [P{player.Prestige} {player.Rank} | {player.Points}/{player.MaximumPointStorage} cheese, {player.WorkerCount}/{player.PopulationCount} workers]";
+            return $"{message.DisplayName} [P{player.Prestige} {player.Rank}, {player.Points}/{player.MaximumPointStorage} cheese, {player.WorkerCount}/{player.PopulationCount} workers]";
         }
     }
 }

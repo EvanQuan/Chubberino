@@ -64,5 +64,42 @@ namespace Chubberino.Modules.CheeseGame.Rankings
                 Spooler.SpoolMessage($"{GetPlayerDisplayName(player, message)} Uh oh, you broke something. You have an invalid rank of {player.Rank}.");
             }
         }
+
+        public void ShowRank(ChatMessage message)
+        {
+            var player = GetPlayer(message);
+
+            var nextRank = player.Rank.Next();
+
+            if (PointsToRank.TryGetValue(player.Rank, out Int32 pointsToRank))
+            {
+                String nextRankInformation;
+
+                if (pointsToRank > player.Points)
+                {
+
+                    nextRankInformation = $"You need {pointsToRank - player.Points} more cheese to rankup to ";
+                }
+                else
+                {
+                    nextRankInformation = $"You have enough cheese ({pointsToRank}) to rankup right now to ";
+                }
+
+                if (nextRank == Rank.Bronze)
+                {
+                    nextRankInformation += $"prestige back to {Rank.Bronze} rank. You will lose all your cheese and upgrades, but will gain a permanent {(Int32)(Constants.PrestigeBonus * 100)}% bonus on your cheese gains.";
+                }
+                else
+                {
+                    nextRankInformation += $"{nextRank} rank.";
+                }
+
+                Spooler.SpoolMessage($"{GetPlayerDisplayName(player, message)} You are currently in {player.Rank} rank. {nextRankInformation}");
+            }
+            else
+            {
+                Spooler.SpoolMessage($"{GetPlayerDisplayName(player, message)} Uh oh, you broke something. You have an invalid rank of {player.Rank}.");
+            }
+        }
     }
 }

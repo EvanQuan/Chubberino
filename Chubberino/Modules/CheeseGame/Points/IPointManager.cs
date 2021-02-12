@@ -2,7 +2,7 @@
 
 namespace Chubberino.Modules.CheeseGame.Points
 {
-    public interface IPointManager
+    public interface IPointManager : ICommandStrategy
     {
         void AddPoints(ChatMessage message);
     }

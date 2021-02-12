@@ -7,7 +7,7 @@ using TwitchLib.Client.Models;
 
 namespace Chubberino.Modules.CheeseGame.Shops
 {
-    public interface IShop
+    public interface IShop : ICommandStrategy
     {
         public void ListInventory(ChatMessage message);
 

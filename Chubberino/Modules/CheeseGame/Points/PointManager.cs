@@ -1,20 +1,81 @@
 ﻿using Chubberino.Client.Abstractions;
 using Chubberino.Modules.CheeseGame.Database.Contexts;
 using System;
+using System.Collections.Generic;
 using TwitchLib.Client.Models;
 
 namespace Chubberino.Modules.CheeseGame.Points
 {
     public sealed class PointManager : AbstractCommandStrategy, IPointManager
     {
-        public TimeSpan PointGainCooldown { get; set; } = TimeSpan.FromSeconds(60);
+        private static IReadOnlyList<String> PositiveEmotes { get; } = new List<String>()
+        {
+            "CHUBBIES",
+            "COGGERS",
+            "Chubbehtusa",
+            "Chubbies",
+            "NODDERS",
+            "OkayChamp",
+            "POGCRAZY",
+            "POGGERS",
+            "Pepetusa",
+            "PogU",
+            "SUPERPOG",
+            "WOODY",
+            "berryA",
+            "chubDuane",
+            "elmoHype",
+            "iron95Pls",
+            "peepoClap",
+            "pepoBoogie",
+            "sanaSnuggle",
+            "sheCrazy",
+            "vibePls",
+            "yyjSUPERPOG",
+            "yyjTasty",
+        };
+
+        private static IReadOnlyList<String> NegativeEmotes { get; } = new List<String>()
+        {
+            "4Weirder",
+            "ChubOest",
+            "DansChamp",
+            "Jelleh",
+            "KEKBye",
+            "KEKW",
+            "Karen",
+            "LULW",
+            "NOIDONTTHINKSO",
+            "NOP",
+            "NOPERS",
+            "OMEGALUL",
+            "PainChamp",
+            "PepeLaugh",
+            "PepeSpit",
+            "PogO",
+            "Sadge",
+            "TearChub",
+            "WeirdChamp",
+            "WideRage",
+            "chubLeave",
+            "chubOff",
+            "reeferSad",
+            "widepeepoLuL",
+            "widepeepoSad",
+            "yyjOMEGALULDANCE",
+            "ZULUL",
+        };
+
+        public TimeSpan PointGainCooldown { get; set; } = TimeSpan.FromMinutes(1);
 
         public ICheeseRepository CheeseRepository { get; }
+        public Random Random { get; }
 
-        public PointManager(ApplicationContext context, IMessageSpooler spooler, ICheeseRepository cheeseRepository)
+        public PointManager(ApplicationContext context, IMessageSpooler spooler, ICheeseRepository cheeseRepository, Random random)
             : base(context, spooler)
         {
             CheeseRepository = cheeseRepository;
+            Random = random;
         }
 
         public void AddPoints(ChatMessage message)
@@ -23,7 +84,6 @@ namespace Chubberino.Modules.CheeseGame.Points
             var now = DateTime.Now;
 
             var timeSinceLastPointGain = now - player.LastPointsGained;
-
 
             if (timeSinceLastPointGain >= PointGainCooldown)
             {
@@ -46,18 +106,24 @@ namespace Chubberino.Modules.CheeseGame.Points
 
                     var workerMessage = player.WorkerCount == 0
                         ? String.Empty
-                        : $"Your workers made {player.WorkerCount} cheese. ";
+                        : $"Your worker{(player.WorkerCount == 1 ? String.Empty : "s")} made +{player.WorkerCount} cheese. {PositiveEmotes[Random.Next(PositiveEmotes.Count)]} ";
 
-                    Spooler.SpoolMessage($"{GetPlayerDisplayName(player, message)}, you made {cheese.Name} ({cheese.PointValue}). {workerMessage}You now have {player.Points}/{player.MaximumPointStorage} cheese.");
+                    Boolean isPositive = cheese.PointValue > 0;
+                    String emote = isPositive
+                        ? PositiveEmotes[Random.Next(PositiveEmotes.Count)]
+                        : NegativeEmotes[Random.Next(NegativeEmotes.Count)];
+
+                    Spooler.SpoolMessage($"{GetPlayerDisplayName(player, message)}, you made {cheese.Name} cheese ({(isPositive ? "+" : String.Empty)}{cheese.PointValue}). {emote} {workerMessage}You now have {player.Points}/{player.MaximumPointStorage} cheese. StinkyCheese");
                 }
             }
             else
             {
                 var timeUntilNextValidPointGain = PointGainCooldown - timeSinceLastPointGain;
 
-                var timeToWait = timeUntilNextValidPointGain.TotalMinutes > 1
-                    ? Math.Ceiling(timeUntilNextValidPointGain.TotalMinutes) + " minutes"
-                    : Math.Ceiling(timeUntilNextValidPointGain.TotalSeconds) + " seconds";
+                var timeToWait = (timeUntilNextValidPointGain.TotalMinutes > 1
+                    ? (Math.Ceiling(timeUntilNextValidPointGain.TotalMinutes) + " minutes and ")
+                    : String.Empty)
+                    + timeUntilNextValidPointGain.Seconds + " seconds";
 
                 Spooler.SpoolMessage($"{GetPlayerDisplayName(player, message)}, wait {timeToWait} for your next cheese.");
             }

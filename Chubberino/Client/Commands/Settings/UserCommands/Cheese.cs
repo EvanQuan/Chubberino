@@ -21,6 +21,15 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
             Disable = twitchClient => twitchClient.OnMessageReceived -= TwitchClient_OnMessageReceived;
         }
 
+        public override void Refresh(IExtendedClient twitchClient)
+        {
+            base.Refresh(twitchClient);
+
+            PointManager.Spooler = TwitchClient;
+            Shop.Spooler = TwitchClient;
+            RankManager.Spooler = TwitchClient;
+        }
+
         private void TwitchClient_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
         {
             if (!TryValidateCommand(e, out IEnumerable<String> words)) { return; }
@@ -48,11 +57,18 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
                     break;
                 case "r":
                 case "rank":
+                    RankManager.ShowRank(e.ChatMessage);
+                    break;
                 case "rankup":
                     RankManager.RankUp(e.ChatMessage);
                     break;
+                case "c":
+                case "command":
+                case "commands":
+                    TwitchClient.SpoolMessage($"{e.ChatMessage.DisplayName} Commands: !cheese <command> where command is | shop - look at what is available to buy with cheese | buy <item> - buy an item at the shop | help <item> - get information about an item in the shop | rank - show information about your rank | rankup - Spend cheese to unlock new items to buy at the shop. Eventually prestige back to the start to climb again but with a permanent boost to your cheese gains.");
+                    break;
                 default:
-                    TwitchClient.SpoolMessage($"Invalid parameter \"{cheeseCommand}\"");
+                    PointManager.AddPoints(e.ChatMessage);
                     break;
             }
         }
