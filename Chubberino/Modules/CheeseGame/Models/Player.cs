@@ -15,6 +15,8 @@ namespace Chubberino.Modules.CheeseGame.Models
 
         public DateTime LastPointsGained { get; set; }
 
+        public DateTime LastQuestVentured { get; set; }
+
         public Rank Rank { get; set; }
 
         public Int32 Prestige { get; set; }

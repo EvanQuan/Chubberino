@@ -12,7 +12,7 @@ namespace Chubberino.Modules.CheeseGame.Shops
     {
         public ICheeseRepository CheeseRepository { get; }
 
-        public Shop(ApplicationContext context, IMessageSpooler spooler, ICheeseRepository cheeseRepository) : base(context, spooler)
+        public Shop(ApplicationContext context, IMessageSpooler spooler, ICheeseRepository cheeseRepository, Random random) : base(context, spooler, random)
         {
             CheeseRepository = cheeseRepository;
         }
@@ -126,20 +126,24 @@ namespace Chubberino.Modules.CheeseGame.Shops
                     break;
                 case 'r':
                     var nextCheeseToUnlock = CheeseRepository.GetNextCheeseToUnlock(player);
-                    if (nextCheeseToUnlock == null || nextCheeseToUnlock.RankToUnlock > player.Rank)
+                    if (nextCheeseToUnlock == null)
                     {
                         Spooler.SpoolMessage($"{GetPlayerDisplayName(player, message)} There is no recipe for sale right now.");
+                    }
+                    else if (nextCheeseToUnlock.RankToUnlock > player.Rank)
+                    {
+                        Spooler.SpoolMessage($"{GetPlayerDisplayName(player, message)} You must rankup to {nextCheeseToUnlock.RankToUnlock} rank before you can buy the {nextCheeseToUnlock.Name} recipe.");
                     }
                     else if (player.Points >= nextCheeseToUnlock.CostToUnlock)
                     {
                         player.CheeseUnlocked++;
-                        player.Points -= nextCheeseToUnlock.CostToUnlock; ;
+                        player.Points -= nextCheeseToUnlock.CostToUnlock;
                         Context.SaveChanges();
-                        Spooler.SpoolMessage($"{GetPlayerDisplayName(player, message)} You unlocked the {nextCheeseToUnlock.Name} recipe. (-{nextCheeseToUnlock.CostToUnlock} cheese)");
+                        Spooler.SpoolMessage($"{GetPlayerDisplayName(player, message)} You bought the {nextCheeseToUnlock.Name} recipe. (-{nextCheeseToUnlock.CostToUnlock} cheese)");
                     }
                     else
                     {
-                        Spooler.SpoolMessage($"{GetPlayerDisplayName(player, message)} You need {nextCheeseToUnlock.PointValue - player.Points} more cheese to unlock the {nextCheeseToUnlock.Name} recipe.");
+                        Spooler.SpoolMessage($"{GetPlayerDisplayName(player, message)} You need {nextCheeseToUnlock.CostToUnlock - player.Points} more cheese to buy the {nextCheeseToUnlock.Name} recipe.");
                     }
                     break;
                 default:
