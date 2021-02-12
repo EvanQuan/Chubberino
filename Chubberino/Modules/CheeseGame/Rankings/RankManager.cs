@@ -22,7 +22,7 @@ namespace Chubberino.Modules.CheeseGame.Rankings
             {  Rank.Legend, 25600 },
         };
 
-        public RankManager(ApplicationContext context, IMessageSpooler spooler) : base(context, spooler)
+        public RankManager(ApplicationContext context, IMessageSpooler spooler, Random random) : base(context, spooler, random)
         {
         }
 
