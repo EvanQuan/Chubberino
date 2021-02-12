@@ -1,5 +1,5 @@
 ﻿using Chubberino.Client.Abstractions;
-using Chubberino.Modules.CheeseGame;
+using Chubberino.Modules.CheeseGame.Points;
 using Chubberino.Modules.CheeseGame.Rankings;
 using Chubberino.Modules.CheeseGame.Shops;
 using System;

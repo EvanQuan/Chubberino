@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Chubberino.Modules.CheeseGame
+namespace Chubberino.Modules.CheeseGame.Points
 {
     public sealed class CheeseRepository : ICheeseRepository
     {

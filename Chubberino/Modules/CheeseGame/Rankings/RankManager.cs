@@ -1,5 +1,6 @@
 ﻿using Chubberino.Client.Abstractions;
 using Chubberino.Modules.CheeseGame.Database.Contexts;
+using Chubberino.Modules.CheeseGame.PlayerExtensions;
 using Chubberino.Utility;
 using System;
 using System.Collections.Generic;
@@ -35,10 +36,22 @@ namespace Chubberino.Modules.CheeseGame.Rankings
 
                 if (player.Points >= pointsToRank)
                 {
-                    player.Points -= pointsToRank;
-                    player.Rank = newRank;
-                    Context.SaveChanges();
-                    Spooler.SpoolMessage($"{GetPlayerDisplayName(player, message)} You ranked up to {newRank} (-{pointsToRank} cheese).");
+                    if (newRank == Rank.Bronze)
+                    {
+                        // Prestige instead of rank up
+                        player.Points -= pointsToRank;
+                        player.ResetRank();
+                        player.Prestige++;
+                        Context.SaveChanges();
+                        Spooler.SpoolMessage($"{GetPlayerDisplayName(player, message)} You prestiged back to {Rank.Bronze} and have gained a permanent {(Int32)(Constants.PrestigeBonus * 100)}% cheese gain boost.");
+                    }
+                    else
+                    {
+                        player.Points -= pointsToRank;
+                        player.Rank = newRank;
+                        Context.SaveChanges();
+                        Spooler.SpoolMessage($"{GetPlayerDisplayName(player, message)} You ranked up to {newRank} (-{pointsToRank} cheese).");
+                    }
                 }
                 else
                 {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Chubberino.Modules.CheeseGame
+namespace Chubberino.Modules.CheeseGame.Points
 {
     public sealed class CheeseType
     {

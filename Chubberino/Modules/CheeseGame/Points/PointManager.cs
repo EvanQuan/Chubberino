@@ -3,7 +3,7 @@ using Chubberino.Modules.CheeseGame.Database.Contexts;
 using System;
 using TwitchLib.Client.Models;
 
-namespace Chubberino.Modules.CheeseGame
+namespace Chubberino.Modules.CheeseGame.Points
 {
     public sealed class PointManager : AbstractCommandStrategy, IPointManager
     {
@@ -37,7 +37,8 @@ namespace Chubberino.Modules.CheeseGame
 
                     // Cannot reach negative points.
                     // Cannot go above the point storage.
-                    player.Points = Math.Min(Math.Max(player.Points + cheese.PointValue + player.WorkerCount, 0), player.MaximumPointStorage);
+                    // Prestige bonus is only applied to base cheese gained.
+                    player.Points = (Int32)Math.Min(Math.Max(player.Points + (cheese.PointValue  * (1 + Constants.PrestigeBonus * player.Prestige)) + player.WorkerCount, 0), player.MaximumPointStorage);
                     player.LastPointsGained = DateTime.Now;
 
                     Context.SaveChanges();
