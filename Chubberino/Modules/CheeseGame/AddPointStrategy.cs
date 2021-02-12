@@ -7,7 +7,7 @@ namespace Chubberino.Modules.CheeseGame
 {
     public sealed class AddPointStrategy : AbstractCommandStrategy, IAddPointStrategy
     {
-        public TimeSpan PointGainCooldown { get; set; } = TimeSpan.FromSeconds(10);
+        public TimeSpan PointGainCooldown { get; set; } = TimeSpan.FromSeconds(60);
 
         public ICheeseRepository CheeseRepository { get; }
 
@@ -33,19 +33,21 @@ namespace Chubberino.Modules.CheeseGame
                 }
                 else
                 {
-                    var variant = CheeseRepository.GetRandomVariant();
-                    var type = CheeseRepository.GetRandomType(player.CheeseUnlocked);
-
-                    var cheese = variant.Name + " " + type.Name;
-                    var points = variant.PointValue + type.PointValue;
+                    var cheese = CheeseRepository.GetRandomType(player.CheeseUnlocked);
 
                     // Cannot reach negative points.
                     // Cannot go above the point storage.
-                    player.Points = Math.Min(Math.Max(player.Points + points, 0), player.MaximumPointStorage);
+                    player.Points = Math.Min(Math.Max(player.Points + cheese.PointValue + player.WorkerCount, 0), player.MaximumPointStorage);
                     player.LastPointsGained = DateTime.Now;
 
                     Context.SaveChanges();
-                    Spooler.SpoolMessage($"{message.DisplayName}, you found {cheese} ({points}), and now have {player.Points}/{player.MaximumPointStorage} cheese.");
+
+
+                    var workerMessage = player.WorkerCount == 0
+                        ? String.Empty
+                        : $"Your workers made {player.WorkerCount} cheese. ";
+
+                    Spooler.SpoolMessage($"{message.DisplayName}, you made {cheese.Name} ({cheese.PointValue}). {workerMessage}You now have {player.Points}/{player.MaximumPointStorage} cheese.");
                 }
             }
             else

@@ -13,7 +13,7 @@ namespace Chubberino.Modules.CheeseGame
             new CheeseType("Blue Castello", -2),
 
             new CheeseType("American Cheese", 2),
-            new CheeseType("Chedddar", 6),
+            new CheeseType("Cheddar", 6),
             new CheeseType("Mozzarella", 10),
             new CheeseType("Swiss", 14),
 
@@ -45,10 +45,18 @@ namespace Chubberino.Modules.CheeseGame
 
         public CheeseType GetRandomType(Int32 cheeseUnlocked)
         {
+            var baseType = GetRandomBaseType(cheeseUnlocked);
+            var variant = GetRandomVariant();
+
+            return new CheeseType(variant.Name + " " + baseType.Name, Math.Sign(baseType.PointValue) * variant.PointValue + baseType.PointValue);
+        }
+
+        private CheeseType GetRandomBaseType(Int32 cheeseUnlocked)
+        {
             return Cheeses[Random.Next(Math.Min(Cheeses.Count, CheeseUnlockedOffset + cheeseUnlocked))];
         }
 
-        public CheeseVariant GetRandomVariant()
+        private CheeseVariant GetRandomVariant()
         {
             return Variants[Random.Next(Variants.Count)];
         }

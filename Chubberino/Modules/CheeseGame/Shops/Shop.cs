@@ -31,8 +31,8 @@ namespace Chubberino.Modules.CheeseGame.Shops
                 $" | Buy with \"!cheese buy <item>\"" +
                 $" | Get details with \"!cheese help <item>\"" +
                 $" | Storage (current: {player.MaximumPointStorage}) +100 @ {storageCost} cheese" +
-                $" | Population (current: {player.PopulationCount}) +5 (p)opulation @ {populationCost} cheese (Current: {player.PopulationCount})" +
-                $" | +1 (w)orker @ {workerCost} cheese (Current: {player.WorkerCount}) |");
+                $" | Population (current: {player.PopulationCount}) +5 population @ {populationCost} cheese" +
+                $" | Worker (current: {player.WorkerCount} +1 worker @ {workerCost} cheese");
         }
 
         public void BuyItem(ChatMessage message)
