@@ -32,9 +32,9 @@ namespace Chubberino.Modules.CheeseGame.Quests
 
         protected override String OnSuccess(Player player)
         {
-            const Int32 baseRewardsPoints = 100;
+            const Int32 baseRewardPoints = 100;
 
-            Int32 rewardPoints = (Int32)(baseRewardsPoints * (1 + (Int32)player.Rank * RewardRankMultiplier));
+            Int32 rewardPoints = (Int32)(baseRewardPoints * (1 + (Int32)player.Rank * RewardRankMultiplier));
 
             player.AddPoints(rewardPoints);
             Context.SaveChanges();
