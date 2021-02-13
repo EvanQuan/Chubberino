@@ -207,13 +207,15 @@ namespace Chubberino.Modules.CheeseGame.Shops
         public void HelpItem(ChatMessage message)
         {
             // Cut out "!cheese help" start.
-            var arguments = message.Message[12..];
+            var arguments = message.Message.StartsWith("!cheese help")
+                ? message.Message[12..]
+                : message.Message[9..]; // !cheese h
 
             var player = GetPlayer(message);
 
             if (String.IsNullOrWhiteSpace(arguments))
             {
-                Spooler.SpoolMessage($"{player.GetDisplayName()} Commands: !cheese <command> where command is " +
+                Spooler.SpoolMessage($"{player.Name} Commands: !cheese <command> where command is " +
                     $"| shop - look at what is available to buy with cheese " +
                     $"| buy <item> - buy an item at the shop " +
                     $"| help <item> - get information about an item in the shop " +
