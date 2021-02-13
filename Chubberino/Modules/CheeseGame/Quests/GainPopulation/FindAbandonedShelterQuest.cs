@@ -24,7 +24,7 @@ namespace Chubberino.Modules.CheeseGame.Quests.GainPopulation
 
         protected override String OnSuccess(Player player)
         {
-            const Int32 basePopulationReward = 5;
+            const Int32 basePopulationReward = 2;
             Int32 rewardPopulation = (Int32)(basePopulationReward * (1 + (Int32)player.Rank * RewardRankMultiplier));
             player.PopulationCount += rewardPopulation;
             Context.SaveChanges();
