@@ -19,7 +19,7 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
                     String.Format(StorageDescription, (Int32)(player.LastStorageUpgradeUnlocked + 1) * Constants.StorageUpgradePercent * 100),
                     player.LastStorageUpgradeUnlocked,
                     (Int32)(200 + Math.Max(1.5, (Int32)player.LastStorageUpgradeUnlocked) * 100),
-                    x => x.LastWorkerQuestHelpUnlocked++);
+                    x => x.LastStorageUpgradeUnlocked++);
 
             }
             else if (player.LastWorkerProductionUpgradeUnlocked > player.LastWorkerQuestHelpUnlocked)
