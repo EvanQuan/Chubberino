@@ -14,6 +14,7 @@ using Chubberino.Modules.CheeseGame.Database.Contexts;
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Points;
 using Chubberino.Modules.CheeseGame.Quests;
+using Chubberino.Modules.CheeseGame.Quests.GainPopulation;
 using Chubberino.Modules.CheeseGame.Quests.GainWorkers;
 using Chubberino.Modules.CheeseGame.Rankings;
 using Chubberino.Modules.CheeseGame.Shops;
@@ -154,6 +155,7 @@ namespace Chubberino
             // Quests
             builder.RegisterType<CheeseMountainQuest>().AsSelf().SingleInstance();
             builder.RegisterType<FindTravellerQuest>().AsSelf().SingleInstance();
+            builder.RegisterType<FindAbandonedShelterQuest>().AsSelf().SingleInstance();
 
             IContainer container = builder.Build();
 
@@ -162,7 +164,8 @@ namespace Chubberino
             var questManager = scope.Resolve<IQuestManager>();
             questManager
                 .AddQuest(scope.Resolve<CheeseMountainQuest>())
-                .AddQuest(scope.Resolve<FindTravellerQuest>());
+                .AddQuest(scope.Resolve<FindTravellerQuest>())
+                .AddQuest(scope.Resolve<FindAbandonedShelterQuest>());
 
             var commandRepository = scope.Resolve<ICommandRepository>();
             commandRepository
