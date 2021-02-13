@@ -8,5 +8,7 @@ namespace Chubberino.Modules.CheeseGame
         /// Bonus multiplier per every prestige level.
         /// </summary>
         public const Double PrestigeBonus = 0.1;
+
+        public const Double StorageUpgradePercent = 0.5;
     }
 }

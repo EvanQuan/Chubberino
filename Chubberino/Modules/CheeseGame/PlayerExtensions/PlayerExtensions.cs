@@ -15,6 +15,7 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
             player.CheeseUnlocked = 0;
             player.LastWorkerProductionUpgradeUnlocked = 0;
             player.LastWorkerQuestHelpUnlocked = 0;
+            player.LastStorageUpgradeUnlocked = 0;
             player.MouseTrapCount = 0;
             player.IsMouseInfested = false;
 
@@ -23,7 +24,7 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
 
         public static String GetDisplayName(this Player player)
         {
-            return $"{player.Name} [P{player.Prestige} {player.Rank}, {player.Points}/{player.MaximumPointStorage} cheese, {player.WorkerCount}/{player.PopulationCount} workers, {player.MouseTrapCount} mousetraps]";
+            return $"{player.Name} [P{player.Prestige} {player.Rank}, {player.Points}/{player.GetTotalStorage()} cheese, {player.WorkerCount}/{player.PopulationCount} workers, {player.MouseTrapCount} mousetraps]";
         }
 
         /// <summary>
@@ -46,6 +47,11 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
         public static void AddPoints(this Player player, Int32 points)
         {
             player.Points = Math.Max(Math.Min(player.Points + points, player.MaximumPointStorage), 0);
+        }
+
+        public static Int32 GetTotalStorage(this Player player)
+        {
+            return (Int32)(player.MaximumPointStorage * (1 + (Int32)player.LastStorageUpgradeUnlocked * Constants.StorageUpgradePercent));
         }
     }
 }

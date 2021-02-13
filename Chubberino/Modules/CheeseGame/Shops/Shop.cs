@@ -77,7 +77,7 @@ namespace Chubberino.Modules.CheeseGame.Shops
                 $" | Storage [+100] for {prices.Storage} cheese" +
                 $" | Population [+5] for {prices.Population} cheese" +
                 $" | Worker [+1] for {prices.Worker} cheese" +
-                $" | Upgrade worker [{upgradePrompt}" + 
+                $" | Upgrade [{upgradePrompt}" + 
                 $" | Mousetrap [+1] for {prices.MouseTrap} " +
                 "|");
         }

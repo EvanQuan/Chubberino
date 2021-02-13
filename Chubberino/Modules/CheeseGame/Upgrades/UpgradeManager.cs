@@ -5,13 +5,24 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
 {
     public sealed class UpgradeManager : IUpgradeManager
     {
-        private const String QuestHelpDescription = "+{0}% quest success chance";
+        private const String StorageDescription = "+{0}% storage increase";
 
-        private const String ProductionDescription = "+{0}% cheese";
+        private const String QuestHelpDescription = "+{0}% quest success per worker";
+
+        private const String ProductionDescription = "+{0}% cheese per worker";
 
         public Upgrade GetNextUpgradeToUnlock(Player player)
         {
-            if (player.LastWorkerProductionUpgradeUnlocked > player.LastWorkerQuestHelpUnlocked)
+            if (player.LastWorkerQuestHelpUnlocked > player.LastStorageUpgradeUnlocked)
+            {
+                return new Upgrade(
+                    String.Format(StorageDescription, (Int32)(player.LastStorageUpgradeUnlocked + 1) * Constants.StorageUpgradePercent * 100),
+                    player.LastStorageUpgradeUnlocked,
+                    (Int32)(200 + Math.Max(1.5, (Int32)player.LastStorageUpgradeUnlocked) * 100),
+                    x => x.LastWorkerQuestHelpUnlocked++);
+
+            }
+            else if (player.LastWorkerProductionUpgradeUnlocked > player.LastWorkerQuestHelpUnlocked)
             {
                 return new Upgrade(
                     String.Format(QuestHelpDescription, (Int32)(player.LastWorkerQuestHelpUnlocked + 1)),
