@@ -19,7 +19,7 @@ namespace Chubberino.Modules.CheeseGame.Quests.GainWorkers
 
         protected override String OnIntroduction(Player player)
         {
-            return $"{GetPlayerWithWorkers(player)} venture out into the Fontina Forest.";
+            return $"{GetPlayerWithWorkers(player)} venture out onto the roads of the Panela Plains.";
         }
 
         protected override String OnSuccess(Player player)
