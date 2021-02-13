@@ -27,7 +27,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
 
         public IEmoteManager EmoteManager { get; }
 
-        protected Double BaseSuccessChance { get; set; } = 0.4;
+        protected Double BaseSuccessChance { get; set; } = 0.25;
 
         protected Double WorkerSuccessBonus { get; set; } = 0.01;
 
@@ -64,7 +64,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
                 ? OnSuccess(player)
                 : OnFailure(player);
 
-            Spooler.SpoolMessage(OnIntroduction(player) + " " + resultMessage);
+            Spooler.SpoolMessage($"[{(Int32)(successChance * 100)}% success] {OnIntroduction(player)} {resultMessage}");
 
             return successful;
         }
