@@ -39,7 +39,9 @@ namespace Chubberino.Modules.CheeseGame.Points
                     // Cannot reach negative points.
                     // Cannot go above the point storage.
                     // Prestige bonus is only applied to base cheese gained.
-                    player.Points = (Int32)Math.Min(Math.Max(player.Points + (cheese.PointValue  * (1 + Constants.PrestigeBonus * player.Prestige)) + player.WorkerCount, 0), player.MaximumPointStorage);
+                    Int32 workerPoints = player.WorkerCount * (1 + (Int32)player.LastWorkerProductionUpgradeUnlocked);
+
+                    player.Points = (Int32)Math.Min(Math.Max(player.Points + (cheese.PointValue  * (1 + Constants.PrestigeBonus * player.Prestige)) + workerPoints, 0), player.MaximumPointStorage);
                     player.LastPointsGained = DateTime.Now;
 
                     Context.SaveChanges();
@@ -47,7 +49,7 @@ namespace Chubberino.Modules.CheeseGame.Points
 
                     var workerMessage = player.WorkerCount == 0
                         ? String.Empty
-                        : $"Your worker{(player.WorkerCount == 1 ? String.Empty : "s")} made +{player.WorkerCount * (Int32)player.LastWorkerProductionUpgradeUnlocked} cheese. {EmoteManager.GetRandomPositiveEmote()} ";
+                        : $"Your worker{(player.WorkerCount == 1 ? String.Empty : "s")} made +{workerPoints} cheese. {EmoteManager.GetRandomPositiveEmote()} ";
 
                     Boolean isPositive = cheese.PointValue > 0;
                     String emote = isPositive
