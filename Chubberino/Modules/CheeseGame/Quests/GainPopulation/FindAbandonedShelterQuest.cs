@@ -24,12 +24,12 @@ namespace Chubberino.Modules.CheeseGame.Quests.GainPopulation
 
         protected override String OnSuccess(Player player)
         {
-            const Int32 basePopulationReward = 2;
+            const Int32 basePopulationReward = 1;
             Int32 rewardPopulation = (Int32)(basePopulationReward * (1 + (Int32)player.Rank * RewardRankMultiplier));
             player.PopulationCount += rewardPopulation;
             Context.SaveChanges();
 
-            return $"You find an abandoned shelter. It takes some time to repair it, but it you finally get it in shape to house some of your workers. (+{rewardPopulation} population)";
+            return $"You find an abandoned shelter. It takes some time to repair, but it you finally get it in shape for housing. (+{rewardPopulation} population)";
         }
     }
 }
