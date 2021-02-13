@@ -52,7 +52,7 @@ namespace Chubberino.Modules.CheeseGame.Rankings
                         player.Points -= pointsToRank;
                         player.Rank = newRank;
                         Context.SaveChanges();
-                        Spooler.SpoolMessage($"{player.GetDisplayName()} You ranked up to {newRank} (-{pointsToRank} cheese).");
+                        Spooler.SpoolMessage($"{player.GetDisplayName()} You ranked up to {newRank}. (-{pointsToRank} cheese)");
                     }
                 }
                 else
