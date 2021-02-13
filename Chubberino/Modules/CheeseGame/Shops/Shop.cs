@@ -4,6 +4,7 @@ using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.PlayerExtensions;
 using Chubberino.Modules.CheeseGame.Points;
+using Chubberino.Modules.CheeseGame.Upgrades;
 using Chubberino.Utility;
 using System;
 using TwitchLib.Client.Models;
@@ -13,11 +14,19 @@ namespace Chubberino.Modules.CheeseGame.Shops
     public class Shop : AbstractCommandStrategy, IShop
     {
         public ICheeseRepository CheeseRepository { get; }
+        public IUpgradeManager UpgradeManager { get; }
 
-        public Shop(ApplicationContext context, IMessageSpooler spooler, ICheeseRepository cheeseRepository, Random random, IEmoteManager emoteManager)
+        public Shop(
+            ApplicationContext context,
+            IMessageSpooler spooler,
+            ICheeseRepository cheeseRepository,
+            Random random,
+            IEmoteManager emoteManager,
+            IUpgradeManager upgradeManager)
             : base(context, spooler, random, emoteManager)
         {
             CheeseRepository = cheeseRepository;
+            UpgradeManager = upgradeManager;
         }
 
         private (Int32 Storage, Int32 Population, Int32 Worker) GetCosts(Player player)
@@ -52,13 +61,31 @@ namespace Chubberino.Modules.CheeseGame.Shops
                 recipePrompt = $"{nextCheeseToUnlock.Name} (+{nextCheeseToUnlock.PointValue})] for {nextCheeseToUnlock.CostToUnlock} cheese"; 
             }
 
+            var upgrade = UpgradeManager.GetNextUpgradeToUnlock(player);
+
+            String upgradePrompt;
+
+            if (upgrade == null)
+            {
+                upgradePrompt = "OUT OF ORDER]";
+            }
+            else if (upgrade.RankToUnlock > player.Rank)
+            {
+                upgradePrompt = $"{upgrade.Description}] unlocked at {upgrade.RankToUnlock} rank";
+            }
+            else
+            {
+                upgradePrompt = $"{upgrade.Description}] for {upgrade.Price} cheese";
+            }
+
             Spooler.SpoolMessage($"{player.GetDisplayName()} Cheese Shop" +
                 $" | Buy with \"!cheese buy <item>\"" +
                 $" | Get details with \"!cheese help <item>\"" +
                 $" | Recipe [{recipePrompt}" +
                 $" | Storage [+100] for {storageCost} cheese" +
                 $" | Population [+5] for {populationCost} cheese" +
-                $" | Worker [+1] for {workerCost} cheese");
+                $" | Worker [+1] for {workerCost} cheese" +
+                $" | Upgrade worker [{upgradePrompt}");
         }
 
         public void BuyItem(ChatMessage message)
@@ -147,6 +174,28 @@ namespace Chubberino.Modules.CheeseGame.Shops
                     else
                     {
                         Spooler.SpoolMessage($"{player.GetDisplayName()} You need {nextCheeseToUnlock.CostToUnlock - player.Points} more cheese to buy the {nextCheeseToUnlock.Name} recipe.");
+                    }
+                    break;
+                case 'u':
+                    var upgrade = UpgradeManager.GetNextUpgradeToUnlock(player);
+                    if (upgrade == null)
+                    {
+                        Spooler.SpoolMessage($"{player.GetDisplayName()} There is no upgrade for sale right now.");
+                    }
+                    else if (upgrade.RankToUnlock > player.Rank)
+                    {
+                        Spooler.SpoolMessage($"{player.GetDisplayName()} You must rankup to {upgrade.RankToUnlock} rank before you can buy the {upgrade.Description} upgrade.");
+                    }
+                    else if (player.Points >= upgrade.Price)
+                    {
+                        upgrade.UpdatePlayer(player);
+                        player.Points -= upgrade.Price;
+                        Context.SaveChanges();
+                        Spooler.SpoolMessage($"{player.GetDisplayName()} You bought the {upgrade.Description} upgrade. (-{upgrade.Price} cheese)");
+                    }
+                    else
+                    {
+                        Spooler.SpoolMessage($"{player.GetDisplayName()} You need {upgrade.Price - player.Points} more cheese to buy the {upgrade.Description} upgrade.");
                     }
                     break;
                 default:

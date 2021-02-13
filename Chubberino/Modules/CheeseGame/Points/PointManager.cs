@@ -47,7 +47,7 @@ namespace Chubberino.Modules.CheeseGame.Points
 
                     var workerMessage = player.WorkerCount == 0
                         ? String.Empty
-                        : $"Your worker{(player.WorkerCount == 1 ? String.Empty : "s")} made +{player.WorkerCount} cheese. {EmoteManager.GetRandomPositiveEmote()} ";
+                        : $"Your worker{(player.WorkerCount == 1 ? String.Empty : "s")} made +{player.WorkerCount * (Int32)player.LastWorkerProductionUpgradeUnlocked} cheese. {EmoteManager.GetRandomPositiveEmote()} ";
 
                     Boolean isPositive = cheese.PointValue > 0;
                     String emote = isPositive

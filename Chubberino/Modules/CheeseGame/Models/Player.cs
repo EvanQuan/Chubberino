@@ -1,4 +1,5 @@
 ﻿using Chubberino.Modules.CheeseGame.Rankings;
+using Chubberino.Modules.CheeseGame.Upgrades;
 using System;
 
 namespace Chubberino.Modules.CheeseGame.Models
@@ -18,6 +19,10 @@ namespace Chubberino.Modules.CheeseGame.Models
         public DateTime LastQuestVentured { get; set; }
 
         public Rank Rank { get; set; }
+
+        public Rank LastWorkerProductionUpgradeUnlocked { get; set; }
+
+        public Rank LastWorkerQuestHelpUnlocked { get; set; }
 
         public Int32 Prestige { get; set; }
 

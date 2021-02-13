@@ -24,10 +24,12 @@ namespace Chubberino.Modules.CheeseGame.Quests
         public Double RewardRankMultiplier { get; set; } = 0.2;
 
         public IMessageSpooler Spooler { get; }
-        public IEmoteManager EmoteManager { get; }
-        protected Double BaseSuccessChance { get; set; } = 0.5;
 
-        protected Double WorkerSuccessBonus { get; set; } = 0.02;
+        public IEmoteManager EmoteManager { get; }
+
+        protected Double BaseSuccessChance { get; set; } = 0.4;
+
+        protected Double WorkerSuccessBonus { get; set; } = 0.01;
 
         /// <summary>
         /// Message on quest failure.
@@ -54,7 +56,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
 
         public Boolean Start(ChatMessage message, Player player)
         {
-            Double successChance = BaseSuccessChance + (player.WorkerCount * WorkerSuccessBonus);
+            Double successChance = BaseSuccessChance * (1 + player.WorkerCount * (WorkerSuccessBonus * ((Int32)player.LastWorkerQuestHelpUnlocked + 1)));
 
             Boolean successful = successChance > Random.NextDouble();
 

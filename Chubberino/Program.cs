@@ -9,7 +9,6 @@ using Chubberino.Client.Commands.Settings.Replies;
 using Chubberino.Client.Commands.Settings.UserCommands;
 using Chubberino.Client.Commands.Strategies;
 using Chubberino.Client.Threading;
-using Chubberino.Modules.CheeseGame;
 using Chubberino.Modules.CheeseGame.Database.Contexts;
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Points;
@@ -19,6 +18,7 @@ using Chubberino.Modules.CheeseGame.Quests.GainStorage;
 using Chubberino.Modules.CheeseGame.Quests.GainWorkers;
 using Chubberino.Modules.CheeseGame.Rankings;
 using Chubberino.Modules.CheeseGame.Shops;
+using Chubberino.Modules.CheeseGame.Upgrades;
 using Jering.Javascript.NodeJS;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -151,6 +151,7 @@ namespace Chubberino
             builder.RegisterType<RankManager>().As<IRankManager>().SingleInstance();
             builder.RegisterType<QuestManager>().As<IQuestManager>().SingleInstance();
             builder.RegisterType<EmoteManager>().As<IEmoteManager>().SingleInstance();
+            builder.RegisterType<UpgradeManager>().As<IUpgradeManager>().SingleInstance();
             builder.RegisterType<CheeseRepository>().As<ICheeseRepository>().SingleInstance();
 
             // Quests
