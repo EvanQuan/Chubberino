@@ -2,44 +2,29 @@
 using Chubberino.Modules.CheeseGame.Database.Contexts;
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Models;
-using Chubberino.Modules.CheeseGame.PlayerExtensions;
 using System;
 
-namespace Chubberino.Modules.CheeseGame.Quests
+namespace Chubberino.Modules.CheeseGame.Quests.GainCheese
 {
-    public sealed class CheeseMountainQuest : Quest
+    public sealed class CheeseMountainQuest : GainCheeseQuest
     {
         public CheeseMountainQuest(ApplicationContext context, Random random, IMessageSpooler spooler, IEmoteManager emoteManager) : base(context, random, spooler, emoteManager)
         {
         }
 
+        protected override Int32 BaseRewardPoints => 100;
+
+        protected override String SuccessMessage =>
+            "You find a giant vein of Magna cheese and mine at it for hours. (+{0} cheese) {1}";
+
         protected override String OnFailure(Player player)
         {
-            const Int32 baseRewardsPoints = 10;
-
-            Int32 rewardPoints = (Int32)(baseRewardsPoints * (1 + (Int32)player.Rank * RewardRankMultiplier));
-
-            player.AddPoints(rewardPoints);
-            Context.SaveChanges();
-
-            return $"You find a few crumbs of cheese here and there, but otherwise no luck. (+{rewardPoints} cheese) {EmoteManager.GetRandomNegativeEmote()}";
+            return $"You search the cavern depths, but with no luck. {EmoteManager.GetRandomNegativeEmote()}";
         }
 
         protected override String OnIntroduction(Player player)
         {
-            return $"{GetPlayerWithWorkers(player)} venture into a cave of Mount Magna in hopes for finding treasures hidden within.";
-        }
-
-        protected override String OnSuccess(Player player)
-        {
-            const Int32 baseRewardPoints = 100;
-
-            Int32 rewardPoints = (Int32)(baseRewardPoints * (1 + (Int32)player.Rank * RewardRankMultiplier));
-
-            player.AddPoints(rewardPoints);
-            Context.SaveChanges();
-
-            return $"Score! You find a giant vein of Magna cheese and mine at it for hours. (+{rewardPoints} cheese) {EmoteManager.GetRandomPositiveEmote()}";
+            return $"{GetPlayerWithWorkers(player)} venture into the caves of Mount Magna.";
         }
     }
 }
