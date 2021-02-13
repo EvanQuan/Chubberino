@@ -31,7 +31,7 @@ namespace Chubberino.Modules.CheeseGame.Quests.GainStorage
             player.MaximumPointStorage += rewardStorage;
             Context.SaveChanges();
 
-            return $"Score! You come across an ancient tomb. There does not appear to be anything inside, so you claim it for yourself to store cheese. (+{rewardStorage})";
+            return $"Score! You come across an ancient tomb. There does not appear to be anything inside, so you claim it for yourself to store cheese. (+{rewardStorage} storage)";
         }
     }
 }

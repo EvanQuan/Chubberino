@@ -15,13 +15,15 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
             player.CheeseUnlocked = 0;
             player.LastWorkerProductionUpgradeUnlocked = 0;
             player.LastWorkerQuestHelpUnlocked = 0;
+            player.MouseTrapCount = 0;
+            player.IsMouseInfested = false;
 
             return player;
         }
 
         public static String GetDisplayName(this Player player)
         {
-            return $"{player.Name} [P{player.Prestige} {player.Rank}, {player.Points}/{player.MaximumPointStorage} cheese, {player.WorkerCount}/{player.PopulationCount} workers]";
+            return $"{player.Name} [P{player.Prestige} {player.Rank}, {player.Points}/{player.MaximumPointStorage} cheese, {player.WorkerCount}/{player.PopulationCount} workers, {player.MouseTrapCount} mousetraps]";
         }
 
         /// <summary>

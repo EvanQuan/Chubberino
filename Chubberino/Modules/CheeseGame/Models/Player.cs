@@ -33,5 +33,9 @@ namespace Chubberino.Modules.CheeseGame.Models
         public Int32 PopulationCount { get; set; }
 
         public Int32 CheeseUnlocked { get; set; }
+
+        public Int32 MouseTrapCount { get; set; }
+
+        public Boolean IsMouseInfested { get; set; }
     }
 }

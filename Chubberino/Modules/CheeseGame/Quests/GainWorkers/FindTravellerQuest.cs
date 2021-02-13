@@ -33,6 +33,7 @@ namespace Chubberino.Modules.CheeseGame.Quests.GainWorkers
 
                 return $"You come across a lonely traveller looking for work. Unfortunately, you do not have enough population slots for him to join your efforts, and so gives you some cheese instead. (+{rewardPoints} cheese)";
             }
+            else
             {
                 player.WorkerCount++;
                 Context.SaveChanges();

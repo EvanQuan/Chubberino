@@ -7,7 +7,7 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
     {
         private const String QuestHelpDescription = "+{0}% quest success chance";
 
-        private const String ProductionDescription = "+{0} cheese";
+        private const String ProductionDescription = "+{0}% cheese";
 
         public Upgrade GetNextUpgradeToUnlock(Player player)
         {
@@ -26,7 +26,7 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
             else
             {
                 return new Upgrade(
-                    String.Format(ProductionDescription, (Int32)(player.LastWorkerProductionUpgradeUnlocked + 1)),
+                    String.Format(ProductionDescription, (Int32)(player.LastWorkerProductionUpgradeUnlocked + 1) * 10),
                     player.LastWorkerProductionUpgradeUnlocked,
                     (Int32)(100 + Math.Pow(2, (Int32)player.LastWorkerProductionUpgradeUnlocked) * 100),
                     x => x.LastWorkerProductionUpgradeUnlocked++);
