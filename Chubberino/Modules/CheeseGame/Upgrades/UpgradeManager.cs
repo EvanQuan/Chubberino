@@ -16,7 +16,7 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
                 return new Upgrade(
                     String.Format(QuestHelpDescription, (Int32)(player.LastWorkerQuestHelpUnlocked + 1)),
                     player.LastWorkerQuestHelpUnlocked,
-                    50 + 100 * (Int32)player.LastWorkerQuestHelpUnlocked,
+                    (Int32)(50 + Math.Pow(1.5, (Int32)player.LastWorkerQuestHelpUnlocked) * 100),
                     x => x.LastWorkerQuestHelpUnlocked++);
             }
             else if (player.LastWorkerProductionUpgradeUnlocked == Rankings.Rank.Legend)
@@ -28,7 +28,7 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
                 return new Upgrade(
                     String.Format(ProductionDescription, (Int32)(player.LastWorkerProductionUpgradeUnlocked + 1)),
                     player.LastWorkerProductionUpgradeUnlocked,
-                    100 + 200 * (Int32)player.LastWorkerProductionUpgradeUnlocked,
+                    (Int32)(100 + Math.Pow(2, (Int32)player.LastWorkerProductionUpgradeUnlocked) * 100),
                     x => x.LastWorkerProductionUpgradeUnlocked++);
             }
         }
