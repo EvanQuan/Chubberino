@@ -1,9 +1,5 @@
 ﻿using Chubberino.Modules.CheeseGame.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Chubberino.Modules.CheeseGame.PlayerExtensions
 {
@@ -17,6 +13,8 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
             player.WorkerCount = 0;
             player.Rank = Rankings.Rank.Bronze;
             player.CheeseUnlocked = 0;
+            player.LastWorkerProductionUpgradeUnlocked = 0;
+            player.LastWorkerQuestHelpUnlocked = 0;
 
             return player;
         }
