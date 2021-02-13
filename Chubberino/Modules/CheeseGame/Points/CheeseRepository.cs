@@ -11,7 +11,7 @@ namespace Chubberino.Modules.CheeseGame.Points
 
         private static IReadOnlyList<CheeseType> Cheeses { get; } = new List<CheeseType>()
         {
-            new CheeseType("Stinking Bishop ZULUL EatPoo", -6),
+            new CheeseType("Stinking Bishop", -6),
             new CheeseType("Blue Castello", -2),
 
             new CheeseType("American", 2),
