@@ -17,7 +17,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
         {
             const Int32 baseRewardsPoints = 10;
 
-            Int32 rewardPoints = (Int32)(baseRewardsPoints + (1 * RewardRankMultiplier));
+            Int32 rewardPoints = (Int32)(baseRewardsPoints * (1 + (Int32)player.Rank * RewardRankMultiplier));
 
             player.AddPoints(rewardPoints);
             Context.SaveChanges();
@@ -34,7 +34,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
         {
             const Int32 baseRewardsPoints = 100;
 
-            Int32 rewardPoints = (Int32)(baseRewardsPoints + (1 * RewardRankMultiplier));
+            Int32 rewardPoints = (Int32)(baseRewardsPoints * (1 + (Int32)player.Rank * RewardRankMultiplier));
 
             player.AddPoints(rewardPoints);
             Context.SaveChanges();

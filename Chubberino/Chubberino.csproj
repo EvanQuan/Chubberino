@@ -35,6 +35,7 @@
 
   <ItemGroup>
     <Folder Include="Client\Services\" />
+    <Folder Include="Modules\CheeseGame\Quests\GainPopulation\" />
   </ItemGroup>
 
 </Project>
