@@ -13,6 +13,7 @@ namespace Chubberino.Modules.CheeseGame.Points
         public static TimeSpan PointGainCooldown { get; set; } = TimeSpan.FromMinutes(1);
 
         public ICheeseRepository CheeseRepository { get; }
+
         public IHazardManager HazardManager { get; }
 
         public PointManager(
@@ -35,41 +36,36 @@ namespace Chubberino.Modules.CheeseGame.Points
 
             var timeSinceLastPointGain = now - player.LastPointsGained;
 
+            var playerStorage = player.GetTotalStorage();
+
             if (timeSinceLastPointGain >= PointGainCooldown)
             {
-                if (player.Points >= player.GetTotalStorage())
+                if (player.Points >= playerStorage)
                 {
-                    Spooler.SpoolMessage($"{player.GetDisplayName()}, you have {player.Points}/{player.MaximumPointStorage} cheese and cannot store any more. Consider buying more cheese storage with \"!cheese buy storage\".");
+                    Spooler.SpoolMessage($"{player.GetDisplayName()}, you have {player.Points}/{playerStorage} cheese and cannot store any more. Consider buying more cheese storage with \"!cheese buy storage\".");
                 }
                 else
                 {
                     var cheese = CheeseRepository.GetRandomType(player.CheeseUnlocked);
 
-                    // Cannot reach negative points.
-                    // Cannot go above the point storage.
-                    // Prestige bonus is only applied to base cheese gained.
-                    // Workers will collectively add at least 1.
-                    Int32 workerPoints = Math.Max(cheese.PointValue * (player.WorkerCount * (((Int32)player.LastWorkerProductionUpgradeUnlocked + 1) * 10) / 100), 1);
+                    var oldPoints = player.Points;
+                    player.AddPoints(cheese);
 
-                    var newPoints = (Int32)Math.Min(Math.Max(player.Points + (cheese.PointValue * (1 + Constants.PrestigeBonus * player.Prestige)) + workerPoints, 0), player.MaximumPointStorage);
+                    var newPoints = player.Points;
 
-                    player.Points = newPoints;
-                    player.LastPointsGained = DateTime.Now;
+                    var pointsGained = newPoints - oldPoints;
+
+                    player.LastPointsGained = now;
 
                     Context.SaveChanges();
 
-
                     Boolean isPositive = cheese.PointValue > 0;
-
-                    var workerMessage = player.WorkerCount == 0
-                        ? String.Empty
-                        : (isPositive ? "+" : "-") + workerPoints;
 
                     String emote = isPositive
                         ? EmoteManager.GetRandomPositiveEmote()
                         : EmoteManager.GetRandomNegativeEmote();
 
-                    Spooler.SpoolMessage($"{player.GetDisplayName()}, you made {cheese.Name} cheese ({(isPositive ? "+" : String.Empty)}{cheese.PointValue}{workerMessage}). {emote} You now have {player.Points}/{player.MaximumPointStorage} cheese. StinkyCheese");
+                    Spooler.SpoolMessage($"{player.GetDisplayName()}, you made {cheese.Name} cheese ({(isPositive ? "+" : String.Empty)}{pointsGained}). {emote} You now have {player.Points}/{playerStorage} cheese. StinkyCheese");
                 }
             }
             else
