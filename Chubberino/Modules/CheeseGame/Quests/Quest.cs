@@ -24,6 +24,8 @@ namespace Chubberino.Modules.CheeseGame.Quests
 
         public Double RewardRankMultiplier { get; set; } = 1;
 
+        public Double RewardRankExponent { get; set; } = 1.5;
+
         public IMessageSpooler Spooler { get; }
 
         public IEmoteManager EmoteManager { get; }
