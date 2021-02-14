@@ -2,10 +2,6 @@
 using Chubberino.Modules.CheeseGame.PlayerExtensions;
 using Chubberino.Modules.CheeseGame.Points;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.PlayerExtensions

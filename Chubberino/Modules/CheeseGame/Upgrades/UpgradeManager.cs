@@ -15,6 +15,7 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
         {
             if (player.LastWorkerQuestHelpUnlocked > player.LastStorageUpgradeUnlocked)
             {
+                // Storage
                 return new Upgrade(
                     String.Format(StorageDescription, (Int32)(player.LastStorageUpgradeUnlocked + 1) * Constants.StorageUpgradePercent * 100),
                     player.LastStorageUpgradeUnlocked,
@@ -24,8 +25,9 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
             }
             else if (player.LastWorkerProductionUpgradeUnlocked > player.LastWorkerQuestHelpUnlocked)
             {
+                // Quest success
                 return new Upgrade(
-                    String.Format(QuestHelpDescription, (Int32)(player.LastWorkerQuestHelpUnlocked + 1)),
+                    String.Format(QuestHelpDescription, (Int32)(player.LastWorkerQuestHelpUnlocked + 1) * Constants.QuestBaseSuccessChance * Constants.QuestWorkerSuccessBonus),
                     player.LastWorkerQuestHelpUnlocked,
                     (Int32)(50 + Math.Pow(1.5, (Int32)player.LastWorkerQuestHelpUnlocked) * 100),
                     x => x.LastWorkerQuestHelpUnlocked++);
@@ -36,6 +38,7 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
             }
             else
             {
+                // Worker production
                 return new Upgrade(
                     String.Format(ProductionDescription, (Int32)(player.LastWorkerProductionUpgradeUnlocked + 1) * 10),
                     player.LastWorkerProductionUpgradeUnlocked,

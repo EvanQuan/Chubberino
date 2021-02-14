@@ -69,5 +69,9 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
             return (Int32)(player.MaximumPointStorage * (1 + (Int32)player.LastStorageUpgradeUnlocked * Constants.StorageUpgradePercent));
         }
 
+        public static Double GetQuestSuccessChance(this Player player)
+        {
+            return Constants.QuestBaseSuccessChance * (1 + player.WorkerCount * (Constants.QuestWorkerSuccessBonus * ((Int32)player.LastWorkerQuestHelpUnlocked + 1)));
+        }
     }
 }

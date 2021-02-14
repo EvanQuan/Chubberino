@@ -2,6 +2,7 @@
 using Chubberino.Modules.CheeseGame.Database.Contexts;
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Models;
+using Chubberino.Modules.CheeseGame.PlayerExtensions;
 using System;
 using TwitchLib.Client.Models;
 
@@ -21,15 +22,11 @@ namespace Chubberino.Modules.CheeseGame.Quests
 
         public Random Random { get; }
 
-        public Double RewardRankMultiplier { get; set; } = 0.2;
+        public Double RewardRankMultiplier { get; set; } = 1;
 
         public IMessageSpooler Spooler { get; }
 
         public IEmoteManager EmoteManager { get; }
-
-        protected Double BaseSuccessChance { get; set; } = 0.25;
-
-        protected Double WorkerSuccessBonus { get; set; } = 0.01;
 
         /// <summary>
         /// Message on quest failure.
@@ -56,7 +53,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
 
         public Boolean Start(ChatMessage message, Player player)
         {
-            Double successChance = BaseSuccessChance * (1 + player.WorkerCount * (WorkerSuccessBonus * ((Int32)player.LastWorkerQuestHelpUnlocked + 1)));
+            Double successChance = player.GetQuestSuccessChance();
 
             Boolean successful = successChance > Random.NextDouble();
 
@@ -64,7 +61,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
                 ? OnSuccess(player)
                 : OnFailure(player);
 
-            Spooler.SpoolMessage($"[{(Int32)(successChance * 100)}% success] {OnIntroduction(player)} {resultMessage}");
+            Spooler.SpoolMessage($"{player.GetDisplayName()} [{Math.Round((successChance * 100), 2)}% success] {OnIntroduction(player)} {resultMessage}");
 
             return successful;
         }
