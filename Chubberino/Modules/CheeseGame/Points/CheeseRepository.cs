@@ -26,8 +26,8 @@ namespace Chubberino.Modules.CheeseGame.Points
             new CheeseType("Mascarpone", 30, Rank.Platinum, 800),
             new CheeseType("Gorgonzola", 34, Rank.Diamond, 1600),
             new CheeseType("Garroxta", 38, Rank.Master, 3200),
-            new CheeseType("Kashkaval", 42, Rank.Grandmaster, 6400),
-            new CheeseType("Myzithra", 46, Rank.Legend, 12800),
+            new CheeseType("Myzithra", 42, Rank.Grandmaster, 6400),
+            new CheeseType("Pule", 46, Rank.Legend, 12800),
         };
 
         public static IReadOnlyList<CheeseVariant> Variants { get; } = new List<CheeseVariant>()
