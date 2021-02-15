@@ -32,11 +32,18 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
 
         private void TwitchClient_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
         {
-            if (!TryValidateCommand(e, out _)) { return; }
+            if (!TryValidateCommand(e, out var words)) { return; }
+
+            if (!words.Any() || !words.First().Equals(e.ChatMessage.Username, StringComparison.OrdinalIgnoreCase))
+            {
+                TwitchClient.SpoolMessage(e.ChatMessage.Channel, $"{e.ChatMessage.DisplayName} You can not get me to join other users' channels.");
+                return;
+            }
 
             // Users can only add their own channel
             var channelFound = Context.StartupChannels.FirstOrDefault(x => x.UserID == e.ChatMessage.UserId);
 
+            String outputMessage;
             if (channelFound == null)
             {
                 // Add new channel.
@@ -45,12 +52,28 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
                     UserID = e.ChatMessage.UserId,
                     DisplayName = e.ChatMessage.DisplayName
                 });
+
+                outputMessage = $"{e.ChatMessage.DisplayName} I have now joined your channel.";
             }
             else
             {
                 // Update the display name
                 channelFound.DisplayName = e.ChatMessage.DisplayName;
+
+                if (channelFound.DisplayName == e.ChatMessage.DisplayName)
+                {
+                    outputMessage = $"{e.ChatMessage.DisplayName} I have already joined your channel.";
+                }
+                else
+                {
+                    outputMessage = $"{e.ChatMessage.DisplayName} I have already joined your channel. Updated user name.";
+                }
+
+                // Update the display name
+                channelFound.DisplayName = e.ChatMessage.DisplayName;
             }
+
+            TwitchClient.SpoolMessage(e.ChatMessage.Channel, outputMessage);
 
             Context.SaveChanges();
         }
