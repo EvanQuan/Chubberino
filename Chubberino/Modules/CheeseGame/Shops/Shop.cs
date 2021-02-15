@@ -263,6 +263,17 @@ namespace Chubberino.Modules.CheeseGame.Shops
                 case "ranks":
                     Spooler.SpoolMessage($"{player.GetDisplayName()} Ranks unlock new items to buy at the shop. Eventually ranking will give you prestige, reseting your rank and everything you have to restart the climb. For every prestige you gain, you get a permanent {(Int32)(Constants.PrestigeBonus * 100)}% boost to your cheese gains, which can stack.");
                     break;
+                case "u":
+                case "upgrade":
+                case "upgrades":
+                    Spooler.SpoolMessage($"{player.GetDisplayName()} Upgrades provide a permanent bonus to your cheese factory until you prestige.");
+                    break;
+                case "m":
+                case "mouse":
+                case "mousetrap":
+                case "mousetraps":
+                    Spooler.SpoolMessage($"{player.GetDisplayName()} Mousetraps kills giant rats that infest your cheese factory.");
+                    break;
                 default:
                     Spooler.SpoolMessage($"{player.GetDisplayName()} Invalid item \"{itemToBuy}\" name. Type \"!cheese shop\" to see the items available for purchase.");
                     break;

@@ -6,11 +6,11 @@ namespace Chubberino.Modules.CheeseGame.Hazards
     public interface IHazardManager
     {
         /// <summary>
-        /// 
+        /// Update the mouse infestation status of the <paramref name="player"/>.
         /// </summary>
         /// <param name="player"></param>
-        /// <returns>true if the <paramref name="player"/> <see cref="Player.IsMouseInfested"/> status has changed. </returns>
-        Boolean ResolveStartMouseInfestation(Player player);
+        /// <returns>The infestation message after update. </returns>
+        String UpdateMouseInfestationStatus(Player player);
 
         Int32 GetMouseInfestationPointLoss(Int32 points);
     }

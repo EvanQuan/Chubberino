@@ -39,15 +39,19 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
             player.AddPoints((Int32) points);
         }
 
-        public static void AddPoints(this Player player, CheeseType cheese)
+        public static void AddPoints(this Player player, CheeseType cheese, Boolean withWorkers = true)
         {
             // Cannot reach negative points.
             // Cannot go above the point storage.
             // Prestige bonus is only applied to base cheese gained.
             // Workers will collectively add at least 1.
-            Double workerPointMultipler = ((Int32)player.LastWorkerProductionUpgradeUnlocked + 1) * 10 / 100.0;
-            Int32 absoluteWorkerPoints = (Int32)Math.Max(Math.Abs(cheese.PointValue) * (player.WorkerCount * workerPointMultipler), player.WorkerCount == 0 ? 0 : 1);
-            Int32 workerPoints = Math.Sign(cheese.PointValue) * absoluteWorkerPoints;
+            Int32 workerPoints = 0;
+            if (withWorkers)
+            {
+                Double workerPointMultipler = ((Int32)player.LastWorkerProductionUpgradeUnlocked + 1) * 10 / 100.0;
+                Int32 absoluteWorkerPoints = (Int32)Math.Max(Math.Abs(cheese.PointValue) * (player.WorkerCount * workerPointMultipler), player.WorkerCount == 0 ? 0 : 1);
+                workerPoints = Math.Sign(cheese.PointValue) * absoluteWorkerPoints;
+            }
 
             var newPoints = (Int32)Math.Min(Math.Max(player.Points + (cheese.PointValue * (1 + Constants.PrestigeBonus * player.Prestige)) + workerPoints, 0), player.GetTotalStorage());
             player.Points = newPoints;

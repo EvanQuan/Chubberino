@@ -48,8 +48,12 @@ namespace Chubberino.Modules.CheeseGame.Points
                 {
                     var cheese = CheeseRepository.GetRandomType(player.CheeseUnlocked);
 
+                    String outputMessage = player.GetDisplayName() + " ";
+
+                    outputMessage += HazardManager.UpdateMouseInfestationStatus(player);
+
                     var oldPoints = player.Points;
-                    player.AddPoints(cheese);
+                    player.AddPoints(cheese, !player.IsMouseInfested);
 
                     var newPoints = player.Points;
 
@@ -65,7 +69,9 @@ namespace Chubberino.Modules.CheeseGame.Points
                         ? EmoteManager.GetRandomPositiveEmote()
                         : EmoteManager.GetRandomNegativeEmote();
 
-                    Spooler.SpoolMessage($"{player.GetDisplayName()}, you made {cheese.Name} cheese ({(isPositive ? "+" : String.Empty)}{pointsGained}). {emote} You now have {player.Points}/{playerStorage} cheese. StinkyCheese");
+                    outputMessage += $"You made {cheese.Name} cheese ({(isPositive ? "+" : String.Empty)}{pointsGained}). {emote} You now have {player.Points}/{playerStorage} cheese. StinkyCheese";
+
+                    Spooler.SpoolMessage(outputMessage);
                 }
             }
             else
