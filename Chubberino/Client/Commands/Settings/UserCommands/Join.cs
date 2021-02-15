@@ -36,7 +36,7 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
 
             if (!words.Any() || !words.First().Equals(e.ChatMessage.Username, StringComparison.OrdinalIgnoreCase))
             {
-                TwitchClient.SpoolMessage(e.ChatMessage.Channel, $"{e.ChatMessage.DisplayName} You can not get me to join other users' channels.");
+                TwitchClient.SpoolMessage(e.ChatMessage.Channel, $"{e.ChatMessage.DisplayName} I cannot join other users' channels for you.");
                 return;
             }
 
@@ -73,9 +73,12 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
                 channelFound.DisplayName = e.ChatMessage.DisplayName;
             }
 
-            TwitchClient.SpoolMessage(e.ChatMessage.Channel, outputMessage);
 
             Context.SaveChanges();
+
+            TwitchClient.JoinChannel(e.ChatMessage.Username);
+
+            TwitchClient.SpoolMessage(e.ChatMessage.Channel, outputMessage);
         }
 
         public override void Execute(IEnumerable<String> arguments)
