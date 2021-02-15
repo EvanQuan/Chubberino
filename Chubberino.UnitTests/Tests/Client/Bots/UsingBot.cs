@@ -1,6 +1,9 @@
 ﻿using Chubberino.Client;
 using Chubberino.Client.Abstractions;
 using Chubberino.Database.Contexts;
+using Chubberino.Database.Models;
+using Chubberino.Modules.CheeseGame.Models;
+using Chubberino.UnitTests.Utility;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -41,9 +44,36 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
 
         protected Mock<ISpinWait> MockedSpinWait { get; }
 
+        protected IList<StartupChannel> StartupChannels { get; }
+
+        protected IList<Player> Players { get; }
+
         public UsingBot()
         {
+            StartupChannels = new List<StartupChannel>
+            {
+                new StartupChannel()
+                {
+                    ID = 1,
+                    UserID = "1",
+                    DisplayName = "a"
+                }
+            };
+
+            Players = new List<Player>
+            {
+                new Player()
+                {
+                    ID = 1,
+                    TwitchUserID = "1",
+                    Name = "a"
+                }
+            };
+
             MockedContext = new Mock<ApplicationContext>().SetupAllProperties();
+
+            MockedContext.Setup(x => x.StartupChannels).Returns(StartupChannels.ToDbSet());
+            MockedContext.Setup(x => x.Players).Returns(Players.ToDbSet());
 
             MockedConsole = new Mock<TextWriter>().SetupAllProperties();
 

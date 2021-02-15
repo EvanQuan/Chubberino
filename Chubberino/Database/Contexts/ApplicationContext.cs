@@ -21,8 +21,8 @@ namespace Chubberino.Database.Contexts
             optionsBuilder.UseSqlServer(TwitchInfo.DatabaseConnectionString);
         }
 
-        public DbSet<Player> Players { get; set; }
+        public virtual DbSet<Player> Players { get; set; }
 
-        public DbSet<StartupChannel> StartupChannels { get; set; }
+        public virtual DbSet<StartupChannel> StartupChannels { get; set; }
     }
 }

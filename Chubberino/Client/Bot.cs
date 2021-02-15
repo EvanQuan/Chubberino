@@ -104,7 +104,6 @@ namespace Chubberino.Client
         private void JoinStartupChannels()
         {
             foreach (StartupChannel channel in Context.StartupChannels)
-
             {
                 TwitchClient.JoinChannel(channel.DisplayName);
             }
