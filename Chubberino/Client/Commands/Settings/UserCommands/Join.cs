@@ -11,6 +11,8 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
 {
     public sealed class Join : UserCommand
     {
+        public const Int32 MaximumChannelsToJoin = 100;
+
         public ApplicationContext Context { get; }
 
         public Join(ApplicationContext context, IExtendedClient client, TextWriter console) : base(client, console)
@@ -46,14 +48,21 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
             String outputMessage;
             if (channelFound == null)
             {
-                // Add new channel.
-                Context.StartupChannels.Add(new StartupChannel()
+                if (Context.StartupChannels.Count() >= MaximumChannelsToJoin)
                 {
-                    UserID = e.ChatMessage.UserId,
-                    DisplayName = e.ChatMessage.DisplayName
-                });
+                    outputMessage = $"{e.ChatMessage.DisplayName} I have reached the maximum number of channels to join and could not join your channel.";
+                }
+                else
+                {
+                    // Add new channel.
+                    Context.StartupChannels.Add(new StartupChannel()
+                    {
+                        UserID = e.ChatMessage.UserId,
+                        DisplayName = e.ChatMessage.DisplayName
+                    });
 
-                outputMessage = $"{e.ChatMessage.DisplayName} I have now joined your channel.";
+                    outputMessage = $"{e.ChatMessage.DisplayName} I have now joined your channel.";
+                }
             }
             else
             {
