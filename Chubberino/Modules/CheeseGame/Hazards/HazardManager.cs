@@ -1,5 +1,5 @@
 ﻿using Chubberino.Client.Abstractions;
-using Chubberino.Modules.CheeseGame.Database.Contexts;
+using Chubberino.Database.Contexts;
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Utility;

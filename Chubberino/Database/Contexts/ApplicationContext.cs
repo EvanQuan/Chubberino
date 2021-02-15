@@ -1,7 +1,8 @@
-﻿using Chubberino.Modules.CheeseGame.Models;
+﻿using Chubberino.Database.Models;
+using Chubberino.Modules.CheeseGame.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Chubberino.Modules.CheeseGame.Database.Contexts
+namespace Chubberino.Database.Contexts
 {
     public class ApplicationContext : DbContext
     {
@@ -21,5 +22,7 @@ namespace Chubberino.Modules.CheeseGame.Database.Contexts
         }
 
         public DbSet<Player> Players { get; set; }
+
+        public DbSet<StartupChannel> StartupChannels { get; set; }
     }
 }

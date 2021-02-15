@@ -72,7 +72,7 @@ namespace Chubberino.Client
             InitializeTwitchClientAndSpooler(moderatorOptions);
         }
 
-        private IReadOnlyList<JoinedChannel> InitializeTwitchClientAndSpooler(IClientOptions? clientOptions = null)
+        private IReadOnlyList<JoinedChannel> InitializeTwitchClientAndSpooler(IClientOptions clientOptions = null)
         {
             if (clientOptions != null)
             {
@@ -96,7 +96,7 @@ namespace Chubberino.Client
             return oldJoinedChannels;
         }
 
-        public Boolean Start(IReadOnlyList<JoinedChannel>? joinedChannels = null)
+        public Boolean Start(IReadOnlyList<JoinedChannel> joinedChannels = null)
         {
             Console.WriteLine("Connecting to " + PrimaryChannelName);
             Boolean channelJoined = TwitchClient.EnsureJoinedToChannel(PrimaryChannelName);
@@ -145,7 +145,7 @@ namespace Chubberino.Client
         }
 
 
-        public void Refresh(IClientOptions? clientOptions = null)
+        public void Refresh(IClientOptions clientOptions = null)
         {
             var oldJoinedChannels = InitializeTwitchClientAndSpooler(clientOptions);
 

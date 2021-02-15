@@ -9,7 +9,7 @@ using Chubberino.Client.Commands.Settings.Replies;
 using Chubberino.Client.Commands.Settings.UserCommands;
 using Chubberino.Client.Commands.Strategies;
 using Chubberino.Client.Threading;
-using Chubberino.Modules.CheeseGame.Database.Contexts;
+using Chubberino.Database.Contexts;
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Hazards;
 using Chubberino.Modules.CheeseGame.Items;
