@@ -1,5 +1,6 @@
 ﻿using Chubberino.Client;
 using Chubberino.Client.Abstractions;
+using Chubberino.Database.Contexts;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,8 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
     public abstract class UsingBot
     {
         protected Bot Sut { get; }
+
+        protected Mock<ApplicationContext> MockedContext { get; }
 
         protected Mock<TextWriter> MockedConsole { get; }
 
@@ -40,6 +43,8 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
 
         public UsingBot()
         {
+            MockedContext = new Mock<ApplicationContext>().SetupAllProperties();
+
             MockedConsole = new Mock<TextWriter>().SetupAllProperties();
 
             JoinedChannels = new List<JoinedChannel>();
@@ -101,6 +106,7 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
                 .Returns(true);
 
             Sut = new Bot(
+                MockedContext.Object,
                 MockedConsole.Object,
                 MockedCommandRepository.Object,
                 Credentials,

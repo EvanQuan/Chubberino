@@ -1,5 +1,7 @@
 ﻿using Autofac;
 using Chubberino.Client.Abstractions;
+using Chubberino.Database.Contexts;
+using Chubberino.Database.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -21,7 +23,7 @@ namespace Chubberino.Client
         private ConnectionCredentials Credentials { get; }
 
         private ICommandRepository Commands { get; set; }
-
+        private ApplicationContext Context { get; }
         private TextWriter Console { get; set; }
 
         public ILifetimeScope Scope { get; set; }
@@ -51,6 +53,7 @@ namespace Chubberino.Client
         public ISpinWait SpinWait { get; }
 
         public Bot(
+            ApplicationContext context,
             TextWriter console,
             ICommandRepository commands,
             ConnectionCredentials credentials,
@@ -61,6 +64,7 @@ namespace Chubberino.Client
             String channelName)
         {
             Credentials = credentials;
+            Context = context;
             Console = console;
             Commands = commands;
             ModeratorClientOptions = moderatorOptions;
@@ -69,6 +73,7 @@ namespace Chubberino.Client
             SpinWait = spinWait;
             PrimaryChannelName = channelName;
             IsModerator = true;
+
             InitializeTwitchClientAndSpooler(moderatorOptions);
         }
 
@@ -96,12 +101,23 @@ namespace Chubberino.Client
             return oldJoinedChannels;
         }
 
+        private void JoinStartupChannels()
+        {
+            foreach (StartupChannel channel in Context.StartupChannels)
+
+            {
+                TwitchClient.JoinChannel(channel.DisplayName);
+            }
+        }
+
         public Boolean Start(IReadOnlyList<JoinedChannel> joinedChannels = null)
         {
             Console.WriteLine("Connecting to " + PrimaryChannelName);
             Boolean channelJoined = TwitchClient.EnsureJoinedToChannel(PrimaryChannelName);
 
             if (!channelJoined) { return false; }
+
+            JoinStartupChannels();
 
             if (joinedChannels != null)
             {

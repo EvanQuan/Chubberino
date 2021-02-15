@@ -52,6 +52,7 @@ namespace Chubberino
 
             var builder = new ContainerBuilder();
             builder.Register(c => new Bot(
+                c.Resolve<ApplicationContext>(),
                 c.Resolve<TextWriter>(),
                 c.Resolve<ICommandRepository>(),
                 c.Resolve<ConnectionCredentials>(),

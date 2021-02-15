@@ -1,5 +1,4 @@
 ﻿using Chubberino.Modules.CheeseGame.Rankings;
-using Chubberino.Modules.CheeseGame.Upgrades;
 using System;
 
 namespace Chubberino.Modules.CheeseGame.Models
