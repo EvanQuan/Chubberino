@@ -2,6 +2,7 @@
 using Chubberino.Modules.CheeseGame.Database.Contexts;
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Hazards;
+using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.PlayerExtensions;
 using System;
 using TwitchLib.Client.Models;
@@ -31,12 +32,12 @@ namespace Chubberino.Modules.CheeseGame.Points
 
         public void AddPoints(ChatMessage message)
         {
-            var now = DateTime.Now;
-            var player = GetPlayer(message);
+            DateTime now = DateTime.Now;
+            Player player = GetPlayer(message);
 
-            var timeSinceLastPointGain = now - player.LastPointsGained;
+            TimeSpan timeSinceLastPointGain = now - player.LastPointsGained;
 
-            var playerStorage = player.GetTotalStorage();
+            Int32 playerStorage = player.GetTotalStorage();
 
             if (timeSinceLastPointGain >= PointGainCooldown)
             {
@@ -46,18 +47,16 @@ namespace Chubberino.Modules.CheeseGame.Points
                 }
                 else
                 {
-                    var cheese = CheeseRepository.GetRandomType(player.CheeseUnlocked);
+                    CheeseType cheese = CheeseRepository.GetRandomType(player.CheeseUnlocked);
 
-                    String outputMessage = player.GetDisplayName() + " ";
+                    String outputMessage = HazardManager.UpdateMouseInfestationStatus(player);
 
-                    outputMessage += HazardManager.UpdateMouseInfestationStatus(player);
-
-                    var oldPoints = player.Points;
+                    Int32 oldPoints = player.Points;
                     player.AddPoints(cheese, !player.IsMouseInfested);
 
-                    var newPoints = player.Points;
+                    Int32 newPoints = player.Points;
 
-                    var pointsGained = newPoints - oldPoints;
+                    Int32 pointsGained = newPoints - oldPoints;
 
                     player.LastPointsGained = now;
 
@@ -72,15 +71,16 @@ namespace Chubberino.Modules.CheeseGame.Points
                         : EmoteManager.GetRandomNegativeEmote(useChannelEmotes);
 
                     outputMessage += $"You made {cheese.Name} cheese ({(isPositive ? "+" : String.Empty)}{pointsGained}). {emote} You now have {player.Points}/{playerStorage} cheese. StinkyCheese";
+                    outputMessage = player.GetDisplayName() + " " + outputMessage;
 
                     Spooler.SpoolMessage(message.Channel, outputMessage);
                 }
             }
             else
             {
-                var timeUntilNextValidPointGain = PointGainCooldown - timeSinceLastPointGain;
+                TimeSpan timeUntilNextValidPointGain = PointGainCooldown - timeSinceLastPointGain;
 
-                var timeToWait = Format(timeUntilNextValidPointGain);
+                String timeToWait = Format(timeUntilNextValidPointGain);
 
                 Spooler.SpoolMessage(message.Channel, $"{player.GetDisplayName()}, you must wait {timeToWait} until you can make more cheese.");
             }
