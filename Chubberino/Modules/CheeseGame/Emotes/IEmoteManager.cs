@@ -4,8 +4,8 @@ namespace Chubberino.Modules.CheeseGame.Emotes
 {
     public interface IEmoteManager
     {
-        String GetRandomPositiveEmote();
+        String GetRandomPositiveEmote(Boolean useChannelEmotes);
 
-        String GetRandomNegativeEmote();
+        String GetRandomNegativeEmote(Boolean useChannelEmotes);
     }
 }

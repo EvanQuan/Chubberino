@@ -42,7 +42,7 @@ namespace Chubberino.Modules.CheeseGame.Points
             {
                 if (player.Points >= playerStorage)
                 {
-                    Spooler.SpoolMessage($"{player.GetDisplayName()}, you have {player.Points}/{playerStorage} cheese and cannot store any more. Consider buying more cheese storage with \"!cheese buy storage\".");
+                    Spooler.SpoolMessage(message.Channel, $"{player.GetDisplayName()}, you have {player.Points}/{playerStorage} cheese and cannot store any more. Consider buying more cheese storage with \"!cheese buy storage\".");
                 }
                 else
                 {
@@ -65,13 +65,15 @@ namespace Chubberino.Modules.CheeseGame.Points
 
                     Boolean isPositive = cheese.PointValue > 0;
 
+                    Boolean useChannelEmotes = message.Channel.Equals("ChubbehMouse", StringComparison.OrdinalIgnoreCase);
+
                     String emote = isPositive
-                        ? EmoteManager.GetRandomPositiveEmote()
-                        : EmoteManager.GetRandomNegativeEmote();
+                        ? EmoteManager.GetRandomPositiveEmote(useChannelEmotes)
+                        : EmoteManager.GetRandomNegativeEmote(useChannelEmotes);
 
                     outputMessage += $"You made {cheese.Name} cheese ({(isPositive ? "+" : String.Empty)}{pointsGained}). {emote} You now have {player.Points}/{playerStorage} cheese. StinkyCheese";
 
-                    Spooler.SpoolMessage(outputMessage);
+                    Spooler.SpoolMessage(message.Channel, outputMessage);
                 }
             }
             else
@@ -80,7 +82,7 @@ namespace Chubberino.Modules.CheeseGame.Points
 
                 var timeToWait = Format(timeUntilNextValidPointGain);
 
-                Spooler.SpoolMessage($"{player.GetDisplayName()}, you must wait {timeToWait} until you can make more cheese.");
+                Spooler.SpoolMessage(message.Channel, $"{player.GetDisplayName()}, you must wait {timeToWait} until you can make more cheese.");
             }
         }
     }

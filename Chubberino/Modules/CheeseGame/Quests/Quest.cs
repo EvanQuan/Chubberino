@@ -59,11 +59,13 @@ namespace Chubberino.Modules.CheeseGame.Quests
 
             Boolean successful = successChance > Random.NextDouble();
 
-            var resultMessage = successful
-                ? OnSuccess(player)
-                : OnFailure(player);
+            Boolean useChannelEmotes = message.Channel.Equals("ChubbehMouse", StringComparison.OrdinalIgnoreCase);
 
-            Spooler.SpoolMessage($"{player.GetDisplayName()} [{Math.Round((successChance * 100), 2)}% success] {OnIntroduction(player)} {resultMessage}");
+            var resultMessage = successful
+                ? OnSuccess(player) + " " + EmoteManager.GetRandomPositiveEmote(useChannelEmotes)
+                : OnFailure(player) + " " + EmoteManager.GetRandomNegativeEmote(useChannelEmotes);
+
+            Spooler.SpoolMessage(message.Channel, $"{player.GetDisplayName()} [{Math.Round((successChance * 100), 2)}% success] {OnIntroduction(player)} {resultMessage}");
 
             return successful;
         }

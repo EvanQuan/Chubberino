@@ -49,7 +49,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
 
                 var timeToWait = Format(timeUntilNextQuestAvailable);
 
-                Spooler.SpoolMessage($"{player.GetDisplayName()}, you must wait {timeToWait} until you can go on your next quest.");
+                Spooler.SpoolMessage(message.Channel, $"{player.GetDisplayName()}, you must wait {timeToWait} until you can go on your next quest.");
             }
         }
     }

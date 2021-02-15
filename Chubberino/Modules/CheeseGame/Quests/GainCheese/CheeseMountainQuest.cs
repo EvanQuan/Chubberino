@@ -15,11 +15,11 @@ namespace Chubberino.Modules.CheeseGame.Quests.GainCheese
         protected override Int32 BaseRewardPoints => 100;
 
         protected override String SuccessMessage =>
-            "You find a giant vein of Magna cheese and mine at it for hours. (+{0} cheese) {1}";
+            "You find a giant vein of Magna cheese and mine at it for hours. (+{0} cheese)";
 
         protected override String OnFailure(Player player)
         {
-            return $"You search the cavern depths, but with no luck. {EmoteManager.GetRandomNegativeEmote()}";
+            return $"You search the cavern depths, but with no luck.";
         }
 
         protected override String OnIntroduction(Player player)

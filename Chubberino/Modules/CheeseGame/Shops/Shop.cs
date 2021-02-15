@@ -72,7 +72,8 @@ namespace Chubberino.Modules.CheeseGame.Shops
                 upgradePrompt = $"{upgrade.Description}] for {upgrade.Price} cheese";
             }
 
-            Spooler.SpoolMessage($"{player.GetDisplayName()}" +
+            Spooler.SpoolMessage(message.Channel,
+                $"{player.GetDisplayName()}" +
                 $" | Recipe [{recipePrompt}" +
                 $" | Storage [+100] for {prices.Storage} cheese" +
                 $" | Population [+5] for {prices.Population} cheese" +
@@ -91,7 +92,7 @@ namespace Chubberino.Modules.CheeseGame.Shops
 
             if (String.IsNullOrWhiteSpace(arguments))
             {
-                Spooler.SpoolMessage($"{player.GetDisplayName()} Please enter an item to buy. Type \"!cheese shop\" to see the items available for purchase.");
+                Spooler.SpoolMessage(message.Channel, $"{player.GetDisplayName()} Please enter an item to buy. Type \"!cheese shop\" to see the items available for purchase.");
                 return;
             }
 
@@ -99,6 +100,8 @@ namespace Chubberino.Modules.CheeseGame.Shops
 
 
             var prices = ItemManager.GetPrices(player);
+
+            String outputMessage = player.GetDisplayName() + " ";
 
             switch (itemToBuy[0])
             {
@@ -108,11 +111,11 @@ namespace Chubberino.Modules.CheeseGame.Shops
                         player.MaximumPointStorage += 100;
                         player.Points -= prices.Storage;
                         Context.SaveChanges();
-                        Spooler.SpoolMessage($"{player.GetDisplayName()} You bought 100 storage space. (-{prices.Storage} cheese)");
+                        outputMessage += $"You bought 100 storage space. (-{prices.Storage} cheese)";
                     }
                     else
                     {
-                        Spooler.SpoolMessage($"{player.GetDisplayName()} You need {prices.Storage} cheese to buy 100 storage.");
+                        outputMessage += $"You need {prices.Storage} cheese to buy 100 storage.";
                     }
                     break;
                 case 'p':
@@ -121,11 +124,11 @@ namespace Chubberino.Modules.CheeseGame.Shops
                         player.PopulationCount += 5;
                         player.Points -= prices.Population;
                         Context.SaveChanges();
-                        Spooler.SpoolMessage($"{player.GetDisplayName()} You bought 5 population slots. (-{prices.Population} cheese)");
+                        outputMessage += $"You bought 5 population slots. (-{prices.Population} cheese)";
                     }
                     else
                     {
-                        Spooler.SpoolMessage($"{player.GetDisplayName()} You need {prices.Population - player.Points} more cheese to buy 5 population slots.");
+                        outputMessage += $"You need {prices.Population - player.Points} more cheese to buy 5 population slots.";
                     }
                     break;
                 case 'w':
@@ -136,60 +139,60 @@ namespace Chubberino.Modules.CheeseGame.Shops
                             player.WorkerCount += 1;
                             player.Points -= prices.Worker;
                             Context.SaveChanges();
-                            Spooler.SpoolMessage($"{player.GetDisplayName()} You bought 1 worker. (-{prices.Worker} cheese)");
+                            outputMessage += $"You bought 1 worker. (-{prices.Worker} cheese)";
                         }
                         else
                         {
-                            Spooler.SpoolMessage($"{player.GetDisplayName()} You do not have enough population slots for another worker. Consider buying more population slots.");
+                            outputMessage += $"You do not have enough population slots for another worker. Consider buying more population slots.";
                         }
                     }
                     else
                     {
-                        Spooler.SpoolMessage($"{player.GetDisplayName()} You need {prices.Worker - player.Points} more cheese to buy 1 worker.");
+                        outputMessage += $"You need {prices.Worker - player.Points} more cheese to buy 1 worker.";
                     }
                     break;
                 case 'r':
                     var nextCheeseToUnlock = CheeseRepository.GetNextCheeseToUnlock(player);
                     if (nextCheeseToUnlock == null)
                     {
-                        Spooler.SpoolMessage($"{player.GetDisplayName()} There is no recipe for sale right now.");
+                        outputMessage += $"There is no recipe for sale right now.";
                     }
                     else if (nextCheeseToUnlock.RankToUnlock > player.Rank)
                     {
-                        Spooler.SpoolMessage($"{player.GetDisplayName()} You must rankup to {nextCheeseToUnlock.RankToUnlock} rank before you can buy the {nextCheeseToUnlock.Name} recipe.");
+                        outputMessage += $"You must rankup to {nextCheeseToUnlock.RankToUnlock} rank before you can buy the {nextCheeseToUnlock.Name} recipe.";
                     }
                     else if (player.Points >= nextCheeseToUnlock.CostToUnlock)
                     {
                         player.CheeseUnlocked++;
                         player.Points -= nextCheeseToUnlock.CostToUnlock;
                         Context.SaveChanges();
-                        Spooler.SpoolMessage($"{player.GetDisplayName()} You bought the {nextCheeseToUnlock.Name} recipe. (-{nextCheeseToUnlock.CostToUnlock} cheese)");
+                        outputMessage += $"You bought the {nextCheeseToUnlock.Name} recipe. (-{nextCheeseToUnlock.CostToUnlock} cheese)";
                     }
                     else
                     {
-                        Spooler.SpoolMessage($"{player.GetDisplayName()} You need {nextCheeseToUnlock.CostToUnlock - player.Points} more cheese to buy the {nextCheeseToUnlock.Name} recipe.");
+                        outputMessage += $"You need {nextCheeseToUnlock.CostToUnlock - player.Points} more cheese to buy the {nextCheeseToUnlock.Name} recipe.";
                     }
                     break;
                 case 'u':
                     var upgrade = UpgradeManager.GetNextUpgradeToUnlock(player);
                     if (upgrade == null)
                     {
-                        Spooler.SpoolMessage($"{player.GetDisplayName()} There is no upgrade for sale right now.");
+                        outputMessage += $"There is no upgrade for sale right now.";
                     }
                     else if (upgrade.RankToUnlock > player.Rank)
                     {
-                        Spooler.SpoolMessage($"{player.GetDisplayName()} You must rankup to {upgrade.RankToUnlock} rank before you can buy the {upgrade.Description} upgrade.");
+                        outputMessage += $"You must rankup to {upgrade.RankToUnlock} rank before you can buy the {upgrade.Description} upgrade.";
                     }
                     else if (player.Points >= upgrade.Price)
                     {
                         upgrade.UpdatePlayer(player);
                         player.Points -= upgrade.Price;
                         Context.SaveChanges();
-                        Spooler.SpoolMessage($"{player.GetDisplayName()} You bought the {upgrade.Description} upgrade. (-{upgrade.Price} cheese)");
+                        outputMessage += $"You bought the {upgrade.Description} upgrade. (-{upgrade.Price} cheese)";
                     }
                     else
                     {
-                        Spooler.SpoolMessage($"{player.GetDisplayName()} You need {upgrade.Price - player.Points} more cheese to buy the {upgrade.Description} upgrade.");
+                        outputMessage += $"You need {upgrade.Price - player.Points} more cheese to buy the {upgrade.Description} upgrade.";
                     }
                     break;
                 case 'm':
@@ -198,17 +201,19 @@ namespace Chubberino.Modules.CheeseGame.Shops
                         player.MouseTrapCount++;
                         player.Points -= prices.MouseTrap;
                         Context.SaveChanges();
-                        Spooler.SpoolMessage($"{player.GetDisplayName()} You bought 1 mousetrap. (-{prices.MouseTrap} cheese)");
+                        outputMessage += $"You bought 1 mousetrap. (-{prices.MouseTrap} cheese)";
                     }
                     else
                     {
-                        Spooler.SpoolMessage($"{player.GetDisplayName()} You need {prices.MouseTrap - player.Points} more cheese to buy 1 mousetrap.");
+                        outputMessage += $"You need {prices.MouseTrap - player.Points} more cheese to buy 1 mousetrap.";
                     }
                     break;
                 default:
-                    Spooler.SpoolMessage($"{player.GetDisplayName()} Invalid item \"{itemToBuy}\" to buy. Type \"!cheese shop\" to see the items available for purchase.");
+                    outputMessage += $"Invalid item \"{itemToBuy}\" to buy. Type \"!cheese shop\" to see the items available for purchase.";
                     break;
             }
+
+            Spooler.SpoolMessage(message.Channel, outputMessage);
         }
 
         public void HelpItem(ChatMessage message)
@@ -222,7 +227,8 @@ namespace Chubberino.Modules.CheeseGame.Shops
 
             if (String.IsNullOrWhiteSpace(arguments))
             {
-                Spooler.SpoolMessage($"{player.Name} Commands: !cheese <command> where command is " +
+                Spooler.SpoolMessage(message.Channel,
+                    $"{player.Name} Commands: !cheese <command> where command is " +
                     $"| shop - look at what is available to buy with cheese " +
                     $"| buy <item> - buy an item at the shop " +
                     $"| help <item> - get information about an item in the shop " +
@@ -234,50 +240,53 @@ namespace Chubberino.Modules.CheeseGame.Shops
 
             var itemToBuy = arguments[1..].ToLower();
 
+            String outputMessage = player.GetDisplayName() + " ";
             switch (itemToBuy)
             {
                 case "s":
                 case "storage":
-                    Spooler.SpoolMessage($"{player.GetDisplayName()} Storage increases the maximum amount of cheese you can have.");
+                    outputMessage += $"Storage increases the maximum amount of cheese you can have.";
                     break;
                 case "p":
                 case "population":
-                    Spooler.SpoolMessage($"{player.GetDisplayName()} Population increases the maximum number of workers you can have.");
+                    outputMessage += $"Population increases the maximum number of workers you can have.";
                     break;
                 case "w":
                 case "worker":
                 case "workers":
-                    Spooler.SpoolMessage($"{player.GetDisplayName()} Workers increase the amount of cheese you get every time you gain cheese with \"!cheese\".");
+                    outputMessage += $"Workers increase the amount of cheese you get every time you gain cheese with \"!cheese\".";
                     break;
                 case "q":
                 case "quest":
                 case "quests":
-                    Spooler.SpoolMessage($"{player.GetDisplayName()} Go on a random quest to get rewards or risk punishment. The chance of success scales with how many workers you have.");
+                    outputMessage += $"Go on a random quest to get rewards or risk punishment. The chance of success scales with how many workers you have.";
                     break;
                 case "recipe":
                 case "recipes":
-                    Spooler.SpoolMessage($"{player.GetDisplayName()} Recipes allow you to create new kinds of cheese with \"!cheese\".");
+                    outputMessage += $"Recipes allow you to create new kinds of cheese with \"!cheese\".";
                     break;
                 case "r":
                 case "rank":
                 case "ranks":
-                    Spooler.SpoolMessage($"{player.GetDisplayName()} Ranks unlock new items to buy at the shop. Eventually ranking will give you prestige, reseting your rank and everything you have to restart the climb. For every prestige you gain, you get a permanent {(Int32)(Constants.PrestigeBonus * 100)}% boost to your cheese gains, which can stack.");
+                    outputMessage += $"Ranks unlock new items to buy at the shop. Eventually ranking will give you prestige, reseting your rank and everything you have to restart the climb. For every prestige you gain, you get a permanent {(Int32)(Constants.PrestigeBonus * 100)}% boost to your cheese gains, which can stack.";
                     break;
                 case "u":
                 case "upgrade":
                 case "upgrades":
-                    Spooler.SpoolMessage($"{player.GetDisplayName()} Upgrades provide a permanent bonus to your cheese factory until you prestige.");
+                    outputMessage += $"Upgrades provide a permanent bonus to your cheese factory until you prestige.";
                     break;
                 case "m":
                 case "mouse":
                 case "mousetrap":
                 case "mousetraps":
-                    Spooler.SpoolMessage($"{player.GetDisplayName()} Mousetraps kills giant rats that infest your cheese factory.");
+                    outputMessage += $"Mousetraps kills giant rats that infest your cheese factory.";
                     break;
                 default:
-                    Spooler.SpoolMessage($"{player.GetDisplayName()} Invalid item \"{itemToBuy}\" name. Type \"!cheese shop\" to see the items available for purchase.");
+                    outputMessage += $"Invalid item \"{itemToBuy}\" name. Type \"!cheese shop\" to see the items available for purchase.";
                     break;
             }
+
+            Spooler.SpoolMessage(message.Channel, outputMessage);
         }
     }
 }

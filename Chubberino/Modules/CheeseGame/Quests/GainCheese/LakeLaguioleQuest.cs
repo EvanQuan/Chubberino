@@ -15,11 +15,11 @@ namespace Chubberino.Modules.CheeseGame.Quests.GainCheese
         protected override Int32 BaseRewardPoints => 50;
 
         protected override String SuccessMessage =>
-            "You fish for some Taleggio Tuna and find a catch quite a few. (+{0} cheese) {1}";
+            "You fish for some Taleggio Tuna and find a catch quite a few. (+{0} cheese)";
 
         protected override String OnFailure(Player player)
         {
-            return $"With the bad weather, you can't find any fish. {EmoteManager.GetRandomNegativeEmote()}";
+            return $"With the bad weather, you can't find any fish.";
         }
 
         protected override String OnIntroduction(Player player)

@@ -15,7 +15,7 @@ namespace Chubberino.Modules.CheeseGame.Hazards
 
         public const String KillOldRatMessage = "You set up a mousetrap, killing the giant rat infesting your cheese factory. Your workers go back to the work. ";
 
-        public const String KillNewRatMessage = "A giant rat sneaks into your factory, but is promptly killed but a mousetrap you have set up. ";
+        public const String KillNewRatMessage = "A giant rat sneaks into your factory, but is promptly killed by a mousetrap you have set up. ";
 
         public HazardManager(ApplicationContext context, IMessageSpooler spooler, Random random, IEmoteManager emoteManager) : base(context, spooler, random, emoteManager)
         {

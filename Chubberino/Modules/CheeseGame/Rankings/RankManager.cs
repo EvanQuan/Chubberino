@@ -32,6 +32,8 @@ namespace Chubberino.Modules.CheeseGame.Rankings
         {
             var player = GetPlayer(message);
 
+            String outputMessage;
+
             if (PointsToRank.TryGetValue(player.Rank, out Int32 pointsToRank))
             {
                 Rank newRank = player.Rank.Next();
@@ -45,26 +47,28 @@ namespace Chubberino.Modules.CheeseGame.Rankings
                         player.ResetRank();
                         player.Prestige++;
                         Context.SaveChanges();
-                        Spooler.SpoolMessage($"{player.GetDisplayName()} You prestiged back to {Rank.Bronze} and have gained a permanent {(Int32)(Constants.PrestigeBonus * 100)}% cheese gain boost.");
+                        outputMessage = $"{player.GetDisplayName()} You prestiged back to {Rank.Bronze} and have gained a permanent {(Int32)(Constants.PrestigeBonus * 100)}% cheese gain boost.";
                     }
                     else
                     {
                         player.Points -= pointsToRank;
                         player.Rank = newRank;
                         Context.SaveChanges();
-                        Spooler.SpoolMessage($"{player.GetDisplayName()} You ranked up to {newRank}. (-{pointsToRank} cheese)");
+                        outputMessage = $"{player.GetDisplayName()} You ranked up to {newRank}. (-{pointsToRank} cheese)";
                     }
                 }
                 else
                 {
                     var pointsNeededToRank = pointsToRank - player.Points;
-                    Spooler.SpoolMessage($"{player.GetDisplayName()} You need {pointsNeededToRank} more cheese in order to rank up to {newRank}.");
+                    outputMessage = $"{player.GetDisplayName()} You need {pointsNeededToRank} more cheese in order to rank up to {newRank}.";
                 }
             }
             else
             {
-                Spooler.SpoolMessage($"{player.GetDisplayName()} Uh oh, you broke something. You have an invalid rank of {player.Rank}.");
+                outputMessage = $"{player.GetDisplayName()} Uh oh, you broke something. You have an invalid rank of {player.Rank}.";
             }
+
+            Spooler.SpoolMessage(message.Channel, outputMessage);
         }
 
         public void ShowRank(ChatMessage message)
@@ -72,6 +76,8 @@ namespace Chubberino.Modules.CheeseGame.Rankings
             var player = GetPlayer(message);
 
             var nextRank = player.Rank.Next();
+
+            String outputMessage;
 
             if (PointsToRank.TryGetValue(player.Rank, out Int32 pointsToRank))
             {
@@ -96,12 +102,15 @@ namespace Chubberino.Modules.CheeseGame.Rankings
                     nextRankInformation += $"{nextRank} rank.";
                 }
 
-                Spooler.SpoolMessage($"{player.GetDisplayName()} You are currently in {player.Rank} rank. {nextRankInformation}");
+                outputMessage = $"{player.GetDisplayName()} You are currently in {player.Rank} rank. {nextRankInformation}";
             }
             else
             {
-                Spooler.SpoolMessage($"{player.GetDisplayName()} Uh oh, you broke something. You have an invalid rank of {player.Rank}.");
+                outputMessage = $"{player.GetDisplayName()} Uh oh, you broke something. You have an invalid rank of {player.Rank}.";
             }
+
+            Spooler.SpoolMessage(message.Channel, outputMessage);
+
         }
     }
 }

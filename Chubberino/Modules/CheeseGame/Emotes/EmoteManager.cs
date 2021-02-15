@@ -10,7 +10,7 @@ namespace Chubberino.Modules.CheeseGame.Emotes
             Random = random;
         }
 
-        private static IReadOnlyList<String> PositiveEmotes { get; } = new List<String>()
+        private static IReadOnlyList<String> PositiveChannelEmotes { get; } = new List<String>()
         {
             "CHUBBIES",
             "COGGERS",
@@ -37,7 +37,34 @@ namespace Chubberino.Modules.CheeseGame.Emotes
             "yyjTasty",
         };
 
-        private static IReadOnlyList<String> NegativeEmotes { get; } = new List<String>()
+        private static IReadOnlyList<String> PositiveGlobalEmotes { get; } = new List<String>()
+        {
+            ":)",
+            ":D",
+            ":p",
+            ";)",
+            ";p",
+            "4Head",
+            "<3",
+            "BatChest",
+            "BloodTrail",
+            "CoolCat",
+            "DendiFace",
+            "GivePLZ",
+            "GunRun",
+            "Kreygasm",
+            "OpieOP",
+            "PartyTime",
+            "PogChamp",
+            "SeemsGood",
+            "TakeNRG",
+            "ThunBeast",
+            "TwitchUnity",
+            "VirtualHug",
+            "bleedPurple",
+        };
+
+        private static IReadOnlyList<String> NegativeChannelEmotes { get; } = new List<String>()
         {
             "4Weirder",
             "ChubOest",
@@ -67,16 +94,45 @@ namespace Chubberino.Modules.CheeseGame.Emotes
             "yyjOMEGALULDANCE",
             "ZULUL",
         };
+
+        private static IReadOnlyList<String> NegativeGlobalEmotes { get; } = new List<String>()
+        {
+            ":(",
+            ":\\",
+            ">(",
+            "BabyRage",
+            "BibleThump",
+            "DansGame",
+            "EleGiggle",
+            "FUNgineer",
+            "FailFish",
+            "FreakinStinkin",
+            "Jebaited",
+            "LUL",
+            "PJSalt",
+            "PunOko",
+            "SwiftRage",
+            "TearGlove",
+            "UWot",
+            "UnSane",
+            "WutFace",
+            "YouWHY",
+        };
+
         public Random Random { get; }
 
-        public String GetRandomPositiveEmote()
+        public String GetRandomPositiveEmote(Boolean useChannelEmotes)
         {
-            return PositiveEmotes[Random.Next(PositiveEmotes.Count)];
+            return useChannelEmotes
+                ? PositiveChannelEmotes[Random.Next(PositiveChannelEmotes.Count)]
+                : PositiveGlobalEmotes[Random.Next(PositiveGlobalEmotes.Count)];
         }
 
-        public String GetRandomNegativeEmote()
+        public String GetRandomNegativeEmote(Boolean useChannelEmotes)
         {
-            return NegativeEmotes[Random.Next(NegativeEmotes.Count)];
+            return useChannelEmotes
+                ? NegativeChannelEmotes[Random.Next(NegativeChannelEmotes.Count)]
+                : NegativeGlobalEmotes[Random.Next(NegativeGlobalEmotes.Count)];
         }
     }
 }

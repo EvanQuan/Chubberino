@@ -24,7 +24,7 @@ namespace Chubberino.Modules.CheeseGame.Quests.GainCheese
             player.AddPoints(rewardPoints);
             Context.SaveChanges();
 
-            return String.Format(SuccessMessage, rewardPoints, EmoteManager.GetRandomPositiveEmote());
+            return String.Format(SuccessMessage, rewardPoints);
         }
     }
 }
