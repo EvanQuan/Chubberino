@@ -12,6 +12,8 @@ namespace Chubberino.Modules.CheeseGame.Emotes
 
         private static IReadOnlyList<String> PositiveChannelEmotes { get; } = new List<String>()
         {
+            "BLANKIES",
+            "CHEESERS",
             "CHUBBIES",
             "COGGERS",
             "Chubbehtusa",
@@ -26,6 +28,8 @@ namespace Chubberino.Modules.CheeseGame.Emotes
             "WOODY",
             "berryA",
             "chubDuane",
+            "chubEars",
+            "chubKiss",
             "elmoHype",
             "iron95Pls",
             "peepoClap",
@@ -91,7 +95,6 @@ namespace Chubberino.Modules.CheeseGame.Emotes
             "reeferSad",
             "widepeepoLuL",
             "widepeepoSad",
-            "yyjOMEGALULDANCE",
             "ZULUL",
         };
 
