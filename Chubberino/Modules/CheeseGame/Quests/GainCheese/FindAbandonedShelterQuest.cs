@@ -2,11 +2,12 @@
 using Chubberino.Database.Contexts;
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Models;
+using Chubberino.Modules.CheeseGame.Quests.GainCheese;
 using System;
 
 namespace Chubberino.Modules.CheeseGame.Quests.GainPopulation
 {
-    public sealed class FindAbandonedShelterQuest : Quest
+    public sealed class FindAbandonedShelterQuest : GainCheeseQuest
     {
         public FindAbandonedShelterQuest(ApplicationContext context, Random random, IMessageSpooler spooler, IEmoteManager emoteManager) : base(context, random, spooler, emoteManager)
         {
@@ -14,7 +15,7 @@ namespace Chubberino.Modules.CheeseGame.Quests.GainPopulation
 
         protected override String OnFailure(Player player)
         {
-            return $"You quickly get lost within the woods. By nightfall, you finally find your way out.";
+            return $"You quickly get lost within the woods. By nightfall, you finally find your way out empty-handed.";
         }
 
         protected override String OnIntroduction(Player player)
@@ -22,14 +23,9 @@ namespace Chubberino.Modules.CheeseGame.Quests.GainPopulation
             return $"{GetPlayerWithWorkers(player)} venture into the depths of the Fontiago Forest.";
         }
 
-        protected override String OnSuccess(Player player)
-        {
-            const Int32 basePopulationReward = 1;
-            Int32 rewardPopulation = (Int32)(basePopulationReward * (1 + (Int32)player.Rank * RewardRankMultiplier));
-            player.PopulationCount += rewardPopulation;
-            Context.SaveChanges();
+        protected override Int32 BaseRewardPoints => 50;
 
-            return $"You find an abandoned shelter. It takes some time to repair, but it you finally get it in shape for housing. (+{rewardPopulation} population)";
-        }
+        protected override String SuccessMessage =>
+            "You find a hidden cache. Inside is an impressive assortment of cheeses. (+{0} cheese)";
     }
 }
