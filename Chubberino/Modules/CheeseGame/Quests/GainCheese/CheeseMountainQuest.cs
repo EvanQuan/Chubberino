@@ -12,7 +12,7 @@ namespace Chubberino.Modules.CheeseGame.Quests.GainCheese
         {
         }
 
-        protected override Int32 BaseRewardPoints => 100;
+        protected override Int32 BaseRewardPoints => 150;
 
         protected override String SuccessMessage =>
             "You find a giant vein of Magna cheese and mine at it for hours. (+{0} cheese)";

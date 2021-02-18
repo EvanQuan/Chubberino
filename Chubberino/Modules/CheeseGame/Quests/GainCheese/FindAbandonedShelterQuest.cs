@@ -23,7 +23,7 @@ namespace Chubberino.Modules.CheeseGame.Quests.GainPopulation
             return $"{GetPlayerWithWorkers(player)} venture into the depths of the Fontiago Forest.";
         }
 
-        protected override Int32 BaseRewardPoints => 50;
+        protected override Int32 BaseRewardPoints => 75;
 
         protected override String SuccessMessage =>
             "You find a hidden cache. Inside is an impressive assortment of cheeses. (+{0} cheese)";
