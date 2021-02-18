@@ -11,7 +11,7 @@ namespace Chubberino.Modules.CheeseGame.Points
 {
     public sealed class PointManager : AbstractCommandStrategy, IPointManager
     {
-        public static TimeSpan PointGainCooldown { get; set; } = TimeSpan.FromMinutes(30);
+        public static TimeSpan PointGainCooldown { get; set; } = TimeSpan.FromMinutes(15);
 
         public ICheeseRepository CheeseRepository { get; }
 
