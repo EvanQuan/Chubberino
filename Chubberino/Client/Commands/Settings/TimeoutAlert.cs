@@ -7,7 +7,7 @@ namespace Chubberino.Client.Commands.Settings
 {
     public sealed class TimeoutAlert : Setting
     {
-        public TimeoutAlert(IExtendedClient client, TextWriter console)
+        public TimeoutAlert(ITwitchClientManager client, IConsole console)
             : base(client, console)
         {
             Enable = twitchClient =>
@@ -23,7 +23,7 @@ namespace Chubberino.Client.Commands.Settings
 
         public void TwitchClient_OnUserTimedout(Object sender, OnUserTimedoutArgs e)
         {
-            TwitchClient.SpoolMessage($"WideHardo FREE MY MAN {e.UserTimeout.Username.ToUpper()}");
+            TwitchClientManager.SpoolMessage($"WideHardo FREE MY MAN {e.UserTimeout.Username.ToUpper()}");
         }
     }
 }

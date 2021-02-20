@@ -24,12 +24,12 @@ namespace Chubberino.Client.Commands.Settings
                     // Do not call Enable if already enabled, or multiple copies of the event will be added.
                     if (!isEnabled)
                     {
-                        Enable(TwitchClient);
+                        Enable(TwitchClientManager.Client);
                     }
                 }
                 else
                 {
-                    Disable(TwitchClient);
+                    Disable(TwitchClientManager.Client);
                 }
 
                 isEnabled = value;
@@ -38,7 +38,7 @@ namespace Chubberino.Client.Commands.Settings
 
         public virtual String Status => IsEnabled ? "enabled" : "disabled";
 
-        protected Setting(IExtendedClient client, TextWriter console)
+        protected Setting(ITwitchClientManager client, IConsole console)
             : base(client, console)
         {
         }
@@ -48,17 +48,13 @@ namespace Chubberino.Client.Commands.Settings
             IsEnabled = !IsEnabled;
         }
 
-        public override void Refresh(IExtendedClient twitchClient)
+        public void Refresh()
         {
             if (IsEnabled)
             {
+                // Re-add events to new client.
                 IsEnabled = false;
-                base.Refresh(twitchClient);
                 IsEnabled = true;
-            }
-            else
-            {
-                base.Refresh(twitchClient);
             }
         }
     }

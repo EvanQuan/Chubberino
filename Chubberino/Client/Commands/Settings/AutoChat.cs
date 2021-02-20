@@ -38,7 +38,9 @@ namespace Chubberino.Client.Commands.Settings
             + $"\n\tDuplicate count: {MinimumDuplicateCount}"
             + $"\n\tCooldown count: {MessageCooldownCount}";
 
-        public AutoChat(IExtendedClient client, TextWriter console)
+        public IBot Bot { get; }
+
+        public AutoChat(ITwitchClientManager client, IConsole console, IBot bot)
             : base(client, console)
         {
             PreviousMessages = new ConcurrentQueue<String>();
@@ -52,6 +54,7 @@ namespace Chubberino.Client.Commands.Settings
                 twitchClient.OnHostingStarted -= TwitchClient_OnHostingStarted;
                 twitchClient.OnMessageReceived -= TwitchClient_OnMessageReceived;
             };
+            Bot = bot;
         }
 
         public override Boolean Set(String property, IEnumerable<String> arguments)
@@ -133,7 +136,7 @@ namespace Chubberino.Client.Commands.Settings
 
                 if (message != null)
                 {
-                    TwitchClient.SpoolMessage(message);
+                    TwitchClientManager.SpoolMessage(message);
                     OnCooldown = true;
                 }
 
@@ -150,17 +153,12 @@ namespace Chubberino.Client.Commands.Settings
 
                 if (message != null)
                 {
-                    TwitchClient.SpoolMessage(message);
+                    TwitchClientManager.SpoolMessage(message);
                     // Empty the last messages, if one was sent.
                     PreviousMessages.Clear();
                     OnCooldown = true;
                 }
             }
-        }
-
-        private String FilterMessage(String message)
-        {
-            return message;
         }
 
         private String GetMessageToSend()
@@ -184,7 +182,7 @@ namespace Chubberino.Client.Commands.Settings
                 || chatMessage.IsModerator // Ignore channel bot responds, or mod spam (such as for links)
                 || chatMessage.IsVip // VIP spam may time you out
                 || chatMessage.Message.StartsWith('!') // Ignore channel bot commands
-                || chatMessage.Message.Contains(TwitchInfo.BotUsername, StringComparison.OrdinalIgnoreCase); // If being @'d, don't want to copy @ ing self.
+                || chatMessage.Message.Contains(Bot.Name, StringComparison.OrdinalIgnoreCase); // If being @'d, don't want to copy @ ing self.
         }
     }
 }

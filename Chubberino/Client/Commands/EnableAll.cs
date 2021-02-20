@@ -8,7 +8,7 @@ namespace Chubberino.Client.Commands
     {
         public ICommandRepository Commands { get; }
 
-        public EnableAll(IExtendedClient client, ICommandRepository commands, TextWriter console)
+        public EnableAll(ITwitchClientManager client, ICommandRepository commands, IConsole console)
             : base(client, console)
         {
             Commands = commands;

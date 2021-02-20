@@ -8,7 +8,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Logs
 
         public UsingLog()
         {
-            Sut = new Log(MockedTwitchClient.Object, MockedConsole.Object);
+            Sut = new Log(MockedTwitchClientManager.Object, MockedConsole.Object);
         }
     }
 }

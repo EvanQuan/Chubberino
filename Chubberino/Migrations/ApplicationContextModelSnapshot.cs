@@ -19,6 +19,27 @@ namespace Chubberino.Migrations
                 .HasAnnotation("ProductVersion", "5.0.3")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("Chubberino.Database.Models.ApplicationCredentials", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("InitialTwitchPrimaryChannelName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TwitchAPIClientID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("WolframAlphaAppID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("ApplicationCredentials");
+                });
+
             modelBuilder.Entity("Chubberino.Database.Models.StartupChannel", b =>
                 {
                     b.Property<int>("ID")
@@ -35,6 +56,27 @@ namespace Chubberino.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("StartupChannels");
+                });
+
+            modelBuilder.Entity("Chubberino.Database.Models.UserCredentials", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AccessToken")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsBot")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("TwitchUsername")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("UserCredentials");
                 });
 
             modelBuilder.Entity("Chubberino.Modules.CheeseGame.Models.Player", b =>

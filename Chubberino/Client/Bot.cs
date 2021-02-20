@@ -1,12 +1,7 @@
-﻿using Autofac;
-using Chubberino.Client.Abstractions;
-using Chubberino.Database.Contexts;
-using Chubberino.Database.Models;
+﻿using Chubberino.Client.Abstractions;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using TwitchLib.Client.Events;
 using TwitchLib.Client.Models;
 using TwitchLib.Communication.Interfaces;
 
@@ -14,166 +9,83 @@ namespace Chubberino.Client
 {
     public sealed class Bot : IBot
     {
-        private IClientOptions CurrentClientOptions { get; set; }
-
-        public BotState State { get; private set; }
-
-        public IExtendedClient TwitchClient { get; set; }
-
-        private ConnectionCredentials Credentials { get; }
+        public BotState State { get; set; }
 
         private ICommandRepository Commands { get; set; }
-        private IApplicationContext Context { get; }
-        private TextWriter Console { get; set; }
 
-        public ILifetimeScope Scope { get; set; }
+        private IConsole Console { get; set; }
 
         /// <summary>
-        /// Primary channel joined.
+        /// Twitch user name that the bot is logged into.
         /// </summary>
-        public String PrimaryChannelName { get; set; }
+        public String Name { get; set; }
 
         /// <summary>
         /// 100 messages in 30 seconds ~1 message per 0.3 seconds.
         /// </summary>
-        public IClientOptions ModeratorClientOptions { get; }
+        public IModeratorClientOptions ModeratorClientOptions { get; }
 
         /// <summary>
         /// 20 messages in 30 seconds ~1 message per 1.5 second
         /// </summary>
-        public IClientOptions RegularClientOptions { get; }
+        public IRegularClientOptions RegularClientOptions { get; }
 
         /// <summary>
         /// Is the bot a broadcaster/moderator/VIP?
         /// </summary>
         public Boolean IsModerator { get; set; }
 
-        private IExtendedClientFactory ClientFactory { get; }
+        private ITwitchClientManager TwitchClientManager { get; }
 
         public ISpinWait SpinWait { get; }
 
         public Bot(
-            IApplicationContext context,
-            TextWriter console,
+            IConsole console,
             ICommandRepository commands,
-            ConnectionCredentials credentials,
-            IClientOptions moderatorOptions,
-            IClientOptions regularOptions,
-            IExtendedClientFactory clientFactory,
-            ISpinWait spinWait,
-            String channelName)
+            IModeratorClientOptions moderatorOptions,
+            IRegularClientOptions regularOptions,
+            ITwitchClientManager twitchClientManager,
+            ISpinWait spinWait)
         {
-            Credentials = credentials;
-            Context = context;
             Console = console;
             Commands = commands;
             ModeratorClientOptions = moderatorOptions;
             RegularClientOptions = regularOptions;
-            ClientFactory = clientFactory;
+            TwitchClientManager = twitchClientManager;
             SpinWait = spinWait;
-            PrimaryChannelName = channelName;
             IsModerator = true;
-
-            InitializeTwitchClientAndSpooler(moderatorOptions);
         }
 
-        private IReadOnlyList<JoinedChannel> InitializeTwitchClientAndSpooler(IClientOptions clientOptions = null)
+        public Boolean Start(
+            IClientOptions clientOptions = null,
+            Boolean askForCredentials = true)
         {
-            if (clientOptions != null)
-            {
-                CurrentClientOptions = clientOptions;
-            }
+            IReadOnlyList<JoinedChannel> previouslyJoinedChannels = TwitchClientManager.Client?.JoinedChannels;
 
-            // We need to get all the channel that the old client was connected to,
-            // so we can rejoin those channels on the new client.
-            var oldJoinedChannels = TwitchClient == null 
-                ? Array.Empty<JoinedChannel>()
-                : TwitchClient.JoinedChannels.ToArray();
-
-            TwitchClient = ClientFactory.GetClient(this, CurrentClientOptions);
-
-            TwitchClient.Initialize(Credentials, PrimaryChannelName);
-
-            TwitchClient.OnConnected += Client_OnConnected;
-            TwitchClient.OnConnectionError += Client_OnConnectionError;
-            TwitchClient.OnUserTimedout += Client_OnUserTimedout;
-
-            return oldJoinedChannels;
-        }
-
-        private void JoinStartupChannels()
-        {
-            foreach (StartupChannel channel in Context.StartupChannels)
-            {
-                TwitchClient.JoinChannel(channel.DisplayName);
-            }
-        }
-
-        public Boolean Start(IReadOnlyList<JoinedChannel> joinedChannels = null)
-        {
-            Console.WriteLine("Connecting to " + PrimaryChannelName);
-            Boolean channelJoined = TwitchClient.EnsureJoinedToChannel(PrimaryChannelName);
-
-            if (!channelJoined) { return false; }
-
-            JoinStartupChannels();
-
-            if (joinedChannels != null)
-            {
-                foreach (var channel in joinedChannels)
-                {
-                    var channelName = channel.Channel;
-
-                    Console.WriteLine("Connecting to " + channelName);
-                    channelJoined = TwitchClient.EnsureJoinedToChannel(channelName);
-
-                    if (!channelJoined) { return false; }
-                }
-            }
-
-            Boolean channelNameUpdated = SpinWait.SpinUntil(() =>
-            {
-                SpinWait.Sleep(TimeSpan.FromSeconds(1));
-                return !String.IsNullOrWhiteSpace(PrimaryChannelName);
-            },
-            TimeSpan.FromSeconds(5));
-
-            return channelNameUpdated;
-
+            return TwitchClientManager.TryInitialize(this, clientOptions, askForCredentials)
+                 && TwitchClientManager.TryJoinInitialChannels(previouslyJoinedChannels);
         }
 
         public String GetPrompt()
         {
             return Environment.NewLine + Environment.NewLine + Commands.GetStatus() + Environment.NewLine
-                + $"[{(IsModerator ? "Mod" : "Normal")} {PrimaryChannelName}]> ";
-        }
-
-        private void Client_OnUserTimedout(Object sender, OnUserTimedoutArgs e)
-        {
-        }
-
-        private void Client_OnConnectionError(Object sender, OnConnectionErrorArgs e)
-        {
-            Console.WriteLine($"!! Connection Error!! {e.Error.Message}");
-            Refresh(CurrentClientOptions);
-            Console.WriteLine("!! Refreshed");
+                + $"[{(IsModerator ? "Mod" : "Normal")} {TwitchClientManager.PrimaryChannelName}]> ";
         }
 
 
-        public void Refresh(IClientOptions clientOptions = null)
+
+        public void Refresh(
+            IClientOptions clientOptions = null,
+            Boolean askForCredentials = true)
         {
-            var oldJoinedChannels = InitializeTwitchClientAndSpooler(clientOptions);
+            Boolean successful = Start(clientOptions, askForCredentials);
 
-            Commands.RefreshAll(TwitchClient);
-
-            Boolean successful = Start(oldJoinedChannels);
+            if (successful)
+            {
+                Commands.RefreshAll();
+            }
 
             Console.WriteLine("Refresh " + (successful ? "successful" : "failed"));
-        }
-
-        private void Client_OnConnected(Object sender, OnConnectedArgs e)
-        {
-            State = BotState.ShouldContinue;
         }
 
         public void ReadCommand(String command)
@@ -198,9 +110,9 @@ namespace Chubberino.Client
 
         public void Dispose()
         {
-            if (TwitchClient.IsConnected)
+            if (TwitchClientManager.Client?.IsConnected ?? false)
             {
-                TwitchClient.Disconnect();
+                TwitchClientManager.Client.Disconnect();
             }
         }
     }

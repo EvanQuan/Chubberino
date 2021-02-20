@@ -1,7 +1,6 @@
 ﻿using Chubberino.Client.Abstractions;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using TwitchLib.Client.Events;
 
@@ -32,7 +31,7 @@ namespace Chubberino.Client.Commands.Settings
             : "disabled")
             + $" Mode: {CurrentMode}";
 
-        public Greet(IExtendedClient client, TextWriter console, IComplimentGenerator compliments)
+        public Greet(ITwitchClientManager client, IConsole console, IComplimentGenerator compliments)
             : base(client, console)
         {
             Enable = twitchClient =>
@@ -53,12 +52,12 @@ namespace Chubberino.Client.Commands.Settings
             // Don't count self
             if (e.Username.Equals(TwitchInfo.BotUsername, StringComparison.OrdinalIgnoreCase)) { return; }
 
-            TwitchClient.SpoolMessage($"@{e.Username} {Greeting} {(CurrentMode == Mode.Wholesome ? Compliments.GetCompliment() : String.Empty)}");
+            TwitchClientManager.SpoolMessage($"@{e.Username} {Greeting} {(CurrentMode == Mode.Wholesome ? Compliments.GetCompliment() : String.Empty)}");
         }
 
         public override void Execute(IEnumerable<String> arguments)
         {
-            IsEnabled = arguments.Count() > 0;
+            IsEnabled = arguments.Any();
 
             if (IsEnabled)
             {
@@ -78,16 +77,11 @@ namespace Chubberino.Client.Commands.Settings
                 case "m":
                 case "mode":
                 {
-                    switch (arguments.FirstOrDefault()?.ToLower())
+                    CurrentMode = (arguments.FirstOrDefault()?.ToLower()) switch
                     {
-                        case "w":
-                        case "wholesome":
-                                CurrentMode = Mode.Wholesome;
-                            break;
-                        default:
-                                CurrentMode = Mode.Default;
-                            break;
-                    }
+                        "w" or "wholesome" => Mode.Wholesome,
+                        _ => Mode.Default,
+                    };
                 }
                 break;
                 default:

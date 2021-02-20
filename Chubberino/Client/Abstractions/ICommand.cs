@@ -23,12 +23,5 @@ namespace Chubberino.Client.Abstractions
         /// </summary>
         /// <returns>The help messag string.</returns>
         String GetHelp();
-
-        /// <summary>
-        /// Refresh the command with a new <see cref="ITwitchClient"/> and
-        /// <see cref="IMessageSpooler"/>.
-        /// </summary>
-        /// <param name="twitchClient">New twitch client.</param>
-        void Refresh(IExtendedClient twitchClient);
     }
 }

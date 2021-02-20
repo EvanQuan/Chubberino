@@ -12,7 +12,7 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
     {
         private PyramidBuilder Builder { get; }
 
-        public Pyramid(IExtendedClient client, TextWriter console, PyramidBuilder builder)
+        public Pyramid(ITwitchClientManager client, IConsole console, PyramidBuilder builder)
             : base(client, console)
         {
             Builder = builder;
@@ -32,13 +32,13 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
 
             if (words.Count() < 2)
             {
-                TwitchClient.SpoolMessage(e.ChatMessage.DisplayName + " Usage: !pyramid <size> <text>");
+                TwitchClientManager.SpoolMessage(e.ChatMessage.DisplayName + " Usage: !pyramid <size> <text>");
                 return;
             }
 
             if (!Int32.TryParse(words.First(), out Int32 height) || height < 1)
             {
-                TwitchClient.SpoolMessage($"{e.ChatMessage.DisplayName} Pyramid height of \"{words.First()}\" must be a positive integer");
+                TwitchClientManager.SpoolMessage($"{e.ChatMessage.DisplayName} Pyramid height of \"{words.First()}\" must be a positive integer");
             }
 
             IEnumerable<String> pyramidBlockArguments = words.Skip(1);
@@ -49,7 +49,7 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
 
             foreach (var line in pyramid)
             {
-                TwitchClient.SpoolMessage(line);
+                TwitchClientManager.SpoolMessage(line);
             }
         }
     }

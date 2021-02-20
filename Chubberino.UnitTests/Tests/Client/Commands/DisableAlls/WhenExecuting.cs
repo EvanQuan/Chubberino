@@ -21,7 +21,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.DisableAlls
         [Fact]
         public void ShouldDisableAllSettingsWithNoArguments()
         {
-            Sut.Execute(new String[] { });
+            Sut.Execute(Array.Empty<String>());
 
             MockedCommandRepository.Verify(x => x.DisableAllSettings(), Times.Once());
 

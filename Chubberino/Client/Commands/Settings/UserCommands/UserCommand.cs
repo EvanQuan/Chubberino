@@ -1,7 +1,6 @@
 ﻿using Chubberino.Client.Abstractions;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using TwitchLib.Client.Events;
 
@@ -19,7 +18,7 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
             "500670723",
         };
 
-        protected UserCommand(IExtendedClient client, TextWriter console) : base(client, console)
+        protected UserCommand(ITwitchClientManager client, IConsole console) : base(client, console)
         {
         }
 

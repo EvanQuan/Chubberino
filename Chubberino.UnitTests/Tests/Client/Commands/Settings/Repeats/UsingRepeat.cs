@@ -8,7 +8,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Repeats
 
         public UsingRepeat()
         {
-            Sut = new Repeat(MockedTwitchClient.Object, MockedRepeater.Object, MockedConsole.Object);
+            Sut = new Repeat(MockedTwitchClientManager.Object, MockedRepeater.Object, MockedConsole.Object);
         }
     }
 }

@@ -8,7 +8,7 @@ namespace Chubberino.Client.Commands.Settings
 {
     internal sealed class MockStreamElements : Copy
     {
-        public MockStreamElements(IExtendedClient client, TextWriter console)
+        public MockStreamElements(ITwitchClientManager client, IConsole console)
             : base(client, console)
         {
         }

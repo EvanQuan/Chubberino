@@ -1,15 +1,14 @@
-﻿using Chubberino.Client.Abstractions;
-using Chubberino.Utility;
+﻿using Chubberino.Utility;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace Chubberino.Client.Commands
 {
     public sealed class Permutations : Command
     {
-        public Permutations(IExtendedClient client, TextWriter console) : base(client, console)
+        public Permutations(ITwitchClientManager client, IConsole console)
+            : base(client, console)
         {
         }
 
@@ -25,7 +24,7 @@ namespace Chubberino.Client.Commands
 
             foreach (var permutation in permutations)
             {
-                TwitchClient.SpoolMessage(permutation);
+                TwitchClientManager.SpoolMessage(permutation);
             }
         }
     }

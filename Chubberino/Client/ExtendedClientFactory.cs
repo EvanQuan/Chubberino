@@ -14,7 +14,7 @@ namespace Chubberino.Client
 
         private ClientProtocol ClientProtocol { get; }
 
-        private TextWriter Console { get; }
+        private IConsole Console { get; }
 
         private ISpinWait SpinWait { get; }
 
@@ -23,7 +23,7 @@ namespace Chubberino.Client
         public ExtendedClientFactory(
             Func<IClientOptions, IClient> clientFactory,
             ClientProtocol clientProtocol,
-            TextWriter console,
+            IConsole console,
             ISpinWait spinWait,
             ILogger<TwitchClient> logger)
         {
@@ -34,10 +34,9 @@ namespace Chubberino.Client
             Logger = logger;
         }
 
-        public IExtendedClient GetClient(IBot bot, IClientOptions options)
+        public IExtendedClient GetClient(IClientOptions options)
         {
             return new ExtendedClient(
-                bot,
                 ClientFactory(options),
                 ClientProtocol,
                 Console,

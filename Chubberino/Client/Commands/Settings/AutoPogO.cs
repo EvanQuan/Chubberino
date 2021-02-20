@@ -16,7 +16,7 @@ namespace Chubberino.Client.Commands.Settings
             + $"\n\tUsers:"
             + $"\n\t\t{UsersToPogO.ToLineDelimitedString(2)}";
 
-        public AutoPogO(IExtendedClient client, TextWriter console)
+        public AutoPogO(ITwitchClientManager client, IConsole console)
             : base(client, console)
         {
             UsersToPogO = new HashSet<String>();
@@ -34,7 +34,7 @@ namespace Chubberino.Client.Commands.Settings
         {
             if (UsersToPogO.Contains(e.ChatMessage.Username))
             {
-                TwitchClient.SpoolMessage($"@{e.ChatMessage.DisplayName} PogO");
+                TwitchClientManager.SpoolMessage($"@{e.ChatMessage.DisplayName} PogO");
             }
         }
 

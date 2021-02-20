@@ -1,8 +1,6 @@
 ﻿using Chubberino.Client.Abstractions;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using TwitchLib.Client.Interfaces;
 
 namespace Chubberino.Client.Commands
 {
@@ -10,13 +8,13 @@ namespace Chubberino.Client.Commands
     {
         public String Name { get; }
 
-        protected IExtendedClient TwitchClient { get; private set; }
+        protected ITwitchClientManager TwitchClientManager { get; private set; }
 
-        protected TextWriter Console { get; }
+        protected IConsole Console { get; }
 
-        protected Command(IExtendedClient client, TextWriter console)
+        protected Command(ITwitchClientManager client, IConsole console)
         {
-            TwitchClient = client;
+            TwitchClientManager = client;
             Console = console;
             Name = GetType().Name.ToLowerInvariant();
         }
@@ -32,16 +30,5 @@ namespace Chubberino.Client.Commands
         public virtual Boolean Add(String property, IEnumerable<String> arguments) { return false; }
 
         public virtual Boolean Remove(String property, IEnumerable<String> arguments) { return false; }
-
-        /// <summary>
-        /// Refresh the command with a new <see cref="ITwitchClient"/> and
-        /// <see cref="IMessageSpooler"/>.
-        /// </summary>
-        /// <param name="twitchClient">New twitch client.</param>
-        /// <param name="messageSpooler">New message spooler.</param>
-        public virtual void Refresh(IExtendedClient twitchClient)
-        {
-            TwitchClient = twitchClient;
-        }
     }
 }

@@ -13,8 +13,8 @@ namespace Chubberino.Modules.CheeseGame.Quests
         private IList<IQuest> Quests { get; }
         public static TimeSpan QuestCooldown { get; set; } = TimeSpan.FromHours(2);
 
-        public QuestManager(IApplicationContext context, IMessageSpooler spooler, Random random, IEmoteManager emoteManager)
-            : base(context, spooler, random, emoteManager)
+        public QuestManager(IApplicationContext context, ITwitchClientManager client, Random random, IEmoteManager emoteManager)
+            : base(context, client, random, emoteManager)
         {
             Quests = new List<IQuest>();
         }
@@ -49,7 +49,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
 
                 var timeToWait = Format(timeUntilNextQuestAvailable);
 
-                Spooler.SpoolMessage(message.Channel, $"{player.GetDisplayName()}, you must wait {timeToWait} until you can go on your next quest.");
+                TwitchClientManager.Client.SpoolMessage(message.Channel, $"{player.GetDisplayName()}, you must wait {timeToWait} until you can go on your next quest.");
             }
         }
     }

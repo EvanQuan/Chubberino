@@ -1,5 +1,6 @@
 ﻿using Chubberino.Client;
 using Chubberino.Client.Abstractions;
+using Chubberino.Client.Credentials;
 using Chubberino.Database.Contexts;
 using Chubberino.Database.Models;
 using Chubberino.Modules.CheeseGame.Models;
@@ -7,12 +8,8 @@ using Chubberino.UnitTests.Utility;
 using Moq;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using TwitchLib.Client.Models;
 using TwitchLib.Communication.Interfaces;
-using TwitchLib.Communication.Models;
-using Xunit;
 
 namespace Chubberino.UnitTests.Tests.Client.Bots
 {
@@ -22,9 +19,13 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
 
         protected Mock<IApplicationContext> MockedContext { get; }
 
-        protected Mock<TextWriter> MockedConsole { get; }
+        protected Mock<ICredentialsManager> MockedCredentialsManager { get; }
 
-        protected ConnectionCredentials Credentials { get; }
+        protected ApplicationCredentials ApplicationCredentials { get; }
+
+        protected Mock<IConsole> MockedConsole { get; }
+
+        protected Credentials Credentials { get; }
 
         protected String Username { get; }
 
@@ -34,15 +35,15 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
 
         protected Mock<ICommandRepository> MockedCommandRepository { get; }
 
-        protected Mock<IExtendedClientFactory> MockedExtendedClientFactory { get; }
+        protected Mock<ITwitchClientManager> MockedTwitchClientManager { get; }
 
-        protected ClientOptions RegularClientOptions { get; }
+        protected IRegularClientOptions RegularClientOptions { get; }
 
-        protected ClientOptions ModeratorClientOptions { get; }
+        protected IModeratorClientOptions ModeratorClientOptions { get; }
 
         protected Mock<IExtendedClient> MockedClient { get; }
 
-        protected List<JoinedChannel> JoinedChannels { get; }
+        protected IList<JoinedChannel> JoinedChannels { get; set; }
 
         protected Mock<ISpinWait> MockedSpinWait { get; }
 
@@ -74,28 +75,46 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
 
             MockedContext = new Mock<IApplicationContext>();
 
-            MockedContext.SetupGet(x => x.StartupChannels).Returns(() => StartupChannels.ToDbSet());
-            MockedContext.SetupGet(x => x.Players).Returns(() => Players.ToDbSet());
+            MockedCredentialsManager = new Mock<ICredentialsManager>();
 
-            MockedConsole = new Mock<TextWriter>().SetupAllProperties();
-
-            JoinedChannels = new List<JoinedChannel>();
+            MockedContext.Setup(x => x.StartupChannels).Returns(() => StartupChannels.ToDbSet());
+            MockedContext.Setup(x => x.Players).Returns(() => Players.ToDbSet());
 
             Username = Guid.NewGuid().ToString();
             TwitchOAuth = Guid.NewGuid().ToString();
             ChannelName = Guid.NewGuid().ToString();
 
-            Credentials = new ConnectionCredentials(Username, TwitchOAuth, disableUsernameCheck: true);
+            ApplicationCredentials = new ApplicationCredentials()
+            {
+                ID = 1,
+                InitialTwitchPrimaryChannelName = ChannelName,
+                TwitchAPIClientID = Guid.NewGuid().ToString(),
+                WolframAlphaAppID = Guid.NewGuid().ToString()
+            };
+
+            MockedConsole = new Mock<IConsole>();
+
+            JoinedChannels = new List<JoinedChannel>();
+
+
+            Credentials = new Credentials(new ConnectionCredentials(Username, TwitchOAuth, disableUsernameCheck: true), true);
+
+            var credentials = Credentials;
+
+            MockedCredentialsManager.Setup(x => x.TryGetCredentials(out credentials)).Returns(true);
 
             MockedCommandRepository = new Mock<ICommandRepository>().SetupAllProperties();
 
-            MockedExtendedClientFactory = new Mock<IExtendedClientFactory>().SetupAllProperties();
+            MockedTwitchClientManager = new Mock<ITwitchClientManager>().SetupAllProperties();
+
+            MockedTwitchClientManager.Setup(x => x.TryInitialize(It.IsAny<IBot>(), It.IsAny<IClientOptions>(), It.IsAny<Boolean>())).Returns(true);
+            MockedTwitchClientManager.Setup(x => x.TryJoinInitialChannels(It.IsAny<IReadOnlyList<JoinedChannel>>())).Returns(true);
 
             MockedClient = new Mock<IExtendedClient>();
 
-            RegularClientOptions = new ClientOptions();
+            RegularClientOptions = new RegularClientOptions();
 
-            ModeratorClientOptions = new ClientOptions();
+            ModeratorClientOptions = new ModeratorClientOptions();
 
             MockedSpinWait = new Mock<ISpinWait>();
 
@@ -103,8 +122,8 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
                 .Setup(x => x.SpinUntil(It.IsAny<Func<Boolean>>(), It.IsAny<TimeSpan>()))
                 .Returns((Func<Boolean> func, TimeSpan timeout) => func());
 
-            MockedExtendedClientFactory
-                .Setup(x => x.GetClient(It.IsAny<IBot>(), It.IsAny<IClientOptions>()))
+            MockedTwitchClientManager
+                .Setup(x => x.Client)
                 .Returns(MockedClient.Object);
 
             MockedClient
@@ -118,16 +137,16 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
 
             MockedClient
                 .Setup(x => x.JoinedChannels)
-                .Returns(JoinedChannels);
+                .Returns((IReadOnlyList<JoinedChannel>)JoinedChannels);
 
             MockedClient
                 .Setup(x => x.JoinChannel(It.IsAny<String>(), It.IsAny<Boolean>()))
                 .Callback((String channel, Boolean overrideCheck) =>
                 {
                     JoinedChannels.Add(new JoinedChannel(channel));
-                    if (Sut.PrimaryChannelName == null)
+                    if (MockedTwitchClientManager.Object.PrimaryChannelName == null)
                     {
-                        Sut.PrimaryChannelName = channel;
+                        MockedTwitchClientManager.Object.PrimaryChannelName = channel;
                     }
                 });
 
@@ -141,17 +160,14 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
                 .Returns(true);
 
             Sut = new Bot(
-                MockedContext.Object,
                 MockedConsole.Object,
                 MockedCommandRepository.Object,
-                Credentials,
                 ModeratorClientOptions,
                 RegularClientOptions,
-                MockedExtendedClientFactory.Object,
-                MockedSpinWait.Object,
-                ChannelName);
+                MockedTwitchClientManager.Object,
+                MockedSpinWait.Object);
 
-            MockedExtendedClientFactory.Invocations.Clear();
+            MockedTwitchClientManager.Invocations.Clear();
             MockedCommandRepository.Invocations.Clear();
             MockedClient.Invocations.Clear();
         }

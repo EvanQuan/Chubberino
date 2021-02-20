@@ -16,7 +16,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.ModChecks
             MockedStopSettingStrategy = new Mock<IStopSettingStrategy>().SetupAllProperties();
 
             Sut = new ModCheck(
-                MockedTwitchClient.Object,
+                MockedTwitchClientManager.Object,
                 MockedConsole.Object,
                 MockedCommandRepository.Object,
                 MockedStopSettingStrategy.Object);

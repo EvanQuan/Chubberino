@@ -2,7 +2,6 @@
 using Chubberino.Client.Commands;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace Chubberino.Client
@@ -10,11 +9,20 @@ namespace Chubberino.Client
     public sealed class Mode : Command
     {
         private IBot Bot { get; }
+        public IModeratorClientOptions ModeratorClientOptions { get; }
+        public IRegularClientOptions RegularClientOptions { get; }
 
-        public Mode(IExtendedClient client, TextWriter console, IBot bot)
+        public Mode(
+            ITwitchClientManager client,
+            IConsole console,
+            IBot bot,
+            IModeratorClientOptions moderatorClientOptions,
+            IRegularClientOptions regularClientOptions)
             : base(client, console)
         {
             Bot = bot;
+            ModeratorClientOptions = moderatorClientOptions;
+            RegularClientOptions = regularClientOptions;
         }
 
         public override void Execute(IEnumerable<String> arguments)
@@ -24,12 +32,12 @@ namespace Chubberino.Client
                 case "m":
                 case "mod":
                 case "moderator":
-                    Bot.Refresh(Bot.ModeratorClientOptions);
+                    Bot.Refresh(ModeratorClientOptions);
                     Bot.IsModerator = true;
                     break;
                 case "n":
                 case "normal":
-                    Bot.Refresh(Bot.RegularClientOptions);
+                    Bot.Refresh(RegularClientOptions);
                     Bot.IsModerator = false;
                     break;
 

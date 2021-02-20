@@ -1,5 +1,6 @@
 ﻿using Chubberino.Client.Abstractions;
 using Chubberino.Client.Commands.Pyramids;
+using Chubberino.Database.Contexts;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,7 +12,7 @@ namespace Chubberino.Client.Commands
     {
         private PyramidBuilder Builder { get; set; }
 
-        public PyramidBuild(IExtendedClient client, TextWriter console, PyramidBuilder builder)
+        public PyramidBuild(ITwitchClientManager client, IConsole console, PyramidBuilder builder)
             : base(client, console)
         {
             Builder = builder;
@@ -46,7 +47,7 @@ namespace Chubberino.Client.Commands
 
             foreach (var line in pyramid)
             {
-                TwitchClient.SpoolMessage(line);
+                TwitchClientManager.SpoolMessage(line);
             }
         }
 

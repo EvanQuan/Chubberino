@@ -17,7 +17,7 @@ namespace Chubberino.Client.Commands.Settings
 
         public PyramidTracker Pyramid { get; }
 
-        public TrackPyramids(IExtendedClient client, TextWriter console)
+        public TrackPyramids(ITwitchClientManager client, IConsole console)
             : base(client, console)
         {
             Pyramid = new PyramidTracker();
@@ -92,7 +92,7 @@ namespace Chubberino.Client.Commands.Settings
         }
 
 
-        private Boolean TryGetFirstPyramidBlock(String message, out String block)
+        private static Boolean TryGetFirstPyramidBlock(String message, out String block)
         {
             block = message.Split(" ").FirstOrDefault();
 
@@ -108,11 +108,11 @@ namespace Chubberino.Client.Commands.Settings
         {
             if (Pyramid.ContributorDisplayNames.Count == 1)
             {
-                TwitchClient.SpoolMessage($"@{Pyramid.ContributorDisplayNames.Single()} Nice {Pyramid.TallestHeight}-story tall {Pyramid.Block} pyramid! peepoClap");
+                TwitchClientManager.SpoolMessage($"@{Pyramid.ContributorDisplayNames.Single()} Nice {Pyramid.TallestHeight}-story tall {Pyramid.Block} pyramid! peepoClap");
             }
             else
             {
-                TwitchClient.SpoolMessage($"@{String.Join(", @", Pyramid.ContributorDisplayNames)} Nice {Pyramid.TallestHeight}-story tall {Pyramid.Block} pyramid! Hooray teamwork! peepoClap");
+                TwitchClientManager.SpoolMessage($"@{String.Join(", @", Pyramid.ContributorDisplayNames)} Nice {Pyramid.TallestHeight}-story tall {Pyramid.Block} pyramid! Hooray teamwork! peepoClap");
             }
         }
 
@@ -129,18 +129,18 @@ namespace Chubberino.Client.Commands.Settings
                 if (Pyramid.ContributorDisplayNames.Count == 1)
                 {
                     // User broke their own pyramid.
-                    TwitchClient.SpoolMessage($"@{userThatBrokePyramid} You just ruined your own {Pyramid.TallestHeight}-story tall {Pyramid.Block} pyramid. Sadge");
+                    TwitchClientManager.SpoolMessage($"@{userThatBrokePyramid} You just ruined your own {Pyramid.TallestHeight}-story tall {Pyramid.Block} pyramid. Sadge");
                 }
                 else
                 {
                     // User broke co-operative pyramid.
-                    TwitchClient.SpoolMessage($"@{userThatBrokePyramid} Imagine working with @{String.Join(", @", Pyramid.ContributorDisplayNames.Where(name => !name.Equals(userThatBrokePyramid, StringComparison.OrdinalIgnoreCase)))} to build a {Pyramid.TallestHeight}-story tall {Pyramid.Block} pyramid and then ruining it. 4WeirdW");
+                    TwitchClientManager.SpoolMessage($"@{userThatBrokePyramid} Imagine working with @{String.Join(", @", Pyramid.ContributorDisplayNames.Where(name => !name.Equals(userThatBrokePyramid, StringComparison.OrdinalIgnoreCase)))} to build a {Pyramid.TallestHeight}-story tall {Pyramid.Block} pyramid and then ruining it. 4WeirdW");
                 }
             }
             else
             {
                 // User broke someone else's pyramid.
-                TwitchClient.SpoolMessage($"@{userThatBrokePyramid} Nice job ruining the {Pyramid.TallestHeight}-story {Pyramid.Block} tall pyramid built by @{String.Join(", @", Pyramid.ContributorDisplayNames)}. PogO");
+                TwitchClientManager.SpoolMessage($"@{userThatBrokePyramid} Nice job ruining the {Pyramid.TallestHeight}-story {Pyramid.Block} tall pyramid built by @{String.Join(", @", Pyramid.ContributorDisplayNames)}. PogO");
 
             }
         }

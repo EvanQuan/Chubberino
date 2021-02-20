@@ -8,6 +8,7 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
         [Fact]
         public void ShouldDisconnect()
         {
+            Sut.Start();
             MockedClient.Setup(x => x.IsConnected).Returns(true);
 
             Sut.Dispose();
@@ -16,8 +17,10 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
         }
 
         [Fact]
-        public void ShouldNotDisonnect()
+        public void ShouldNotDisconnect()
         {
+
+            Sut.Start();
             MockedClient.Setup(x => x.IsConnected).Returns(false);
 
             Sut.Dispose();

@@ -7,5 +7,11 @@ namespace Chubberino.Client.Abstractions
         Boolean IsEnabled { get; set; }
 
         String Status { get; }
+
+
+        /// <summary>
+        /// Refresh the command.
+        /// </summary>
+        void Refresh();
     }
 }

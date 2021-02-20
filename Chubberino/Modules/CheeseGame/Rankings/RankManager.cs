@@ -23,8 +23,8 @@ namespace Chubberino.Modules.CheeseGame.Rankings
             {  Rank.Legend, 25600 },
         };
 
-        public RankManager(IApplicationContext context, IMessageSpooler spooler, Random random, IEmoteManager emoteManager)
-            : base(context, spooler, random, emoteManager)
+        public RankManager(IApplicationContext context, ITwitchClientManager client, Random random, IEmoteManager emoteManager)
+            : base(context, client, random, emoteManager)
         {
         }
 
@@ -68,7 +68,7 @@ namespace Chubberino.Modules.CheeseGame.Rankings
                 outputMessage = $"{player.GetDisplayName()} Uh oh, you broke something. You have an invalid rank of {player.Rank}.";
             }
 
-            Spooler.SpoolMessage(message.Channel, outputMessage);
+            TwitchClientManager.Client.SpoolMessage(message.Channel, outputMessage);
         }
 
         public void ShowRank(ChatMessage message)
@@ -109,7 +109,7 @@ namespace Chubberino.Modules.CheeseGame.Rankings
                 outputMessage = $"{player.GetDisplayName()} Uh oh, you broke something. You have an invalid rank of {player.Rank}.";
             }
 
-            Spooler.SpoolMessage(message.Channel, outputMessage);
+            TwitchClientManager.Client.SpoolMessage(message.Channel, outputMessage);
 
         }
     }

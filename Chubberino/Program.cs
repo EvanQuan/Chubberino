@@ -8,8 +8,10 @@ using Chubberino.Client.Commands.Settings.ColorSelectors;
 using Chubberino.Client.Commands.Settings.Replies;
 using Chubberino.Client.Commands.Settings.UserCommands;
 using Chubberino.Client.Commands.Strategies;
+using Chubberino.Client.Credentials;
 using Chubberino.Client.Threading;
 using Chubberino.Database.Contexts;
+using Chubberino.Database.Models;
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Hazards;
 using Chubberino.Modules.CheeseGame.Items;
@@ -24,14 +26,12 @@ using Chubberino.Modules.CheeseGame.Upgrades;
 using Jering.Javascript.NodeJS;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.IO;
+using System.Linq;
 using TwitchLib.Api;
 using TwitchLib.Api.Interfaces;
 using TwitchLib.Client.Enums;
-using TwitchLib.Client.Models;
 using TwitchLib.Communication.Clients;
 using TwitchLib.Communication.Interfaces;
-using TwitchLib.Communication.Models;
 using WolframAlphaNet;
 
 namespace Chubberino
@@ -48,36 +48,18 @@ namespace Chubberino
             // services.AddTransient<ISiteInterface, SiteRepo>
 
             var builder = new ContainerBuilder();
-            builder.Register(c => new Bot(
-                c.Resolve<IApplicationContext>(),
-                c.Resolve<TextWriter>(),
-                c.Resolve<ICommandRepository>(),
-                c.Resolve<ConnectionCredentials>(),
-                new ClientOptions()
-                {
-                    MessagesAllowedInPeriod = 90, // 100
-                    ThrottlingPeriod = TimeSpan.FromSeconds(30)
-                },
-                new ClientOptions()
-                {
-                    MessagesAllowedInPeriod = 20,
-                    ThrottlingPeriod = TimeSpan.FromSeconds(30)
-                },
-                c.Resolve<IExtendedClientFactory>(),
-                c.Resolve<ISpinWait>(),
-                TwitchInfo.InitialChannelName))
-                .As<IBot>()
-                .SingleInstance();
-            builder.RegisterInstance(Console.Out).As<TextWriter>().SingleInstance();
+            builder.RegisterType<Bot>().As<IBot>().SingleInstance();
+            builder.RegisterType<Client.Console>().As<IConsole>().SingleInstance();
+            builder.RegisterType<TwitchClientManager>().As<ITwitchClientManager>().SingleInstance();
+            builder.RegisterType<CrendentialsManager>().As<ICredentialsManager>().SingleInstance();
             builder.RegisterType<CommandRepository>().As<ICommandRepository>().SingleInstance();
             builder.Register(c => new ExtendedClientFactory(
                 (IClientOptions options) => new WebSocketClient(options),
                 ClientProtocol.WebSocket,
-                c.Resolve<TextWriter>(),
+                c.Resolve<IConsole>(),
                 c.Resolve<ISpinWait>(),
                 null)).As<IExtendedClientFactory>().SingleInstance();
-            builder.Register(c => c.Resolve<IBot>().TwitchClient).As<IExtendedClient>().As<IMessageSpooler>().SingleInstance();
-            builder.Register(c => new ConnectionCredentials(TwitchInfo.BotUsername, TwitchInfo.BotToken)).As<ConnectionCredentials>().SingleInstance();
+
             builder.RegisterType<StopSettingStrategy>().As<IStopSettingStrategy>().SingleInstance();
             builder.RegisterType<Repeater>().As<IRepeater>();
             builder.RegisterType<ContainsComparator>().As<IContainsComparator>().SingleInstance();
@@ -96,19 +78,26 @@ namespace Chubberino
                 return serviceProvider.GetRequiredService<INodeJSService>();
             }).As<INodeJSService>().SingleInstance();
             builder.RegisterType<SpinWait>().As<ISpinWait>().SingleInstance();
+            builder.RegisterType<ModeratorClientOptions>().As<IModeratorClientOptions>().SingleInstance();
+            builder.RegisterType<RegularClientOptions>().As<IRegularClientOptions>().SingleInstance();
             builder.RegisterType<PyramidBuilder>().AsSelf().SingleInstance();
 
             builder.Register(c =>
             {
                 var api = new TwitchAPI();
 
-                api.Settings.ClientId = TwitchInfo.ClientId;
-                api.Settings.AccessToken = TwitchInfo.BotToken;
+                var applicationCredentials = c.Resolve<ApplicationCredentials>();
+
+                api.Settings.ClientId = applicationCredentials.TwitchAPIClientID;
+                // Doesn't matter which user credentials access token is used here.
+                api.Settings.AccessToken = c.Resolve<IApplicationContext>().UserCredentials.First().AccessToken;
 
                 return api;
             }).As<ITwitchAPI>().SingleInstance();
 
-            builder.Register(c => new WolframAlpha(TwitchInfo.WolframAlphaAppId)).AsSelf().SingleInstance();
+            builder.Register(c => new WolframAlpha(c.Resolve<ApplicationCredentials>().WolframAlphaAppID)).AsSelf().SingleInstance();
+
+            builder.Register(c => c.Resolve<IApplicationContext>().ApplicationCredentials.First()).AsSelf().SingleInstance();
 
             // Commands
             builder.RegisterType<AtAll>().AsSelf().SingleInstance();
@@ -168,6 +157,18 @@ namespace Chubberino
 
             using ILifetimeScope scope = container.BeginLifetimeScope();
 
+            var console = scope.Resolve<IConsole>();
+
+            var bot = scope.Resolve<IBot>();
+
+            var twitchClientManager = scope.Resolve<ITwitchClientManager>();
+
+            if (!twitchClientManager.TryInitialize(bot))
+            {
+                console.WriteLine("Failed to start");
+                return;
+            }
+
             var questManager = scope.Resolve<IQuestManager>();
             questManager
                 .AddQuest(scope.Resolve<MagnaMountainQuest>())
@@ -211,27 +212,17 @@ namespace Chubberino
                 .AddCommand(scope.Resolve<Wolfram>())
                 .AddCommand(scope.Resolve<YepKyle>());
 
-            var bot = scope.Resolve<IBot>();
-
             var color = scope.Resolve<Color>();
 
             color.AddColorSelector(scope.Resolve<RandomColorSelector>());
             color.AddColorSelector(scope.Resolve<PresetColorSelector>());
             color.AddColorSelector(scope.Resolve<RainbowColorSelector>());
 
-            bot.Scope = scope;
-
-            if (!bot.Start())
-            {
-                Console.WriteLine("Failed to join channel");
-                return;
-            }
-
             Boolean shouldContinue = true;
             do
             {
-                Console.Write(bot.GetPrompt());
-                bot.ReadCommand(Console.ReadLine());
+                console.Write(bot.GetPrompt());
+                bot.ReadCommand(console.ReadLine());
 
                 switch (bot.State)
                 {

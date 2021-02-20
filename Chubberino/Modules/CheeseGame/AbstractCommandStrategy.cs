@@ -1,5 +1,4 @@
-﻿using Chubberino.Client.Abstractions;
-using Chubberino.Database.Contexts;
+﻿using Chubberino.Database.Contexts;
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.PlayerExtensions;
@@ -13,12 +12,12 @@ namespace Chubberino.Modules.CheeseGame
     {
         protected IApplicationContext Context { get; }
 
-        public IMessageSpooler Spooler { get; set; }
+        public ITwitchClientManager TwitchClientManager { get; set; }
 
-        public AbstractCommandStrategy(IApplicationContext context, IMessageSpooler spooler, Random random, IEmoteManager emoteManager)
+        public AbstractCommandStrategy(IApplicationContext context, ITwitchClientManager client, Random random, IEmoteManager emoteManager)
         {
             Context = context;
-            Spooler = spooler;
+            TwitchClientManager = client;
             Random = random;
             EmoteManager = emoteManager;
         }
@@ -44,7 +43,7 @@ namespace Chubberino.Modules.CheeseGame
 
                 Context.SaveChanges();
 
-                Spooler.SpoolMessage(message.Channel, $"!!! NEW CHEESE FACTORY !!! {player.GetDisplayName()} You have just begun building your own cheese factory in the lands of Kashkaval, where {player.ID - 1} other cheese factories already reside here. Begin producing cheese with \"!cheese\". You can get help with \"!cheese help\". Good luck!");
+                TwitchClientManager.Client.SpoolMessage(message.Channel, $"!!! NEW CHEESE FACTORY !!! {player.GetDisplayName()} You have just begun building your own cheese factory in the lands of Kashkaval, where {player.ID - 1} other cheese factories already reside here. Begin producing cheese with \"!cheese\". You can get help with \"!cheese help\". Good luck!");
             }
 
             return player;

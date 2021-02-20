@@ -1,14 +1,12 @@
-﻿using Chubberino.Client.Abstractions;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace Chubberino.Client.Commands
 {
     public sealed class Switch : Command
     {
-        public Switch(IExtendedClient client, TextWriter console) : base(client, console)
+        public Switch(ITwitchClientManager client, IConsole console) : base(client, console)
         {
         }
 
@@ -16,21 +14,21 @@ namespace Chubberino.Client.Commands
         {
             if (!arguments.Any()) { return; }
 
-            if (!TwitchClient.IsConnected)
+            if (!TwitchClientManager.Client.IsConnected)
             {
-                TwitchClient.Connect();
+                TwitchClientManager.Client.Connect();
             }
 
             String channelName = arguments.First();
 
-            var joinedChannels = TwitchClient.JoinedChannels;
+            var joinedChannels = TwitchClientManager.Client.JoinedChannels;
 
             foreach (var channel in joinedChannels)
             {
-                TwitchClient.LeaveChannel(channel);
+                TwitchClientManager.Client.LeaveChannel(channel);
             }
 
-            TwitchClient.EnsureJoinedToChannel(channelName);
+            TwitchClientManager.Client.EnsureJoinedToChannel(channelName);
         }
     }
 }

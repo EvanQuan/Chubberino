@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Chubberino.UnitTests.Tests.Client.Commands.Settings
+﻿namespace Chubberino.UnitTests.Tests.Client.Commands.Settings
 {
     public abstract class UsingSetting : UsingCommand
     {
@@ -10,7 +6,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings
 
         public UsingSetting()
         {
-            Sut = new SettingExtender(MockedTwitchClient.Object, MockedConsole.Object);
+            Sut = new SettingExtender(MockedTwitchClientManager.Object, MockedConsole.Object);
         }
     }
 }

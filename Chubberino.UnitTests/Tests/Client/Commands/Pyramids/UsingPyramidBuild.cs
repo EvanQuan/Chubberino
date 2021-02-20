@@ -13,7 +13,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Pyramids
         public UsingPyramidBuild()
         {
             PyramidBuilder = new PyramidBuilder();
-            Sut = new PyramidBuild(MockedTwitchClient.Object, MockedConsole.Object, PyramidBuilder);
+            Sut = new PyramidBuild(MockedTwitchClientManager.Object, MockedConsole.Object, PyramidBuilder);
         }
     }
 }

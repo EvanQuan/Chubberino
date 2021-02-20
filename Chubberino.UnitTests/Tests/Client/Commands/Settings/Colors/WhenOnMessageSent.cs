@@ -1,7 +1,5 @@
 ﻿using Moq;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using TwitchLib.Client.Events;
 using TwitchLib.Client.Models.Builders;
 using Xunit;
@@ -28,7 +26,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Colors
 
             Sut.TwitchClient_OnMessageSent(null, args);
 
-            MockedTwitchClient
+            MockedTwitchClientManager
                 .Verify(x => x.SpoolMessage(It.IsAny<String>()), Times.Never());
         }
 
@@ -45,7 +43,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Colors
 
             Sut.TwitchClient_OnMessageSent(null, args);
 
-            MockedTwitchClient
+            MockedTwitchClientManager
                 .Verify(x => x.SpoolMessage($".color {Color1}"), Times.Once());
         }
     }

@@ -6,7 +6,7 @@ namespace Chubberino.Client.Commands.Settings
 {
     public sealed class YepKyle : Setting
     {
-        public YepKyle(IExtendedClient client, TextWriter console)
+        public YepKyle(ITwitchClientManager client, IConsole console)
             : base(client, console)
         {
             Enable = twitchClient =>
@@ -24,7 +24,7 @@ namespace Chubberino.Client.Commands.Settings
         {
             if (e.ChatMessage.Username.Equals("YepKyle", StringComparison.OrdinalIgnoreCase))
             {
-                TwitchClient.SpoolMessage($"YEP KYLE");
+                TwitchClientManager.SpoolMessage($"YEP KYLE");
             }
         }
     }

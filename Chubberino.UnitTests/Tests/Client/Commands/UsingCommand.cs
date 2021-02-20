@@ -12,11 +12,13 @@ namespace Chubberino.UnitTests.Tests.Client.Commands
     {
         protected Mock<IApplicationContext> MockedContext { get; }
 
+        protected Mock<ITwitchClientManager> MockedTwitchClientManager { get; }
+
         protected Mock<IExtendedClient> MockedTwitchClient { get; }
 
         protected Mock<IRepeater> MockedRepeater { get; }
 
-        protected Mock<TextWriter> MockedConsole { get; }
+        protected Mock<IConsole> MockedConsole { get; }
 
         protected Mock<ICommandRepository> MockedCommandRepository { get; }
 
@@ -29,21 +31,17 @@ namespace Chubberino.UnitTests.Tests.Client.Commands
             var moderatorOptions =  new ClientOptions();
             var regularOptions = new ClientOptions();
 
-            MockedBot
-                .Setup(x => x.ModeratorClientOptions)
-                .Returns(moderatorOptions);
-
-            MockedBot
-                .Setup(x => x.RegularClientOptions)
-                .Returns(regularOptions);
-
-            MockedBot.Object.PrimaryChannelName = Guid.NewGuid().ToString();
-
-            MockedConsole = new Mock<TextWriter>().SetupAllProperties();
+            MockedConsole = new Mock<IConsole>();
 
             MockedContext = new Mock<IApplicationContext>();
 
-            MockedTwitchClient = new Mock<IExtendedClient>().SetupAllProperties();
+            MockedTwitchClient = new Mock<IExtendedClient>();
+
+            MockedTwitchClientManager = new Mock<ITwitchClientManager>();
+
+            MockedTwitchClientManager.Object.PrimaryChannelName = Guid.NewGuid().ToString();
+
+            MockedTwitchClientManager.Setup(x => x.Client).Returns(MockedTwitchClient.Object);
 
             MockedRepeater = new Mock<IRepeater>().SetupAllProperties();
 

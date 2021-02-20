@@ -11,7 +11,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.TimeoutAlerts
 
         public UsingTimeoutAlert()
         {
-            Sut = new TimeoutAlert(MockedTwitchClient.Object, MockedConsole.Object);
+            Sut = new TimeoutAlert(MockedTwitchClientManager.Object, MockedConsole.Object);
         }
     }
 }
