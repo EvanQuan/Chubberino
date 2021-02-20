@@ -10,6 +10,8 @@ namespace Chubberino
     {
         String PrimaryChannelName { get; set; }
 
+        Boolean IsBot { get; }
+
         IExtendedClient Client { get; }
 
         void SpoolMessage(String message);

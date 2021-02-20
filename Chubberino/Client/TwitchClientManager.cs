@@ -13,16 +13,22 @@ namespace Chubberino.Client
 {
     public sealed class TwitchClientManager : ITwitchClientManager
     {
+        public String PrimaryChannelName { get; set; }
+
+        public Boolean IsBot { get; private set; }
+
         public IExtendedClient Client { get; private set; }
 
-        public String PrimaryChannelName { get; set; }
         public IApplicationContext Context { get; }
+
         private IExtendedClientFactory Factory { get; }
 
         private ICredentialsManager CredentialsManager { get; }
 
         private ApplicationCredentials ApplicationCredentials { get; }
+
         public IConsole Console { get; }
+
         private IClientOptions CurrentClientOptions { get; set; }
 
         private ConnectionCredentials ConnectionCredentials { get; set; }
@@ -59,10 +65,11 @@ namespace Chubberino.Client
 
             if (askForCredentials)
             {
-                if (CredentialsManager.TryGetConnectionCredentials(out var credentials))
+                if (CredentialsManager.TryGetCredentials(out var credentials))
                 {
-                    ConnectionCredentials = credentials;
-                    bot.Name = credentials.TwitchUsername;
+                    ConnectionCredentials = credentials.ConnectionCredentials;
+                    bot.Name = credentials.ConnectionCredentials.TwitchUsername;
+                    IsBot = credentials.IsBot;
                 }
                 else
                 {

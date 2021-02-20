@@ -17,7 +17,7 @@ namespace Chubberino.Client.Credentials
             Context = context;
         }
 
-        public Boolean TryGetConnectionCredentials(out ConnectionCredentials credentials)
+        public Boolean TryGetCredentials(out Credentials credentials)
         {
             credentials = null;
 
@@ -32,11 +32,11 @@ namespace Chubberino.Client.Credentials
             Boolean resultIsValid = false;
             do
             {
-
                 Console.WriteLine("Log in as:");
                 for (Int32 i = 0; i < users.Length; i++)
                 {
-                    Console.WriteLine($"\t{i}. {users[i].TwitchUsername}");
+                    var user = users[i];
+                    Console.WriteLine($"\t{i}. {user.TwitchUsername}{(user.IsBot ? " [Bot]" : "")}");
                 }
 
                 Int32 result = Int32.TryParse(Console.ReadLine(), out result) ? result : -1;
@@ -46,7 +46,10 @@ namespace Chubberino.Client.Credentials
                 if (resultIsValid)
                 {
                     var user = users[result];
-                    credentials = new ConnectionCredentials(user.TwitchUsername, user.AccessToken);
+                    credentials = new Credentials(
+                        new ConnectionCredentials(user.TwitchUsername, user.AccessToken),
+                        user.IsBot);
+
                     return true;
                 }
             }

@@ -101,7 +101,7 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
 
             var credentials = Credentials;
 
-            MockedCredentialsManager.Setup(x => x.TryGetConnectionCredentials(out credentials)).Returns(true);
+            MockedCredentialsManager.Setup(x => x.TryGetUserCredentials(out credentials)).Returns(true);
 
             MockedCommandRepository = new Mock<ICommandRepository>().SetupAllProperties();
 

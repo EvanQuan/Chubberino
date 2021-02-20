@@ -19,7 +19,7 @@ namespace Chubberino.Client.Commands
             Enable = twitchClient => twitchClient.OnMessageReceived += TwitchClient_OnMessageReceived;
             Disable = TwitchClient => TwitchClient.OnMessageReceived -= TwitchClient_OnMessageReceived;
 
-            IsEnabled = true;
+            IsEnabled = TwitchClientManager.IsBot;
         }
 
         private void TwitchClient_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
