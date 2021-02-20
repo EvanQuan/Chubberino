@@ -1,11 +1,14 @@
 ﻿using Chubberino.Database.Models;
 using Chubberino.Modules.CheeseGame.Models;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace Chubberino.Database.Contexts
 {
     public sealed class ApplicationContext : DbContext, IApplicationContext
     {
+        public const String LocalDatabaseConnectionString = @"Server=localhost\SQLEXPRESS;Database=master;Trusted_Connection=True;";
+
         public ApplicationContext() : base()
         {
 
@@ -13,7 +16,7 @@ namespace Chubberino.Database.Contexts
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(TwitchInfo.DatabaseConnectionString);
+            optionsBuilder.UseSqlServer(LocalDatabaseConnectionString);
         }
 
         public DbSet<Player> Players { get; set; }
