@@ -31,8 +31,6 @@ namespace Chubberino.UnitTests.Tests.Client.Commands
             var moderatorOptions =  new ClientOptions();
             var regularOptions = new ClientOptions();
 
-            MockedTwitchClientManager.Object.PrimaryChannelName = Guid.NewGuid().ToString();
-
             MockedConsole = new Mock<IConsole>();
 
             MockedContext = new Mock<IApplicationContext>();
@@ -40,6 +38,8 @@ namespace Chubberino.UnitTests.Tests.Client.Commands
             MockedTwitchClient = new Mock<IExtendedClient>();
 
             MockedTwitchClientManager = new Mock<ITwitchClientManager>();
+
+            MockedTwitchClientManager.Object.PrimaryChannelName = Guid.NewGuid().ToString();
 
             MockedTwitchClientManager.Setup(x => x.Client).Returns(MockedTwitchClient.Object);
 
