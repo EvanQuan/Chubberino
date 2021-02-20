@@ -26,7 +26,7 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.PlayerExtensions
 
         [Theory]
         [InlineData(0, Rank.Bronze, 1, Rank.Bronze)]
-        [InlineData(0, Rank.Bronze, 0, Rank.Silver)]
+        [InlineData(0, Rank.Bronze, 2, Rank.Silver)]
         [InlineData(1, Rank.Silver, 2, Rank.Silver)]
         [InlineData(1, Rank.Silver, 1, Rank.Gold)]
         public void ShouldAddWorkerBonus(Int32 lesserWorkerCount, Rank lesserWorkerUpgrade, Int32 greaterWorkerCount, Rank greaterWorkerUpgrade)
