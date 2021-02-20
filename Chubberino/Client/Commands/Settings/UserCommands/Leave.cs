@@ -52,7 +52,7 @@ namespace Chubberino.Client.Commands
 
             if (e.Channel == TwitchClientManager.PrimaryChannelName)
             {
-                TwitchClientManager.PrimaryChannelName = TwitchClientManager.Client.JoinedChannels.FirstOrDefault()?.Channel ?? null;
+                TwitchClientManager.PrimaryChannelName = TwitchClientManager.Client.JoinedChannels?[0].Channel ?? null;
                 Console.WriteLine($"Primary channel updated to {TwitchClientManager.PrimaryChannelName}");
             }
 
@@ -60,7 +60,7 @@ namespace Chubberino.Client.Commands
 
         public override void Execute(IEnumerable<String> arguments)
         {
-            if (arguments.Count() == 0) { return; }
+            if (!arguments.Any()) { return; }
 
             if (!TwitchClientManager.Client.IsConnected)
             {

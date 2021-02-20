@@ -130,7 +130,7 @@ namespace Chubberino.Client.Commands.Settings
             }
         }
 
-        private Boolean IsTop(String[] tokens)
+        private static Boolean IsTop(String[] tokens)
         {
             return tokens[1] == tokens[0]
                 && tokens[2] == tokens[0]

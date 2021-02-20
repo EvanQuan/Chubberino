@@ -79,7 +79,7 @@ namespace Chubberino.Client.Commands.Settings
 
         public override void Execute(IEnumerable<String> arguments)
         {
-            if (arguments.Count() == 0)
+            if (!arguments.Any())
             {
                 UserToMirror = null;
                 Console.WriteLine("Copy disabled");

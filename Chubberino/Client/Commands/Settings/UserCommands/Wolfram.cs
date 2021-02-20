@@ -46,7 +46,7 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
                     StringBuilder messageBuilder = new StringBuilder();
 
                     messageBuilder.Append(e.ChatMessage.DisplayName);
-                    messageBuilder.Append(" ");
+                    messageBuilder.Append(' ');
 
                     if (pod.Title == "Result")
                     {
@@ -61,7 +61,7 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
                         foreach (var subpod in pod.SubPods)
                         {
                             wikipediaEntryBuilder.Append(subpod.Plaintext);
-                            wikipediaEntryBuilder.Append(" ");
+                            wikipediaEntryBuilder.Append(' ');
                         }
 
                         var match = FirstSentenceRegex.Match(wikipediaEntryBuilder.ToString());

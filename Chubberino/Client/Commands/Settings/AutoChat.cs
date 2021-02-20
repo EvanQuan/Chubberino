@@ -161,11 +161,6 @@ namespace Chubberino.Client.Commands.Settings
             }
         }
 
-        private String FilterMessage(String message)
-        {
-            return message;
-        }
-
         private String GetMessageToSend()
         {
             return PreviousMessages

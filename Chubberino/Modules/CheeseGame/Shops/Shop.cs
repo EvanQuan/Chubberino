@@ -243,51 +243,18 @@ namespace Chubberino.Modules.CheeseGame.Shops
             var itemToBuy = arguments[1..].ToLower();
 
             String outputMessage = player.GetDisplayName() + " ";
-            switch (itemToBuy)
+            outputMessage += itemToBuy switch
             {
-                case "s":
-                case "storage":
-                    outputMessage += $"Storage increases the maximum amount of cheese you can have.";
-                    break;
-                case "p":
-                case "population":
-                    outputMessage += $"Population increases the maximum number of workers you can have.";
-                    break;
-                case "w":
-                case "worker":
-                case "workers":
-                    outputMessage += $"Workers increase the amount of cheese you get every time you gain cheese with \"!cheese\".";
-                    break;
-                case "q":
-                case "quest":
-                case "quests":
-                    outputMessage += $"Go on a random quest to get rewards or risk punishment. The chance of success scales with how many workers you have.";
-                    break;
-                case "recipe":
-                case "recipes":
-                    outputMessage += $"Recipes allow you to create new kinds of cheese with \"!cheese\".";
-                    break;
-                case "r":
-                case "rank":
-                case "ranks":
-                    outputMessage += $"Ranks unlock new items to buy at the shop. Eventually ranking will give you prestige, reseting your rank and everything you have to restart the climb. For every prestige you gain, you get a permanent {(Int32)(Constants.PrestigeBonus * 100)}% boost to your cheese gains, which can stack.";
-                    break;
-                case "u":
-                case "upgrade":
-                case "upgrades":
-                    outputMessage += $"Upgrades provide a permanent bonus to your cheese factory until you prestige.";
-                    break;
-                case "m":
-                case "mouse":
-                case "mousetrap":
-                case "mousetraps":
-                    outputMessage += $"Mousetraps kills giant rats that infest your cheese factory.";
-                    break;
-                default:
-                    outputMessage += $"Invalid item \"{itemToBuy}\" name. Type \"!cheese shop\" to see the items available for purchase.";
-                    break;
-            }
-
+                "s" or "storage" => $"Storage increases the maximum amount of cheese you can have.",
+                "p" or "population" => $"Population increases the maximum number of workers you can have.",
+                "w" or "worker" or "workers" => $"Workers increase the amount of cheese you get every time you gain cheese with \"!cheese\".",
+                "q" or "quest" or "quests" => $"Go on a random quest to get rewards or risk punishment. The chance of success scales with how many workers you have.",
+                "recipe" or "recipes" => $"Recipes allow you to create new kinds of cheese with \"!cheese\".",
+                "r" or "rank" or "ranks" => $"Ranks unlock new items to buy at the shop. Eventually ranking will give you prestige, reseting your rank and everything you have to restart the climb. For every prestige you gain, you get a permanent {(Int32)(Constants.PrestigeBonus * 100)}% boost to your cheese gains, which can stack.",
+                "u" or "upgrade" or "upgrades" => $"Upgrades provide a permanent bonus to your cheese factory until you prestige.",
+                "m" or "mouse" or "mousetrap" or "mousetraps" => $"Mousetraps kills giant rats that infest your cheese factory.",
+                _ => $"Invalid item \"{itemToBuy}\" name. Type \"!cheese shop\" to see the items available for purchase.",
+            };
             TwitchClientManager.Client.SpoolMessage(message.Channel, outputMessage);
         }
     }

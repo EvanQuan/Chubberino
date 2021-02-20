@@ -92,7 +92,7 @@ namespace Chubberino.Client.Commands.Settings
         }
 
 
-        private Boolean TryGetFirstPyramidBlock(String message, out String block)
+        private static Boolean TryGetFirstPyramidBlock(String message, out String block)
         {
             block = message.Split(" ").FirstOrDefault();
 

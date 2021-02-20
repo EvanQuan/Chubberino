@@ -9,7 +9,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Pyramids
         [Fact]
         public void ShouldOutputHelpMessage()
         {
-            Sut.Execute(new String[] { });
+            Sut.Execute(Array.Empty<String>());
 
             MockedConsole.Verify(x => x.WriteLine(Sut.GetHelp()), Times.Once());
             MockedTwitchClientManager.Verify(x => x.SpoolMessage(It.IsAny<String>()), Times.Never());

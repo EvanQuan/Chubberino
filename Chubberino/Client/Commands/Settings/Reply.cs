@@ -94,20 +94,11 @@ namespace Chubberino.Client.Commands.Settings
                 case "c":
                 case "compare":
                 case "comparator":
-                    switch (arguments.FirstOrDefault())
+                    Comparator = (arguments.FirstOrDefault()) switch
                     {
-                        case "c":
-                        case "contain":
-                        case "contains":
-                            Comparator = ContainsComparator;
-                            break;
-                        case "e":
-                        case "equal":
-                        case "equals":
-                        default:
-                            Comparator = EqualsComparator;
-                            break;
-                    }
+                        "c" or "contain" or "contains" => ContainsComparator,
+                        _ => EqualsComparator,
+                    };
                     break;
 
                 case "w":

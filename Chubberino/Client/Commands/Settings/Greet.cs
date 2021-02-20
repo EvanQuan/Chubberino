@@ -57,7 +57,7 @@ namespace Chubberino.Client.Commands.Settings
 
         public override void Execute(IEnumerable<String> arguments)
         {
-            IsEnabled = arguments.Count() > 0;
+            IsEnabled = arguments.Any();
 
             if (IsEnabled)
             {
