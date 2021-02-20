@@ -1,4 +1,5 @@
-﻿using Chubberino.Modules.CheeseGame.Models;
+﻿using Chubberino.Modules.CheeseGame;
+using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.PlayerExtensions;
 using Chubberino.Modules.CheeseGame.Rankings;
 using System;
@@ -18,24 +19,29 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.PlayerExtensions
         [Fact]
         public void ShouldReturnBaseChance()
         {
-            var result = Player.GetQuestSuccessChance();
+            Double result = Player.GetQuestSuccessChance();
 
-            Assert.Equal(0.25, result);
+            Assert.Equal(Constants.QuestBaseSuccessChance, result);
         }
 
         [Theory]
-        [InlineData(1, Rank.Bronze, 0.2525)]
-        [InlineData(2, Rank.Bronze, 0.2550)]
-        [InlineData(1, Rank.Silver, 0.2550)]
-        [InlineData(2, Rank.Silver, 0.26)]
-        public void ShouldAddWorkerBonus(Int32 workerCount, Rank workerUpgrade, Double expectedChance)
+        [InlineData(0, Rank.Bronze, 1, Rank.Bronze)]
+        [InlineData(0, Rank.Bronze, 0, Rank.Silver)]
+        [InlineData(1, Rank.Silver, 2, Rank.Silver)]
+        [InlineData(1, Rank.Silver, 1, Rank.Gold)]
+        public void ShouldAddWorkerBonus(Int32 lesserWorkerCount, Rank lesserWorkerUpgrade, Int32 greaterWorkerCount, Rank greaterWorkerUpgrade)
         {
-            Player.WorkerCount = workerCount;
-            Player.LastWorkerQuestHelpUnlocked = workerUpgrade;
+            Player.WorkerCount = lesserWorkerCount;
+            Player.LastWorkerQuestHelpUnlocked = lesserWorkerUpgrade;
 
-            var result = Player.GetQuestSuccessChance();
+            Double lesserResult = Player.GetQuestSuccessChance();
 
-            Assert.Equal(expectedChance, result);
+            Player.WorkerCount = greaterWorkerCount;
+            Player.LastWorkerQuestHelpUnlocked = greaterWorkerUpgrade;
+
+            Double greaterResult = Player.GetQuestSuccessChance();
+
+            Assert.True(lesserResult < greaterResult);
         }
     }
 }
