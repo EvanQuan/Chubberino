@@ -8,7 +8,7 @@ namespace Chubberino.Modules.CheeseGame.Quests.GainCheese
 {
     public sealed class FontiagoForestQuest : GainCheeseQuest
     {
-        public FontiagoForestQuest(ApplicationContext context, Random random, IMessageSpooler spooler, IEmoteManager emoteManager) : base(context, random, spooler, emoteManager)
+        public FontiagoForestQuest(IApplicationContext context, Random random, IMessageSpooler spooler, IEmoteManager emoteManager) : base(context, random, spooler, emoteManager)
         {
         }
 

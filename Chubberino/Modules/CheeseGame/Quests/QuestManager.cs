@@ -13,7 +13,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
         private IList<IQuest> Quests { get; }
         public static TimeSpan QuestCooldown { get; set; } = TimeSpan.FromHours(2);
 
-        public QuestManager(ApplicationContext context, IMessageSpooler spooler, Random random, IEmoteManager emoteManager)
+        public QuestManager(IApplicationContext context, IMessageSpooler spooler, Random random, IEmoteManager emoteManager)
             : base(context, spooler, random, emoteManager)
         {
             Quests = new List<IQuest>();

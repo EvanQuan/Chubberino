@@ -18,7 +18,7 @@ namespace Chubberino.Modules.CheeseGame.Points
         public IHazardManager HazardManager { get; }
 
         public PointManager(
-            ApplicationContext context,
+            IApplicationContext context,
             IMessageSpooler spooler,
             ICheeseRepository cheeseRepository,
             Random random,

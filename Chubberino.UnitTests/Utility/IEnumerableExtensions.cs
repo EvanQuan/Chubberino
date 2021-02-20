@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Moq;
+using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 
 namespace Chubberino.UnitTests.Utility
@@ -14,12 +16,15 @@ namespace Chubberino.UnitTests.Utility
 
             var queryable = source.AsQueryable();
 
+            dbSet.As<IQueryable<T>>().SetReturnsDefault(queryable);
             dbSet.As<IQueryable<T>>().Setup(m => m.Provider).Returns(queryable.Provider);
             dbSet.As<IQueryable<T>>().Setup(m => m.Expression).Returns(queryable.Expression);
             dbSet.As<IQueryable<T>>().Setup(m => m.ElementType).Returns(queryable.ElementType);
             dbSet.As<IQueryable<T>>().Setup(m => m.GetEnumerator()).Returns(queryable.GetEnumerator());
 
             dbSet.As<IEnumerable<T>>().Setup(m => m.GetEnumerator()).Returns(source.GetEnumerator());
+            dbSet.As<IEnumerable>().Setup(m => m.GetEnumerator()).Returns(source.GetEnumerator());
+            dbSet.As<IListSource>().Setup(m => m.GetList()).Returns((IList)source);
 
             dbSet.Setup(x => x.AsQueryable()).Returns(queryable);
 

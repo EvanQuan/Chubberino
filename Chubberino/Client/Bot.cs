@@ -23,7 +23,7 @@ namespace Chubberino.Client
         private ConnectionCredentials Credentials { get; }
 
         private ICommandRepository Commands { get; set; }
-        private ApplicationContext Context { get; }
+        private IApplicationContext Context { get; }
         private TextWriter Console { get; set; }
 
         public ILifetimeScope Scope { get; set; }
@@ -53,7 +53,7 @@ namespace Chubberino.Client
         public ISpinWait SpinWait { get; }
 
         public Bot(
-            ApplicationContext context,
+            IApplicationContext context,
             TextWriter console,
             ICommandRepository commands,
             ConnectionCredentials credentials,

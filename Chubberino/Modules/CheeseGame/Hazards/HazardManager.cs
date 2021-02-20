@@ -17,7 +17,7 @@ namespace Chubberino.Modules.CheeseGame.Hazards
 
         public const String KillNewRatMessage = "A giant mouse sneaks into your factory, but is promptly killed by a mousetrap you have set up. ";
 
-        public HazardManager(ApplicationContext context, IMessageSpooler spooler, Random random, IEmoteManager emoteManager) : base(context, spooler, random, emoteManager)
+        public HazardManager(IApplicationContext context, IMessageSpooler spooler, Random random, IEmoteManager emoteManager) : base(context, spooler, random, emoteManager)
         {
         }
 

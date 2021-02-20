@@ -13,9 +13,9 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
     {
         public const Int32 MaximumChannelsToJoin = 100;
 
-        public ApplicationContext Context { get; }
+        public IApplicationContext Context { get; }
 
-        public Join(ApplicationContext context, IExtendedClient client, TextWriter console) : base(client, console)
+        public Join(IApplicationContext context, IExtendedClient client, TextWriter console) : base(client, console)
         {
             Context = context;
 

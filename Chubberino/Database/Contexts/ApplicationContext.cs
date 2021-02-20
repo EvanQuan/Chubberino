@@ -4,25 +4,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Chubberino.Database.Contexts
 {
-    public class ApplicationContext : DbContext
+    public sealed class ApplicationContext : DbContext, IApplicationContext
     {
         public ApplicationContext() : base()
         {
 
         }
 
-        //public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
-        //{
-
-        //}
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(TwitchInfo.DatabaseConnectionString);
         }
 
-        public virtual DbSet<Player> Players { get; set; }
+        public DbSet<Player> Players { get; set; }
 
-        public virtual DbSet<StartupChannel> StartupChannels { get; set; }
+        public DbSet<StartupChannel> StartupChannels { get; set; }
     }
 }

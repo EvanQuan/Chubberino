@@ -4,7 +4,6 @@ using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.PlayerExtensions;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using TwitchLib.Client.Models;
 
@@ -12,11 +11,11 @@ namespace Chubberino.Modules.CheeseGame
 {
     public abstract class AbstractCommandStrategy : ICommandStrategy
     {
-        protected ApplicationContext Context { get; }
+        protected IApplicationContext Context { get; }
 
         public IMessageSpooler Spooler { get; set; }
 
-        public AbstractCommandStrategy(ApplicationContext context, IMessageSpooler spooler, Random random, IEmoteManager emoteManager)
+        public AbstractCommandStrategy(IApplicationContext context, IMessageSpooler spooler, Random random, IEmoteManager emoteManager)
         {
             Context = context;
             Spooler = spooler;

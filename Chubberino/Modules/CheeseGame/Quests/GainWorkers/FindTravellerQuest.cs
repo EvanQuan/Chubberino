@@ -9,7 +9,7 @@ namespace Chubberino.Modules.CheeseGame.Quests.GainWorkers
 {
     public sealed class FindTravellerQuest : Quest
     {
-        public FindTravellerQuest(ApplicationContext context, Random random, IMessageSpooler spooler, IEmoteManager emoteManager) : base(context, random, spooler, emoteManager)
+        public FindTravellerQuest(IApplicationContext context, Random random, IMessageSpooler spooler, IEmoteManager emoteManager) : base(context, random, spooler, emoteManager)
         {
         }
 

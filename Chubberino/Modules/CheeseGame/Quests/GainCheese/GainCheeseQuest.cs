@@ -9,7 +9,7 @@ namespace Chubberino.Modules.CheeseGame.Quests.GainCheese
 {
     public abstract class GainCheeseQuest : Quest
     {
-        protected GainCheeseQuest(ApplicationContext context, Random random, IMessageSpooler spooler, IEmoteManager emoteManager) : base(context, random, spooler, emoteManager)
+        protected GainCheeseQuest(IApplicationContext context, Random random, IMessageSpooler spooler, IEmoteManager emoteManager) : base(context, random, spooler, emoteManager)
         {
         }
         

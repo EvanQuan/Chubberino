@@ -10,7 +10,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
 {
     public abstract class Quest : IQuest
     {
-        public Quest(ApplicationContext context, Random random, IMessageSpooler spooler, IEmoteManager emoteManager)
+        public Quest(IApplicationContext context, Random random, IMessageSpooler spooler, IEmoteManager emoteManager)
         {
             Context = context;
             Random = random;
@@ -18,7 +18,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
             EmoteManager = emoteManager;
         }
 
-        public ApplicationContext Context { get; }
+        public IApplicationContext Context { get; }
 
         public Random Random { get; }
 

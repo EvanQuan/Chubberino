@@ -18,7 +18,7 @@ namespace Chubberino.Modules.CheeseGame.Shops
         public IItemManager ItemManager { get; }
 
         public Shop(
-            ApplicationContext context,
+            IApplicationContext context,
             IMessageSpooler spooler,
             ICheeseRepository cheeseRepository,
             Random random,

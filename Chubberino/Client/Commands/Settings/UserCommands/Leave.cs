@@ -11,11 +11,11 @@ namespace Chubberino.Client.Commands
 {
     public sealed class Leave : UserCommand
     {
-        public ApplicationContext Context { get; }
+        public IApplicationContext Context { get; }
 
         private IBot Bot { get; }
 
-        public Leave(ApplicationContext context, IExtendedClient client, TextWriter console, IBot bot) : base(client, console)
+        public Leave(IApplicationContext context, IExtendedClient client, TextWriter console, IBot bot) : base(client, console)
         {
             TwitchClient.OnLeftChannel += TwitchClient_OnLeftChannel;
             Context = context;

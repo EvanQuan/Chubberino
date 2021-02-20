@@ -8,9 +8,11 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using TwitchLib.Client.Models;
 using TwitchLib.Communication.Interfaces;
 using TwitchLib.Communication.Models;
+using Xunit;
 
 namespace Chubberino.UnitTests.Tests.Client.Bots
 {
@@ -18,7 +20,7 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
     {
         protected Bot Sut { get; }
 
-        protected Mock<ApplicationContext> MockedContext { get; }
+        protected Mock<IApplicationContext> MockedContext { get; }
 
         protected Mock<TextWriter> MockedConsole { get; }
 
@@ -70,10 +72,10 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
                 }
             };
 
-            MockedContext = new Mock<ApplicationContext>().SetupAllProperties();
+            MockedContext = new Mock<IApplicationContext>();
 
-            MockedContext.Setup(x => x.StartupChannels).Returns(StartupChannels.ToDbSet());
-            MockedContext.Setup(x => x.Players).Returns(Players.ToDbSet());
+            MockedContext.SetupGet(x => x.StartupChannels).Returns(() => StartupChannels.ToDbSet());
+            MockedContext.SetupGet(x => x.Players).Returns(() => Players.ToDbSet());
 
             MockedConsole = new Mock<TextWriter>().SetupAllProperties();
 
@@ -123,7 +125,10 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
                 .Callback((String channel, Boolean overrideCheck) =>
                 {
                     JoinedChannels.Add(new JoinedChannel(channel));
-                    Sut.PrimaryChannelName = channel;
+                    if (Sut.PrimaryChannelName == null)
+                    {
+                        Sut.PrimaryChannelName = channel;
+                    }
                 });
 
             MockedClient

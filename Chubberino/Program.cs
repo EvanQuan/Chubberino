@@ -16,7 +16,6 @@ using Chubberino.Modules.CheeseGame.Items;
 using Chubberino.Modules.CheeseGame.Points;
 using Chubberino.Modules.CheeseGame.Quests;
 using Chubberino.Modules.CheeseGame.Quests.GainCheese;
-using Chubberino.Modules.CheeseGame.Quests.GainPopulation;
 using Chubberino.Modules.CheeseGame.Quests.GainStorage;
 using Chubberino.Modules.CheeseGame.Quests.GainWorkers;
 using Chubberino.Modules.CheeseGame.Rankings;
@@ -39,8 +38,6 @@ namespace Chubberino
 {
     public class Program
     {
-        public ApplicationContext Context { get; }
-
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>
@@ -52,7 +49,7 @@ namespace Chubberino
 
             var builder = new ContainerBuilder();
             builder.Register(c => new Bot(
-                c.Resolve<ApplicationContext>(),
+                c.Resolve<IApplicationContext>(),
                 c.Resolve<TextWriter>(),
                 c.Resolve<ICommandRepository>(),
                 c.Resolve<ConnectionCredentials>(),
@@ -148,7 +145,7 @@ namespace Chubberino
             builder.RegisterType<Wolfram>().AsSelf().SingleInstance();
 
             // Cheese game database context
-            builder.RegisterType<ApplicationContext>().AsSelf().InstancePerLifetimeScope();
+            builder.RegisterType<ApplicationContext>().As<IApplicationContext>().InstancePerLifetimeScope();
 
             builder.RegisterType<Shop>().As<IShop>().SingleInstance();
             builder.RegisterType<PointManager>().As<IPointManager>().SingleInstance();
