@@ -24,9 +24,7 @@ namespace Chubberino.Client
 
         private ICommandRepository Commands { get; set; }
         private IApplicationContext Context { get; }
-        private TextWriter Console { get; set; }
-
-        public ILifetimeScope Scope { get; set; }
+        private IConsole Console { get; set; }
 
         /// <summary>
         /// Primary channel joined.
@@ -54,7 +52,7 @@ namespace Chubberino.Client
 
         public Bot(
             IApplicationContext context,
-            TextWriter console,
+            IConsole console,
             ICommandRepository commands,
             ConnectionCredentials credentials,
             IClientOptions moderatorOptions,

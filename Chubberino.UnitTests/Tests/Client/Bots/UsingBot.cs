@@ -22,7 +22,7 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
 
         protected Mock<IApplicationContext> MockedContext { get; }
 
-        protected Mock<TextWriter> MockedConsole { get; }
+        protected Mock<IConsole> MockedConsole { get; }
 
         protected ConnectionCredentials Credentials { get; }
 
@@ -77,7 +77,7 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
             MockedContext.SetupGet(x => x.StartupChannels).Returns(() => StartupChannels.ToDbSet());
             MockedContext.SetupGet(x => x.Players).Returns(() => Players.ToDbSet());
 
-            MockedConsole = new Mock<TextWriter>().SetupAllProperties();
+            MockedConsole = new Mock<IConsole>();
 
             JoinedChannels = new List<JoinedChannel>();
 

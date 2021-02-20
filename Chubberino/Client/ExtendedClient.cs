@@ -20,7 +20,7 @@ namespace Chubberino.Client
 
         private IBot Bot { get; }
 
-        private TextWriter Console { get; }
+        private IConsole Console { get; }
 
         private ISpinWait SpinWait { get; }
 
@@ -28,7 +28,7 @@ namespace Chubberino.Client
             IBot bot,
             IClient client,
             ClientProtocol protocol,
-            TextWriter console,
+            IConsole console,
             ISpinWait spinWait,
             ILogger<TwitchClient> logger)
             : base(client, protocol, logger)

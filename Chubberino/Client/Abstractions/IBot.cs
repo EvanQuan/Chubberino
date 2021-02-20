@@ -12,8 +12,6 @@ namespace Chubberino.Client.Abstractions
 
         IExtendedClient TwitchClient { get; set; }
 
-        ILifetimeScope Scope { get; set; }
-
         /// <summary>
         /// Current channel joined.
         /// </summary>

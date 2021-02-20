@@ -50,7 +50,7 @@ namespace Chubberino
             var builder = new ContainerBuilder();
             builder.Register(c => new Bot(
                 c.Resolve<IApplicationContext>(),
-                c.Resolve<TextWriter>(),
+                c.Resolve<IConsole>(),
                 c.Resolve<ICommandRepository>(),
                 c.Resolve<ConnectionCredentials>(),
                 new ClientOptions()
@@ -68,12 +68,13 @@ namespace Chubberino
                 TwitchInfo.InitialChannelName))
                 .As<IBot>()
                 .SingleInstance();
-            builder.RegisterInstance(Console.Out).As<TextWriter>().SingleInstance();
+
+            builder.RegisterType<Client.Console>().As<IConsole>().SingleInstance();
             builder.RegisterType<CommandRepository>().As<ICommandRepository>().SingleInstance();
             builder.Register(c => new ExtendedClientFactory(
                 (IClientOptions options) => new WebSocketClient(options),
                 ClientProtocol.WebSocket,
-                c.Resolve<TextWriter>(),
+                c.Resolve<IConsole>(),
                 c.Resolve<ISpinWait>(),
                 null)).As<IExtendedClientFactory>().SingleInstance();
             builder.Register(c => c.Resolve<IBot>().TwitchClient).As<IExtendedClient>().As<IMessageSpooler>().SingleInstance();
@@ -219,19 +220,19 @@ namespace Chubberino
             color.AddColorSelector(scope.Resolve<PresetColorSelector>());
             color.AddColorSelector(scope.Resolve<RainbowColorSelector>());
 
-            bot.Scope = scope;
+            var console = scope.Resolve<IConsole>();
 
             if (!bot.Start())
             {
-                Console.WriteLine("Failed to join channel");
+                console.WriteLine("Failed to join channel");
                 return;
             }
 
             Boolean shouldContinue = true;
             do
             {
-                Console.Write(bot.GetPrompt());
-                bot.ReadCommand(Console.ReadLine());
+                console.Write(bot.GetPrompt());
+                bot.ReadCommand(console.ReadLine());
 
                 switch (bot.State)
                 {
