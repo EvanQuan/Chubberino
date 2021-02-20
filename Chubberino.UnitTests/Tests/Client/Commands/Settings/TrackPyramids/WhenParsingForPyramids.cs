@@ -60,7 +60,7 @@ namespace Chubberino.UnitTests.Tests.Client.UsingTrackPyramids
 
             Assert.Equal(expectedPyramidBlock, Sut.Pyramid.Block);
 
-            MockedTwitchClient.Verify(x => x.SpoolMessage(It.IsAny<String>(), It.IsAny<String>()), Times.Once());
+            MockedTwitchClientManager.Verify(x => x.SpoolMessage(It.IsAny<String>()), Times.Once());
         }
 
         public static IEnumerable<Object[]> ValidPyramids { get; } = new List<Object[]>
