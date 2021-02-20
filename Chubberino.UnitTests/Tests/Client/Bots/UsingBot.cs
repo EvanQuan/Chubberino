@@ -25,7 +25,7 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
 
         protected Mock<IConsole> MockedConsole { get; }
 
-        protected ConnectionCredentials Credentials { get; }
+        protected Credentials Credentials { get; }
 
         protected String Username { get; }
 
@@ -97,11 +97,11 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
             JoinedChannels = new List<JoinedChannel>();
 
 
-            Credentials = new ConnectionCredentials(Username, TwitchOAuth, disableUsernameCheck: true);
+            Credentials = new Credentials(new ConnectionCredentials(Username, TwitchOAuth, disableUsernameCheck: true), true);
 
             var credentials = Credentials;
 
-            MockedCredentialsManager.Setup(x => x.TryGetUserCredentials(out credentials)).Returns(true);
+            MockedCredentialsManager.Setup(x => x.TryGetCredentials(out credentials)).Returns(true);
 
             MockedCommandRepository = new Mock<ICommandRepository>().SetupAllProperties();
 
