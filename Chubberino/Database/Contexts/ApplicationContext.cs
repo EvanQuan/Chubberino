@@ -21,5 +21,7 @@ namespace Chubberino.Database.Contexts
         public DbSet<StartupChannel> StartupChannels { get; set; }
 
         public DbSet<UserCredentials> UserCredentials { get; set; }
+
+        public DbSet<ApplicationCredentials> ApplicationCredentials { get; set; }
     }
 }

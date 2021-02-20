@@ -14,6 +14,8 @@ namespace Chubberino.Database.Contexts
 
         DbSet<UserCredentials> UserCredentials { get; set; }
 
+        DbSet<ApplicationCredentials> ApplicationCredentials { get; set; }
+
         EntityEntry<TEntity> Add<TEntity>(TEntity entity) where TEntity : class;
 
         Int32 SaveChanges();
