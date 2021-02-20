@@ -163,7 +163,7 @@ namespace Chubberino
 
             var twitchClientManager = scope.Resolve<ITwitchClientManager>();
 
-            if (!twitchClientManager.TryInitializeClient(bot, scope.Resolve<IModeratorClientOptions>()))
+            if (!twitchClientManager.TryInitialize(bot))
             {
                 console.WriteLine("Failed to start");
                 return;
@@ -217,12 +217,6 @@ namespace Chubberino
             color.AddColorSelector(scope.Resolve<RandomColorSelector>());
             color.AddColorSelector(scope.Resolve<PresetColorSelector>());
             color.AddColorSelector(scope.Resolve<RainbowColorSelector>());
-
-            if (!twitchClientManager.TryJoinInitialChannels())
-            {
-                console.WriteLine("Failed to join initial channels");
-                return;
-            }
 
             Boolean shouldContinue = true;
             do

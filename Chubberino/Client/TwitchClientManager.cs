@@ -16,7 +16,6 @@ namespace Chubberino.Client
         public IExtendedClient Client { get; private set; }
 
         public String PrimaryChannelName { get; set; }
-
         public IApplicationContext Context { get; }
         private IExtendedClientFactory Factory { get; }
 
@@ -42,7 +41,7 @@ namespace Chubberino.Client
             Console = console;
         }
 
-        public Boolean TryInitializeClient(
+        public Boolean TryInitialize(
             IBot bot,
             IClientOptions clientOptions = null,
             Boolean askForCredentials = true)
@@ -108,7 +107,7 @@ namespace Chubberino.Client
                 Client.JoinChannel(channel.DisplayName);
             }
 
-            if (previouslyJoinedChannels != null)
+            if (previouslyJoinedChannels != null && previouslyJoinedChannels.Any())
             {
                 foreach (var channel in previouslyJoinedChannels)
                 {

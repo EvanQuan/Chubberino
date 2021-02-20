@@ -1,18 +1,27 @@
 ﻿using Moq;
+using System;
+using System.Collections.Generic;
+using TwitchLib.Client.Models;
+using TwitchLib.Communication.Interfaces;
 using Xunit;
 
 namespace Chubberino.UnitTests.Tests.Client.Bots
 {
     public sealed class WhenRefreshing : UsingBot
     {
-        [Fact]
-        public void ShouldRefreshComponentsWithOptions()
+        [Theory]
+        [InlineData(false, false)]
+        [InlineData(true, false)]
+        [InlineData(false, true)]
+        [InlineData(true, true)]
+        public void ShouldRefreshComponentsWithOptions(Boolean regularClientOptions, Boolean askForCredentials)
         {
-            Sut.Refresh(RegularClientOptions);
+            IClientOptions clientOptions = regularClientOptions ? RegularClientOptions : ModeratorClientOptions;
 
-            MockedTwitchClientManager.Verify(x => x.TryInitializeClient(Sut, RegularClientOptions, false), Times.Once());
-            MockedClient.Verify(x => x.Initialize(Credentials, MockedTwitchClientManager.Object.PrimaryChannelName, '!', '!', true), Times.Once());
-            MockedClient.Verify(x => x.JoinChannel(MockedTwitchClientManager.Object.PrimaryChannelName, false), Times.Once());
+            Sut.Refresh(clientOptions, askForCredentials);
+
+            MockedTwitchClientManager.Verify(x => x.TryInitialize(Sut, clientOptions, askForCredentials), Times.Once());
+            MockedTwitchClientManager.Verify(x => x.TryJoinInitialChannels(It.IsAny<IReadOnlyList<JoinedChannel>>()), Times.Once());
             MockedCommandRepository.Verify(x => x.RefreshAll(), Times.Once());
         }
     }

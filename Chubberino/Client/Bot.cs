@@ -15,6 +15,12 @@ namespace Chubberino.Client
 
         private IConsole Console { get; set; }
 
+
+        /// <summary>
+        /// Primary channel joined.
+        /// </summary>
+        public String PrimaryChannelName { get; set; }
+
         /// <summary>
         /// Twitch user name that the bot is logged into.
         /// </summary>
@@ -57,25 +63,28 @@ namespace Chubberino.Client
         }
 
         public Boolean Start(
-            IReadOnlyList<JoinedChannel> joinedChannels = null,
             IClientOptions clientOptions = null,
             Boolean askForCredentials = true)
         {
-            return TwitchClientManager.TryInitializeClient(this, clientOptions, askForCredentials)
-                 && TwitchClientManager.TryJoinInitialChannels(joinedChannels);
+            IReadOnlyList<JoinedChannel> previouslyJoinedChannels = TwitchClientManager.Client?.JoinedChannels;
+
+            return TwitchClientManager.TryInitialize(this, clientOptions, askForCredentials)
+                 && TwitchClientManager.TryJoinInitialChannels(previouslyJoinedChannels);
         }
 
         public String GetPrompt()
         {
             return Environment.NewLine + Environment.NewLine + Commands.GetStatus() + Environment.NewLine
-                + $"[{(IsModerator ? "Mod" : "Normal")} {TwitchClientManager.PrimaryChannelName}]> ";
+                + $"[{(IsModerator ? "Mod" : "Normal")} {PrimaryChannelName}]> ";
         }
 
 
 
-        public void Refresh(IClientOptions clientOptions = null)
+        public void Refresh(
+            IClientOptions clientOptions = null,
+            Boolean askForCredentials = true)
         {
-            Boolean successful = Start(clientOptions: clientOptions);
+            Boolean successful = Start(clientOptions, askForCredentials);
 
             if (successful)
             {

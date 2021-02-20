@@ -9,6 +9,7 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using TwitchLib.Client.Models;
+using TwitchLib.Communication.Interfaces;
 
 namespace Chubberino.UnitTests.Tests.Client.Bots
 {
@@ -42,7 +43,7 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
 
         protected Mock<IExtendedClient> MockedClient { get; }
 
-        protected List<JoinedChannel> JoinedChannels { get; }
+        protected IList<JoinedChannel> JoinedChannels { get; set; }
 
         protected Mock<ISpinWait> MockedSpinWait { get; }
 
@@ -106,6 +107,9 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
 
             MockedTwitchClientManager = new Mock<ITwitchClientManager>().SetupAllProperties();
 
+            MockedTwitchClientManager.Setup(x => x.TryInitialize(It.IsAny<IBot>(), It.IsAny<IClientOptions>(), It.IsAny<Boolean>())).Returns(true);
+            MockedTwitchClientManager.Setup(x => x.TryJoinInitialChannels(It.IsAny<IReadOnlyList<JoinedChannel>>())).Returns(true);
+
             MockedClient = new Mock<IExtendedClient>();
 
             RegularClientOptions = new RegularClientOptions();
@@ -133,7 +137,7 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
 
             MockedClient
                 .Setup(x => x.JoinedChannels)
-                .Returns(JoinedChannels);
+                .Returns((IReadOnlyList<JoinedChannel>)JoinedChannels);
 
             MockedClient
                 .Setup(x => x.JoinChannel(It.IsAny<String>(), It.IsAny<Boolean>()))

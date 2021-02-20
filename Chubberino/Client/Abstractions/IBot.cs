@@ -19,11 +19,11 @@ namespace Chubberino.Client.Abstractions
         /// </summary>
         Boolean IsModerator { get; set; }
 
-        Boolean Start(IReadOnlyList<JoinedChannel> joinedChannels = null, IClientOptions clientOptions = null, Boolean askForCredentials = true);
+        Boolean Start(IClientOptions clientOptions = null, Boolean askForCredentials = true);
 
         String GetPrompt();
 
-        void Refresh(IClientOptions clientOptions = null);
+        void Refresh(IClientOptions clientOptions = null, Boolean askForCredentials = true);
 
         void ReadCommand(String command);
     }
