@@ -1,5 +1,6 @@
 ﻿using Chubberino.Client;
 using Chubberino.Client.Abstractions;
+using Chubberino.Database.Contexts;
 using Moq;
 using System;
 using System.IO;
@@ -9,6 +10,8 @@ namespace Chubberino.UnitTests.Tests.Client.Commands
 {
     public abstract class UsingCommand
     {
+        protected Mock<IApplicationContext> MockedContext { get; }
+
         protected Mock<IExtendedClient> MockedTwitchClient { get; }
 
         protected Mock<IRepeater> MockedRepeater { get; }
@@ -37,6 +40,8 @@ namespace Chubberino.UnitTests.Tests.Client.Commands
             MockedBot.Object.PrimaryChannelName = Guid.NewGuid().ToString();
 
             MockedConsole = new Mock<TextWriter>().SetupAllProperties();
+
+            MockedContext = new Mock<IApplicationContext>();
 
             MockedTwitchClient = new Mock<IExtendedClient>().SetupAllProperties();
 

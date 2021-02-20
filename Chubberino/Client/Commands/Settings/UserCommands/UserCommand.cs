@@ -9,6 +9,16 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
 {
     public abstract class UserCommand : Setting, IUserCommand
     {
+        private static IReadOnlyList<String> UserIdsToIgnore { get; } = new List<String>()
+        {
+            // Nightbot
+            "19264788",
+            // SimonSaysBot,
+            "469718952",
+            // VJBotardo
+            "500670723",
+        };
+
         protected UserCommand(IExtendedClient client, TextWriter console) : base(client, console)
         {
         }
@@ -21,11 +31,15 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
         /// <returns></returns>
         protected Boolean TryValidateCommand(OnMessageReceivedArgs args, out IEnumerable<String> words)
         {
-            String message = args.ChatMessage.Message;   
+            words = null;
 
-            words =  message.StartsWith('!' + Name, StringComparison.OrdinalIgnoreCase)
-                ? message.Split(' ').Skip(1)
-                : null;
+            if (UserIdsToIgnore.Contains(args.ChatMessage.UserId)) { return false; }
+            String message = args.ChatMessage.Message;
+
+            if (message.StartsWith('!' + Name, StringComparison.OrdinalIgnoreCase))
+            {
+                words = message.Split(' ').Skip(1);
+            }
 
             return words != null;
         }

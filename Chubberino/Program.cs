@@ -9,6 +9,18 @@ using Chubberino.Client.Commands.Settings.Replies;
 using Chubberino.Client.Commands.Settings.UserCommands;
 using Chubberino.Client.Commands.Strategies;
 using Chubberino.Client.Threading;
+using Chubberino.Database.Contexts;
+using Chubberino.Modules.CheeseGame.Emotes;
+using Chubberino.Modules.CheeseGame.Hazards;
+using Chubberino.Modules.CheeseGame.Items;
+using Chubberino.Modules.CheeseGame.Points;
+using Chubberino.Modules.CheeseGame.Quests;
+using Chubberino.Modules.CheeseGame.Quests.GainCheese;
+using Chubberino.Modules.CheeseGame.Quests.GainStorage;
+using Chubberino.Modules.CheeseGame.Quests.GainWorkers;
+using Chubberino.Modules.CheeseGame.Rankings;
+using Chubberino.Modules.CheeseGame.Shops;
+using Chubberino.Modules.CheeseGame.Upgrades;
 using Jering.Javascript.NodeJS;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -24,21 +36,26 @@ using WolframAlphaNet;
 
 namespace Chubberino
 {
-    public static class Program
+    public class Program
     {
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>
         public static void Main()
         {
+            var services = new ServiceCollection();
+
+            // services.AddTransient<ISiteInterface, SiteRepo>
+
             var builder = new ContainerBuilder();
             builder.Register(c => new Bot(
+                c.Resolve<IApplicationContext>(),
                 c.Resolve<TextWriter>(),
                 c.Resolve<ICommandRepository>(),
                 c.Resolve<ConnectionCredentials>(),
                 new ClientOptions()
                 {
-                    MessagesAllowedInPeriod = 100,
+                    MessagesAllowedInPeriod = 90, // 100
                     ThrottlingPeriod = TimeSpan.FromSeconds(30)
                 },
                 new ClientOptions()
@@ -59,7 +76,7 @@ namespace Chubberino
                 c.Resolve<TextWriter>(),
                 c.Resolve<ISpinWait>(),
                 null)).As<IExtendedClientFactory>().SingleInstance();
-            builder.Register(c => c.Resolve<IBot>().TwitchClient).As<IExtendedClient>().SingleInstance();
+            builder.Register(c => c.Resolve<IBot>().TwitchClient).As<IExtendedClient>().As<IMessageSpooler>().SingleInstance();
             builder.Register(c => new ConnectionCredentials(TwitchInfo.BotUsername, TwitchInfo.BotToken)).As<ConnectionCredentials>().SingleInstance();
             builder.RegisterType<StopSettingStrategy>().As<IStopSettingStrategy>().SingleInstance();
             builder.RegisterType<Repeater>().As<IRepeater>();
@@ -98,6 +115,7 @@ namespace Chubberino
             builder.RegisterType<AutoChat>().AsSelf().SingleInstance();
             builder.RegisterType<AutoPogO>().AsSelf().SingleInstance();
             builder.RegisterType<Channel>().AsSelf().SingleInstance();
+            builder.RegisterType<Cheese>().AsSelf().SingleInstance();
             builder.RegisterType<Color>().AsSelf().SingleInstance();
             builder.RegisterType<Copy>().AsSelf().SingleInstance();
             builder.RegisterType<Count>().AsSelf().SingleInstance();
@@ -126,9 +144,37 @@ namespace Chubberino
             builder.RegisterType<YepKyle>().AsSelf().SingleInstance();
             builder.RegisterType<Wolfram>().AsSelf().SingleInstance();
 
+            // Cheese game database context
+            builder.RegisterType<ApplicationContext>().As<IApplicationContext>().InstancePerLifetimeScope();
+
+            builder.RegisterType<Shop>().As<IShop>().SingleInstance();
+            builder.RegisterType<PointManager>().As<IPointManager>().SingleInstance();
+            builder.RegisterType<RankManager>().As<IRankManager>().SingleInstance();
+            builder.RegisterType<QuestManager>().As<IQuestManager>().SingleInstance();
+            builder.RegisterType<EmoteManager>().As<IEmoteManager>().SingleInstance();
+            builder.RegisterType<UpgradeManager>().As<IUpgradeManager>().SingleInstance();
+            builder.RegisterType<CheeseRepository>().As<ICheeseRepository>().SingleInstance();
+            builder.RegisterType<HazardManager>().As<IHazardManager>().SingleInstance();
+            builder.RegisterType<ItemManager>().As<IItemManager>().SingleInstance();
+
+            // Quests
+            builder.RegisterType<MagnaMountainQuest>().AsSelf().SingleInstance();
+            builder.RegisterType<LakeLaguioleQuest>().AsSelf().SingleInstance();
+            builder.RegisterType<FindTravellerQuest>().AsSelf().SingleInstance();
+            builder.RegisterType<FontiagoForestQuest>().AsSelf().SingleInstance();
+            builder.RegisterType<FindTombQuest>().AsSelf().SingleInstance();
+
             IContainer container = builder.Build();
 
             using ILifetimeScope scope = container.BeginLifetimeScope();
+
+            var questManager = scope.Resolve<IQuestManager>();
+            questManager
+                .AddQuest(scope.Resolve<MagnaMountainQuest>())
+                .AddQuest(scope.Resolve<LakeLaguioleQuest>())
+                .AddQuest(scope.Resolve<FindTravellerQuest>())
+                .AddQuest(scope.Resolve<FontiagoForestQuest>())
+                .AddQuest(scope.Resolve<FindTombQuest>());
 
             var commandRepository = scope.Resolve<ICommandRepository>();
             commandRepository
@@ -136,6 +182,7 @@ namespace Chubberino
                 .AddCommand(scope.Resolve<AutoChat>())
                 .AddCommand(scope.Resolve<AutoPogO>())
                 .AddCommand(scope.Resolve<Channel>())
+                .AddCommand(scope.Resolve<Cheese>())
                 .AddCommand(scope.Resolve<Color>())
                 .AddCommand(scope.Resolve<Copy>())
                 .AddCommand(scope.Resolve<Count>())
@@ -163,7 +210,6 @@ namespace Chubberino
                 .AddCommand(scope.Resolve<Translate>())
                 .AddCommand(scope.Resolve<Wolfram>())
                 .AddCommand(scope.Resolve<YepKyle>());
-
 
             var bot = scope.Resolve<IBot>();
 

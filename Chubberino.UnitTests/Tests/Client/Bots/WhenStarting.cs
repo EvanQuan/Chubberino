@@ -1,5 +1,8 @@
-﻿using Moq;
+﻿using Chubberino.Database.Models;
+using Chubberino.UnitTests.Utility;
+using Moq;
 using System;
+using System.Collections.Generic;
 using TwitchLib.Client.Models;
 using Xunit;
 
@@ -50,6 +53,8 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
                     JoinedChannels.Add(new JoinedChannel(channel));
                     Sut.PrimaryChannelName = null;
                 });
+
+            MockedContext.Setup(x => x.StartupChannels).Returns(new List<StartupChannel>().ToDbSet());
 
             Boolean result = Sut.Start();
 

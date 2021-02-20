@@ -1,18 +1,26 @@
 ﻿using Chubberino.Client;
 using Chubberino.Client.Abstractions;
+using Chubberino.Database.Contexts;
+using Chubberino.Database.Models;
+using Chubberino.Modules.CheeseGame.Models;
+using Chubberino.UnitTests.Utility;
 using Moq;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using TwitchLib.Client.Models;
 using TwitchLib.Communication.Interfaces;
 using TwitchLib.Communication.Models;
+using Xunit;
 
 namespace Chubberino.UnitTests.Tests.Client.Bots
 {
     public abstract class UsingBot
     {
         protected Bot Sut { get; }
+
+        protected Mock<IApplicationContext> MockedContext { get; }
 
         protected Mock<TextWriter> MockedConsole { get; }
 
@@ -38,8 +46,37 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
 
         protected Mock<ISpinWait> MockedSpinWait { get; }
 
+        protected IList<StartupChannel> StartupChannels { get; }
+
+        protected IList<Player> Players { get; }
+
         public UsingBot()
         {
+            StartupChannels = new List<StartupChannel>
+            {
+                new StartupChannel()
+                {
+                    ID = 1,
+                    UserID = "1",
+                    DisplayName = "a"
+                }
+            };
+
+            Players = new List<Player>
+            {
+                new Player()
+                {
+                    ID = 1,
+                    TwitchUserID = "1",
+                    Name = "a"
+                }
+            };
+
+            MockedContext = new Mock<IApplicationContext>();
+
+            MockedContext.SetupGet(x => x.StartupChannels).Returns(() => StartupChannels.ToDbSet());
+            MockedContext.SetupGet(x => x.Players).Returns(() => Players.ToDbSet());
+
             MockedConsole = new Mock<TextWriter>().SetupAllProperties();
 
             JoinedChannels = new List<JoinedChannel>();
@@ -88,7 +125,10 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
                 .Callback((String channel, Boolean overrideCheck) =>
                 {
                     JoinedChannels.Add(new JoinedChannel(channel));
-                    Sut.PrimaryChannelName = channel;
+                    if (Sut.PrimaryChannelName == null)
+                    {
+                        Sut.PrimaryChannelName = channel;
+                    }
                 });
 
             MockedClient
@@ -101,6 +141,7 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
                 .Returns(true);
 
             Sut = new Bot(
+                MockedContext.Object,
                 MockedConsole.Object,
                 MockedCommandRepository.Object,
                 Credentials,
