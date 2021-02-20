@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Chubberino.Client.Abstractions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TwitchLib.Client.Models;
@@ -7,11 +8,18 @@ namespace Chubberino.Client.Commands.Strategies
 {
     public sealed class StopSettingStrategy : IStopSettingStrategy
     {
+        public StopSettingStrategy(IBot bot)
+        {
+            Bot = bot;
+        }
+
         private static ISet<String> StopWords { get; } = new HashSet<String>()
         {
             "bot",
-            TwitchInfo.BotUsername,
         };
+
+        public ITwitchClientManager TwitchClientManager { get; }
+        public IBot Bot { get; }
 
         public Boolean ShouldStop(ChatMessage chatMessage)
         {
@@ -21,7 +29,7 @@ namespace Chubberino.Client.Commands.Strategies
 
             String[] messageWords = chatMessage.Message.Split(' ');
 
-            return messageWords.Any(word => StopWords.Contains(word.ToLower()));
+            return messageWords.Any(word => StopWords.Contains(word.ToLower()) || word.Equals(Bot.Name, StringComparison.OrdinalIgnoreCase));
         }
     }
 }

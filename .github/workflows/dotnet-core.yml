@@ -21,15 +21,13 @@ jobs:
       run: dotnet restore
     - name: Build
       run: |
-        bash ./move_resx.sh
         dotnet build --configuration Release --no-restore
     - name: Test
       run: |
-        bash ./move_resx.sh
         dotnet test --no-restore --verbosity normal
     - name: Archive production artifacts
       uses: actions/upload-artifact@v2
       with:
         name: dist-with-all
         path: |
-          ./Chubberino/bin/Release/netcoreapp3.1/
+          ./Chubberino/bin/Release/net5.0/

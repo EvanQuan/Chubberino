@@ -14,7 +14,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Greets
         {
             MockedCompliments = new Mock<IComplimentGenerator>();
 
-            Sut = new Greet(MockedTwitchClientManager.Object, MockedConsole.Object, MockedCompliments.Object);
+            Sut = new Greet(MockedTwitchClientManager.Object, MockedBot.Object, MockedConsole.Object, MockedCompliments.Object);
         }
     }
 }
