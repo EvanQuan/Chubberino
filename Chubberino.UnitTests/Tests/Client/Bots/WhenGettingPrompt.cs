@@ -16,7 +16,7 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
 
             MockedCommandRepository.Setup(x => x.GetStatus()).Returns(commandStatus);
 
-            MockedTwitchClientManager.Object.PrimaryChannelName = Guid.NewGuid().ToString();
+            MockedTwitchClientManager.Setup(x => x.PrimaryChannelName).Returns(Guid.NewGuid().ToString());
 
             String prompt = Sut.GetPrompt();
 

@@ -15,12 +15,6 @@ namespace Chubberino.Client
 
         private IConsole Console { get; set; }
 
-
-        /// <summary>
-        /// Primary channel joined.
-        /// </summary>
-        public String PrimaryChannelName { get; set; }
-
         /// <summary>
         /// Twitch user name that the bot is logged into.
         /// </summary>
@@ -75,7 +69,7 @@ namespace Chubberino.Client
         public String GetPrompt()
         {
             return Environment.NewLine + Environment.NewLine + Commands.GetStatus() + Environment.NewLine
-                + $"[{(IsModerator ? "Mod" : "Normal")} {PrimaryChannelName}]> ";
+                + $"[{(IsModerator ? "Mod" : "Normal")} {TwitchClientManager.PrimaryChannelName}]> ";
         }
 
 

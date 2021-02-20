@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using TwitchLib.Client.Models;
 using TwitchLib.Communication.Interfaces;
 
 namespace Chubberino.Client.Abstractions
