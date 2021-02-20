@@ -19,5 +19,7 @@ namespace Chubberino.Database.Contexts
         public DbSet<Player> Players { get; set; }
 
         public DbSet<StartupChannel> StartupChannels { get; set; }
+
+        public DbSet<UserCredentials> UserCredentials { get; set; }
     }
 }
