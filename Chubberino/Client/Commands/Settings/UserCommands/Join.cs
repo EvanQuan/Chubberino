@@ -1,9 +1,7 @@
-﻿using Chubberino.Client.Abstractions;
-using Chubberino.Database.Contexts;
+﻿using Chubberino.Database.Contexts;
 using Chubberino.Database.Models;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using TwitchLib.Client.Events;
 
@@ -15,11 +13,11 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
 
         public IApplicationContext Context { get; }
 
-        public Join(IApplicationContext context, IExtendedClient client, TextWriter console) : base(client, console)
+        public Join(IApplicationContext context, ITwitchClientManager client, IConsole console) : base(client, console)
         {
             Context = context;
 
-            TwitchClient.OnJoinedChannel += TwitchClient_OnJoinedChannel;
+            TwitchClientManager.Client.OnJoinedChannel += TwitchClient_OnJoinedChannel;
 
             Enable = twitchClient => twitchClient.OnMessageReceived += TwitchClient_OnMessageReceived;
             Disable = twitchClient => twitchClient.OnMessageReceived -= TwitchClient_OnMessageReceived;
@@ -38,7 +36,7 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
 
             if (!words.Any() || !words.First().Equals(e.ChatMessage.Username, StringComparison.OrdinalIgnoreCase))
             {
-                TwitchClient.SpoolMessage(e.ChatMessage.Channel, $"{e.ChatMessage.DisplayName} I cannot join other users' channels for you.");
+                TwitchClientManager.Client.SpoolMessage(e.ChatMessage.Channel, $"{e.ChatMessage.DisplayName} I cannot join other users' channels for you.");
                 return;
             }
 
@@ -85,25 +83,25 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
 
             Context.SaveChanges();
 
-            TwitchClient.JoinChannel(e.ChatMessage.Username);
+            TwitchClientManager.Client.JoinChannel(e.ChatMessage.Username);
 
-            TwitchClient.SpoolMessage(e.ChatMessage.Channel, outputMessage);
+            TwitchClientManager.Client.SpoolMessage(e.ChatMessage.Channel, outputMessage);
         }
 
         public override void Execute(IEnumerable<String> arguments)
         {
             if (!arguments.Any()) { return; }
 
-            if (!TwitchClient.IsConnected)
+            if (!TwitchClientManager.Client.IsConnected)
             {
-                TwitchClient.Connect();
+                TwitchClientManager.Client.Connect();
             }
 
             String channelName = arguments.FirstOrDefault();
 
             // If the user inputs any second argument, it will join that channel and not leave the existing channel.
 
-            TwitchClient.EnsureJoinedToChannel(channelName);
+            TwitchClientManager.Client.EnsureJoinedToChannel(channelName);
         }
 
         public override string GetHelp()

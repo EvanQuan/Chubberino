@@ -1,9 +1,7 @@
-﻿using Chubberino.Client.Abstractions;
-using Chubberino.Client.Commands.Settings.UserCommands;
+﻿using Chubberino.Client.Commands.Settings.UserCommands;
 using Chubberino.Database.Contexts;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using TwitchLib.Client.Events;
 
@@ -13,13 +11,10 @@ namespace Chubberino.Client.Commands
     {
         public IApplicationContext Context { get; }
 
-        private IBot Bot { get; }
-
-        public Leave(IApplicationContext context, IExtendedClient client, TextWriter console, IBot bot) : base(client, console)
+        public Leave(IApplicationContext context, ITwitchClientManager client, IConsole console) : base(client, console)
         {
-            TwitchClient.OnLeftChannel += TwitchClient_OnLeftChannel;
+            TwitchClientManager.Client.OnLeftChannel += TwitchClient_OnLeftChannel;
             Context = context;
-            Bot = bot;
 
             Enable = twitchClient => twitchClient.OnMessageReceived += TwitchClient_OnMessageReceived;
             Disable = TwitchClient => TwitchClient.OnMessageReceived -= TwitchClient_OnMessageReceived;
@@ -33,7 +28,7 @@ namespace Chubberino.Client.Commands
 
             if (!words.Any() || !words.First().Equals(e.ChatMessage.Username, StringComparison.OrdinalIgnoreCase))
             {
-                TwitchClient.SpoolMessage(e.ChatMessage.Channel, $"{e.ChatMessage.DisplayName} I cannot leave other users' channels for you.");
+                TwitchClientManager.Client.SpoolMessage(e.ChatMessage.Channel, $"{e.ChatMessage.DisplayName} I cannot leave other users' channels for you.");
                 return;
             }
 
@@ -46,19 +41,19 @@ namespace Chubberino.Client.Commands
                 Context.SaveChanges();
             }
 
-            TwitchClient.LeaveChannel(e.ChatMessage.Username);
+            TwitchClientManager.Client.LeaveChannel(e.ChatMessage.Username);
 
-            TwitchClient.SpoolMessage(e.ChatMessage.Channel, $"{e.ChatMessage.DisplayName} I have left your channel");
+            TwitchClientManager.Client.SpoolMessage(e.ChatMessage.Channel, $"{e.ChatMessage.DisplayName} I have left your channel");
         }
 
         private void TwitchClient_OnLeftChannel(Object sender, OnLeftChannelArgs e)
         {
             Console.WriteLine($"Left channel {e.Channel}");
 
-            if (e.Channel == Bot.PrimaryChannelName)
+            if (e.Channel == TwitchClientManager.PrimaryChannelName)
             {
-                Bot.PrimaryChannelName = TwitchClient.JoinedChannels.FirstOrDefault()?.Channel ?? null;
-                Console.WriteLine($"Primary channel updated to {Bot.PrimaryChannelName}");
+                TwitchClientManager.PrimaryChannelName = TwitchClientManager.Client.JoinedChannels.FirstOrDefault()?.Channel ?? null;
+                Console.WriteLine($"Primary channel updated to {TwitchClientManager.PrimaryChannelName}");
             }
 
         }
@@ -67,16 +62,16 @@ namespace Chubberino.Client.Commands
         {
             if (arguments.Count() == 0) { return; }
 
-            if (!TwitchClient.IsConnected)
+            if (!TwitchClientManager.Client.IsConnected)
             {
-                TwitchClient.Connect();
+                TwitchClientManager.Client.Connect();
             }
 
             String channelName = arguments.FirstOrDefault();
 
             // If the user inputs any second argument, it will join that channel and not leave the existing channel.
 
-            TwitchClient.LeaveChannel(channelName);
+            TwitchClientManager.Client.LeaveChannel(channelName);
         }
 
         public override string GetHelp()

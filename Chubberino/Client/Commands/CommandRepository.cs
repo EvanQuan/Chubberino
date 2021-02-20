@@ -13,13 +13,13 @@ namespace Chubberino.Client.Commands
 
         private List<ICommand> CommandList { get; }
 
-        private TextWriter Console { get; }
+        private IConsole Console { get; }
 
         private Lazy<IEnumerable<ISetting>> LazySettings { get; }
 
         private Lazy<IEnumerable<IUserCommand>> LazyUserCommands { get; }
 
-        public CommandRepository(TextWriter console)
+        public CommandRepository(IConsole console)
         {
             Console = console;
             CommandList = new List<ICommand>();
@@ -87,11 +87,11 @@ namespace Chubberino.Client.Commands
             }
         }
 
-        public void RefreshAll(IExtendedClient twitchClient)
+        public void RefreshAll()
         {
-            foreach (ICommand command in CommandList)
+            foreach (ISetting setting in Settings)
             {
-                command.Refresh(twitchClient);
+                setting.Refresh();
             }
         }
 

@@ -16,11 +16,13 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
 
             MockedCommandRepository.Setup(x => x.GetStatus()).Returns(commandStatus);
 
+            MockedTwitchClientManager.Object.PrimaryChannelName = Guid.NewGuid().ToString();
+
             String prompt = Sut.GetPrompt();
 
             Assert.Contains(commandStatus, prompt);
             Assert.Contains(expectedModeratorText, prompt);
-            Assert.Contains(Sut.PrimaryChannelName, prompt);
+            Assert.Contains(MockedTwitchClientManager.Object.PrimaryChannelName, prompt);
         }
     }
 }

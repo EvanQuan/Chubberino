@@ -30,7 +30,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Colors
 
             Sut.TwitchClient_OnMessageReceived(null, args);
 
-            MockedTwitchClient
+            MockedTwitchClientManager
                 .Verify(x => x.SpoolMessage(It.IsAny<String>()), Times.Never());
         }
 
@@ -51,7 +51,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Colors
 
             Sut.TwitchClient_OnMessageReceived(null, args);
 
-            MockedTwitchClient
+            MockedTwitchClientManager
                 .Verify(x => x.SpoolMessage($".color {Color1}"), Times.Once());
         }
     }

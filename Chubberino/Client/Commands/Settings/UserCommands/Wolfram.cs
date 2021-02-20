@@ -1,7 +1,4 @@
-﻿using Chubberino.Client.Abstractions;
-using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -18,7 +15,7 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
 
         private Regex FirstSentenceRegex { get; }
 
-        public Wolfram(IExtendedClient client, TextWriter console, WolframAlpha wolfram) : base(client, console)
+        public Wolfram(ITwitchClientManager client, IConsole console, WolframAlpha wolfram) : base(client, console)
         {
             WolframAlpha = wolfram;
             FirstSentenceRegex = new Regex(FirstSentencePattern, RegexOptions.Compiled);
@@ -75,12 +72,12 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
                         }
                     }
 
-                    TwitchClient.SpoolMessage(messageBuilder.ToString());
+                    TwitchClientManager.SpoolMessage(messageBuilder.ToString());
                 }
             }
             else
             {
-                TwitchClient.SpoolMessage(e.ChatMessage.DisplayName + " Could not query WolframAlpha successfully.");
+                TwitchClientManager.SpoolMessage(e.ChatMessage.DisplayName + " Could not query WolframAlpha successfully.");
             }
         }
     }

@@ -22,7 +22,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.TimeoutAlerts
 
             Sut.TwitchClient_OnUserTimedout(null, args);
 
-            MockedTwitchClient
+            MockedTwitchClientManager
                 .Verify(x => x
                     .SpoolMessage($"WideHardo FREE MY MAN {args.UserTimeout.Username.ToUpper()}"),
                     Times.Once());

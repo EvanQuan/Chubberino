@@ -8,7 +8,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.DisableAlls
 
         public UsingDisableAll()
         {
-            Sut = new DisableAll(MockedTwitchClient.Object, MockedCommandRepository.Object, MockedConsole.Object);
+            Sut = new DisableAll(MockedTwitchClientManager.Object, MockedCommandRepository.Object, MockedConsole.Object);
         }
     }
 }

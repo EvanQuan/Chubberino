@@ -10,7 +10,7 @@ namespace Chubberino.Client.Commands
     {
         public ICommandRepository Commands { get; }
 
-        public DisableAll(IExtendedClient client, ICommandRepository commands, TextWriter console)
+        public DisableAll(ITwitchClientManager client, ICommandRepository commands, IConsole console)
             : base(client, console)
         {
             Commands = commands;

@@ -28,7 +28,7 @@ namespace Chubberino.Client.Commands.Settings
             + $"\n\tprefix: {Prefix}"
             + $"\n\tsuffix: {Suffix}";
 
-        public Count(IExtendedClient client, IRepeater repeater, TextWriter console)
+        public Count(ITwitchClientManager client, IRepeater repeater, IConsole console)
             : base(client, console)
         {
             Repeater = repeater;
@@ -79,7 +79,7 @@ namespace Chubberino.Client.Commands.Settings
 
         private void SpoolCount()
         {
-            TwitchClient.SpoolMessage($"{Prefix} {CurrentCount++} {Suffix}");
+            TwitchClientManager.SpoolMessage($"{Prefix} {CurrentCount++} {Suffix}");
         }
     }
 }

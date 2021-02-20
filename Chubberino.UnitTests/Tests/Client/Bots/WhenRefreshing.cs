@@ -10,10 +10,10 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
         {
             Sut.Refresh(RegularClientOptions);
 
-            MockedExtendedClientFactory.Verify(x => x.GetClient(Sut, RegularClientOptions), Times.Once());
-            MockedClient.Verify(x => x.Initialize(Credentials, Sut.PrimaryChannelName, '!', '!', true), Times.Once());
-            MockedClient.Verify(x => x.JoinChannel(Sut.PrimaryChannelName, false), Times.Once());
-            MockedCommandRepository.Verify(x => x.RefreshAll(MockedClient.Object), Times.Once());
+            MockedTwitchClientManager.Verify(x => x.TryInitializeClient(Sut, RegularClientOptions, false), Times.Once());
+            MockedClient.Verify(x => x.Initialize(Credentials, MockedTwitchClientManager.Object.PrimaryChannelName, '!', '!', true), Times.Once());
+            MockedClient.Verify(x => x.JoinChannel(MockedTwitchClientManager.Object.PrimaryChannelName, false), Times.Once());
+            MockedCommandRepository.Verify(x => x.RefreshAll(), Times.Once());
         }
     }
 }

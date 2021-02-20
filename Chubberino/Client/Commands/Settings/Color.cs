@@ -1,8 +1,6 @@
-﻿using Chubberino.Client.Abstractions;
-using Chubberino.Client.Commands.Settings.ColorSelectors;
+﻿using Chubberino.Client.Commands.Settings.ColorSelectors;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using TwitchLib.Client.Enums;
 using TwitchLib.Client.Events;
@@ -26,7 +24,7 @@ namespace Chubberino.Client.Commands.Settings
         public override String Status => base.Status
             + $"\n\tType: {CurrentSelector.Name}";
 
-        public Color(IExtendedClient client, TextWriter console)
+        public Color(ITwitchClientManager client, IConsole console)
             : base(client, console)
         {
             Enable = twitchClient =>
@@ -82,7 +80,7 @@ namespace Chubberino.Client.Commands.Settings
         {
             CurrentColor = CurrentSelector.GetNextColor();
 
-            TwitchClient.SpoolMessage($".color {CurrentColor}");
+            TwitchClientManager.SpoolMessage($".color {CurrentColor}");
         }
 
         public override Boolean Set(String property, IEnumerable<String> arguments)

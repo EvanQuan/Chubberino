@@ -7,7 +7,7 @@ namespace Chubberino.Client.Abstractions
     {
         IReadOnlyList<ICommand> Commands { get; }
 
-        void RefreshAll(IExtendedClient twitchClient);
+        void RefreshAll();
 
         String GetStatus();
 

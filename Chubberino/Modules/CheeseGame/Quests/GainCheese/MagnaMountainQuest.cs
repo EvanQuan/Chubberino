@@ -8,7 +8,7 @@ namespace Chubberino.Modules.CheeseGame.Quests.GainCheese
 {
     public sealed class MagnaMountainQuest : GainCheeseQuest
     {
-        public MagnaMountainQuest(IApplicationContext context, Random random, IMessageSpooler spooler, IEmoteManager emoteManager) : base(context, random, spooler, emoteManager)
+        public MagnaMountainQuest(IApplicationContext context, Random random, ITwitchClientManager client, IEmoteManager emoteManager) : base(context, random, client, emoteManager)
         {
         }
 

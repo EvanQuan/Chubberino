@@ -19,12 +19,12 @@ namespace Chubberino.Modules.CheeseGame.Points
 
         public PointManager(
             IApplicationContext context,
-            IMessageSpooler spooler,
+            ITwitchClientManager client,
             ICheeseRepository cheeseRepository,
             Random random,
             IEmoteManager emoteManager,
             IHazardManager hazardManager)
-            : base(context, spooler, random, emoteManager)
+            : base(context, client, random, emoteManager)
         {
             CheeseRepository = cheeseRepository;
             HazardManager = hazardManager;
@@ -43,7 +43,7 @@ namespace Chubberino.Modules.CheeseGame.Points
             {
                 if (player.Points >= playerStorage)
                 {
-                    Spooler.SpoolMessage(message.Channel, $"{player.GetDisplayName()}, you have {player.Points}/{playerStorage} cheese and cannot store any more. Consider buying more cheese storage with \"!cheese buy storage\".");
+                    TwitchClientManager.Client.SpoolMessage(message.Channel, $"{player.GetDisplayName()}, you have {player.Points}/{playerStorage} cheese and cannot store any more. Consider buying more cheese storage with \"!cheese buy storage\".");
                 }
                 else
                 {
@@ -73,7 +73,7 @@ namespace Chubberino.Modules.CheeseGame.Points
                     outputMessage += $"You made {cheese.Name} cheese ({(isPositive ? "+" : String.Empty)}{pointsGained}). {emote} You now have {player.Points}/{playerStorage} cheese. StinkyCheese";
                     outputMessage = player.GetDisplayName() + " " + outputMessage;
 
-                    Spooler.SpoolMessage(message.Channel, outputMessage);
+                    TwitchClientManager.Client.SpoolMessage(message.Channel, outputMessage);
                 }
             }
             else
@@ -82,7 +82,7 @@ namespace Chubberino.Modules.CheeseGame.Points
 
                 String timeToWait = Format(timeUntilNextValidPointGain);
 
-                Spooler.SpoolMessage(message.Channel, $"{player.GetDisplayName()}, you must wait {timeToWait} until you can make more cheese.");
+                TwitchClientManager.Client.SpoolMessage(message.Channel, $"{player.GetDisplayName()}, you must wait {timeToWait} until you can make more cheese.");
             }
         }
     }

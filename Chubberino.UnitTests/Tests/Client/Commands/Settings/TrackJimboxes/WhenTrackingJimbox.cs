@@ -15,7 +15,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.TrackJimboxes
 
         public WhenTrackingJimbox()
         {
-            Sut = new TrackJimbox(MockedTwitchClient.Object, MockedConsole.Object);
+            Sut = new TrackJimbox(MockedTwitchClientManager.Object, MockedConsole.Object);
         }
 
         [Theory]
@@ -25,7 +25,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.TrackJimboxes
             String[] expectedContributors,
             String expectedBorder)
         {
-            MockedTwitchClient
+            MockedTwitchClientManager
                 .Setup(x => x.SpoolMessage(It.IsAny<String>()))
                 .Callback((String message) =>
                 {
@@ -52,7 +52,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.TrackJimboxes
                 });
             }
 
-            MockedTwitchClient.Verify(x => x.SpoolMessage(It.IsAny<String>()), Times.Once());
+            MockedTwitchClientManager.Verify(x => x.SpoolMessage(It.IsAny<String>()), Times.Once());
         }
 
         public static IEnumerable<Object[]> ValidJimboxes { get; } = new List<Object[]>

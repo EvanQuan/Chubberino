@@ -8,7 +8,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Copies
 
         public UsingCopy()
         {
-            Sut = new Copy(MockedTwitchClient.Object, MockedConsole.Object);
+            Sut = new Copy(MockedTwitchClientManager.Object, MockedConsole.Object);
         }
     }
 }

@@ -1,6 +1,5 @@
-﻿using Chubberino.Client.Abstractions;
+﻿using Chubberino.Client;
 using Chubberino.Client.Commands.Settings;
-using System.IO;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands.Settings
 {
@@ -9,7 +8,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings
     /// </summary>
     public sealed class SettingExtender : Setting
     {
-        public SettingExtender(IExtendedClient client, TextWriter console)
+        public SettingExtender(ITwitchClientManager client, IConsole console)
             : base(client, console)
         {
         }

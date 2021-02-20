@@ -34,10 +34,9 @@ namespace Chubberino.Client
             Logger = logger;
         }
 
-        public IExtendedClient GetClient(IBot bot, IClientOptions options)
+        public IExtendedClient GetClient(IClientOptions options)
         {
             return new ExtendedClient(
-                bot,
                 ClientFactory(options),
                 ClientProtocol,
                 Console,

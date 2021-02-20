@@ -1,8 +1,6 @@
-﻿using Chubberino.Client.Abstractions;
-using Chubberino.Client.Extensions;
+﻿using Chubberino.Client.Extensions;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using TwitchLib.Client.Events;
 
@@ -27,17 +25,17 @@ namespace Chubberino.Client.Commands.Settings
             ? $"{UserToMirror} Mode: {Mode} Prefix: {MessagePrefix}"
             : "disabled";
 
-        public Copy(IExtendedClient client, TextWriter console)
+        public Copy(ITwitchClientManager client, IConsole console)
             : base(client, console)
         {
             Enable = twitchClient =>
             {
-                TwitchClient.OnMessageReceived += TwitchClient_OnMessageReceived;
+                TwitchClientManager.Client.OnMessageReceived += TwitchClient_OnMessageReceived;
             };
 
             Disable = twitchClient =>
             {
-                TwitchClient.OnMessageReceived -= TwitchClient_OnMessageReceived;
+                TwitchClientManager.Client.OnMessageReceived -= TwitchClient_OnMessageReceived;
             };
         }
 
@@ -76,7 +74,7 @@ namespace Chubberino.Client.Commands.Settings
             const Int32 messageCharacterLimit = 300;
             String truncatedMessage = prefixAddedMessage.Substring(0, Math.Min(prefixAddedMessage.Length, messageCharacterLimit));
 
-            TwitchClient.SpoolMessage(truncatedMessage);
+            TwitchClientManager.SpoolMessage(truncatedMessage);
         }
 
         public override void Execute(IEnumerable<String> arguments)

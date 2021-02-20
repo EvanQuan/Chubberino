@@ -1,9 +1,7 @@
 ﻿using Chubberino.Client.Abstractions;
 using Microsoft.Extensions.Logging;
 using System;
-using System.IO;
 using System.Linq;
-using System.Threading;
 using TwitchLib.Client;
 using TwitchLib.Client.Enums;
 using TwitchLib.Client.Exceptions;
@@ -18,14 +16,11 @@ namespace Chubberino.Client
     {
         private String PreviousMessage { get; set; }
 
-        private IBot Bot { get; }
-
         private IConsole Console { get; }
 
         private ISpinWait SpinWait { get; }
 
         public ExtendedClient(
-            IBot bot,
             IClient client,
             ClientProtocol protocol,
             IConsole console,
@@ -33,15 +28,8 @@ namespace Chubberino.Client
             ILogger<TwitchClient> logger)
             : base(client, protocol, logger)
         {
-            Bot = bot;
             Console = console;
             SpinWait = spinWait;
-        }
-
-
-        public void SpoolMessage(String message)
-        {
-            SpoolMessage(Bot.PrimaryChannelName, message);
         }
 
         public void SpoolMessage(String channelName, String message)

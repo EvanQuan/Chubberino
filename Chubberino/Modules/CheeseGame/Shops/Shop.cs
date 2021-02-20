@@ -19,13 +19,13 @@ namespace Chubberino.Modules.CheeseGame.Shops
 
         public Shop(
             IApplicationContext context,
-            IMessageSpooler spooler,
+            ITwitchClientManager client,
             ICheeseRepository cheeseRepository,
             Random random,
             IEmoteManager emoteManager,
             IUpgradeManager upgradeManager,
             IItemManager itemManager)
-            : base(context, spooler, random, emoteManager)
+            : base(context, client, random, emoteManager)
         {
             CheeseRepository = cheeseRepository;
             UpgradeManager = upgradeManager;
@@ -72,7 +72,7 @@ namespace Chubberino.Modules.CheeseGame.Shops
                 upgradePrompt = $"{upgrade.Description}] for {upgrade.Price} cheese";
             }
 
-            Spooler.SpoolMessage(message.Channel,
+            TwitchClientManager.Client.SpoolMessage(message.Channel,
                 $"{player.GetDisplayName()}" +
                 $" | Recipe [{recipePrompt}" +
                 $" | Storage [+100] for {prices.Storage} cheese" +
@@ -92,7 +92,7 @@ namespace Chubberino.Modules.CheeseGame.Shops
 
             if (String.IsNullOrWhiteSpace(arguments))
             {
-                Spooler.SpoolMessage(message.Channel, $"{player.GetDisplayName()} Please enter an item to buy. Type \"!cheese shop\" to see the items available for purchase.");
+                TwitchClientManager.Client.SpoolMessage(message.Channel, $"{player.GetDisplayName()} Please enter an item to buy. Type \"!cheese shop\" to see the items available for purchase.");
                 return;
             }
 
@@ -215,7 +215,7 @@ namespace Chubberino.Modules.CheeseGame.Shops
 
             outputMessage = player.GetDisplayName() + " " + outputMessage;
 
-            Spooler.SpoolMessage(message.Channel, outputMessage);
+            TwitchClientManager.Client.SpoolMessage(message.Channel, outputMessage);
         }
 
         public void HelpItem(ChatMessage message)
@@ -229,7 +229,7 @@ namespace Chubberino.Modules.CheeseGame.Shops
 
             if (String.IsNullOrWhiteSpace(arguments))
             {
-                Spooler.SpoolMessage(message.Channel,
+                TwitchClientManager.Client.SpoolMessage(message.Channel,
                     $"{player.Name} Commands: !cheese <command> where command is " +
                     $"| shop - look at what is available to buy with cheese " +
                     $"| buy <item> - buy an item at the shop " +
@@ -288,7 +288,7 @@ namespace Chubberino.Modules.CheeseGame.Shops
                     break;
             }
 
-            Spooler.SpoolMessage(message.Channel, outputMessage);
+            TwitchClientManager.Client.SpoolMessage(message.Channel, outputMessage);
         }
     }
 }

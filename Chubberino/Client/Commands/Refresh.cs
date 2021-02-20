@@ -1,15 +1,14 @@
 ﻿using Chubberino.Client.Abstractions;
 using System;
 using System.Collections.Generic;
-using System.IO;
 
 namespace Chubberino.Client.Commands
 {
     public sealed class Refresh : Command
     {
-        private IBot Bot { get; }
+        public IBot Bot { get; }
 
-        public Refresh(IExtendedClient client, TextWriter console, IBot bot)
+        public Refresh(ITwitchClientManager client, IConsole console, IBot bot)
             : base(client, console)
         {
             Bot = bot;

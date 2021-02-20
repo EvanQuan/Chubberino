@@ -1,7 +1,5 @@
-﻿using Chubberino.Client.Abstractions;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using TwitchLib.Client.Events;
 
@@ -53,7 +51,7 @@ namespace Chubberino.Client.Commands.Settings
         /// </summary>
         private String Border { get; set; }
 
-        public TrackJimbox(IExtendedClient client, TextWriter console)
+        public TrackJimbox(ITwitchClientManager client, IConsole console)
             : base(client, console)
         {
             Enable = twitchClient =>
@@ -124,11 +122,11 @@ namespace Chubberino.Client.Commands.Settings
         {
             if (Contributors.Count == 1)
             {
-                TwitchClient.SpoolMessage($"@{Contributors.Single()} Nice {Border} jimbox! peepoClap");
+                TwitchClientManager.SpoolMessage($"@{Contributors.Single()} Nice {Border} jimbox! peepoClap");
             }
             else
             {
-                TwitchClient.SpoolMessage($"@{String.Join(", @", Contributors)} Nice {Border} jimbox! Hooray teamwork! peepoClap");
+                TwitchClientManager.SpoolMessage($"@{String.Join(", @", Contributors)} Nice {Border} jimbox! Hooray teamwork! peepoClap");
             }
         }
 

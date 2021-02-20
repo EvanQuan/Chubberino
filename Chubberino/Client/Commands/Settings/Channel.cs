@@ -1,22 +1,17 @@
-﻿using Chubberino.Client.Abstractions;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace Chubberino.Client.Commands.Settings
 {
     public sealed class Channel : Setting
     {
-        public override String Status => $"\n\tprimary: {Bot.PrimaryChannelName}"
+        public override String Status => $"\n\tprimary: {TwitchClientManager.PrimaryChannelName}"
             + $"\n\tOthers:"
-            + "\n\t\t" + String.Join("\n\t\t", TwitchClient.JoinedChannels.Where(x => x.Channel != Bot.PrimaryChannelName).Select(x => x.Channel));
+            + "\n\t\t" + String.Join("\n\t\t", TwitchClientManager.Client.JoinedChannels.Where(x => x.Channel != TwitchClientManager.PrimaryChannelName).Select(x => x.Channel));
 
-        private IBot Bot { get; }
-
-        public Channel(IExtendedClient client, TextWriter console, IBot bot) : base(client, console)
+        public Channel(ITwitchClientManager client, IConsole console) : base(client, console)
         {
-            Bot = bot;
             IsEnabled = true;
         }
 
@@ -34,13 +29,13 @@ namespace Chubberino.Client.Commands.Settings
             {
                 case "p":
                 case "primary":
-                    var channel = TwitchClient.JoinedChannels
+                    var channel = TwitchClientManager.Client.JoinedChannels
                         .FirstOrDefault(x => x.Channel.Equals(primaryChannelName, StringComparison.OrdinalIgnoreCase))
                         ?.Channel ?? null;
 
                     if (channel != null)
                     {
-                        Bot.PrimaryChannelName = channel;
+                        TwitchClientManager.PrimaryChannelName = channel;
                         return true;
                     }
                     return false;

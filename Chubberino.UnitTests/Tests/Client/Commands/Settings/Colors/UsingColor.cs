@@ -25,7 +25,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Colors
             MockedSelector1 = new Mock<IColorSelector>().SetupAllProperties();
             MockedSelector2 = new Mock<IColorSelector>().SetupAllProperties();
 
-            Sut = new Color(MockedTwitchClient.Object, MockedConsole.Object);
+            Sut = new Color(MockedTwitchClientManager.Object, MockedConsole.Object);
 
             MockedSelector1.Setup(x => x.GetNextColor())
                 .Returns(Color1);

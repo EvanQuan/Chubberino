@@ -19,7 +19,7 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
             "500670723",
         };
 
-        protected UserCommand(IExtendedClient client, TextWriter console) : base(client, console)
+        protected UserCommand(ITwitchClientManager client, IConsole console) : base(client, console)
         {
         }
 

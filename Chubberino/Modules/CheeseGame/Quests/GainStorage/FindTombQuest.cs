@@ -8,7 +8,7 @@ namespace Chubberino.Modules.CheeseGame.Quests.GainStorage
 {
     public sealed class FindTombQuest : Quest
     {
-        public FindTombQuest(IApplicationContext context, Random random, IMessageSpooler spooler, IEmoteManager emoteManager) : base(context, random, spooler, emoteManager)
+        public FindTombQuest(IApplicationContext context, Random random, ITwitchClientManager client, IEmoteManager emoteManager) : base(context, random, client, emoteManager)
         {
         }
 

@@ -1,4 +1,5 @@
-﻿using Chubberino.Client.Abstractions;
+﻿using Chubberino.Client;
+using Chubberino.Client.Abstractions;
 using Chubberino.Client.Commands;
 using Moq;
 using System.IO;
@@ -14,7 +15,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
 
         protected Mock<IExtendedClient> MockedClient { get; }
 
-        protected Mock<TextWriter> MockedConsole { get; }
+        protected Mock<IConsole> MockedConsole { get; }
 
         protected Mock<IBot> MockedBot { get; }
 
@@ -22,7 +23,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
         {
             MockedClient = new Mock<IExtendedClient>();
 
-            MockedConsole = new Mock<TextWriter>();
+            MockedConsole = new Mock<IConsole>();
 
             MockedBot = new Mock<IBot>();
 

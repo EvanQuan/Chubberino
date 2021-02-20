@@ -1,7 +1,6 @@
 ﻿using Chubberino.Client.Abstractions;
 using Chubberino.Client.Commands.Strategies;
 using System;
-using System.IO;
 using TwitchLib.Client.Events;
 
 namespace Chubberino.Client.Commands.Settings
@@ -12,7 +11,7 @@ namespace Chubberino.Client.Commands.Settings
 
         private IStopSettingStrategy StopSettingStrategy { get; }
 
-        public ModCheck(IExtendedClient client, TextWriter console, ICommandRepository commands, IStopSettingStrategy stopSettingStrategy)
+        public ModCheck(ITwitchClientManager client, IConsole console, ICommandRepository commands, IStopSettingStrategy stopSettingStrategy)
             : base(client, console)
         {
             Enable = twitchClient =>

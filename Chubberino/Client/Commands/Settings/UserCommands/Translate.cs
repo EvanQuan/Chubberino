@@ -13,7 +13,7 @@ namespace Chubberino.Client.Commands
     {
         private INodeJSService NodeService { get; }
 
-        public Translate(IExtendedClient client, TextWriter console, INodeJSService nodeService) : base(client, console)
+        public Translate(ITwitchClientManager client, IConsole console, INodeJSService nodeService) : base(client, console)
         {
             NodeService = nodeService;
 
@@ -35,7 +35,7 @@ namespace Chubberino.Client.Commands
 
             if (translatedText != null)
             {
-                TwitchClient.SpoolMessage(translatedText);
+                TwitchClientManager.SpoolMessage(translatedText);
             }
         }
     }

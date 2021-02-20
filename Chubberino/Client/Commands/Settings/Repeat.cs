@@ -1,7 +1,6 @@
 ﻿using Chubberino.Client.Abstractions;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using TwitchLib.Client.Events;
 
@@ -23,7 +22,7 @@ namespace Chubberino.Client.Commands.Settings
 
         private IRepeater Repeater { get; }
 
-        public Repeat(IExtendedClient client, IRepeater repeater, TextWriter console)
+        public Repeat(ITwitchClientManager client, IRepeater repeater, IConsole console)
             : base(client, console)
         {
             Repeater = repeater;
@@ -33,7 +32,7 @@ namespace Chubberino.Client.Commands.Settings
 
         private void SpoolRepeatMessages()
         {
-            TwitchClient.SpoolMessage(RepeatMessage);
+            TwitchClientManager.SpoolMessage(RepeatMessage);
         }
 
         public override String Status => base.Status
@@ -99,7 +98,7 @@ namespace Chubberino.Client.Commands.Settings
                 case "wait":
                     if (!WaitingForRepeatMessage)
                     {
-                        TwitchClient.OnMessageReceived += TwitchClient_OnMessageReceived;
+                        TwitchClientManager.Client.OnMessageReceived += TwitchClient_OnMessageReceived;
                         WaitingForRepeatMessage = true;
                     }
                     return true;
@@ -114,7 +113,7 @@ namespace Chubberino.Client.Commands.Settings
             RepeatMessage = e.ChatMessage.Message;
 
             WaitingForRepeatMessage = false;
-            TwitchClient.OnMessageReceived -= TwitchClient_OnMessageReceived;
+            TwitchClientManager.Client.OnMessageReceived -= TwitchClient_OnMessageReceived;
             Console.WriteLine($"Received repeat message: \"{RepeatMessage}\"");
         }
 

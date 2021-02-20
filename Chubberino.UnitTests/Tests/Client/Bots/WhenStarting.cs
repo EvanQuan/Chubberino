@@ -16,7 +16,7 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
             Boolean result = Sut.Start();
 
             Assert.True(result);
-            MockedConsole.Verify(x => x.WriteLine("Connecting to " + Sut.PrimaryChannelName), Times.Once());
+            MockedConsole.Verify(x => x.WriteLine("Connecting to " + MockedTwitchClientManager.Object.PrimaryChannelName), Times.Once());
             Assert.True(MockedClient.Object.IsConnected);
         }
 
@@ -37,13 +37,13 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
             Boolean result = Sut.Start();
 
             Assert.False(result);
-            MockedConsole.Verify(x => x.WriteLine("Connecting to " + Sut.PrimaryChannelName), Times.Once());
+            MockedConsole.Verify(x => x.WriteLine("Connecting to " + MockedTwitchClientManager.Object.PrimaryChannelName), Times.Once());
         }
 
         [Fact]
         public void FailToJoinOnFailureToUpdateChannelName()
         {
-            String initialChannelName = Sut.PrimaryChannelName;
+            String initialChannelName = ApplicationCredentials.InitialTwitchPrimaryChannelName;
 
             // BotInfo fails to update channel name.
             MockedClient
@@ -51,7 +51,7 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
                 .Callback((String channel, Boolean overideCheck) =>
                 {
                     JoinedChannels.Add(new JoinedChannel(channel));
-                    Sut.PrimaryChannelName = null;
+                    MockedTwitchClientManager.Object.PrimaryChannelName = null;
                 });
 
             MockedContext.Setup(x => x.StartupChannels).Returns(new List<StartupChannel>().ToDbSet());

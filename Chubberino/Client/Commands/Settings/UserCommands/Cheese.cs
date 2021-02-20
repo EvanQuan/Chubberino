@@ -1,11 +1,9 @@
-﻿using Chubberino.Client.Abstractions;
-using Chubberino.Modules.CheeseGame.Points;
+﻿using Chubberino.Modules.CheeseGame.Points;
 using Chubberino.Modules.CheeseGame.Quests;
 using Chubberino.Modules.CheeseGame.Rankings;
 using Chubberino.Modules.CheeseGame.Shops;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using TwitchLib.Client.Events;
 
@@ -14,8 +12,8 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
     public sealed class Cheese : UserCommand
     {
         public Cheese(
-            IExtendedClient client,
-            TextWriter console,
+            ITwitchClientManager client,
+            IConsole console,
             IPointManager pointManager,
             IShop shop,
             IRankManager rankManager,
@@ -28,15 +26,6 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
             QuestManager = questManager;
             Enable = twitchClient => twitchClient.OnMessageReceived += TwitchClient_OnMessageReceived;
             Disable = twitchClient => twitchClient.OnMessageReceived -= TwitchClient_OnMessageReceived;
-        }
-
-        public override void Refresh(IExtendedClient twitchClient)
-        {
-            base.Refresh(twitchClient);
-
-            PointManager.Spooler = TwitchClient;
-            Shop.Spooler = TwitchClient;
-            RankManager.Spooler = TwitchClient;
         }
 
         private void TwitchClient_OnMessageReceived(Object sender, OnMessageReceivedArgs e)

@@ -1,12 +1,9 @@
-﻿using Chubberino.Client.Abstractions;
-using Chubberino.Client.Commands.Settings.Replies;
+﻿using Chubberino.Client.Commands.Settings.Replies;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using TwitchLib.Client.Events;
-using TwitchLib.Client.Interfaces;
 
 namespace Chubberino.Client.Commands.Settings
 {
@@ -47,7 +44,7 @@ namespace Chubberino.Client.Commands.Settings
             .AppendLine($"\tusers: {(UsersToReplyTo.Count == 0 ? "< Any user >" : "\n\t\t" + String.Join("\n\t\t", UsersToReplyTo))}")
             .ToString();
 
-        public Reply(IExtendedClient client, IEqualsComparator equalsComparator, IContainsComparator containsComparator, TextWriter console)
+        public Reply(ITwitchClientManager client, IEqualsComparator equalsComparator, IContainsComparator containsComparator, IConsole console)
             : base(client, console)
         {
             UsersToReplyTo = new HashSet<String>();
@@ -76,7 +73,7 @@ namespace Chubberino.Client.Commands.Settings
 
             String replyMessageWithUserName = replyMessage.Replace("@", $"@{e.ChatMessage.DisplayName}");
 
-            TwitchClient.SpoolMessage(replyMessageWithUserName);
+            TwitchClientManager.SpoolMessage(replyMessageWithUserName);
         }
 
         public override Boolean Set(String property, IEnumerable<String> arguments)
