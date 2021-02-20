@@ -23,7 +23,7 @@ namespace Chubberino.Client.Commands.Settings
         /// Greeting to add after the user name.
         /// </summary>
         private String Greeting { get; set; }
-
+        public IBot Bot { get; }
         private IComplimentGenerator Compliments { get; }
 
         public override String Status => (IsEnabled
@@ -31,7 +31,7 @@ namespace Chubberino.Client.Commands.Settings
             : "disabled")
             + $" Mode: {CurrentMode}";
 
-        public Greet(ITwitchClientManager client, IConsole console, IComplimentGenerator compliments)
+        public Greet(ITwitchClientManager client, IBot bot, IConsole console, IComplimentGenerator compliments)
             : base(client, console)
         {
             Enable = twitchClient =>
@@ -43,14 +43,14 @@ namespace Chubberino.Client.Commands.Settings
             {
                 twitchClient.OnUserJoined -= TwitchClient_OnUserJoined;
             };
-
+            Bot = bot;
             Compliments = compliments;
         }
 
         private void TwitchClient_OnUserJoined(Object sender, OnUserJoinedArgs e)
         {
             // Don't count self
-            if (e.Username.Equals(TwitchInfo.BotUsername, StringComparison.OrdinalIgnoreCase)) { return; }
+            if (e.Username.Equals(Bot.Name, StringComparison.OrdinalIgnoreCase)) { return; }
 
             TwitchClientManager.SpoolMessage($"@{e.Username} {Greeting} {(CurrentMode == Mode.Wholesome ? Compliments.GetCompliment() : String.Empty)}");
         }
