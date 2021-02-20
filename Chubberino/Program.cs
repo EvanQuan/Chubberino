@@ -161,10 +161,10 @@ namespace Chubberino
             builder.RegisterType<ItemManager>().As<IItemManager>().SingleInstance();
 
             // Quests
-            builder.RegisterType<CheeseMountainQuest>().AsSelf().SingleInstance();
+            builder.RegisterType<MagnaMountainQuest>().AsSelf().SingleInstance();
             builder.RegisterType<LakeLaguioleQuest>().AsSelf().SingleInstance();
             builder.RegisterType<FindTravellerQuest>().AsSelf().SingleInstance();
-            builder.RegisterType<FindAbandonedShelterQuest>().AsSelf().SingleInstance();
+            builder.RegisterType<FontiagoForestQuest>().AsSelf().SingleInstance();
             builder.RegisterType<FindTombQuest>().AsSelf().SingleInstance();
 
             IContainer container = builder.Build();
@@ -173,10 +173,10 @@ namespace Chubberino
 
             var questManager = scope.Resolve<IQuestManager>();
             questManager
-                .AddQuest(scope.Resolve<CheeseMountainQuest>())
+                .AddQuest(scope.Resolve<MagnaMountainQuest>())
                 .AddQuest(scope.Resolve<LakeLaguioleQuest>())
                 .AddQuest(scope.Resolve<FindTravellerQuest>())
-                .AddQuest(scope.Resolve<FindAbandonedShelterQuest>())
+                .AddQuest(scope.Resolve<FontiagoForestQuest>())
                 .AddQuest(scope.Resolve<FindTombQuest>());
 
             var commandRepository = scope.Resolve<ICommandRepository>();

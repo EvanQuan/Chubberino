@@ -6,13 +6,13 @@ using System;
 
 namespace Chubberino.Modules.CheeseGame.Quests.GainCheese
 {
-    public sealed class CheeseMountainQuest : GainCheeseQuest
+    public sealed class MagnaMountainQuest : GainCheeseQuest
     {
-        public CheeseMountainQuest(ApplicationContext context, Random random, IMessageSpooler spooler, IEmoteManager emoteManager) : base(context, random, spooler, emoteManager)
+        public MagnaMountainQuest(ApplicationContext context, Random random, IMessageSpooler spooler, IEmoteManager emoteManager) : base(context, random, spooler, emoteManager)
         {
         }
 
-        protected override Int32 BaseRewardPoints => 150;
+        protected override Int32 BaseRewardPoints => 100;
 
         protected override String SuccessMessage =>
             "You find a giant vein of Magna cheese and mine at it for hours. (+{0} cheese)";
