@@ -82,7 +82,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
             return hasWorkers;
         }
 
-        protected String GetPlayerWithWorkers(Player player)
+        protected static String GetPlayerWithWorkers(Player player)
         {
             return player.WorkerCount switch
             {
