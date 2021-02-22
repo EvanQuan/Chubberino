@@ -1,9 +1,9 @@
-﻿using Chubberino.Client.Abstractions;
-using Chubberino.Database.Contexts;
+﻿using Chubberino.Database.Contexts;
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Hazards;
 using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.PlayerExtensions;
+using Chubberino.Utility;
 using System;
 using TwitchLib.Client.Models;
 
@@ -51,8 +51,18 @@ namespace Chubberino.Modules.CheeseGame.Points
 
                     String outputMessage = HazardManager.UpdateMouseInfestationStatus(player);
 
+                    Boolean useChannelEmotes = message.Channel.Equals("ChubbehMouse", StringComparison.OrdinalIgnoreCase);
+
                     Int32 oldPoints = player.Points;
-                    player.AddPoints(cheese, !player.IsMouseInfested);
+
+                    Boolean isCritical = Random.TryPercentChance((Int32)player.NextCriticalCheeseUpgradeUnlock * Constants.CriticalCheeseUpgradePercent);
+
+                    if (isCritical)
+                    {
+                        outputMessage += $"{EmoteManager.GetRandomPositiveEmote(useChannelEmotes)} CRITICAL CHEESE!!! {EmoteManager.GetRandomPositiveEmote(useChannelEmotes)} ";
+                    }
+
+                    player.AddPoints(cheese, !player.IsMouseInfested, isCritical);
 
                     Int32 newPoints = player.Points;
 
@@ -64,11 +74,11 @@ namespace Chubberino.Modules.CheeseGame.Points
 
                     Boolean isPositive = cheese.PointValue > 0;
 
-                    Boolean useChannelEmotes = message.Channel.Equals("ChubbehMouse", StringComparison.OrdinalIgnoreCase);
 
                     String emote = isPositive
                         ? EmoteManager.GetRandomPositiveEmote(useChannelEmotes)
                         : EmoteManager.GetRandomNegativeEmote(useChannelEmotes);
+
 
                     outputMessage += $"You made {cheese.Name} cheese ({(isPositive ? "+" : String.Empty)}{pointsGained}). {emote} You now have {player.Points}/{playerStorage} cheese. StinkyCheese";
                     outputMessage = player.GetDisplayName() + " " + outputMessage;

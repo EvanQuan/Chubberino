@@ -18,6 +18,7 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
             player.NextWorkerQuestSuccessUpgradeUnlock = 0;
             player.NextStorageUpgradeUnlock = 0;
             player.NextQuestSuccessUpgradeUnlock = 0;
+            player.NextCriticalCheeseUpgradeUnlock = 0;
             player.MouseTrapCount = 0;
             player.IsMouseInfested = false;
 
@@ -40,7 +41,7 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
             player.AddPoints((Int32) points);
         }
 
-        public static void AddPoints(this Player player, CheeseType cheese, Boolean withWorkers = true)
+        public static void AddPoints(this Player player, CheeseType cheese, Boolean withWorkers = true, Boolean isCritical = false)
         {
             // Cannot reach negative points.
             // Cannot go above the point storage.
@@ -54,8 +55,16 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
                 workerPoints = Math.Sign(cheese.PointValue) * absoluteWorkerPoints;
             }
 
-            var newPoints = (Int32)Math.Min(Math.Max(player.Points + (cheese.PointValue * (1 + Constants.PrestigeBonus * player.Prestige)) + workerPoints, 0), player.GetTotalStorage());
-            player.Points = newPoints;
+            var pointsToAddRaw = cheese.PointValue * (1 + Constants.PrestigeBonus * player.Prestige) + workerPoints;
+
+            var pointsToAddWithCritical = pointsToAddRaw * (isCritical ? 1 : Constants.CriticalCheeseMultiplier); 
+
+            var newPointsRaw = player.Points + pointsToAddWithCritical;
+
+            // Between 0 and total storage
+            var newPointsBounded = (Int32)Math.Min(Math.Max(newPointsRaw, 0), player.GetTotalStorage());
+
+            player.Points = newPointsBounded;
         }
 
         /// <summary>

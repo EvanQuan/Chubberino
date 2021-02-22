@@ -40,5 +40,7 @@ namespace Chubberino.Modules.CheeseGame.Models
         public Rank NextStorageUpgradeUnlock { get; set; }
 
         public Rank NextQuestSuccessUpgradeUnlock { get; set; }
+
+        public Rank NextCriticalCheeseUpgradeUnlock { get; set; }
     }
 }
