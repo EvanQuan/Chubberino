@@ -13,33 +13,33 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
 
         public Upgrade GetNextUpgradeToUnlock(Player player)
         {
-            if (player.LastWorkerQuestHelpUnlocked > player.LastStorageUpgradeUnlocked)
+            if (player.NextWorkerQuestSuccessUpgradeUnlock > player.NextStorageUpgradeUnlock)
             {
                 // Storage
                 return new Upgrade(
-                    String.Format(StorageDescription, (Int32)(player.LastStorageUpgradeUnlocked + 1) * Constants.StorageUpgradePercent * 100),
-                    player.LastStorageUpgradeUnlocked,
-                    (Int32)(200 + Math.Max(1.5, (Int32)player.LastStorageUpgradeUnlocked) * 100),
-                    x => x.LastStorageUpgradeUnlocked++);
+                    String.Format(StorageDescription, (Int32)(player.NextStorageUpgradeUnlock + 1) * Constants.StorageUpgradePercent * 100),
+                    player.NextStorageUpgradeUnlock,
+                    (Int32)(200 + Math.Max(1.5, (Int32)player.NextStorageUpgradeUnlock) * 100),
+                    x => x.NextStorageUpgradeUnlock++);
 
             }
-            else if (player.LastWorkerProductionUpgradeUnlocked > player.LastWorkerQuestHelpUnlocked)
+            else if (player.NextWorkerProductionUpgradeUnlock > player.NextWorkerQuestSuccessUpgradeUnlock)
             {
                 // Quest success
                 return new Upgrade(
-                    String.Format(QuestHelpDescription, (Int32)(player.LastWorkerQuestHelpUnlocked + 1) * Constants.QuestBaseSuccessChance * Constants.QuestWorkerSuccessBonus),
-                    player.LastWorkerQuestHelpUnlocked,
-                    (Int32)(50 + Math.Pow(1.5, (Int32)player.LastWorkerQuestHelpUnlocked) * 100),
-                    x => x.LastWorkerQuestHelpUnlocked++);
+                    String.Format(QuestHelpDescription, (Int32)(player.NextWorkerQuestSuccessUpgradeUnlock + 1) * Constants.QuestBaseSuccessChance * Constants.QuestWorkerSuccessBonus),
+                    player.NextWorkerQuestSuccessUpgradeUnlock,
+                    (Int32)(50 + Math.Pow(1.5, (Int32)player.NextWorkerQuestSuccessUpgradeUnlock) * 100),
+                    x => x.NextWorkerQuestSuccessUpgradeUnlock++);
             }
-            else if (player.LastWorkerProductionUpgradeUnlocked < Rankings.Rank.Legend)
+            else if (player.NextWorkerProductionUpgradeUnlock < Rankings.Rank.Legend)
             {
                 // Worker production
                 return new Upgrade(
-                    String.Format(ProductionDescription, (Int32)(player.LastWorkerProductionUpgradeUnlocked + 1) * Constants.WorkerUpgradePercent * 100),
-                    player.LastWorkerProductionUpgradeUnlocked,
-                    (Int32)(100 + Math.Pow(2, (Int32)player.LastWorkerProductionUpgradeUnlocked) * 100),
-                    x => x.LastWorkerProductionUpgradeUnlocked++);
+                    String.Format(ProductionDescription, (Int32)(player.NextWorkerProductionUpgradeUnlock + 1) * Constants.WorkerUpgradePercent * 100),
+                    player.NextWorkerProductionUpgradeUnlock,
+                    (Int32)(100 + Math.Pow(2, (Int32)player.NextWorkerProductionUpgradeUnlock) * 100),
+                    x => x.NextWorkerProductionUpgradeUnlock++);
             }
             else
             {
