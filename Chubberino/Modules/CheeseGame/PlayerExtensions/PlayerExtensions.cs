@@ -48,7 +48,7 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
             Int32 workerPoints = 0;
             if (withWorkers)
             {
-                Double workerPointMultipler = ((Int32)player.LastWorkerProductionUpgradeUnlocked + 1) * 10 / 100.0;
+                Double workerPointMultipler = ((Int32)player.LastWorkerProductionUpgradeUnlocked + 1) * Constants.WorkerUpgradePercent;
                 Int32 absoluteWorkerPoints = (Int32)Math.Max(Math.Abs(cheese.PointValue) * (player.WorkerCount * workerPointMultipler), player.WorkerCount == 0 ? 0 : 1);
                 workerPoints = Math.Sign(cheese.PointValue) * absoluteWorkerPoints;
             }
