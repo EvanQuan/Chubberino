@@ -53,8 +53,8 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
             else if (player.NextWorkerProductionUpgradeUnlock < Rankings.Rank.Legend)
             {
                 // Worker production
-                Double currentUpgradePercent = (Int32)(player.NextWorkerProductionUpgradeUnlock) * Constants.WorkerUpgradePercent * 100;
-                Double nextUpgradePercent = (Int32)(player.NextWorkerProductionUpgradeUnlock + 1) * Constants.WorkerUpgradePercent * 100;
+                Double currentUpgradePercent = (Int32)(player.NextWorkerProductionUpgradeUnlock + 1) * Constants.WorkerUpgradePercent * 100;
+                Double nextUpgradePercent = (Int32)(player.NextWorkerProductionUpgradeUnlock + 2) * Constants.WorkerUpgradePercent * 100;
                 return new Upgrade(
                     String.Format(ProductionDescription, currentUpgradePercent, nextUpgradePercent),
                     player.NextWorkerProductionUpgradeUnlock,

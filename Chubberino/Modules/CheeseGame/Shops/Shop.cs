@@ -1,6 +1,7 @@
 ﻿using Chubberino.Database.Contexts;
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Items;
+using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.PlayerExtensions;
 using Chubberino.Modules.CheeseGame.Points;
 using Chubberino.Modules.CheeseGame.Upgrades;
@@ -33,11 +34,11 @@ namespace Chubberino.Modules.CheeseGame.Shops
 
         public void ListInventory(ChatMessage message)
         {
-            var player = GetPlayer(message);
+            Player player = GetPlayer(message);
 
-            var prices = ItemManager.GetPrices(player);
+            PriceList prices = ItemManager.GetPrices(player);
 
-            var nextCheeseToUnlock = CheeseRepository.GetNextCheeseToUnlock(player);
+            CheeseType nextCheeseToUnlock = CheeseRepository.GetNextCheeseToUnlock(player);
 
             String recipePrompt;
 
@@ -54,7 +55,7 @@ namespace Chubberino.Modules.CheeseGame.Shops
                 recipePrompt = $"{nextCheeseToUnlock.Name} (+{nextCheeseToUnlock.PointValue})] for {nextCheeseToUnlock.CostToUnlock} cheese"; 
             }
 
-            var upgrade = UpgradeManager.GetNextUpgradeToUnlock(player);
+            Upgrade upgrade = UpgradeManager.GetNextUpgradeToUnlock(player);
 
             String upgradePrompt;
 
@@ -85,9 +86,9 @@ namespace Chubberino.Modules.CheeseGame.Shops
         public void BuyItem(ChatMessage message)
         {
             // Cut out "!cheese buy" start.
-            var arguments = message.Message[11..];
+            String arguments = message.Message[11..];
 
-            var player = GetPlayer(message);
+            Player player = GetPlayer(message);
 
             if (String.IsNullOrWhiteSpace(arguments))
             {
@@ -95,10 +96,10 @@ namespace Chubberino.Modules.CheeseGame.Shops
                 return;
             }
 
-            var itemToBuy = arguments[1..].ToLower();
+            String itemToBuy = arguments[1..].ToLower();
 
 
-            var prices = ItemManager.GetPrices(player);
+            PriceList prices = ItemManager.GetPrices(player);
 
             String outputMessage;
 
@@ -225,11 +226,11 @@ namespace Chubberino.Modules.CheeseGame.Shops
         public void HelpItem(ChatMessage message)
         {
             // Cut out "!cheese help" start.
-            var arguments = message.Message.StartsWith("!cheese help")
+            String arguments = message.Message.StartsWith("!cheese help")
                 ? message.Message[12..]
                 : message.Message[9..]; // !cheese h
 
-            var player = GetPlayer(message);
+            Player player = GetPlayer(message);
 
             if (String.IsNullOrWhiteSpace(arguments))
             {
@@ -244,14 +245,14 @@ namespace Chubberino.Modules.CheeseGame.Shops
                 return;
             }
 
-            var itemToBuy = arguments[1..].ToLower();
+            String itemToBuy = arguments[1..].ToLower();
 
             String outputMessage = player.GetDisplayName() + " ";
             outputMessage += itemToBuy switch
             {
                 "s" or "storage" => $"Storage increases the maximum amount of cheese you can have.",
                 "p" or "population" => $"Population increases the maximum number of workers you can have.",
-                "w" or "worker" or "workers" => $"Workers increase the amount of cheese you get every time you gain cheese with \"!cheese\".",
+                "w" or "worker" or "workers" => $"Workers increase the amount of cheese you get every time you gain cheese with \"!cheese\" and increase the success chance with you go on a quest with \"!cheese quest\".",
                 "q" or "quest" or "quests" => $"Go on a random quest to get rewards or risk punishment. The chance of success scales with how many workers you have.",
                 "recipe" or "recipes" => $"Recipes allow you to create new kinds of cheese with \"!cheese\".",
                 "r" or "rank" or "ranks" => $"Ranks unlock new items to buy at the shop. Eventually ranking will give you prestige, reseting your rank and everything you have to restart the climb. For every prestige you gain, you get a permanent {(Int32)(Constants.PrestigeBonus * 100)}% boost to your cheese gains, which can stack.",
