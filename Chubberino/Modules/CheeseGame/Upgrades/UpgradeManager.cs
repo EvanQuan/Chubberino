@@ -16,7 +16,7 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
 
         public Upgrade GetNextUpgradeToUnlock(Player player)
         {
-            if (player.NextQuestSuccessUpgradeUnlock > player.NextStorageUpgradeUnlock)
+            if (player.NextCriticalCheeseUpgradeUnlock > player.NextStorageUpgradeUnlock)
             {
                 // Storage
                 Double currentUpgradePercent = (Int32)(player.NextStorageUpgradeUnlock) * Constants.StorageUpgradePercent * 100;
