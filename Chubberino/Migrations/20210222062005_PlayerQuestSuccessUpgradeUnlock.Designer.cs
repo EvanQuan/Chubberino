@@ -4,14 +4,16 @@ using Chubberino.Database.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Chubberino.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20210222062005_PlayerQuestSuccessUpgradeUnlock")]
+    partial class PlayerQuestSuccessUpgradeUnlock
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -98,6 +100,15 @@ namespace Chubberino.Migrations
                     b.Property<DateTime>("LastQuestVentured")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("LastStorageUpgradeUnlocked")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LastWorkerProductionUpgradeUnlocked")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LastWorkerQuestHelpUnlocked")
+                        .HasColumnType("int");
+
                     b.Property<int>("MaximumPointStorage")
                         .HasColumnType("int");
 
@@ -107,19 +118,7 @@ namespace Chubberino.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("NextCriticalCheeseUpgradeUnlock")
-                        .HasColumnType("int");
-
                     b.Property<int>("NextQuestSuccessUpgradeUnlock")
-                        .HasColumnType("int");
-
-                    b.Property<int>("NextStorageUpgradeUnlock")
-                        .HasColumnType("int");
-
-                    b.Property<int>("NextWorkerProductionUpgradeUnlock")
-                        .HasColumnType("int");
-
-                    b.Property<int>("NextWorkerQuestSuccessUpgradeUnlock")
                         .HasColumnType("int");
 
                     b.Property<int>("Points")

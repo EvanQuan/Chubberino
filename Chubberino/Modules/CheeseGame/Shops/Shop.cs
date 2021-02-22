@@ -1,5 +1,4 @@
-﻿using Chubberino.Client.Abstractions;
-using Chubberino.Database.Contexts;
+﻿using Chubberino.Database.Contexts;
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Items;
 using Chubberino.Modules.CheeseGame.PlayerExtensions;
@@ -164,6 +163,11 @@ namespace Chubberino.Modules.CheeseGame.Shops
                     else if (player.Points >= nextCheeseToUnlock.CostToUnlock)
                     {
                         player.CheeseUnlocked++;
+                        if (nextCheeseToUnlock.UnlocksNegativeCheese)
+                        {
+                            // Increment again so that the next cheese to unlock is not a negative one.
+                            player.CheeseUnlocked++;
+                        }
                         player.Points -= nextCheeseToUnlock.CostToUnlock;
                         Context.SaveChanges();
                         outputMessage = $"You bought the {nextCheeseToUnlock.Name} recipe. (-{nextCheeseToUnlock.CostToUnlock} cheese)";

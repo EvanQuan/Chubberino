@@ -17,19 +17,23 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.PlayerExtensions
         }
 
         [Theory]
-        [InlineData(0, 1)]
-        [InlineData(1, 1)]
-        [InlineData(1, 2)]
-        [InlineData(2, 3)]
-        public void ShouldAddPointsWithoutWorkers(Int32 pointGain, Int32 storage)
+        [InlineData(0, 1, 0, 0)]
+        [InlineData(1, 1, 0, 1)]
+        [InlineData(1, 2, 0, 1)]
+        [InlineData(2, 3, 0, 2)]
+        [InlineData(-1, 2, 1, 0)]
+        [InlineData(-1, 2, 2, 1)]
+        public void ShouldAddPointsWithoutWorkers(Int32 pointGain, Int32 storage, Int32 initialPoints, Int32 expectedPoints)
         {
             var cheese = new CheeseType(null, pointGain);
 
             Player.MaximumPointStorage = storage;
 
+            Player.Points = initialPoints;
+
             Player.AddPoints(cheese);
 
-            Assert.Equal(pointGain, Player.Points);
+            Assert.Equal(expectedPoints, Player.Points);
         }
 
         /// <summary>
@@ -93,6 +97,8 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.PlayerExtensions
         [Theory]
         [InlineData(100, 200, 0, 1, 110)]
         [InlineData(100, 200, 0, 2, 120)]
+        [InlineData(-100, 200, 200, 1, 90)]
+        [InlineData(-100, 200, 200, 2, 80)]
         public void ShouldAddWorkerPoints(Int32 pointGain, Int32 storage, Int32 initialPoints, Int32 workers, Int32 expectedPoints)
         {
             

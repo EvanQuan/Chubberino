@@ -19,9 +19,9 @@ namespace Chubberino.Modules.CheeseGame.Models
 
         public Rank Rank { get; set; }
 
-        public Rank LastWorkerProductionUpgradeUnlocked { get; set; }
+        public Rank NextWorkerProductionUpgradeUnlock { get; set; }
 
-        public Rank LastWorkerQuestHelpUnlocked { get; set; }
+        public Rank NextWorkerQuestSuccessUpgradeUnlock { get; set; }
 
         public Int32 Prestige { get; set; }
 
@@ -37,6 +37,10 @@ namespace Chubberino.Modules.CheeseGame.Models
 
         public Boolean IsMouseInfested { get; set; }
 
-        public Rank LastStorageUpgradeUnlocked { get; set; }
+        public Rank NextStorageUpgradeUnlock { get; set; }
+
+        public Rank NextQuestSuccessUpgradeUnlock { get; set; }
+
+        public Rank NextCriticalCheeseUpgradeUnlock { get; set; }
     }
 }

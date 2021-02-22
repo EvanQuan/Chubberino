@@ -14,9 +14,11 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
             player.WorkerCount = 0;
             player.Rank = Rankings.Rank.Bronze;
             player.CheeseUnlocked = 0;
-            player.LastWorkerProductionUpgradeUnlocked = 0;
-            player.LastWorkerQuestHelpUnlocked = 0;
-            player.LastStorageUpgradeUnlocked = 0;
+            player.NextWorkerProductionUpgradeUnlock = 0;
+            player.NextWorkerQuestSuccessUpgradeUnlock = 0;
+            player.NextStorageUpgradeUnlock = 0;
+            player.NextQuestSuccessUpgradeUnlock = 0;
+            player.NextCriticalCheeseUpgradeUnlock = 0;
             player.MouseTrapCount = 0;
             player.IsMouseInfested = false;
 
@@ -39,7 +41,7 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
             player.AddPoints((Int32) points);
         }
 
-        public static void AddPoints(this Player player, CheeseType cheese, Boolean withWorkers = true)
+        public static void AddPoints(this Player player, CheeseType cheese, Boolean withWorkers = true, Boolean isCritical = false)
         {
             // Cannot reach negative points.
             // Cannot go above the point storage.
@@ -48,13 +50,21 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
             Int32 workerPoints = 0;
             if (withWorkers)
             {
-                Double workerPointMultipler = ((Int32)player.LastWorkerProductionUpgradeUnlocked + 1) * Constants.WorkerUpgradePercent;
+                Double workerPointMultipler = ((Int32)player.NextWorkerProductionUpgradeUnlock + 1) * Constants.WorkerUpgradePercent;
                 Int32 absoluteWorkerPoints = (Int32)Math.Max(Math.Abs(cheese.PointValue) * (player.WorkerCount * workerPointMultipler), player.WorkerCount == 0 ? 0 : 1);
                 workerPoints = Math.Sign(cheese.PointValue) * absoluteWorkerPoints;
             }
 
-            var newPoints = (Int32)Math.Min(Math.Max(player.Points + (cheese.PointValue * (1 + Constants.PrestigeBonus * player.Prestige)) + workerPoints, 0), player.GetTotalStorage());
-            player.Points = newPoints;
+            Double pointsToAddRaw = cheese.PointValue * (1 + Constants.PrestigeBonus * player.Prestige) + workerPoints;
+
+            Double pointsToAddWithCritical = pointsToAddRaw * (isCritical ? Constants.CriticalCheeseMultiplier : 1);
+
+            Double newPointsRaw = player.Points + pointsToAddWithCritical;
+
+            // Between 0 and total storage
+            Int32 newPointsBounded = (Int32)Math.Min(Math.Max(newPointsRaw, 0), player.GetTotalStorage());
+
+            player.Points = newPointsBounded;
         }
 
         /// <summary>
@@ -70,12 +80,12 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
 
         public static Int32 GetTotalStorage(this Player player)
         {
-            return (Int32)(player.MaximumPointStorage * (1 + (Int32)player.LastStorageUpgradeUnlocked * Constants.StorageUpgradePercent));
+            return (Int32)(player.MaximumPointStorage * (1 + (Int32)player.NextStorageUpgradeUnlock * Constants.StorageUpgradePercent));
         }
 
         public static Double GetQuestSuccessChance(this Player player)
         {
-            return Constants.QuestBaseSuccessChance * (1 + player.WorkerCount * (Constants.QuestWorkerSuccessBonus * ((Int32)player.LastWorkerQuestHelpUnlocked + 1)));
+            return Constants.QuestBaseSuccessChance * (1 + player.WorkerCount * (Constants.QuestWorkerSuccessBonus * ((Int32)player.NextWorkerQuestSuccessUpgradeUnlock + 1)));
         }
     }
 }
