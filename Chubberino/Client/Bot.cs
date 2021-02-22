@@ -69,7 +69,7 @@ namespace Chubberino.Client
         public String GetPrompt()
         {
             return Environment.NewLine + Environment.NewLine + Commands.GetStatus() + Environment.NewLine
-                + $"[{(IsModerator ? "Mod" : "Normal")} {TwitchClientManager.PrimaryChannelName}]> ";
+                + $"[{Name} | {(IsModerator ? "Mod" : "Normal")} {TwitchClientManager.PrimaryChannelName}]> ";
         }
 
 
