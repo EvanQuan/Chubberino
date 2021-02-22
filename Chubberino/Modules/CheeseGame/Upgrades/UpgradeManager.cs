@@ -5,11 +5,11 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
 {
     public sealed class UpgradeManager : IUpgradeManager
     {
-        private static String StorageDescription { get; } = "+" + (Constants.StorageUpgradePercent * 100) + "% storage increase (+{0}% total)";
+        private static String StorageDescription { get; } = "+" + (Constants.StorageUpgradePercent * 100) + "% storage increase | +{0}% total";
 
-        private static String QuestHelpDescription { get; } = "+" + (Constants.QuestBaseSuccessChance * Constants.QuestWorkerSuccessBonus * 100) + "% quest success per worker (+{0}% total)";
+        private static String QuestHelpDescription { get; } = "+" + (Constants.QuestBaseSuccessChance * Constants.QuestWorkerSuccessBonus * 100) + "% quest success per worker | +{0}% total";
 
-        private static String ProductionDescription { get; } = "+" + (Constants.WorkerUpgradePercent * 100) + "% cheese per worker(+{0}% total)";
+        private static String ProductionDescription { get; } = "+" + (Constants.WorkerUpgradePercent * 100) + "% cheese per worker | +{0}% total";
 
         public Upgrade GetNextUpgradeToUnlock(Player player)
         {
