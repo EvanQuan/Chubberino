@@ -8,11 +8,11 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
     {
         private const String StorageDescription = "+{0}% -> +{1}% storage increase";
 
-        private const String QuestSuccessDescription = "+{0}% -> +{1}% quest success chance";
+        private const String QuestSuccessDescription = "{0}% -> {1}% quest success chance";
 
         private const String ProductionDescription = "+{0}% -> +{1}% cheese per worker";
 
-        private const String CriticalCheeseDescription = "+{0}% -> +{1}% critical cheese chance";
+        private const String CriticalCheeseDescription = "{0}% -> {1}% critical cheese chance";
 
         public Upgrade GetNextUpgradeToUnlock(Player player)
         {
