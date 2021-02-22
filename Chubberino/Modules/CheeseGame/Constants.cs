@@ -11,6 +11,8 @@ namespace Chubberino.Modules.CheeseGame
 
         public const Double StorageUpgradePercent = 0.5;
 
+        public const Double WorkerUpgradePercent = 0.1;
+
         public const Double QuestBaseSuccessChance = 0.40;
 
         public const Double QuestWorkerSuccessBonus = 0.005;
