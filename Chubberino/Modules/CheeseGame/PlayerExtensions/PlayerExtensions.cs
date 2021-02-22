@@ -55,14 +55,14 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
                 workerPoints = Math.Sign(cheese.PointValue) * absoluteWorkerPoints;
             }
 
-            var pointsToAddRaw = cheese.PointValue * (1 + Constants.PrestigeBonus * player.Prestige) + workerPoints;
+            Double pointsToAddRaw = cheese.PointValue * (1 + Constants.PrestigeBonus * player.Prestige) + workerPoints;
 
-            var pointsToAddWithCritical = pointsToAddRaw * (isCritical ? 1 : Constants.CriticalCheeseMultiplier); 
+            Double pointsToAddWithCritical = pointsToAddRaw * (isCritical ? Constants.CriticalCheeseMultiplier : 1);
 
-            var newPointsRaw = player.Points + pointsToAddWithCritical;
+            Double newPointsRaw = player.Points + pointsToAddWithCritical;
 
             // Between 0 and total storage
-            var newPointsBounded = (Int32)Math.Min(Math.Max(newPointsRaw, 0), player.GetTotalStorage());
+            Int32 newPointsBounded = (Int32)Math.Min(Math.Max(newPointsRaw, 0), player.GetTotalStorage());
 
             player.Points = newPointsBounded;
         }
