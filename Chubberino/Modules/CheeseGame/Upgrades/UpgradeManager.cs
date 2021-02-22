@@ -36,7 +36,7 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
                 return new Upgrade(
                     String.Format(CriticalCheeseDescription, currentUpgradePercent, nextUpgradePercent),
                     player.NextCriticalCheeseUpgradeUnlock,
-                    50 + (Int32)(Math.Pow(1.5, (Int32)player.NextQuestSuccessUpgradeUnlock) * 75),
+                    50 + (Int32)(Math.Pow(1.5, (Int32)player.NextCriticalCheeseUpgradeUnlock) * 75),
                     x => x.NextCriticalCheeseUpgradeUnlock++);
             }
             else if (player.NextWorkerProductionUpgradeUnlock > player.NextQuestSuccessUpgradeUnlock)
