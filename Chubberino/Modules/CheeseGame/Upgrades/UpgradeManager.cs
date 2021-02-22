@@ -1,4 +1,5 @@
 ﻿using Chubberino.Modules.CheeseGame.Models;
+using Chubberino.Modules.CheeseGame.PlayerExtensions;
 using System;
 
 namespace Chubberino.Modules.CheeseGame.Upgrades
@@ -7,15 +8,15 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
     {
         private const String StorageDescription = "+{0}% -> +{1}% storage increase";
 
-        private const String QuestHelpDescription = "+{0}% -> +{1}% quest success per worker";
+        private const String QuestSuccessDescription = "{0}% -> {1}% quest success chance";
 
         private const String ProductionDescription = "+{0}% -> +{1}% cheese per worker";
 
-        private const String CriticalCheeseDescription = "+{0}% -> +{1}% critical cheese chance";
+        private const String CriticalCheeseDescription = "{0}% -> {1}% critical cheese chance";
 
         public Upgrade GetNextUpgradeToUnlock(Player player)
         {
-            if (player.NextWorkerQuestSuccessUpgradeUnlock > player.NextStorageUpgradeUnlock)
+            if (player.NextQuestSuccessUpgradeUnlock > player.NextStorageUpgradeUnlock)
             {
                 // Storage
                 Double currentUpgradePercent = (Int32)(player.NextStorageUpgradeUnlock) * Constants.StorageUpgradePercent * 100;
@@ -27,7 +28,7 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
                     x => x.NextStorageUpgradeUnlock++);
 
             }
-            else if (player.NextWorkerQuestSuccessUpgradeUnlock > player.NextCriticalCheeseUpgradeUnlock)
+            else if (player.NextQuestSuccessUpgradeUnlock > player.NextCriticalCheeseUpgradeUnlock)
             {
                 // Critical cheese
                 Double currentUpgradePercent = (Int32)(player.NextCriticalCheeseUpgradeUnlock) * Constants.CriticalCheeseUpgradePercent * 100;
@@ -35,19 +36,19 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
                 return new Upgrade(
                     String.Format(CriticalCheeseDescription, currentUpgradePercent, nextUpgradePercent),
                     player.NextCriticalCheeseUpgradeUnlock,
-                    (Int32)(Math.Pow(1.5, (Int32)player.NextWorkerQuestSuccessUpgradeUnlock) * 50),
+                    (Int32)(Math.Pow(1.5, (Int32)player.NextQuestSuccessUpgradeUnlock) * 50),
                     x => x.NextCriticalCheeseUpgradeUnlock++);
             }
-            else if (player.NextWorkerProductionUpgradeUnlock > player.NextWorkerQuestSuccessUpgradeUnlock)
+            else if (player.NextWorkerProductionUpgradeUnlock > player.NextQuestSuccessUpgradeUnlock)
             {
                 // Worker quest success
-                Double currentUpgradePercent = (Int32)(player.NextWorkerQuestSuccessUpgradeUnlock) * Constants.QuestBaseSuccessChance * Constants.QuestWorkerSuccessBonus;
-                Double nextUpgradePercent = (Int32)(player.NextWorkerQuestSuccessUpgradeUnlock + 1) * Constants.QuestBaseSuccessChance * Constants.QuestWorkerSuccessBonus;
+                Int32 currentUpgradePercent = (Int32)(player.GetQuestSuccessChance() * 100);
+                Int32 nextUpgradePercent = currentUpgradePercent + (Int32)(Constants.QuestSuccessUpgradePercent * 100);
                 return new Upgrade(
-                    String.Format(QuestHelpDescription, currentUpgradePercent, nextUpgradePercent),
-                    player.NextWorkerQuestSuccessUpgradeUnlock,
-                    (Int32)(50 + Math.Pow(1.5, (Int32)player.NextWorkerQuestSuccessUpgradeUnlock) * 100),
-                    x => x.NextWorkerQuestSuccessUpgradeUnlock++);
+                    String.Format(QuestSuccessDescription, currentUpgradePercent, nextUpgradePercent),
+                    player.NextQuestSuccessUpgradeUnlock,
+                    (Int32)(50 + Math.Pow(1.5, (Int32)player.NextQuestSuccessUpgradeUnlock) * 100),
+                    x => x.NextQuestSuccessUpgradeUnlock++);
             }
             else if (player.NextWorkerProductionUpgradeUnlock < Rankings.Rank.Legend)
             {

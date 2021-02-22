@@ -4,14 +4,16 @@ using Chubberino.Database.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Chubberino.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20210222075931_RemoveQuestSuccessUpgradeUnlock")]
+    partial class RemoveQuestSuccessUpgradeUnlock
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -110,13 +112,13 @@ namespace Chubberino.Migrations
                     b.Property<int>("NextCriticalCheeseUpgradeUnlock")
                         .HasColumnType("int");
 
-                    b.Property<int>("NextQuestSuccessUpgradeUnlock")
-                        .HasColumnType("int");
-
                     b.Property<int>("NextStorageUpgradeUnlock")
                         .HasColumnType("int");
 
                     b.Property<int>("NextWorkerProductionUpgradeUnlock")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NextWorkerQuestSuccessUpgradeUnlock")
                         .HasColumnType("int");
 
                     b.Property<int>("Points")

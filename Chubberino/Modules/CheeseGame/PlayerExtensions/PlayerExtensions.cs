@@ -15,9 +15,8 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
             player.Rank = Rankings.Rank.Bronze;
             player.CheeseUnlocked = 0;
             player.NextWorkerProductionUpgradeUnlock = 0;
-            player.NextWorkerQuestSuccessUpgradeUnlock = 0;
-            player.NextStorageUpgradeUnlock = 0;
             player.NextQuestSuccessUpgradeUnlock = 0;
+            player.NextStorageUpgradeUnlock = 0;
             player.NextCriticalCheeseUpgradeUnlock = 0;
             player.MouseTrapCount = 0;
             player.IsMouseInfested = false;
@@ -85,7 +84,11 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
 
         public static Double GetQuestSuccessChance(this Player player)
         {
-            return Constants.QuestBaseSuccessChance * (1 + player.WorkerCount * (Constants.QuestWorkerSuccessBonus * ((Int32)player.NextWorkerQuestSuccessUpgradeUnlock + 1)));
+            Double baseSuccessChance = Constants.QuestBaseSuccessChance + ((Int32)player.NextQuestSuccessUpgradeUnlock * Constants.QuestSuccessUpgradePercent);
+
+            Double workerSuccessChance = player.WorkerCount * Constants.QuestWorkerSuccessPercent;
+
+            return baseSuccessChance + workerSuccessChance;
         }
     }
 }

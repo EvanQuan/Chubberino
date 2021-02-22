@@ -32,12 +32,12 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.PlayerExtensions
         public void ShouldAddWorkerBonus(Int32 lesserWorkerCount, Rank lesserWorkerUpgrade, Int32 greaterWorkerCount, Rank greaterWorkerUpgrade)
         {
             Player.WorkerCount = lesserWorkerCount;
-            Player.NextWorkerQuestSuccessUpgradeUnlock = lesserWorkerUpgrade;
+            Player.NextQuestSuccessUpgradeUnlock = lesserWorkerUpgrade;
 
             Double lesserResult = Player.GetQuestSuccessChance();
 
             Player.WorkerCount = greaterWorkerCount;
-            Player.NextWorkerQuestSuccessUpgradeUnlock = greaterWorkerUpgrade;
+            Player.NextQuestSuccessUpgradeUnlock = greaterWorkerUpgrade;
 
             Double greaterResult = Player.GetQuestSuccessChance();
 
