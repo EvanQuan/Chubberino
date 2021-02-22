@@ -21,6 +21,6 @@ namespace Chubberino.Modules.CheeseGame
 
         public const Double CriticalCheeseUpgradePercent = 0.005;
 
-        public const Int32 CriticalCheeseMultiplier = 3;
+        public const Int32 CriticalCheeseMultiplier = 5;
     }
 }
