@@ -38,5 +38,7 @@ namespace Chubberino.Modules.CheeseGame.Models
         public Boolean IsMouseInfested { get; set; }
 
         public Rank LastStorageUpgradeUnlocked { get; set; }
+
+        public Rank NextQuestSuccessUpgradeUnlock { get; set; }
     }
 }
