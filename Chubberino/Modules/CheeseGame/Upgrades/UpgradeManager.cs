@@ -41,13 +41,13 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
             }
             else if (player.NextWorkerProductionUpgradeUnlock > player.NextQuestSuccessUpgradeUnlock)
             {
-                // Worker quest success
+                // Quest success
                 Int32 currentUpgradePercent = (Int32)(player.GetQuestSuccessChance() * 100);
                 Int32 nextUpgradePercent = currentUpgradePercent + (Int32)(Constants.QuestSuccessUpgradePercent * 100);
                 return new Upgrade(
                     String.Format(QuestSuccessDescription, currentUpgradePercent, nextUpgradePercent),
                     player.NextQuestSuccessUpgradeUnlock,
-                    (Int32)(50 + Math.Pow(1.5, (Int32)player.NextQuestSuccessUpgradeUnlock) * 100),
+                    (Int32)(50 + Math.Pow(1.5, (Int32)player.NextQuestSuccessUpgradeUnlock) * 80),
                     x => x.NextQuestSuccessUpgradeUnlock++);
             }
             else if (player.NextWorkerProductionUpgradeUnlock < Rankings.Rank.Legend)
