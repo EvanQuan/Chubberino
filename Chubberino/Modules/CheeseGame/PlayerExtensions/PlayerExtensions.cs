@@ -26,7 +26,8 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
 
         public static String GetDisplayName(this Player player)
         {
-            return $"{player.Name} [P{player.Prestige} {player.Rank}, {player.Points}/{player.GetTotalStorage()} cheese, {player.WorkerCount}/{player.PopulationCount} workers, {player.MouseTrapCount} mousetraps]";
+            String prestige = player.Prestige > 0 ? "P" + player.Prestige + " " : String.Empty;
+            return $"{player.Name} [{prestige}{player.Rank}, {player.Points}/{player.GetTotalStorage()} cheese, {player.WorkerCount}/{player.PopulationCount} workers, {player.MouseTrapCount} mousetraps]";
         }
 
         /// <summary>
