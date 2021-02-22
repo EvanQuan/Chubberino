@@ -21,9 +21,9 @@ namespace Chubberino.Modules.CheeseGame.Quests
 
         public Random Random { get; }
 
-        public Double RewardRankMultiplier { get; set; } = 1;
+        public Double RewardRankMultiplier { get; set; } = 0.5;
 
-        public Double RewardRankExponent { get; set; } = 1.7;
+        public Double RewardRankExponent { get; set; } = 2;
 
         public ITwitchClientManager TwitchClientManager { get; }
 
