@@ -72,10 +72,12 @@ namespace Chubberino.Modules.CheeseGame.Shops
                 upgradePrompt = $"{upgrade.Description}] for {upgrade.Price} cheese";
             }
 
+            Int32 storageGain = (Int32)(Constants.ShopStorageQuantity * player.GetStorageUpgradeMultiplier());
+
             TwitchClientManager.Client.SpoolMessage(message.Channel,
                 $"{player.GetDisplayName()}" +
                 $" | Recipe [{recipePrompt}" +
-                $" | Storage [+100] for {prices.Storage} cheese" +
+                $" | Storage [+{storageGain}] for {prices.Storage} cheese" +
                 $" | Population [+5] for {prices.Population} cheese" +
                 $" | Worker [+1] for {prices.Worker} cheese" +
                 $" | Upgrade [{upgradePrompt}" + 
@@ -108,16 +110,17 @@ namespace Chubberino.Modules.CheeseGame.Shops
             switch (itemToBuy[0])
             {
                 case 's':
+                    Int32 storageGain = (Int32)(Constants.ShopStorageQuantity * player.GetStorageUpgradeMultiplier();
                     if (player.Points >= prices.Storage)
                     {
-                        player.MaximumPointStorage += 100;
+                        player.MaximumPointStorage += Constants.ShopStorageQuantity;
                         player.Points -= prices.Storage;
                         Context.SaveChanges();
-                        outputMessage = $"You bought 100 storage space. (-{prices.Storage} cheese)";
+                        outputMessage = $"You bought {storageGain} storage space. (-{prices.Storage} cheese)";
                     }
                     else
                     {
-                        outputMessage = $"You need {prices.Storage} cheese to buy 100 storage.";
+                        outputMessage = $"You need {prices.Storage - player.Points} more cheese to buy {storageGain} storage.";
                     }
                     break;
                 case 'p':

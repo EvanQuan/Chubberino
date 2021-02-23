@@ -1,7 +1,7 @@
-﻿using Chubberino.Client.Abstractions;
-using Chubberino.Database.Contexts;
+﻿using Chubberino.Database.Contexts;
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Models;
+using Chubberino.Modules.CheeseGame.PlayerExtensions;
 using System;
 
 namespace Chubberino.Modules.CheeseGame.Quests.GainStorage
@@ -28,10 +28,13 @@ namespace Chubberino.Modules.CheeseGame.Quests.GainStorage
 
             Int32 rewardStorage = (Int32)(baseRewardStorage * (1 + (Int32)player.Rank * RewardRankMultiplier));
 
+            // We only add the base storage value in the database, but display the multiplied value to the user.
+            Int32 rewardStorageWithMultiplier = (Int32)(rewardStorage * player.GetStorageUpgradeMultiplier());
+
             player.MaximumPointStorage += rewardStorage;
             Context.SaveChanges();
 
-            return $"Score! You come across an ancient tomb. There does not appear to be anything inside, so you claim it for yourself to store cheese. (+{rewardStorage} storage)";
+            return $"You come across an ancient tomb. It appears to be empty inside, so you claim it for yourself to store cheese. (+{rewardStorageWithMultiplier} storage)";
         }
     }
 }
