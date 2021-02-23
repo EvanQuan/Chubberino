@@ -2,6 +2,7 @@
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.PlayerExtensions;
+using Chubberino.Utility;
 using System;
 using TwitchLib.Client.Models;
 
@@ -56,7 +57,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
         {
             Double successChance = player.GetQuestSuccessChance();
 
-            Boolean successful = successChance > Random.NextDouble();
+            Boolean successful = Random.TryPercentChance(successChance);
 
             Boolean useChannelEmotes = message.Channel.Equals("ChubbehMouse", StringComparison.OrdinalIgnoreCase);
 
