@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Chubberino.Utility
 {
@@ -17,6 +14,11 @@ namespace Chubberino.Utility
         public static Boolean TryPercentChance(this Random random, Double successChance)
         {
             return random.NextDouble() < successChance;
+        }
+
+        public static TElement GetElement<TElement>(this Random random, IList<TElement> list)
+        {
+            return list[random.Next(list.Count)];
         }
     }
 }
