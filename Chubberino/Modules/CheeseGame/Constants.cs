@@ -13,7 +13,7 @@ namespace Chubberino.Modules.CheeseGame
 
         public const Double WorkerUpgradePercent = 0.1;
 
-        public const Double QuestBaseSuccessChance = 0.25;
+        public const Double QuestBaseSuccessChance = 0.2;
 
         public const Double QuestSuccessUpgradePercent = 0.05;
 
@@ -21,6 +21,6 @@ namespace Chubberino.Modules.CheeseGame
 
         public const Double CriticalCheeseUpgradePercent = 0.005;
 
-        public const Int32 CriticalCheeseMultiplier = 3;
+        public const Int32 CriticalCheeseMultiplier = 5;
     }
 }

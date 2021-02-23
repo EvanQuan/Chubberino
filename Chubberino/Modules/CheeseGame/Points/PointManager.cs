@@ -55,7 +55,7 @@ namespace Chubberino.Modules.CheeseGame.Points
 
                     Int32 oldPoints = player.Points;
 
-                    Boolean isCritical = Random.TryPercentChance((Int32)player.NextCriticalCheeseUpgradeUnlock * Constants.CriticalCheeseUpgradePercent);
+                    Boolean isCritical = cheese.PointValue > 0 && Random.TryPercentChance((Int32)player.NextCriticalCheeseUpgradeUnlock * Constants.CriticalCheeseUpgradePercent);
 
                     if (isCritical)
                     {

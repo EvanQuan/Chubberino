@@ -1,14 +1,14 @@
-﻿using Chubberino.Client.Abstractions;
-using Chubberino.Database.Contexts;
+﻿using Chubberino.Database.Contexts;
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.PlayerExtensions;
+using Chubberino.Utility;
 using System;
 using System.Collections.Generic;
 using TwitchLib.Client.Models;
 
 namespace Chubberino.Modules.CheeseGame.Quests
 {
-    class QuestManager : AbstractCommandStrategy, IQuestManager
+    public sealed class QuestManager : AbstractCommandStrategy, IQuestManager
     {
         private IList<IQuest> Quests { get; }
         public static TimeSpan QuestCooldown { get; set; } = TimeSpan.FromHours(2);
@@ -35,7 +35,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
 
             if (timeSinceLastQuestVentured >= QuestCooldown)
             {
-                var quest = Quests[Random.Next(Quests.Count)];
+                var quest = Random.GetElement(Quests);
 
                 quest.Start(message, player);
 

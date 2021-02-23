@@ -69,7 +69,7 @@ namespace Chubberino.Client
         public String GetPrompt()
         {
             return Environment.NewLine + Environment.NewLine + Commands.GetStatus() + Environment.NewLine
-                + $"[{(IsModerator ? "Mod" : "Normal")} {TwitchClientManager.PrimaryChannelName}]> ";
+                + $"[{Name} | {(IsModerator ? "Mod" : "Normal")} {TwitchClientManager.PrimaryChannelName}]> ";
         }
 
 
@@ -83,9 +83,13 @@ namespace Chubberino.Client
             if (successful)
             {
                 Commands.RefreshAll();
+                Console.WriteLine("Refresh " + (successful ? "successful" : "failed"));
             }
-
-            Console.WriteLine("Refresh " + (successful ? "successful" : "failed"));
+            else
+            {
+                Console.WriteLine("Failed to refresh");
+                State = BotState.ShouldStop;
+            }
         }
 
         public void ReadCommand(String command)

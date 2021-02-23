@@ -218,8 +218,9 @@ namespace Chubberino
             color.AddColorSelector(scope.Resolve<PresetColorSelector>());
             color.AddColorSelector(scope.Resolve<RainbowColorSelector>());
 
-            Boolean shouldContinue = true;
-            do
+            Boolean shouldContinue = twitchClientManager.TryJoinInitialChannels();
+
+            while (shouldContinue)
             {
                 console.Write(bot.GetPrompt());
                 bot.ReadCommand(console.ReadLine());
@@ -239,7 +240,6 @@ namespace Chubberino
                         // break;
                 }
             }
-            while (shouldContinue);
         }
     }
 }

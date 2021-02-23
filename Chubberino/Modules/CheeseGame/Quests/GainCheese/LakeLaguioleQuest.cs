@@ -1,5 +1,4 @@
-﻿using Chubberino.Client.Abstractions;
-using Chubberino.Database.Contexts;
+﻿using Chubberino.Database.Contexts;
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Models;
 using System;
@@ -15,7 +14,7 @@ namespace Chubberino.Modules.CheeseGame.Quests.GainCheese
         protected override Int32 BaseRewardPoints => 75;
 
         protected override String SuccessMessage =>
-            "You fish for some Taleggio Tuna and find a catch quite a few. (+{0} cheese)";
+            "You go fishing and catch some Taleggio Tuna. (+{0} cheese)";
 
         protected override String OnFailure(Player player)
         {

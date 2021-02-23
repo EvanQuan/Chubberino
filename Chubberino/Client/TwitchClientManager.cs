@@ -109,9 +109,12 @@ namespace Chubberino.Client
 
             if (!channelJoined) { return false; }
 
-            foreach (var channel in Context.StartupChannels)
+            if (IsBot)
             {
-                Client.JoinChannel(channel.DisplayName);
+                foreach (var channel in Context.StartupChannels)
+                {
+                    Client.JoinChannel(channel.DisplayName);
+                }
             }
 
             if (previouslyJoinedChannels != null && previouslyJoinedChannels.Any())
