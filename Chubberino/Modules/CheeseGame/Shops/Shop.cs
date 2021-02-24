@@ -110,7 +110,7 @@ namespace Chubberino.Modules.CheeseGame.Shops
             switch (itemToBuy[0])
             {
                 case 's':
-                    Int32 storageGain = (Int32)(Constants.ShopStorageQuantity * player.GetStorageUpgradeMultiplier();
+                    Int32 storageGain = (Int32)(Constants.ShopStorageQuantity * player.GetStorageUpgradeMultiplier());
                     if (player.Points >= prices.Storage)
                     {
                         player.MaximumPointStorage += Constants.ShopStorageQuantity;
