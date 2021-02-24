@@ -33,12 +33,5 @@ namespace Chubberino.UnitTests.Utility
 
             return dbSet.Object;
         }
-
-        public static Boolean TryGetFirst<TElement>(this IEnumerable<TElement> source, Func<TElement, Boolean> predicate, out TElement element)
-        {
-            element = source.FirstOrDefault(predicate);
-
-            return !Equals(default(TElement), element);
-        }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Chubberino.UnitTests.Utility;
+﻿using Chubberino.Utility;
 using System;
 using System.Collections.Generic;
 using Xunit;
