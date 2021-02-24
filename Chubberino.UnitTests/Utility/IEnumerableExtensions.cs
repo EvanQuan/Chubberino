@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Moq;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -31,6 +32,13 @@ namespace Chubberino.UnitTests.Utility
             dbSet.Setup(d => d.Add(It.IsAny<T>())).Callback<T>(s => source.Add(s));
 
             return dbSet.Object;
+        }
+
+        public static Boolean TryGetFirst<TElement>(this IEnumerable<TElement> source, Func<TElement, Boolean> predicate, out TElement element)
+        {
+            element = source.FirstOrDefault(predicate);
+
+            return !Equals(default(TElement), element);
         }
     }
 }
