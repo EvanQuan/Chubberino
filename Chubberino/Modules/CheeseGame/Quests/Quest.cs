@@ -1,4 +1,5 @@
-﻿using Chubberino.Database.Contexts;
+﻿using Chubberino.Client;
+using Chubberino.Database.Contexts;
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.PlayerExtensions;
@@ -10,7 +11,11 @@ namespace Chubberino.Modules.CheeseGame.Quests
 {
     public abstract class Quest : IQuest
     {
-        public Quest(IApplicationContext context, Random random, ITwitchClientManager client, IEmoteManager emoteManager)
+        public Quest(
+            IApplicationContext context,
+            Random random,
+            ITwitchClientManager client,
+            IEmoteManager emoteManager)
         {
             Context = context;
             Random = random;
@@ -65,7 +70,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
                 ? OnSuccess(player) + " " + EmoteManager.GetRandomPositiveEmote(useChannelEmotes)
                 : OnFailure(player) + " " + EmoteManager.GetRandomNegativeEmote(useChannelEmotes);
 
-            TwitchClientManager.Client.SpoolMessage(message.Channel, $"{player.GetDisplayName()} [{Math.Round((successChance * 100), 2)}% success] {OnIntroduction(player)} {resultMessage}");
+            TwitchClientManager.SpoolMessageAsMe(message.Channel, $"[{Math.Round((successChance * 100), 2)}% success] {OnIntroduction(player)} {resultMessage}");
 
             return successful;
         }
