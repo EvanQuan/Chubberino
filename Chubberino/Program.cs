@@ -107,6 +107,7 @@ namespace Chubberino
             builder.RegisterType<Channel>().AsSelf().SingleInstance();
             builder.RegisterType<Cheese>().AsSelf().SingleInstance();
             builder.RegisterType<Color>().AsSelf().SingleInstance();
+            builder.RegisterType<Cookie>().AsSelf().SingleInstance();
             builder.RegisterType<Copy>().AsSelf().SingleInstance();
             builder.RegisterType<Count>().AsSelf().SingleInstance();
             builder.RegisterType<DisableAll>().AsSelf().SingleInstance();
@@ -187,6 +188,7 @@ namespace Chubberino
                 .AddCommand(scope.Resolve<Channel>())
                 .AddCommand(scope.Resolve<Cheese>())
                 .AddCommand(scope.Resolve<Color>())
+                .AddCommand(scope.Resolve<Cookie>())
                 .AddCommand(scope.Resolve<Copy>())
                 .AddCommand(scope.Resolve<Count>())
                 .AddCommand(scope.Resolve<DisableAll>())
