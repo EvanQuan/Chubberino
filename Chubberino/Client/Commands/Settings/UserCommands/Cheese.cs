@@ -6,6 +6,7 @@ using Chubberino.Modules.CheeseGame.Shops;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using TwitchLib.Client.Events;
 
 namespace Chubberino.Client.Commands.Settings.UserCommands
@@ -71,7 +72,8 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
                     QuestManager.StartQuest(e.ChatMessage);
                     break;
                 case "heist":
-                    HeistManager.InitiateHeist(e.ChatMessage);
+                    // Run in a separate thread as it involves sleeping to wait for joiners.
+                    Task.Run(() => HeistManager.InitiateHeist(e.ChatMessage));
                     break;
                 case "j":
                 case "join":
