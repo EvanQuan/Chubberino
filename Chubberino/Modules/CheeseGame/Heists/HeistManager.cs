@@ -5,7 +5,7 @@ using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Utility;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 using TwitchLib.Client.Models;
 
 namespace Chubberino.Modules.CheeseGame.Heists
@@ -47,7 +47,7 @@ namespace Chubberino.Modules.CheeseGame.Heists
                 // Find if there's another ongoing heist in this channel.
                 if (OngoingHeists.TryGetValue(message.Channel, out IHeist currentHeist))
                 {
-                    TwitchClientManager.SpoolMessageAsMe(message.Channel, player, $"There already is an ongoing quest in this channel, initiated by {currentHeist.InitiatorName}. You must wait until it is over before you initiate your own heist in this channel.");
+                    TwitchClientManager.SpoolMessageAsMe(message.Channel, player, $"There already is an ongoing heist in this channel, initiated by {currentHeist.InitiatorName}. You must wait until it is over before you initiate your own heist in this channel.");
                 }
                 else if (player.Points < 1)
                 {
@@ -59,6 +59,8 @@ namespace Chubberino.Modules.CheeseGame.Heists
                     OngoingHeists.TryAdd(message.Channel, heist);
 
                     TwitchClientManager.SpoolMessageAsMe(message.Channel, player, $"A heist has been initiated. You and others can join with \"!cheese join <cheese amount>\". The more cheese wagered, the greater the risk and reward! The heist will begin in {HeistWaitTime.Format()}.");
+
+                    Task.Run(() => JoinHeist(message));
 
                     // Since we are sleeping, this needs to be async.
                     SpinWait.Sleep(HeistWaitTime);
@@ -94,11 +96,9 @@ namespace Chubberino.Modules.CheeseGame.Heists
                 return;
             }
 
-            var strippedCommand = message.Message
-                .StripStart("!cheese j")
-                .StripStart("oin");
+            String strippedCommand = message.Message.GetNextWord(out _).GetNextWord(out _);
 
-            if (!strippedCommand.StartsWith(' '))
+            if (String.IsNullOrWhiteSpace(strippedCommand))
             {
                 TwitchClientManager.SpoolMessageAsMe(message.Channel, player, "To join the heist, you must wager some amount of cheese \"!cheese join <cheese to wager>\". The more you wager, the greater the risk and reward.");
                 return;
