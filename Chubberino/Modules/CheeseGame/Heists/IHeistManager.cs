@@ -7,7 +7,5 @@ namespace Chubberino.Modules.CheeseGame.Heists
         void InitiateHeist(ChatMessage message);
 
         void JoinHeist(ChatMessage message);
-
-        IHeistManager AddHeist(IHeist heist);
     }
 }

@@ -5,6 +5,7 @@ using Chubberino.Modules.CheeseGame.PlayerExtensions;
 using Chubberino.Utility;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using TwitchLib.Client.Models;
 
@@ -15,7 +16,7 @@ namespace Chubberino.Modules.CheeseGame.Heists
         public const Double MinimumWinnerPercent = 0.33;
         public const Double MaximumWinnerPercent = 1;
 
-        private IList<(Int32 PlayerID, String PlayerName, Int32 WageredPoints)> Wagers { get; }
+        private IList<(String PlayerTwitchID, String PlayerName, Int32 WageredPoints)> Wagers { get; }
 
         public Heist(
             ChatMessage message,
@@ -23,7 +24,7 @@ namespace Chubberino.Modules.CheeseGame.Heists
             Random random,
             ITwitchClientManager client)
         {
-            Wagers = new List<(Int32, String, Int32)>();
+            Wagers = new List<(String, String, Int32)>();
             InitiatorMessage = message;
             InitiatorName = message.DisplayName;
             Context = context;
@@ -65,7 +66,7 @@ namespace Chubberino.Modules.CheeseGame.Heists
             if (winnerCount == 0)
             {
                 intro.Append("Unfortunately the cheese dragon prevented anyone from getting anything");
-                TwitchClient.SpoolMessage(InitiatorMessage.Channel, intro.ToString());
+                TwitchClient.SpoolMessageAsMe(InitiatorMessage.Channel, intro.ToString());
                 return true;
             }
 
@@ -79,20 +80,20 @@ namespace Chubberino.Modules.CheeseGame.Heists
                 intro.Append("Some made it out with the spoils! ");
             }
 
-            var winners = new List<(Int32, String, Int32)>();
+            var winners = new List<(String, String, Int32)>();
 
             winnerCount.Repeat(() => winners.Add(Random.RemoveElement(Wagers)));
 
-            foreach ((Int32 playerID, String playerName, Int32 wageredPoints) in winners)
+            foreach ((String playerTwitchID, String playerName, Int32 wageredPoints) in winners)
             {
-                var player = Context.GetPlayer(TwitchClient, InitiatorMessage);
+                var player = Context.Players.FirstOrDefault(x => x.TwitchUserID == playerTwitchID);
                 Int32 winnerPoints = (Int32)((1.0 / winnerPercent + 0.5) * wageredPoints);
                 player.AddPoints(winnerPoints);
                 Context.SaveChanges();
                 intro.Append($"{player.Name} (+{winnerPoints}) ");
             }
 
-            TwitchClient.SpoolMessage(InitiatorMessage.Channel, intro.ToString());
+            TwitchClient.SpoolMessageAsMe(InitiatorMessage.Channel, intro.ToString());
 
             return true;
         }
@@ -100,18 +101,28 @@ namespace Chubberino.Modules.CheeseGame.Heists
         public void UpdateWager(Player player, Int32 points)
         {
             String updateMessage;
+
+            // Updated so that points is never greater than what the player has.
             Int32 updatedPoints = Math.Min(player.Points, points);
 
-            if (Wagers.TryGetFirst(x => x.PlayerID == player.ID, out var wager))
+            if (Wagers.TryGetFirst(x => x.PlayerTwitchID == player.TwitchUserID, out var wager))
             {
                 if (updatedPoints <= 0)
                 {
+                    player.AddPoints(wager.WageredPoints);
                     Wagers.Remove(wager);
+                    Context.SaveChanges();
                     updateMessage = $"You left the heist.";
                 }
+                else
+                {
+                    var pointDifference = updatedPoints - wager.WageredPoints;
+                    wager.WageredPoints = updatedPoints;
+                    player.AddPoints(-pointDifference);
+                    Context.SaveChanges();
+                    updateMessage = $"You updated your heist wager to {updatedPoints} cheese.";
+                }
 
-                wager.WageredPoints = updatedPoints;
-                updateMessage = $"You updated your heist wager to {wager.WageredPoints} cheese.";
             }
             else if (updatedPoints <= 0)
             {
@@ -119,8 +130,10 @@ namespace Chubberino.Modules.CheeseGame.Heists
             }
             else
             {
-                Wagers.Add((player.ID, player.Name, updatedPoints));
-                updateMessage = $"You joined the heist, wagering {wager.WageredPoints} cheese.";
+                Wagers.Add((player.TwitchUserID, player.Name, updatedPoints));
+                player.AddPoints(-updatedPoints);
+                Context.SaveChanges();
+                updateMessage = $"You joined the heist, wagering {updatedPoints} cheese.";
             }
 
             TwitchClient.SpoolMessageAsMe(InitiatorMessage.Channel, player, updateMessage);
