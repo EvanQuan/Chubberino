@@ -43,7 +43,7 @@ namespace Chubberino.Modules.CheeseGame.Heists
         {
             if (Wagers.Count == 0)
             {
-                TwitchClient.SpoolMessageAsMe(InitiatorMessage.Channel, "No one joined the heist.");
+                TwitchClient.SpoolMessageAsMe(InitiatorMessage.Channel, "[Heist] No one joined the heist.");
                 return false;
             }
 
@@ -54,7 +54,7 @@ namespace Chubberino.Modules.CheeseGame.Heists
                 _ => $"and {Wagers.Count} others go"
             };
 
-            var intro = new StringBuilder($"{Wagers[0].PlayerName} {others} into the lair of the great cheese dragon. ");
+            var intro = new StringBuilder($"[Heist] {Wagers[0].PlayerName} {others} into the lair of the great cheese dragon. ");
 
             Double winnerPercent = Random.NextDouble(MinimumWinnerPercent, MaximumWinnerPercent);
 
@@ -120,7 +120,7 @@ namespace Chubberino.Modules.CheeseGame.Heists
                     wager.WageredPoints = updatedPoints;
                     player.AddPoints(-pointDifference);
                     Context.SaveChanges();
-                    updateMessage = $"You updated your heist wager to {updatedPoints} cheese.";
+                    updateMessage = $"You update your heist wager to {updatedPoints} cheese.";
                 }
 
             }
@@ -133,10 +133,10 @@ namespace Chubberino.Modules.CheeseGame.Heists
                 Wagers.Add((player.TwitchUserID, player.Name, updatedPoints));
                 player.AddPoints(-updatedPoints);
                 Context.SaveChanges();
-                updateMessage = $"You joined the heist, wagering {updatedPoints} cheese.";
+                updateMessage = $"You join the heist, wagering {updatedPoints} cheese.";
             }
 
-            TwitchClient.SpoolMessageAsMe(InitiatorMessage.Channel, player, updateMessage);
+            TwitchClient.SpoolMessageAsMe(InitiatorMessage.Channel, player, "[Heist] " + updateMessage);
         }
     }
 }
