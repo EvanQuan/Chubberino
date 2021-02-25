@@ -28,7 +28,7 @@ namespace Chubberino.Client.Commands
 
             if (!words.Any() || !words.First().Equals(e.ChatMessage.Username, StringComparison.OrdinalIgnoreCase))
             {
-                TwitchClientManager.Client.SpoolMessage(e.ChatMessage.Channel, $"{e.ChatMessage.DisplayName} I cannot leave other users' channels for you.");
+                TwitchClientManager.SpoolMessageAsMe(e.ChatMessage.Channel, $"{e.ChatMessage.DisplayName} I cannot leave other users' channels for you.");
                 return;
             }
 
@@ -43,7 +43,7 @@ namespace Chubberino.Client.Commands
 
             TwitchClientManager.Client.LeaveChannel(e.ChatMessage.Username);
 
-            TwitchClientManager.Client.SpoolMessage(e.ChatMessage.Channel, $"{e.ChatMessage.DisplayName} I have left your channel");
+            TwitchClientManager.SpoolMessageAsMe(e.ChatMessage.Channel, $"{e.ChatMessage.DisplayName} I have left your channel");
         }
 
         private void TwitchClient_OnLeftChannel(Object sender, OnLeftChannelArgs e)

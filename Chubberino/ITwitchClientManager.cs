@@ -14,8 +14,6 @@ namespace Chubberino
 
         IExtendedClient Client { get; }
 
-        void SpoolMessage(String message);
-
         Boolean TryInitialize(IBot bot, IClientOptions clientOptions = null, Boolean askForCredentials = true);
 
         Boolean TryJoinInitialChannels(IReadOnlyList<JoinedChannel> previouslyJoinedChannels = null);

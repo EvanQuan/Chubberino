@@ -1,4 +1,5 @@
-﻿using Chubberino.Client.Abstractions;
+﻿using Chubberino.Client;
+using Chubberino.Client.Abstractions;
 using Chubberino.Database.Contexts;
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.PlayerExtensions;
@@ -47,28 +48,28 @@ namespace Chubberino.Modules.CheeseGame.Rankings
                         player.ResetRank();
                         player.Prestige++;
                         Context.SaveChanges();
-                        outputMessage = $"{player.GetDisplayName()} You prestiged back to {Rank.Bronze} and have gained a permanent {(Int32)(Constants.PrestigeBonus * 100)}% cheese gain boost.";
+                        outputMessage = $"You prestiged back to {Rank.Bronze} and have gained a permanent {(Int32)(Constants.PrestigeBonus * 100)}% cheese gain boost.";
                     }
                     else
                     {
                         player.Points -= pointsToRank;
                         player.Rank = newRank;
                         Context.SaveChanges();
-                        outputMessage = $"{player.GetDisplayName()} You ranked up to {newRank}. (-{pointsToRank} cheese)";
+                        outputMessage = $"You ranked up to {newRank}. (-{pointsToRank} cheese)";
                     }
                 }
                 else
                 {
                     var pointsNeededToRank = pointsToRank - player.Points;
-                    outputMessage = $"{player.GetDisplayName()} You need {pointsNeededToRank} more cheese in order to rank up to {newRank}.";
+                    outputMessage = $"You need {pointsNeededToRank} more cheese in order to rank up to {newRank}.";
                 }
             }
             else
             {
-                outputMessage = $"{player.GetDisplayName()} Uh oh, you broke something. You have an invalid rank of {player.Rank}.";
+                outputMessage = $"Uh oh, you broke something. You have an invalid rank of {player.Rank}.";
             }
 
-            TwitchClientManager.Client.SpoolMessage(message.Channel, outputMessage);
+            TwitchClientManager.SpoolMessageAsMe(message.Channel, player, outputMessage);
         }
 
         public void ShowRank(ChatMessage message)
@@ -102,14 +103,14 @@ namespace Chubberino.Modules.CheeseGame.Rankings
                     nextRankInformation += $"{nextRank} rank.";
                 }
 
-                outputMessage = $"{player.GetDisplayName()} You are currently in {player.Rank} rank. {nextRankInformation}";
+                outputMessage = $"You are currently in {player.Rank} rank. {nextRankInformation}";
             }
             else
             {
-                outputMessage = $"{player.GetDisplayName()} Uh oh, you broke something. You have an invalid rank of {player.Rank}.";
+                outputMessage = $"Uh oh, you broke something. You have an invalid rank of {player.Rank}.";
             }
 
-            TwitchClientManager.Client.SpoolMessage(message.Channel, outputMessage);
+            TwitchClientManager.SpoolMessageAsMe(message.Channel, player, outputMessage);
 
         }
     }

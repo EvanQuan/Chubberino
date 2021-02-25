@@ -81,9 +81,14 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
             player.Points = Math.Max(Math.Min(player.Points + points, player.GetTotalStorage()), 0);
         }
 
+        public static Double GetStorageUpgradeMultiplier(this Player player)
+        {
+            return 1 + (Int32)player.NextStorageUpgradeUnlock * Constants.StorageUpgradePercent;
+        }
+
         public static Int32 GetTotalStorage(this Player player)
         {
-            return (Int32)(player.MaximumPointStorage * (1 + (Int32)player.NextStorageUpgradeUnlock * Constants.StorageUpgradePercent));
+            return (Int32)(player.MaximumPointStorage * player.GetStorageUpgradeMultiplier());
         }
 
         public static Double GetQuestSuccessChance(this Player player)

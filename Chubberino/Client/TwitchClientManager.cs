@@ -92,11 +92,6 @@ namespace Chubberino.Client
             return true;
         }
 
-        public void SpoolMessage(String message)
-        {
-            Client.SpoolMessage(PrimaryChannelName, message);
-        }
-
         private void Client_OnConnectionError(Object sender, OnConnectionErrorArgs e)
         {
             Console.WriteLine($"!! Connection Error!! {e.Error.Message}");

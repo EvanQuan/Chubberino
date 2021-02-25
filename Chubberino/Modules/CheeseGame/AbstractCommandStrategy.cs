@@ -1,4 +1,5 @@
-﻿using Chubberino.Database.Contexts;
+﻿using Chubberino.Client;
+using Chubberino.Database.Contexts;
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.PlayerExtensions;
@@ -28,34 +29,7 @@ namespace Chubberino.Modules.CheeseGame
 
         protected Player GetPlayer(ChatMessage message)
         {
-            var player = Context.Players.FirstOrDefault(x => x.TwitchUserID == message.UserId);
-
-            if (player == null)
-            {
-                player = new Player()
-                {
-                    TwitchUserID = message.UserId,
-                    Name = message.DisplayName
-                }
-                .ResetRank();
-
-                Context.Add(player);
-
-                Context.SaveChanges();
-
-                TwitchClientManager.Client.SpoolMessage(message.Channel, $"!!! NEW CHEESE FACTORY !!! {player.GetDisplayName()} You have just begun building your own cheese factory in the lands of Kashkaval, where {player.ID - 1} other cheese factories already reside here. Begin producing cheese with \"!cheese\". You can get help with \"!cheese help\". Good luck!");
-            }
-
-            return player;
-        }
-
-
-        protected static String Format(TimeSpan timespan)
-        {
-            return (timespan.TotalMinutes > 1
-                ? (Math.Floor(timespan.TotalMinutes) + " minutes and ")
-                : String.Empty)
-                + timespan.Seconds + " seconds";
+            return Context.GetPlayer(TwitchClientManager, message);
         }
     }
 }

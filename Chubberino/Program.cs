@@ -14,6 +14,7 @@ using Chubberino.Database.Contexts;
 using Chubberino.Database.Models;
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Hazards;
+using Chubberino.Modules.CheeseGame.Heists;
 using Chubberino.Modules.CheeseGame.Items;
 using Chubberino.Modules.CheeseGame.Points;
 using Chubberino.Modules.CheeseGame.Quests;
@@ -140,6 +141,7 @@ namespace Chubberino
             builder.RegisterType<PointManager>().As<IPointManager>().SingleInstance();
             builder.RegisterType<RankManager>().As<IRankManager>().SingleInstance();
             builder.RegisterType<QuestManager>().As<IQuestManager>().SingleInstance();
+            builder.RegisterType<HeistManager>().As<IHeistManager>().SingleInstance();
             builder.RegisterType<EmoteManager>().As<IEmoteManager>().SingleInstance();
             builder.RegisterType<UpgradeManager>().As<IUpgradeManager>().SingleInstance();
             builder.RegisterType<CheeseRepository>().As<ICheeseRepository>().SingleInstance();

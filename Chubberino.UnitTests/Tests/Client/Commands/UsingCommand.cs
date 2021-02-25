@@ -3,7 +3,6 @@ using Chubberino.Client.Abstractions;
 using Chubberino.Database.Contexts;
 using Moq;
 using System;
-using System.IO;
 using TwitchLib.Communication.Models;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands
@@ -24,8 +23,12 @@ namespace Chubberino.UnitTests.Tests.Client.Commands
 
         protected Mock<IBot> MockedBot { get; }
 
+        protected String PrimaryChannelName { get; }
+
         public UsingCommand()
         {
+            PrimaryChannelName = Guid.NewGuid().ToString();
+
             MockedBot = new Mock<IBot>().SetupAllProperties();
 
             var moderatorOptions =  new ClientOptions();
@@ -39,7 +42,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands
 
             MockedTwitchClientManager = new Mock<ITwitchClientManager>();
 
-            MockedTwitchClientManager.Object.PrimaryChannelName = Guid.NewGuid().ToString();
+            MockedTwitchClientManager.Setup(x => x.PrimaryChannelName).Returns(PrimaryChannelName);
 
             MockedTwitchClientManager.Setup(x => x.Client).Returns(MockedTwitchClient.Object);
 
