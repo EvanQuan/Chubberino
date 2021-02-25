@@ -1,7 +1,6 @@
 ﻿using Chubberino.Client;
 using Chubberino.Database.Contexts;
 using Chubberino.Modules.CheeseGame.Emotes;
-using Chubberino.Modules.CheeseGame.PlayerExtensions;
 using Chubberino.Utility;
 using System;
 using System.Collections.Generic;
@@ -48,7 +47,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
             {
                 var timeUntilNextQuestAvailable = QuestCooldown - timeSinceLastQuestVentured;
 
-                var timeToWait = Format(timeUntilNextQuestAvailable);
+                var timeToWait = timeUntilNextQuestAvailable.Format();
 
                 TwitchClientManager.SpoolMessageAsMe(message.Channel, player, $"You must wait {timeToWait} until you can go on your next quest.");
             }

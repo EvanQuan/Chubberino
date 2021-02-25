@@ -31,14 +31,5 @@ namespace Chubberino.Modules.CheeseGame
         {
             return Context.GetPlayer(TwitchClientManager, message);
         }
-
-
-        protected static String Format(TimeSpan timespan)
-        {
-            return (timespan.TotalMinutes > 1
-                ? (Math.Floor(timespan.TotalMinutes) + " minutes and ")
-                : String.Empty)
-                + timespan.Seconds + " seconds";
-        }
     }
 }
