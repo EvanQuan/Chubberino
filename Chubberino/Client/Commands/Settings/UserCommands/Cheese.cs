@@ -1,4 +1,5 @@
-﻿using Chubberino.Modules.CheeseGame.Points;
+﻿using Chubberino.Modules.CheeseGame.Heists;
+using Chubberino.Modules.CheeseGame.Points;
 using Chubberino.Modules.CheeseGame.Quests;
 using Chubberino.Modules.CheeseGame.Rankings;
 using Chubberino.Modules.CheeseGame.Shops;
@@ -17,13 +18,15 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
             IPointManager pointManager,
             IShop shop,
             IRankManager rankManager,
-            IQuestManager questManager)
+            IQuestManager questManager,
+            IHeistManager heistManager)
             : base(client, console)
         {
             PointManager = pointManager;
             Shop = shop;
             RankManager = rankManager;
             QuestManager = questManager;
+            HeistManager = heistManager;
             Enable = twitchClient => twitchClient.OnMessageReceived += TwitchClient_OnMessageReceived;
             Disable = twitchClient => twitchClient.OnMessageReceived -= TwitchClient_OnMessageReceived;
 
@@ -67,6 +70,13 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
                 case "quests":
                     QuestManager.StartQuest(e.ChatMessage);
                     break;
+                case "heist":
+                    HeistManager.InitiateHeist(e.ChatMessage);
+                    break;
+                case "j":
+                case "join":
+                    HeistManager.JoinHeist(e.ChatMessage);
+                    break;
                 default:
                     PointManager.AddPoints(e.ChatMessage);
                     break;
@@ -77,5 +87,6 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
         public IShop Shop { get; }
         public IRankManager RankManager { get; }
         public IQuestManager QuestManager { get; }
+        public IHeistManager HeistManager { get; }
     }
 }

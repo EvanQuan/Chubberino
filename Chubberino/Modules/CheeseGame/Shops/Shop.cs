@@ -1,4 +1,5 @@
-﻿using Chubberino.Database.Contexts;
+﻿using Chubberino.Client;
+using Chubberino.Database.Contexts;
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Items;
 using Chubberino.Modules.CheeseGame.Models;
@@ -74,8 +75,7 @@ namespace Chubberino.Modules.CheeseGame.Shops
 
             Int32 storageGain = (Int32)(Constants.ShopStorageQuantity * player.GetStorageUpgradeMultiplier());
 
-            TwitchClientManager.Client.SpoolMessage(message.Channel,
-                $"{player.GetDisplayName()}" +
+            TwitchClientManager.SpoolMessageAsMe(message.Channel, player,
                 $" | Recipe [{recipePrompt}" +
                 $" | Storage [+{storageGain}] for {prices.Storage} cheese" +
                 $" | Population [+5] for {prices.Population} cheese" +
@@ -96,7 +96,7 @@ namespace Chubberino.Modules.CheeseGame.Shops
 
             if (String.IsNullOrWhiteSpace(arguments))
             {
-                TwitchClientManager.Client.SpoolMessage(message.Channel, $"{player.GetDisplayName()} Please enter an item to buy. Type \"!cheese shop\" to see the items available for purchase.");
+                TwitchClientManager.SpoolMessageAsMe(message.Channel, player, $"Please enter an item to buy. Type \"!cheese shop\" to see the items available for purchase.");
                 return;
             }
 
@@ -223,37 +223,34 @@ namespace Chubberino.Modules.CheeseGame.Shops
                     break;
             }
 
-            outputMessage = player.GetDisplayName() + " " + outputMessage;
-
-            TwitchClientManager.Client.SpoolMessage(message.Channel, outputMessage);
+            TwitchClientManager.SpoolMessageAsMe(message.Channel, player, outputMessage);
         }
 
         public void HelpItem(ChatMessage message)
         {
             // Cut out "!cheese help" start.
-            String arguments = message.Message.StartsWith("!cheese help")
-                ? message.Message[12..]
-                : message.Message[9..]; // !cheese h
+            String arguments = message.Message
+                .StripStart("!cheese h")
+                .StripStart("elp");
 
             Player player = GetPlayer(message);
 
             if (String.IsNullOrWhiteSpace(arguments))
             {
-                TwitchClientManager.Client.SpoolMessage(message.Channel,
+                TwitchClientManager.SpoolMessageAsMe(message.Channel, 
                     $"{player.Name} Commands: !cheese <command> where command is " +
                     $"| shop - look at what is available to buy with cheese " +
                     $"| buy <item> - buy an item at the shop " +
                     $"| help <item> - get information about an item in the shop " +
-                    $"| quest - potentially get a big reward, or risk failure. The more workers you have, the greater chance of success. " +
+                    $"| quest - potentially get a big reward. The more workers you have, the greater chance of success. " +
                     $"| rank - show information about your rank " +
-                    $"| rankup - Spend cheese to unlock new items to buy at the shop. Eventually prestige back to the start to climb again but with a permanent boost to your cheese gains.");
+                    $"| rankup - Spend cheese to unlock new items to buy at the shop.");
                 return;
             }
 
             String itemToBuy = arguments[1..].ToLower();
 
-            String outputMessage = player.GetDisplayName() + " ";
-            outputMessage += itemToBuy switch
+            String outputMessage = itemToBuy switch
             {
                 "s" or "storage" => $"Storage increases the maximum amount of cheese you can have.",
                 "p" or "population" => $"Population increases the maximum number of workers you can have.",
@@ -265,7 +262,7 @@ namespace Chubberino.Modules.CheeseGame.Shops
                 "m" or "mouse" or "mousetrap" or "mousetraps" => $"Mousetraps kills giant rats that infest your cheese factory.",
                 _ => $"Invalid item \"{itemToBuy}\" name. Type \"!cheese shop\" to see the items available for purchase.",
             };
-            TwitchClientManager.Client.SpoolMessage(message.Channel, outputMessage);
+            TwitchClientManager.SpoolMessageAsMe(message.Channel, player, outputMessage);
         }
     }
 }

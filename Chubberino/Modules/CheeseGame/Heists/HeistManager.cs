@@ -1,12 +1,11 @@
-﻿using Chubberino.Client.Abstractions;
+﻿using Chubberino.Client;
+using Chubberino.Client.Abstractions;
 using Chubberino.Database.Contexts;
 using Chubberino.Modules.CheeseGame.Emotes;
-using Chubberino.Modules.CheeseGame.PlayerExtensions;
 using Chubberino.Utility;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
 using TwitchLib.Client.Models;
 
 namespace Chubberino.Modules.CheeseGame.Heists
@@ -46,7 +45,7 @@ namespace Chubberino.Modules.CheeseGame.Heists
             return this;
         }
 
-        public void StartHeist(ChatMessage message)
+        public void InitiateHeist(ChatMessage message)
         {
             var player = GetPlayer(message);
             var now  = DateTime.Now;
@@ -55,29 +54,33 @@ namespace Chubberino.Modules.CheeseGame.Heists
 
             if (timeSinceLastHeistInitiated >= HeistCooldown)
             {
-                var heist = Random.GetElement(HeistTypes);
-
                 // Find if there's another ongoing heist in this channel.
-                // if (OngoingHeists.TryGetValue(message.Channel, out IHeist heist))
+                if (OngoingHeists.TryGetValue(message.Channel, out IHeist heist))
                 {
-                    TwitchClientManager.Client.SpoolMessage(message.Channel, $"{player.GetDisplayName()} There already is an ongoing quest in this channel, initiated by {heist.InitatorName}. You must wait until it is over before you initiate your own heist in this channel.");
+                    TwitchClientManager.SpoolMessageAsMe(message.Channel, player, $"There already is an ongoing quest in this channel, initiated by {heist.InitiatorName}. You must wait until it is over before you initiate your own heist in this channel.");
                 }
-                // else if (OngoingHeists.TryAdd(message.Channel, player.Name))
+                else if (player.Points < 1)
                 {
-                    TwitchClientManager.Client.SpoolMessage(message.Channel, $"{player.GetDisplayName()} A heist has been initiated. Others can join with \"!cheese join <cheese amount>\". The more cheese invested, the greater the risk and reward! The heist will begin in {Format(HeistWaitTime)}.");
+                    TwitchClientManager.SpoolMessageAsMe(message.Channel, player, $"You do not have any cheese to wager to initiate a heist.");
+                }
+                else if (OngoingHeists.TryAdd(message.Channel, new Heist(message, Context, Random, TwitchClientManager)))
+                {
+                    TwitchClientManager.SpoolMessageAsMe(message.Channel, player, $"A heist has been initiated. You and others can join with \"!cheese join <cheese amount>\". The more cheese wagered, the greater the risk and reward! The heist will begin in {Format(HeistWaitTime)}.");
 
                     SpinWait.Sleep(HeistWaitTime);
 
-                    heist.Start(message, player);
+                    if (heist.Start())
+                    {
+                        player.LastHeistInitiated = now;
 
-                    player.LastHeistInitiated = now;
+                        Context.SaveChanges();
+                    }
 
-
-                    Context.SaveChanges();
+                    OngoingHeists.TryRemove(message.Channel, out _);
                 }
-                // else
+                else
                 {
-                    TwitchClientManager.Client.SpoolMessage(message.Channel, $"{player.GetDisplayName()} You have already initiated an ongoing heist.");
+                    TwitchClientManager.SpoolMessageAsMe(message.Channel, player, $"You have already initiated an ongoing heist.");
                 }
 
             }
@@ -87,9 +90,45 @@ namespace Chubberino.Modules.CheeseGame.Heists
 
                 var timeToWait = Format(timeUntilNextHeistAvailable);
 
-                TwitchClientManager.Client.SpoolMessage(message.Channel, $"{player.GetDisplayName()}, you must wait {timeToWait} until you can initiate another heist.");
+                TwitchClientManager.SpoolMessageAsMe(message.Channel, player, $"You must wait {timeToWait} until you can initiate another heist.");
             }
 
+        }
+
+        public void JoinHeist(ChatMessage message)
+        {
+            var player = GetPlayer(message);
+
+            if (!OngoingHeists.TryGetValue(message.Channel, out IHeist heist))
+            {
+                TwitchClientManager.SpoolMessageAsMe(message.Channel, player, "There currently is no heist to join in this channel");
+                return;
+            }
+
+            var strippedCommand = message.Message
+                .StripStart("!cheese h")
+                .StripStart("eist");
+
+            if (!strippedCommand.StartsWith(' '))
+            {
+                TwitchClientManager.SpoolMessageAsMe(message.Channel, player, "To join the heist, you must wager some amount of cheese \"!cheese join <cheese to wager>\". The more you wager, the greater the risk and reward.");
+                return;
+            }
+
+            strippedCommand.GetNextWord(out String countUnchecked);
+
+            if (Int32.TryParse(countUnchecked, out Int32 wager))
+            {
+                heist.UpdateWager(player, wager);
+            }
+            else if (countUnchecked.Equals("all", StringComparison.OrdinalIgnoreCase) || countUnchecked.Equals("a", StringComparison.OrdinalIgnoreCase))
+            {
+                heist.UpdateWager(player, player.Points);
+            }
+            else
+            {
+                TwitchClientManager.SpoolMessageAsMe(message.Channel, player, $"\"{countUnchecked}\" You must wager a positive number of cheese to join the heist.");
+            }
         }
     }
 }

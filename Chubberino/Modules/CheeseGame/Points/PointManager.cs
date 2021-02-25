@@ -1,4 +1,5 @@
-﻿using Chubberino.Database.Contexts;
+﻿using Chubberino.Client;
+using Chubberino.Database.Contexts;
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Hazards;
 using Chubberino.Modules.CheeseGame.Models;
@@ -43,7 +44,7 @@ namespace Chubberino.Modules.CheeseGame.Points
             {
                 if (player.Points >= playerStorage)
                 {
-                    TwitchClientManager.Client.SpoolMessage(message.Channel, $"{player.GetDisplayName()}, you have {player.Points}/{playerStorage} cheese and cannot store any more. Consider buying more cheese storage with \"!cheese buy storage\".");
+                    TwitchClientManager.SpoolMessageAsMe(message.Channel, player, $" You have {player.Points}/{playerStorage} cheese and cannot store any more. Consider buying more cheese storage with \"!cheese buy storage\".");
                 }
                 else
                 {
@@ -81,9 +82,8 @@ namespace Chubberino.Modules.CheeseGame.Points
 
 
                     outputMessage += $"You made {cheese.Name} cheese ({(isPositive ? "+" : String.Empty)}{pointsGained}). {emote} You now have {player.Points}/{playerStorage} cheese. StinkyCheese";
-                    outputMessage = player.GetDisplayName() + " " + outputMessage;
 
-                    TwitchClientManager.Client.SpoolMessage(message.Channel, outputMessage);
+                    TwitchClientManager.SpoolMessageAsMe(message.Channel, player, outputMessage);
                 }
             }
             else
@@ -92,7 +92,7 @@ namespace Chubberino.Modules.CheeseGame.Points
 
                 String timeToWait = Format(timeUntilNextValidPointGain);
 
-                TwitchClientManager.Client.SpoolMessage(message.Channel, $"{player.GetDisplayName()}, you must wait {timeToWait} until you can make more cheese.");
+                TwitchClientManager.SpoolMessageAsMe(message.Channel, player, $"You must wait {timeToWait} until you can make more cheese.");
             }
         }
     }
