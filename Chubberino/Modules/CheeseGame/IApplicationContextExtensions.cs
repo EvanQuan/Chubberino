@@ -26,7 +26,7 @@ namespace Chubberino.Modules.CheeseGame
 
                 source.SaveChanges();
 
-                client.SpoolMessageAsMe(message.Channel, player, $"!!! NEW CHEESE FACTORY !!!You have just begun building your own cheese factory in the lands of Kashkaval, where {player.ID - 1} other cheese factories already reside here. Begin producing cheese with \"!cheese\". You can get help with \"!cheese help\". Good luck!");
+                client.SpoolMessageAsMe(message.Channel, player, $"!!! NEW CHEESE FACTORY !!! You have just begun building your own cheese factory in the lands of Kashkaval, where {player.ID - 1} other cheese factories already reside here. Begin producing cheese with \"!cheese\". You can get help with \"!cheese help\". Good luck!");
             }
 
             return player;
