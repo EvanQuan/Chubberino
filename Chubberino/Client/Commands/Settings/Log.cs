@@ -11,11 +11,16 @@ namespace Chubberino.Client.Commands.Settings
             Enable = twitchClient =>
             {
                 twitchClient.OnLog += TwitchClient_OnLog;
+                twitchClient.OnRitualNewChatter += TwitchClient_OnRitualNewChatter;
             };
             Disable = twitchClient =>
             {
                 twitchClient.OnLog -= TwitchClient_OnLog;
             };
+        }
+
+        private void TwitchClient_OnRitualNewChatter(Object sender, OnRitualNewChatterArgs e)
+        {
         }
 
         public void TwitchClient_OnLog(Object sender, OnLogArgs e)
