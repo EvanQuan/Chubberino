@@ -88,9 +88,9 @@ namespace Chubberino.Modules.CheeseGame.Shops
         public void BuyItem(ChatMessage message)
         {
             // Cut out "!cheese buy " or "!cheese b" start.
-            String arguments = message.Message.StartsWith("!cheese buy")
-                ? message.Message[11..]
-                : message.Message[9..];
+            String arguments = message.Message
+                .GetNextWord(out _)
+                .GetNextWord(out _);
 
             Player player = GetPlayer(message);
 
@@ -101,13 +101,13 @@ namespace Chubberino.Modules.CheeseGame.Shops
             }
 
             // Cut out space between buy and item
-            String itemToBuy = arguments[1..].ToLower();
+            arguments.GetNextWord(out String itemToBuy);
 
             PriceList prices = ItemManager.GetPrices(player);
 
             String outputMessage;
 
-            switch (itemToBuy[0])
+            switch (itemToBuy.ToLower()[0])
             {
                 case 's':
                     Int32 storageGain = (Int32)(Constants.ShopStorageQuantity * player.GetStorageUpgradeMultiplier());
