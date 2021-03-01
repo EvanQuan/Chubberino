@@ -63,7 +63,7 @@ namespace Chubberino.Modules.CheeseGame.Rankings
                     var pointsNeededToRank = pointsToRank - player.Points;
                     if (newRank == Rank.Bronze)
                     {
-                        outputMessage = $"You need {pointsNeededToRank} more cheese in order ot prestige back to bronze. You will lose all your cheese and upgrades, but will gain a permanent {(Int32)(Constants.PrestigeBonus * 100)}% bonus on your cheese gains.";
+                        outputMessage = $"You need {pointsNeededToRank} more cheese in order to prestige back to {Rank.Bronze} rank. You will lose all your cheese and upgrades, but will gain a permanent {(Int32)(Constants.PrestigeBonus * 100)}% bonus on your cheese gains.";
                     }
                     else
                     {
