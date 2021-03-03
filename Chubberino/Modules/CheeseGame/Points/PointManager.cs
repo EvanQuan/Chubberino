@@ -56,11 +56,18 @@ namespace Chubberino.Modules.CheeseGame.Points
 
                     Int32 oldPoints = player.Points;
 
-                    Boolean isCritical = cheese.PointValue > 0 && Random.TryPercentChance((Int32)player.NextCriticalCheeseUpgradeUnlock * Constants.CriticalCheeseUpgradePercent);
+                    Boolean isCritical = Random.TryPercentChance((Int32)player.NextCriticalCheeseUpgradeUnlock * Constants.CriticalCheeseUpgradePercent);
 
                     if (isCritical)
                     {
-                        outputMessage += $"{EmoteManager.GetRandomPositiveEmote(useChannelEmotes)} CRITICAL CHEESE!!! {EmoteManager.GetRandomPositiveEmote(useChannelEmotes)} ";
+                        if (cheese.PointValue > 0)
+                        {
+                            outputMessage += $"{EmoteManager.GetRandomPositiveEmote(useChannelEmotes)} CRITICAL CHEESE!!! {EmoteManager.GetRandomPositiveEmote(useChannelEmotes)} ";
+                        }
+                        else
+                        {
+                            outputMessage += $"{EmoteManager.GetRandomNegativeEmote(useChannelEmotes)} CRITICAL NEGATIVE CHEESE!!! {EmoteManager.GetRandomNegativeEmote(useChannelEmotes)} ";
+                        }
                     }
 
                     player.AddPoints(cheese, !player.IsMouseInfested, isCritical);

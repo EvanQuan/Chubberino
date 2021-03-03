@@ -1,5 +1,6 @@
 ﻿using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.PlayerExtensions;
+using Chubberino.Modules.CheeseGame.Rankings;
 using System;
 
 namespace Chubberino.Modules.CheeseGame.Upgrades
@@ -72,7 +73,7 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
             {
                 return player.GetNextQuestSuccessUpgrade();
             }
-            else if (player.NextWorkerProductionUpgradeUnlock < Rankings.Rank.Legend)
+            else if (player.NextWorkerProductionUpgradeUnlock <= Rank.Legend)
             {
                 return player.GetNextWorkerProductionUpgrade();
             }
