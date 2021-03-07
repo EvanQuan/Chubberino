@@ -16,7 +16,7 @@ namespace Chubberino.Modules.CheeseGame.Heists
         public const Double MinimumWinnerPercent = 0.33;
         public const Double MaximumWinnerPercent = 1;
 
-        private IList<(String PlayerTwitchID, String PlayerName, Int32 WageredPoints)> Wagers { get; }
+        private IList<Wager> Wagers { get; }
 
         public Heist(
             ChatMessage message,
@@ -24,7 +24,7 @@ namespace Chubberino.Modules.CheeseGame.Heists
             Random random,
             ITwitchClientManager client)
         {
-            Wagers = new List<(String, String, Int32)>();
+            Wagers = new List<Wager>();
             InitiatorMessage = message;
             InitiatorName = message.DisplayName;
             Context = context;
@@ -47,14 +47,14 @@ namespace Chubberino.Modules.CheeseGame.Heists
                 return false;
             }
 
-            String others = Wagers.Count switch
+            String people = Wagers.Count switch
             {
-                1 => "goes",
-                2 => $"and {Wagers[1].PlayerName} go",
-                _ => $"and {Wagers.Count} others go"
+                0 => "No one goes",
+                1 => "1 person goes",
+                _ => $"{Wagers.Count} people go"
             };
 
-            var intro = new StringBuilder($"[Heist] {Wagers[0].PlayerName} {others} into the lair of the great cheese dragon. ");
+            var intro = new StringBuilder($"[Heist] {people} into the lair of the great cheese dragon. ");
 
             Double winnerPercent = Random.NextDouble(MinimumWinnerPercent, MaximumWinnerPercent);
 
@@ -80,14 +80,14 @@ namespace Chubberino.Modules.CheeseGame.Heists
                 intro.Append("Some made it out with the spoils! ");
             }
 
-            var winners = new List<(String, String, Int32)>();
+            var winners = new List<Wager>();
 
             winnerCount.Repeat(() => winners.Add(Random.RemoveElement(Wagers)));
 
-            foreach ((String playerTwitchID, String playerName, Int32 wageredPoints) in winners)
+            foreach (Wager wager in winners)
             {
-                var player = Context.Players.FirstOrDefault(x => x.TwitchUserID == playerTwitchID);
-                Int32 winnerPoints = (Int32)((1.0 / winnerPercent + 0.5) * wageredPoints);
+                var player = Context.Players.FirstOrDefault(x => x.TwitchUserID == wager.PlayerTwitchID);
+                Int32 winnerPoints = (Int32)((1.0 / winnerPercent + 0.5) * wager.WageredPoints);
                 player.AddPoints(winnerPoints);
                 Context.SaveChanges();
                 intro.Append($"{player.Name} (+{winnerPoints}) ");
@@ -130,7 +130,7 @@ namespace Chubberino.Modules.CheeseGame.Heists
             }
             else
             {
-                Wagers.Add((player.TwitchUserID, player.Name, updatedPoints));
+                Wagers.Add(new Wager(player.TwitchUserID, updatedPoints));
                 player.AddPoints(-updatedPoints);
                 Context.SaveChanges();
                 updateMessage = $"You join the heist, wagering {updatedPoints} cheese.";
