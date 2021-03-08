@@ -20,7 +20,8 @@ namespace Chubberino.Modules.CheeseGame.Heists
         /// </summary>
         private ConcurrentDictionary<String, IHeist> OngoingHeists { get; }
 
-        public static TimeSpan HeistCooldown { get; set; } = TimeSpan.FromHours(10);
+        public static TimeSpan HeistCooldown { get; set; } = TimeSpan.FromHours(6);
+
         public ISpinWait SpinWait { get; }
 
         public HeistManager(
