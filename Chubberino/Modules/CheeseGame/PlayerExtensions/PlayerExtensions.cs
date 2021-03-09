@@ -19,9 +19,14 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
             player.NextStorageUpgradeUnlock = 0;
             player.NextCriticalCheeseUpgradeUnlock = 0;
             player.MouseTrapCount = 0;
-            player.IsMouseInfested = false;
+            player.MouseCount = 0;
 
             return player;
+        }
+
+        public static Boolean IsMouseInfested(this Player player)
+        {
+            return player.MouseCount > 0;
         }
 
         public static String GetDisplayName(this Player player)

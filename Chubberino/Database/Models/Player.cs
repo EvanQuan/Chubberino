@@ -37,7 +37,10 @@ namespace Chubberino.Modules.CheeseGame.Models
 
         public Int32 MouseTrapCount { get; set; }
 
-        public Boolean IsMouseInfested { get; set; }
+        /// <summary>
+        /// Number of mice present in the factory.
+        /// </summary>
+        public Int32 MouseCount { get; set; }
 
         public Rank NextStorageUpgradeUnlock { get; set; }
 

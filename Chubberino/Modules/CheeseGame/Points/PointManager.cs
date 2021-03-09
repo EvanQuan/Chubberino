@@ -74,7 +74,7 @@ namespace Chubberino.Modules.CheeseGame.Points
                         }
                     }
 
-                    player.AddPoints(cheese, !player.IsMouseInfested, isCritical);
+                    player.AddPoints(cheese, !player.IsMouseInfested(), isCritical);
 
                     Int32 newPoints = player.Points;
 
@@ -92,7 +92,7 @@ namespace Chubberino.Modules.CheeseGame.Points
                         : EmoteManager.GetRandomNegativeEmote(useChannelEmotes);
 
 
-                    outputMessage += $"You made {cheese.Name} cheese ({(isPositive ? "+" : String.Empty)}{pointsGained}). {emote} You now have {player.Points}/{playerStorage} cheese. StinkyCheese";
+                    outputMessage += $"You made {cheese.Name} cheese. {emote} ({(isPositive ? "+" : String.Empty)}{pointsGained})";
 
                     TwitchClientManager.SpoolMessageAsMe(message.Channel, player, outputMessage);
                 }
