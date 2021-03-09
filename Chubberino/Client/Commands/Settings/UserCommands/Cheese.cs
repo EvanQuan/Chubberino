@@ -75,10 +75,6 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
                     // Run in a separate thread as it involves sleeping to wait for joiners.
                     Task.Run(() => HeistManager.InitiateHeist(e.ChatMessage));
                     break;
-                case "j":
-                case "join":
-                    HeistManager.JoinHeist(e.ChatMessage);
-                    break;
                 default:
                     PointManager.AddPoints(e.ChatMessage);
                     break;
