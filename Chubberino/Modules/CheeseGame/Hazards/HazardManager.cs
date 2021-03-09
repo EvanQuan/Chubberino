@@ -30,7 +30,7 @@ namespace Chubberino.Modules.CheeseGame.Hazards
         {
             String outputMessage = String.Empty;
 
-            Double infestationChance = ((Double)player.Rank + 1) / 100.0;
+            Double infestationChance = ((Double)player.Rank) / 100.0;
 
             if (player.IsMouseInfested || Random.TryPercentChance(infestationChance))
             {
