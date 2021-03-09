@@ -1,4 +1,5 @@
 ﻿using Chubberino.Client;
+using Chubberino.Client.Services;
 using Chubberino.Database.Contexts;
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Hazards;
@@ -17,6 +18,7 @@ namespace Chubberino.Modules.CheeseGame.Points
         public ICheeseRepository CheeseRepository { get; }
 
         public IHazardManager HazardManager { get; }
+        public IDateTimeService DateTime { get; }
 
         public PointManager(
             IApplicationContext context,
@@ -24,11 +26,13 @@ namespace Chubberino.Modules.CheeseGame.Points
             ICheeseRepository cheeseRepository,
             Random random,
             IEmoteManager emoteManager,
-            IHazardManager hazardManager)
+            IHazardManager hazardManager,
+            IDateTimeService dateTime)
             : base(context, client, random, emoteManager)
         {
             CheeseRepository = cheeseRepository;
             HazardManager = hazardManager;
+            DateTime = dateTime;
         }
 
         public void AddPoints(ChatMessage message)

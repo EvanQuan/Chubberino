@@ -1,4 +1,5 @@
 ﻿using Chubberino.Client;
+using Chubberino.Client.Services;
 using Chubberino.Database.Contexts;
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Utility;
@@ -12,11 +13,18 @@ namespace Chubberino.Modules.CheeseGame.Quests
     {
         private IList<IQuest> Quests { get; }
         public static TimeSpan QuestCooldown { get; set; } = TimeSpan.FromHours(2);
+        public IDateTimeService DateTime { get; }
 
-        public QuestManager(IApplicationContext context, ITwitchClientManager client, Random random, IEmoteManager emoteManager)
+        public QuestManager(
+            IApplicationContext context,
+            ITwitchClientManager client,
+            Random random,
+            IEmoteManager emoteManager,
+            IDateTimeService dateTime)
             : base(context, client, random, emoteManager)
         {
             Quests = new List<IQuest>();
+            DateTime = dateTime;
         }
 
         public IQuestManager AddQuest(IQuest quest)

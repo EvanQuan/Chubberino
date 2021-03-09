@@ -9,6 +9,7 @@ using Chubberino.Client.Commands.Settings.Replies;
 using Chubberino.Client.Commands.Settings.UserCommands;
 using Chubberino.Client.Commands.Strategies;
 using Chubberino.Client.Credentials;
+using Chubberino.Client.Services;
 using Chubberino.Client.Threading;
 using Chubberino.Database.Contexts;
 using Chubberino.Database.Models;
@@ -60,6 +61,8 @@ namespace Chubberino
                 c.Resolve<IConsole>(),
                 c.Resolve<ISpinWait>(),
                 null)).As<IExtendedClientFactory>().SingleInstance();
+
+            builder.RegisterType<DateTimeService>().As<IDateTimeService>().SingleInstance();
 
             builder.RegisterType<StopSettingStrategy>().As<IStopSettingStrategy>().SingleInstance();
             builder.RegisterType<Repeater>().As<IRepeater>();

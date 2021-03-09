@@ -13,6 +13,13 @@ namespace Chubberino.Utility
             return !Equals(default(TElement), element);
         }
 
+        public static Boolean TryGetFirst<TElement>(this IEnumerable<TElement> source, out TElement element)
+        {
+            element = source.FirstOrDefault();
+
+            return !Equals(default(TElement), element);
+        }
+
         public static IEnumerable<TType> ForEach<TType>(this IEnumerable<TType> source, Action<TType> action)
         {
             foreach (var element in source)
