@@ -19,8 +19,4 @@
     <PackageReference Include="WolframAlphaNET" Version="2.0.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Client\Services\" />
-  </ItemGroup>
-
 </Project>

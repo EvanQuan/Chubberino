@@ -1,5 +1,6 @@
 ﻿using Chubberino.Client;
 using Chubberino.Client.Abstractions;
+using Chubberino.Client.Services;
 using Chubberino.Database.Contexts;
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Models;
@@ -24,17 +25,20 @@ namespace Chubberino.Modules.CheeseGame.Heists
         public static TimeSpan HeistCooldown { get; set; } = TimeSpan.FromHours(6);
 
         public ISpinWait SpinWait { get; }
+        public IDateTimeService DateTime { get; }
 
         public HeistManager(
             IApplicationContext context,
             ITwitchClientManager client,
             Random random,
             IEmoteManager emoteManager,
-            ISpinWait spinWait)
+            ISpinWait spinWait,
+            IDateTimeService dateTime)
             : base(context, client, random, emoteManager)
         {
             OngoingHeists = new ConcurrentDictionary<String, IHeist>();
             SpinWait = spinWait;
+            DateTime = dateTime;
         }
 
         public void InitiateHeist(ChatMessage message)

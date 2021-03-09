@@ -132,9 +132,7 @@ namespace Chubberino.Client.Commands.Settings
                 // Get the most common message from the last GeneralMessageCount
                 // number of messages, as long as there is more than one
                 // duplicate of it.
-                String message = GetMessageToSend();
-
-                if (message != null)
+                if (TryGetMessageToSend(out String message))
                 {
                     TwitchClientManager.SpoolMessage(message);
                     OnCooldown = true;
@@ -149,9 +147,7 @@ namespace Chubberino.Client.Commands.Settings
                 // Get the most common message from the last SpamMessageCount
                 // number of messages, as long as there is more than one
                 // duplicate of it.
-                String message = GetMessageToSend();
-
-                if (message != null)
+                if (TryGetMessageToSend(out String message))
                 {
                     TwitchClientManager.SpoolMessage(message);
                     // Empty the last messages, if one was sent.
@@ -161,14 +157,16 @@ namespace Chubberino.Client.Commands.Settings
             }
         }
 
-        private String GetMessageToSend()
+        private Boolean TryGetMessageToSend(out String message)
         {
-            return PreviousMessages
+            message = PreviousMessages
                 .GroupBy(x => x)
                 .OrderByDescending(x => x.Count()).ThenBy(x => x.Key)
                 .Where(x => x.Count() >= MinimumDuplicateCount)
                 .Select(x => x.Key)
                 .FirstOrDefault();
+
+            return message != default;
         }
 
         /// <summary>
