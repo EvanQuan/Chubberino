@@ -100,7 +100,7 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
         {
             Double baseSuccessChance = Constants.QuestBaseSuccessChance + ((Int32)player.NextQuestSuccessUpgradeUnlock * Constants.QuestSuccessUpgradePercent);
 
-            Double workerSuccessChance = player.WorkerCount * Constants.QuestWorkerSuccessPercent;
+            Double workerSuccessChance = player.IsMouseInfested() ? 0 : player.WorkerCount * Constants.QuestWorkerSuccessPercent;
 
             return baseSuccessChance + workerSuccessChance;
         }
