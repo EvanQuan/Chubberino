@@ -59,7 +59,7 @@ namespace Chubberino.Modules.CheeseGame.Hazards
             }
             else if (Random.TryPercentChance(((Double)player.Rank) / 100.0))
             {
-                Int32 mouseCount = Random.Next(0, (Int32)player.Rank + 1);
+                Int32 mouseCount = Random.Next(1, (Int32)player.Rank + 1);
 
                 Boolean isSingleMouse = mouseCount == 1;
                 String mouse = isSingleMouse ? "mouse" : "mice";
