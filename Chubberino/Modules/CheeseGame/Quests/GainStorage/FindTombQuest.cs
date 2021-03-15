@@ -31,7 +31,7 @@ namespace Chubberino.Modules.CheeseGame.Quests.GainStorage
 
         protected override String OnSuccess(Player player)
         {
-            const Int32 baseRewardStorage = 10;
+            const Int32 baseRewardStorage = 20;
 
             Int32 rewardStorage = (Int32)(baseRewardStorage * Calculator.GetQuestRewardMultiplier(player.Rank));
 
