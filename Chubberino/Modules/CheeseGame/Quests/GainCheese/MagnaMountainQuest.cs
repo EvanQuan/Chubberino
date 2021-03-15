@@ -1,14 +1,20 @@
-﻿using Chubberino.Client.Abstractions;
-using Chubberino.Database.Contexts;
+﻿using Chubberino.Database.Contexts;
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Models;
+using Chubberino.Modules.CheeseGame.Points;
 using System;
 
 namespace Chubberino.Modules.CheeseGame.Quests.GainCheese
 {
     public sealed class MagnaMountainQuest : GainCheeseQuest
     {
-        public MagnaMountainQuest(IApplicationContext context, Random random, ITwitchClientManager client, IEmoteManager emoteManager) : base(context, random, client, emoteManager)
+        public MagnaMountainQuest(
+            IApplicationContext context,
+            Random random,
+            ITwitchClientManager client,
+            IEmoteManager emoteManager,
+            ICalculator calculator)
+            : base(context, random, client, emoteManager, calculator)
         {
         }
 

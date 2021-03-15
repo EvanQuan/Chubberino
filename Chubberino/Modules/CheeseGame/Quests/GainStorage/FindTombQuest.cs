@@ -2,13 +2,20 @@
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.PlayerExtensions;
+using Chubberino.Modules.CheeseGame.Points;
 using System;
 
 namespace Chubberino.Modules.CheeseGame.Quests.GainStorage
 {
     public sealed class FindTombQuest : Quest
     {
-        public FindTombQuest(IApplicationContext context, Random random, ITwitchClientManager client, IEmoteManager emoteManager) : base(context, random, client, emoteManager)
+        public FindTombQuest(
+            IApplicationContext context,
+            Random random,
+            ITwitchClientManager client,
+            IEmoteManager emoteManager,
+            ICalculator calculator)
+            : base(context, random, client, emoteManager, calculator)
         {
         }
 
@@ -24,9 +31,9 @@ namespace Chubberino.Modules.CheeseGame.Quests.GainStorage
 
         protected override String OnSuccess(Player player)
         {
-            const Int32 baseRewardStorage = 50;
+            const Int32 baseRewardStorage = 20;
 
-            Int32 rewardStorage = (Int32)(baseRewardStorage * (1 + (Int32)player.Rank * RewardRankMultiplier));
+            Int32 rewardStorage = (Int32)(baseRewardStorage * Calculator.GetQuestRewardMultiplier(player.Rank));
 
             // We only add the base storage value in the database, but display the multiplied value to the user.
             Int32 rewardStorageWithMultiplier = (Int32)(rewardStorage * player.GetStorageUpgradeMultiplier());

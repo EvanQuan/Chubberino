@@ -2,13 +2,20 @@
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.PlayerExtensions;
+using Chubberino.Modules.CheeseGame.Points;
 using System;
 
 namespace Chubberino.Modules.CheeseGame.Quests.GainWorkers
 {
     public sealed class FindTravellerQuest : Quest
     {
-        public FindTravellerQuest(IApplicationContext context, Random random, ITwitchClientManager client, IEmoteManager emoteManager) : base(context, random, client, emoteManager)
+        public FindTravellerQuest(
+            IApplicationContext context,
+            Random random,
+            ITwitchClientManager client,
+            IEmoteManager emoteManager,
+            ICalculator calculator)
+            : base(context, random, client, emoteManager, calculator)
         {
         }
 
@@ -26,7 +33,7 @@ namespace Chubberino.Modules.CheeseGame.Quests.GainWorkers
         {
             if (player.WorkerCount + 1 > player.PopulationCount)
             {
-                Int32 rewardPoints = (Int32)(50 * (1 + (Int32)player.Rank * RewardRankMultiplier));
+                Int32 rewardPoints = (Int32)(50 * Calculator.GetQuestRewardMultiplier(player.Rank));
                 player.AddPoints(rewardPoints);
                 Context.SaveChanges();
 
