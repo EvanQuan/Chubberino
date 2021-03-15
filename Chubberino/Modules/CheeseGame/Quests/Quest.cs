@@ -70,7 +70,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
                 ? OnSuccess(player) + " " + EmoteManager.GetRandomPositiveEmote(useChannelEmotes)
                 : OnFailure(player) + " " + EmoteManager.GetRandomNegativeEmote(useChannelEmotes);
 
-            TwitchClientManager.SpoolMessageAsMe(message.Channel, player, $"[{Math.Round((successChance * 100), 2)}% success] {OnIntroduction(player)} {resultMessage}");
+            TwitchClientManager.SpoolMessageAsMe(message.Channel, player, $"[Quest {Math.Round((successChance * 100), 2)}% success] {OnIntroduction(player)} {resultMessage}");
 
             return successful;
         }
