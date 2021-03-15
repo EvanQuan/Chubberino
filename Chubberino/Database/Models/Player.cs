@@ -23,7 +23,7 @@ namespace Chubberino.Modules.CheeseGame.Models
 
         public Rank NextWorkerProductionUpgradeUnlock { get; set; }
 
-        public Rank NextQuestSuccessUpgradeUnlock { get; set; }
+        public Rank NextQuestRewardUpgradeUnlock { get; set; }
 
         public Int32 Prestige { get; set; }
 

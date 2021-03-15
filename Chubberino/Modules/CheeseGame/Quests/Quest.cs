@@ -3,6 +3,7 @@ using Chubberino.Database.Contexts;
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.PlayerExtensions;
+using Chubberino.Modules.CheeseGame.Points;
 using Chubberino.Utility;
 using System;
 using TwitchLib.Client.Models;
@@ -15,25 +16,24 @@ namespace Chubberino.Modules.CheeseGame.Quests
             IApplicationContext context,
             Random random,
             ITwitchClientManager client,
-            IEmoteManager emoteManager)
+            IEmoteManager emoteManager,
+            ICalculator calculation)
         {
             Context = context;
             Random = random;
             TwitchClientManager = client;
             EmoteManager = emoteManager;
+            Calculator = calculation;
         }
 
         public IApplicationContext Context { get; }
 
         public Random Random { get; }
 
-        public Double RewardRankMultiplier { get; set; } = 0.5;
-
-        public Double RewardRankExponent { get; set; } = 2;
-
         public ITwitchClientManager TwitchClientManager { get; }
 
         public IEmoteManager EmoteManager { get; }
+        public ICalculator Calculator { get; }
 
         /// <summary>
         /// Message on quest failure.

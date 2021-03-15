@@ -64,6 +64,8 @@ namespace Chubberino
 
             builder.RegisterType<DateTimeService>().As<IDateTimeService>().SingleInstance();
 
+            builder.RegisterType<Calculator>().As<ICalculator>().SingleInstance();
+
             builder.RegisterType<StopSettingStrategy>().As<IStopSettingStrategy>().SingleInstance();
             builder.RegisterType<Repeater>().As<IRepeater>();
             builder.RegisterType<ContainsComparator>().As<IContainsComparator>().SingleInstance();

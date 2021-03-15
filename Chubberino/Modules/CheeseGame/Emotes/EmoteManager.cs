@@ -27,7 +27,7 @@ namespace Chubberino.Modules.CheeseGame.Emotes
             "PogU",
             "SUPERPOG",
             "WOODY",
-            "berryA",
+            "berryW",
             "catJAM",
             "chubDuane",
             "chubEars",
