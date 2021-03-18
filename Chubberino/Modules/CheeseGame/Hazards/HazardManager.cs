@@ -43,7 +43,7 @@ namespace Chubberino.Modules.CheeseGame.Hazards
                 {
                     // Old infestation remains, contested.
                     Int32 newMouseCount = player.MouseCount - player.MouseTrapCount;
-                    outputMessage = $"You set up {(isSingleMouseTrapUsed ? "a mousetrap" : $"{player.MouseTrapCount} mousetraps")}, killing {(isSingleMouse ? "a giant mouse" : "some of the giant mice")} infesting your cheese factory. {newMouseCount} {(newMouseCount == 1 ? "remains" : "remain")}, scaring away your workers. ";
+                    outputMessage = $"You set up {(isSingleMouseTrapUsed ? "a mousetrap" : $"{player.MouseCount} mousetraps")}, killing {(isSingleMouse ? "a giant mouse" : "some of the giant mice")} infesting your cheese factory. {newMouseCount} {(newMouseCount == 1 ? "remains" : "remain")}, scaring away your workers. ";
                     player.MouseCount = newMouseCount;
                     player.MouseTrapCount = 0;
                     Context.SaveChanges();
