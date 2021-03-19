@@ -49,7 +49,7 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
             player.AddPoints((Int32) points);
         }
 
-        public static void AddPoints(this Player player, CheeseType cheese, Boolean withWorkers = true, Boolean isCritical = false)
+        public static void AddPoints(this Player player, CheeseType cheese, ICalculator calculator, Boolean withWorkers = true, Boolean isCritical = false)
         {
             // Cannot reach negative points.
             // Cannot go above the point storage.
@@ -58,7 +58,7 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
             Int32 workerPoints = 0;
             if (withWorkers)
             {
-                Double workerPointMultipler = ((Int32)player.NextWorkerProductionUpgradeUnlock + 1) * Constants.WorkerUpgradePercent;
+                Double workerPointMultipler = calculator.GetWorkerPointMultiplier(player.NextWorkerProductionUpgradeUnlock);
                 Int32 absoluteWorkerPoints = (Int32)Math.Max(Math.Abs(cheese.PointValue) * (player.WorkerCount * workerPointMultipler), player.WorkerCount == 0 ? 0 : 1);
                 workerPoints = Math.Sign(cheese.PointValue) * absoluteWorkerPoints;
             }

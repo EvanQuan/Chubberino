@@ -6,5 +6,7 @@ namespace Chubberino.Modules.CheeseGame.Points
     public interface ICalculator
     {
         Double GetQuestRewardMultiplier(Rank rank);
+
+        Double GetWorkerPointMultiplier(Rank rank);
     }
 }
