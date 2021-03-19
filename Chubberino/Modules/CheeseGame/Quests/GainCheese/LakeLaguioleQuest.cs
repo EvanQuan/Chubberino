@@ -18,10 +18,10 @@ namespace Chubberino.Modules.CheeseGame.Quests.GainCheese
         {
         }
 
-        protected override Int32 BaseRewardPoints => 75;
+        protected override Int32 BaseRewardPoints => 70;
 
         protected override String SuccessMessage =>
-            "You go fishing and catch some Taleggio Tuna. (+{0} cheese)";
+            "You go fishing and catch some Taleggio Tuna.";
 
         protected override String OnFailure(Player player)
         {

@@ -30,7 +30,7 @@ namespace Chubberino.Modules.CheeseGame.Quests.GainCheese
             player.AddPoints(rewardPoints);
             Context.SaveChanges();
 
-            return String.Format(SuccessMessage, rewardPoints);
+            return SuccessMessage + $" (+{rewardPoints} cheese)";
         }
     }
 }

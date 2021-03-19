@@ -6,9 +6,9 @@ using System;
 
 namespace Chubberino.Modules.CheeseGame.Quests.GainCheese
 {
-    public sealed class MagnaMountainQuest : GainCheeseQuest
+    public sealed class MadronaMarsh : GainCheeseQuest
     {
-        public MagnaMountainQuest(
+        public MadronaMarsh(
             IApplicationContext context,
             Random random,
             ITwitchClientManager client,
@@ -18,19 +18,19 @@ namespace Chubberino.Modules.CheeseGame.Quests.GainCheese
         {
         }
 
-        protected override Int32 BaseRewardPoints => 100;
+        protected override Int32 BaseRewardPoints => 120;
 
         protected override String SuccessMessage =>
-            "You find a giant vein of Magna cheese and mine at it for hours.";
+            "You find some cheese hidden in the depths that must have been aging for decades.";
 
         protected override String OnFailure(Player player)
         {
-            return $"You search the cavern depths, but with no luck.";
+            return $"You get lost in the fog, and with some trouble, return safely.";
         }
 
         protected override String OnIntroduction(Player player)
         {
-            return $"{GetPlayerWithWorkers(player)} venture into the caves of Mount Magna.";
+            return $"{GetPlayerWithWorkers(player)} travel to the Madrona Marsh.";
         }
     }
 }
