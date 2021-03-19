@@ -1,5 +1,6 @@
 ﻿using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.Points;
+using Chubberino.Utility;
 using System;
 
 namespace Chubberino.Modules.CheeseGame.PlayerExtensions
@@ -59,7 +60,7 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
             if (withWorkers)
             {
                 Double workerPointMultipler = calculator.GetWorkerPointMultiplier(player.NextWorkerProductionUpgradeUnlock);
-                Int32 absoluteWorkerPoints = (Int32)Math.Max(Math.Abs(cheese.PointValue) * (player.WorkerCount * workerPointMultipler), player.WorkerCount == 0 ? 0 : 1);
+                Int32 absoluteWorkerPoints = (Int32)(Math.Abs(cheese.PointValue) * (player.WorkerCount * workerPointMultipler)).Max(player.WorkerCount == 0 ? 0 : 1);
                 workerPoints = Math.Sign(cheese.PointValue) * absoluteWorkerPoints;
             }
 
@@ -69,21 +70,24 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
 
             Double newPointsRaw = player.Points + pointsToAddWithCritical;
 
-            // Between 0 and total storage
-            Int32 newPointsBounded = (Int32)Math.Min(Math.Max(newPointsRaw, 0), player.GetTotalStorage());
+            Int32 newPointsBounded = (Int32)newPointsRaw
+                .Min(player.GetTotalStorage())
+                .Max(0);
 
             player.Points = newPointsBounded;
         }
 
         /// <summary>
         /// Add or substract points from the player. Does not save the database.
-        /// Ensures that points cannot exceed <see cref="PlayerExtensions.GetTotalStorage(Player)"/> or go below 0.
+        /// Ensures that points cannot exceed <see cref="GetTotalStorage(Player)"/> or go below 0.
         /// </summary>
         /// <param name="player"></param>
         /// <param name="points"></param>
         public static void AddPoints(this Player player, Int32 points)
         {
-            player.Points = Math.Max(Math.Min(player.Points + points, player.GetTotalStorage()), 0);
+            player.Points = (player.Points + points)
+                .Min(player.GetTotalStorage())
+                .Max(0);
         }
 
         public static Double GetStorageUpgradeMultiplier(this Player player)
