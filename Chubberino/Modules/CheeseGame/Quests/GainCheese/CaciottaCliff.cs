@@ -6,9 +6,9 @@ using System;
 
 namespace Chubberino.Modules.CheeseGame.Quests.GainCheese
 {
-    public sealed class LakeLaguioleQuest : GainCheeseQuest
+    public sealed class CaciottaCliff : GainCheeseQuest
     {
-        public LakeLaguioleQuest(
+        public CaciottaCliff(
             IApplicationContext context,
             Random random,
             ITwitchClientManager client,
@@ -18,19 +18,19 @@ namespace Chubberino.Modules.CheeseGame.Quests.GainCheese
         {
         }
 
-        protected override Int32 BaseRewardPoints => 70;
+        protected override Int32 BaseRewardPoints => 90;
 
         protected override String SuccessMessage =>
-            "You go fishing and catch some Taleggio Tuna.";
+            "You find some cheese along the edge of the cliffside, which you carefully take.";
 
         protected override String OnFailure(Player player)
         {
-            return "With the bad weather, you can't find any fish.";
+            return "The heights get to you, and you go back without finding anything.";
         }
 
         protected override String OnIntroduction(Player player)
         {
-            return $"{GetPlayerWithWorkers(player)} travel to Lake Laguiole.";
+            return $"{GetPlayerWithWorkers(player)} travel to the Caciotta Cliff.";
         }
     }
 }

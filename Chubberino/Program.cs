@@ -155,6 +155,7 @@ namespace Chubberino
             builder.RegisterType<ItemManager>().As<IItemManager>().SingleInstance();
 
             // Quests
+            builder.RegisterType<CaciottaCliff>().AsSelf().SingleInstance();
             builder.RegisterType<MagnaMountainQuest>().AsSelf().SingleInstance();
             builder.RegisterType<MadronaMarsh>().AsSelf().SingleInstance();
             builder.RegisterType<LakeLaguioleQuest>().AsSelf().SingleInstance();
@@ -182,6 +183,7 @@ namespace Chubberino
 
             var questManager = scope.Resolve<IQuestManager>();
             questManager
+                .AddQuest(scope.Resolve<CaciottaCliff>())
                 .AddQuest(scope.Resolve<MagnaMountainQuest>())
                 .AddQuest(scope.Resolve<MadronaMarsh>())
                 .AddQuest(scope.Resolve<LakeLaguioleQuest>())
