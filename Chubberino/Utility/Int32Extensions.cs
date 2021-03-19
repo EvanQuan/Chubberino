@@ -29,5 +29,15 @@ namespace Chubberino.Utility
                 action(i);
             }
         }
+
+        public static Int32 Max(this Int32 source, Int32 other)
+        {
+            return Math.Max(source, other);
+        }
+
+        public static Int32 Min(this Int32 source, Int32 other)
+        {
+            return Math.Min(source, other);
+        }
     }
 }
