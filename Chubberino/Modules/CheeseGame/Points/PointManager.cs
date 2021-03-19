@@ -19,6 +19,7 @@ namespace Chubberino.Modules.CheeseGame.Points
 
         public IHazardManager HazardManager { get; }
         public IDateTimeService DateTime { get; }
+        public ICalculator Calculator { get; }
 
         public PointManager(
             IApplicationContext context,
@@ -27,12 +28,14 @@ namespace Chubberino.Modules.CheeseGame.Points
             Random random,
             IEmoteManager emoteManager,
             IHazardManager hazardManager,
-            IDateTimeService dateTime)
+            IDateTimeService dateTime,
+            ICalculator calculator)
             : base(context, client, random, emoteManager)
         {
             CheeseRepository = cheeseRepository;
             HazardManager = hazardManager;
             DateTime = dateTime;
+            Calculator = calculator;
         }
 
         public void AddPoints(ChatMessage message)
@@ -74,7 +77,7 @@ namespace Chubberino.Modules.CheeseGame.Points
                         }
                     }
 
-                    player.AddPoints(cheese, !player.IsMouseInfested(), isCritical);
+                    player.AddPoints(cheese, Calculator, !player.IsMouseInfested(), isCritical);
 
                     Int32 newPoints = player.Points;
 

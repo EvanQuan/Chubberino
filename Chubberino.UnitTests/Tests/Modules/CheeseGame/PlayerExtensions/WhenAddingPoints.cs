@@ -9,11 +9,13 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.PlayerExtensions
     public sealed class WhenAddingPoints
     {
         private Player Player { get; }
+        private ICalculator Calculator { get; }
         // private CheeseType Cheese { get; }
 
         public WhenAddingPoints()
         {
             Player = new Player();
+            Calculator = new Calculator();
         }
 
         [Theory]
@@ -31,7 +33,7 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.PlayerExtensions
 
             Player.Points = initialPoints;
 
-            Player.AddPoints(cheese);
+            Player.AddPoints(cheese, Calculator);
 
             Assert.Equal(expectedPoints, Player.Points);
         }
@@ -51,7 +53,7 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.PlayerExtensions
             Player.WorkerCount = 1;
             Player.Points = initialPoints;
 
-            Player.AddPoints(cheese);
+            Player.AddPoints(cheese, Calculator);
 
             Assert.Equal(expectedPoints, Player.Points);
         }
@@ -70,7 +72,7 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.PlayerExtensions
             Player.WorkerCount = workers;
             Player.Points = initialPoints;
 
-            Player.AddPoints(cheese);
+            Player.AddPoints(cheese, Calculator);
 
             Assert.Equal(expectedPoints, Player.Points);
         }
@@ -89,7 +91,7 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.PlayerExtensions
             Player.WorkerCount = workers;
             Player.Points = initialPoints;
 
-            Player.AddPoints(cheese);
+            Player.AddPoints(cheese, Calculator);
 
             Assert.Equal(0, Player.Points);
         }
@@ -109,7 +111,7 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.PlayerExtensions
             Player.WorkerCount = workers;
             Player.Points = initialPoints;
 
-            Player.AddPoints(cheese);
+            Player.AddPoints(cheese, Calculator);
 
             Assert.Equal(expectedPoints, Player.Points);
         }
