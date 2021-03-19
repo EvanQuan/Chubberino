@@ -10,7 +10,7 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
     {
         private const String StorageDescription = "+{0}% -> +{1}% storage increase";
 
-        private const String QuestRewardDescription = "{0}% -> {1}% quest reward increase";
+        private const String QuestRewardDescription = "{0}% -> {1}% cheese quest reward increase";
 
         private const String ProductionDescription = "+{0}% -> +{1}% cheese per worker";
 

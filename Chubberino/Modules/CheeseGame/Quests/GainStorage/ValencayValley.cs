@@ -1,0 +1,36 @@
+﻿using Chubberino.Database.Contexts;
+using Chubberino.Modules.CheeseGame.Emotes;
+using Chubberino.Modules.CheeseGame.Models;
+using Chubberino.Modules.CheeseGame.Points;
+using System;
+
+namespace Chubberino.Modules.CheeseGame.Quests.GainStorage
+{
+    public sealed class ValencayValley : GainStorageQuest
+    {
+        public ValencayValley(
+            IApplicationContext context,
+            Random random,
+            ITwitchClientManager client,
+            IEmoteManager emoteManager,
+            ICalculator calculation)
+            : base(context, random, client, emoteManager, calculation)
+        {
+        }
+
+        protected override Int32 BaseRewardStorage => Constants.ShopStorageQuantity;
+
+        protected override String SuccessMessage { get; }
+        = "You find a small cave in the side of the valley, which you claim for cheese storage.";
+
+        protected override String OnFailure(Player player)
+        {
+            return "The valley winds on forever, and you return without anything.";
+        }
+
+        protected override String OnIntroduction(Player player)
+        {
+            return $"{GetPlayerWithWorkers(player)} travel into the Valencay Valley.";
+        }
+    }
+}
