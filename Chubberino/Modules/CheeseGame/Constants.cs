@@ -15,7 +15,7 @@ namespace Chubberino.Modules.CheeseGame
 
         public const Double QuestRewardUpgradePercent = 0.05;
 
-        public const Double QuestWorkerSuccessPercent = 0.015;
+        public const Double QuestWorkerSuccessPercent = 0.01;
 
         public const Double CriticalCheeseUpgradePercent = 0.005;
 
