@@ -54,8 +54,8 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
 
         public Upgrade GetNextQuestRewardUpgrade(Player player)
         {
-            Int32 currentUpgradePercent = (Int32)(Calculator.GetQuestRewardMultiplier(player.Rank) * 100);
-            Int32 nextUpgradePercent = (Int32)(Calculator.GetQuestRewardMultiplier(player.Rank.Next()) * 100);
+            Int32 currentUpgradePercent = (Int32)(Calculator.GetQuestRewardMultiplier(player.NextQuestRewardUpgradeUnlock) * 100);
+            Int32 nextUpgradePercent = (Int32)(Calculator.GetQuestRewardMultiplier(player.NextQuestRewardUpgradeUnlock.Next()) * 100);
             return new Upgrade(
                 String.Format(QuestRewardDescription, currentUpgradePercent, nextUpgradePercent),
                 player.NextQuestRewardUpgradeUnlock,
