@@ -7,9 +7,9 @@ using System;
 
 namespace Chubberino.Modules.CheeseGame.Quests.GainWorkers
 {
-    public sealed class FindTravellerQuest : Quest
+    public sealed class PanelaPlainsQuest : Quest
     {
-        public FindTravellerQuest(
+        public PanelaPlainsQuest(
             IApplicationContext context,
             Random random,
             ITwitchClientManager client,

@@ -159,7 +159,7 @@ namespace Chubberino
             builder.RegisterType<MagnaMountainQuest>().AsSelf().SingleInstance();
             builder.RegisterType<MadronaMarsh>().AsSelf().SingleInstance();
             builder.RegisterType<LakeLaguioleQuest>().AsSelf().SingleInstance();
-            builder.RegisterType<FindTravellerQuest>().AsSelf().SingleInstance();
+            builder.RegisterType<PanelaPlainsQuest>().AsSelf().SingleInstance();
             builder.RegisterType<FontiagoForestQuest>().AsSelf().SingleInstance();
             builder.RegisterType<DurrusDesertQuest>().AsSelf().SingleInstance();
             builder.RegisterType<HayloftHillsQuest>().AsSelf().SingleInstance();
@@ -187,7 +187,7 @@ namespace Chubberino
                 .AddQuest(scope.Resolve<MagnaMountainQuest>())
                 .AddQuest(scope.Resolve<MadronaMarsh>())
                 .AddQuest(scope.Resolve<LakeLaguioleQuest>())
-                .AddQuest(scope.Resolve<FindTravellerQuest>())
+                .AddQuest(scope.Resolve<PanelaPlainsQuest>())
                 .AddQuest(scope.Resolve<FontiagoForestQuest>())
                 .AddQuest(scope.Resolve<DurrusDesertQuest>())
                 .AddQuest(scope.Resolve<HayloftHillsQuest>())
