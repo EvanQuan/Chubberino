@@ -11,55 +11,77 @@ namespace Chubberino.Modules.CheeseGame.Points
 
         private static IReadOnlyList<CheeseType> Cheeses { get; } = new List<CheeseType>()
         {
-            new CheeseType("Blue Castello", -1),
-
-            new CheeseType("American", 2),
-            new CheeseType("Cheddar", 4),
-            new CheeseType("Mozzarella", 6),
+            new CheeseType("Spray", 1),
+            new CheeseType("Spread", 2),
+            new CheeseType("Velveeta", 3),
+            new CheeseType("American", 4), // 0
 
             // Unlockable cheese types
-            new CheeseType("Swiss", 8, Rank.Bronze, 75),
+            new CheeseType("Cheddar", 5, Rank.Bronze, 50, true), // 1
+            new CheeseType("Blue Castello", -1),
+            new CheeseType("Mozzarella", 6, Rank.Bronze, 60),
+            new CheeseType("Friulano", 7, Rank.Bronze, 70),
+            new CheeseType("Swiss", 8, Rank.Bronze, 80),
+            new CheeseType("Tetilla", 9, Rank.Bronze, 90),
             new CheeseType("Babybel", 10, Rank.Bronze, 100),
-            new CheeseType("Gouda", 12, Rank.Bronze, 125),
+            new CheeseType("Piave", 11, Rank.Bronze, 110),
+            new CheeseType("Gouda", 12, Rank.Bronze, 120),
 
-            new CheeseType("Monterey Jack", 14, Rank.Silver, 150),
+            new CheeseType("Havarti", 13, Rank.Silver, 140, true), // 10
+            new CheeseType("Stinking Bishop", -5),
+            new CheeseType("Monterey Jack", 14, Rank.Silver, 160),
+            new CheeseType("Morbier", 15, Rank.Silver, 180),
             new CheeseType("Asiago", 16, Rank.Silver, 200),
-            new CheeseType("Camembert", 18, Rank.Silver, 250, true),
-            new CheeseType("Stinking Bishop", -4),
+            new CheeseType("Red Cloud", 17, Rank.Silver, 220),
+            new CheeseType("Camembert", 18, Rank.Silver, 240),
 
-            new CheeseType("Grana", 20, Rank.Gold, 325),
+            new CheeseType("Dry Jack", 19, Rank.Gold, 280, true), // 17
+            new CheeseType("Cheshire", -13),
+            new CheeseType("Grana", 20, Rank.Gold, 320),
+            new CheeseType("Kasseri", 21, Rank.Gold, 360),
             new CheeseType("Brie", 22, Rank.Gold, 400),
-            new CheeseType("Roquefort", 24, Rank.Gold, 475),
+            new CheeseType("Parmesan", 23, Rank.Gold, 440),
+            new CheeseType("Roquefort", 24, Rank.Gold, 480),
 
-            new CheeseType("Emmental", 26, Rank.Platinum, 700),
+            new CheeseType("Kasseri", 25, Rank.Gold, 560, true), // 24
+            new CheeseType("Limburger", -19),
+            new CheeseType("Emmental", 26, Rank.Platinum, 640),
+            new CheeseType("Ogleshield", 27, Rank.Platinum, 720),
             new CheeseType("Mascarpone", 28, Rank.Platinum, 800),
-            new CheeseType("Bocconcini", 30, Rank.Platinum, 900, true),
-            new CheeseType("Limburger", -7),
+            new CheeseType("Wensleydale", 29, Rank.Platinum, 880),
+            new CheeseType("Bocconcini", 30, Rank.Platinum, 960),
 
-            new CheeseType("Halloumi", 32, Rank.Diamond, 1475),
+            new CheeseType("Neufchatel", 31, Rank.Diamond, 1120, true), // 31
+            new CheeseType("Oxford Blue", -25),
+            new CheeseType("Halloumi", 32, Rank.Diamond, 1280),
+            new CheeseType("Stilton", 33, Rank.Diamond, 1440),
             new CheeseType("Gorgonzola", 34, Rank.Diamond, 1600),
-            new CheeseType("Reblochon", 36, Rank.Diamond, 1725),
+            new CheeseType("Lairobell", 35, Rank.Diamond, 1760),
+            new CheeseType("Reblochon", 36, Rank.Diamond, 1920),
 
-            new CheeseType("Oaxaca", 38, Rank.Master, 3050),
+            new CheeseType("Edam", 37, Rank.Master, 2240, true), // 38
+            new CheeseType("Muenster", -31),
+            new CheeseType("Oaxaca", 38, Rank.Master, 2560),
+            new CheeseType("Ulloa", 39, Rank.Master, 2880),
             new CheeseType("Adelost", 40, Rank.Master, 3200),
-            new CheeseType("Garroxta", 42, Rank.Master, 3350, true),
-            new CheeseType("Muenster", -10),
+            new CheeseType("Montagnolo", 41, Rank.Master, 3520),
+            new CheeseType("Garroxta", 42, Rank.Master, 3840),
 
-            new CheeseType("Juustoleipa", 44, Rank.Grandmaster, 6225),
+            new CheeseType("Cabrales", 43, Rank.Grandmaster, 4480, true), // 45
+            new CheeseType("Danablu", -37),
+            new CheeseType("Juustoleipa", 44, Rank.Grandmaster, 5120),
+            new CheeseType("Flagship Block", 45, Rank.Grandmaster, 5760),
             new CheeseType("Castelmagno", 46, Rank.Grandmaster, 6400),
-            new CheeseType("Myzithra", 48, Rank.Grandmaster, 6575),
+            new CheeseType("Gammelost", 47, Rank.Grandmaster, 7040),
+            new CheeseType("Myzithra", 48, Rank.Grandmaster, 7680),
 
-            new CheeseType("Beaufort D'Ete", 50, Rank.Legend, 12600),
+            new CheeseType("Beaufort D'Ete", 49, Rank.Legend, 8960, true), // 52
+            new CheeseType("Epoisses", -43),
+            new CheeseType("Winnimere", 50, Rank.Legend, 10240),
+            new CheeseType("Cacio Bufala", 51, Rank.Legend, 11520),
             new CheeseType("Lord of the Hundreds", 52, Rank.Legend, 12800),
-            new CheeseType("Pule", 54, Rank.Legend, 13000, true),
-            new CheeseType("Epoisses", -13),
-        };
-
-        public static IReadOnlyList<CheeseVariant> Variants { get; } = new List<CheeseVariant>()
-        {
-            new CheeseVariant("a slice of", 0),
-            new CheeseVariant("a wheel of", 1),
-            new CheeseVariant("a pile of", 2),
+            new CheeseType("White Stilton Gold", 53, Rank.Legend, 14080),
+            new CheeseType("Pule", 54, Rank.Legend, 15360),
         };
 
         public CheeseRepository(Random random)
@@ -78,20 +100,12 @@ namespace Chubberino.Modules.CheeseGame.Points
 
         public CheeseType GetRandomType(Int32 cheeseUnlocked)
         {
-            var baseType = GetRandomBaseType(cheeseUnlocked);
-            var variant = GetRandomVariant();
-
-            return new CheeseType(variant.Name + " " + baseType.Name, Math.Sign(baseType.PointValue) * variant.PointValue + baseType.PointValue);
+            return GetRandomBaseType(cheeseUnlocked);
         }
 
         private CheeseType GetRandomBaseType(Int32 cheeseUnlocked)
         {
             return Cheeses[Random.Next(Math.Min(Cheeses.Count, CheeseUnlockedOffset + cheeseUnlocked))];
-        }
-
-        private CheeseVariant GetRandomVariant()
-        {
-            return Variants[Random.Next(Variants.Count)];
         }
     }
 }

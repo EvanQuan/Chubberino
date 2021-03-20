@@ -95,7 +95,7 @@ namespace Chubberino.Modules.CheeseGame.Points
                         : EmoteManager.GetRandomNegativeEmote(useChannelEmotes);
 
 
-                    outputMessage += $"You made {cheese.Name} cheese. {emote} ({(isPositive ? "+" : String.Empty)}{pointsGained} cheese)";
+                    outputMessage += $"You made some {cheese.Name} cheese. {emote} ({(isPositive ? "+" : String.Empty)}{pointsGained} cheese)";
 
                     TwitchClientManager.SpoolMessageAsMe(message.Channel, player, outputMessage);
                 }
