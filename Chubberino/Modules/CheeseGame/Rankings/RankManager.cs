@@ -1,5 +1,4 @@
 ﻿using Chubberino.Client;
-using Chubberino.Client.Abstractions;
 using Chubberino.Database.Contexts;
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.PlayerExtensions;
@@ -14,14 +13,14 @@ namespace Chubberino.Modules.CheeseGame.Rankings
     {
         private IReadOnlyDictionary<Rank, Int32> PointsToRank { get; } = new Dictionary<Rank, Int32>()
         {
-            {  Rank.Bronze, 200 },
-            {  Rank.Silver, 400 },
-            {  Rank.Gold, 800 },
-            {  Rank.Platinum, 1600 },
-            {  Rank.Diamond, 3200 },
-            {  Rank.Master, 6400 },
-            {  Rank.Grandmaster, 12800 },
-            {  Rank.Legend, 25600 },
+            {  Rank.Bronze, 250 },
+            {  Rank.Silver, 500 },
+            {  Rank.Gold, 1000 },
+            {  Rank.Platinum, 2000 },
+            {  Rank.Diamond, 4000 },
+            {  Rank.Master, 8000 },
+            {  Rank.Grandmaster, 16000 },
+            {  Rank.Legend, 32000 },
         };
 
         public RankManager(IApplicationContext context, ITwitchClientManager client, Random random, IEmoteManager emoteManager)
