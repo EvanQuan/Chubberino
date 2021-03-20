@@ -13,7 +13,7 @@ namespace Chubberino.Modules.CheeseGame.Points
         /// <summary>
         /// The additional worker point percent increase per upgrade.
         /// </summary>
-        public const Double WorkerUpgradePercent = 0.025;
+        public const Double WorkerUpgradePercent = 0.02;
 
         /// <summary>
         /// The base point increase value workers provide.
