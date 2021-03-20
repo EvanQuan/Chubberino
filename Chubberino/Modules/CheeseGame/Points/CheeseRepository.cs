@@ -91,11 +91,16 @@ namespace Chubberino.Modules.CheeseGame.Points
 
         public Random Random { get; }
 
-        public CheeseType GetNextCheeseToUnlock(Player player)
+        public Boolean TryGetNextCheeseToUnlock(Player player, out CheeseType cheeseType)
         {
-            if (player.CheeseUnlocked + CheeseUnlockedOffset >= Cheeses.Count) { return null; }
+            if (player.CheeseUnlocked + CheeseUnlockedOffset >= Cheeses.Count)
+            {
+                cheeseType = default;
+                return false;
+            }
 
-            return Cheeses[CheeseUnlockedOffset + player.CheeseUnlocked];
+            cheeseType = Cheeses[CheeseUnlockedOffset + player.CheeseUnlocked];
+            return true;
         }
 
         public CheeseType GetRandomType(Int32 cheeseUnlocked)

@@ -130,16 +130,16 @@ namespace Chubberino.Modules.CheeseGame.Emotes
 
         public Random Random { get; }
 
-        public String GetRandomPositiveEmote(Boolean useChannelEmotes)
+        public String GetRandomPositiveEmote(String channelName)
         {
-            return useChannelEmotes
+            return channelName.Equals("ChubbehMouse", StringComparison.OrdinalIgnoreCase)
                 ? PositiveChannelEmotes[Random.Next(PositiveChannelEmotes.Count)]
                 : PositiveGlobalEmotes[Random.Next(PositiveGlobalEmotes.Count)];
         }
 
-        public String GetRandomNegativeEmote(Boolean useChannelEmotes)
+        public String GetRandomNegativeEmote(String channelName)
         {
-            return useChannelEmotes
+            return channelName.Equals("ChubbehMouse", StringComparison.OrdinalIgnoreCase)
                 ? NegativeChannelEmotes[Random.Next(NegativeChannelEmotes.Count)]
                 : NegativeGlobalEmotes[Random.Next(NegativeGlobalEmotes.Count)];
         }

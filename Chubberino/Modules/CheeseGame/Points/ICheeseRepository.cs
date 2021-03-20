@@ -5,7 +5,7 @@ namespace Chubberino.Modules.CheeseGame.Points
 {
     public interface ICheeseRepository
     {
-        public CheeseType GetNextCheeseToUnlock(Player player);
+        public Boolean TryGetNextCheeseToUnlock(Player player, out CheeseType cheeseType);
 
         public CheeseType GetRandomType(Int32 cheeseUnlocked);
     }

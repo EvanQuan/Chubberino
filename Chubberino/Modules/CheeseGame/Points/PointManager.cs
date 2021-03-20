@@ -59,8 +59,6 @@ namespace Chubberino.Modules.CheeseGame.Points
 
                     String outputMessage = HazardManager.UpdateMouseInfestationStatus(player);
 
-                    Boolean useChannelEmotes = message.Channel.Equals("ChubbehMouse", StringComparison.OrdinalIgnoreCase);
-
                     Int32 oldPoints = player.Points;
 
                     Boolean isCritical = Random.TryPercentChance((Int32)player.NextCriticalCheeseUpgradeUnlock * Constants.CriticalCheeseUpgradePercent);
@@ -69,11 +67,11 @@ namespace Chubberino.Modules.CheeseGame.Points
                     {
                         if (cheese.PointValue > 0)
                         {
-                            outputMessage += $"{EmoteManager.GetRandomPositiveEmote(useChannelEmotes)} CRITICAL CHEESE!!! {EmoteManager.GetRandomPositiveEmote(useChannelEmotes)} ";
+                            outputMessage += $"{EmoteManager.GetRandomPositiveEmote(message.Channel)} CRITICAL CHEESE!!! {EmoteManager.GetRandomPositiveEmote(message.Channel)} ";
                         }
                         else
                         {
-                            outputMessage += $"{EmoteManager.GetRandomNegativeEmote(useChannelEmotes)} CRITICAL NEGATIVE CHEESE!!! {EmoteManager.GetRandomNegativeEmote(useChannelEmotes)} ";
+                            outputMessage += $"{EmoteManager.GetRandomNegativeEmote(message.Channel)} CRITICAL NEGATIVE CHEESE!!! {EmoteManager.GetRandomNegativeEmote(message.Channel)} ";
                         }
                     }
 
@@ -91,8 +89,8 @@ namespace Chubberino.Modules.CheeseGame.Points
 
 
                     String emote = isPositive
-                        ? EmoteManager.GetRandomPositiveEmote(useChannelEmotes)
-                        : EmoteManager.GetRandomNegativeEmote(useChannelEmotes);
+                        ? EmoteManager.GetRandomPositiveEmote(message.Channel)
+                        : EmoteManager.GetRandomNegativeEmote(message.Channel);
 
 
                     outputMessage += $"You made some {cheese.Name} cheese. {emote} ({(isPositive ? "+" : String.Empty)}{pointsGained} cheese)";

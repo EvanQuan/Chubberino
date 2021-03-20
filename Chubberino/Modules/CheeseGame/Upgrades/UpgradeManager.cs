@@ -23,11 +23,6 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
             Calculator = calculator;
         }
 
-        public Upgrade GetNextUpgradeToUnlock(Player player)
-        {
-            return GetNextUpgrade(player);
-        }
-
         public static Upgrade GetNextStorageUpgrade(Player player)
         {
             Double currentUpgradePercent = (Int32)(player.NextStorageUpgradeUnlock) * Constants.StorageUpgradePercent * 100;
@@ -72,28 +67,30 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
                 x => x.NextWorkerProductionUpgradeUnlock++);
         }
 
-        public Upgrade GetNextUpgrade(Player player)
+        public Boolean TryGetNextUpgradeToUnlock(Player player, out Upgrade upgrade)
         {
             if (player.NextCriticalCheeseUpgradeUnlock > player.NextStorageUpgradeUnlock)
             {
-                return GetNextStorageUpgrade(player);
+                upgrade = GetNextStorageUpgrade(player);
             }
             else if (player.NextQuestRewardUpgradeUnlock > player.NextCriticalCheeseUpgradeUnlock)
             {
-                return GetNextCriticalCheeseUpgrade(player);
+                upgrade = GetNextCriticalCheeseUpgrade(player);
             }
             else if (player.NextWorkerProductionUpgradeUnlock > player.NextQuestRewardUpgradeUnlock)
             {
-                return GetNextQuestRewardUpgrade(player);
+                upgrade = GetNextQuestRewardUpgrade(player);
             }
             else if (player.NextWorkerProductionUpgradeUnlock <= Rank.Legend)
             {
-                return GetNextWorkerProductionUpgrade(player);
+                upgrade = GetNextWorkerProductionUpgrade(player);
             }
             else
             {
-                return null;
+                upgrade = default;
+                return false;
             }
+            return true;
         }
     }
 }
