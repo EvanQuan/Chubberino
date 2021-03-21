@@ -1,4 +1,5 @@
 ﻿using Chubberino.Modules.CheeseGame.Points;
+using Chubberino.UnitTests.Utility;
 using Moq;
 using System;
 using Xunit;
@@ -7,18 +8,13 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Points.CheeseRepositorie
 {
     public sealed class WhenGettingRandomCheese : UsingCheeseRepository
     {
-        public WhenGettingRandomCheese()
-        {
-            MockedRandom.Setup(x => x.Next(It.Is<Int32>(x => x < 0))).Throws<ArgumentOutOfRangeException>();
-        }
-
         [Theory]
         [InlineData(0)]
         [InlineData(1)]
         [InlineData(2)]
         public void ShouldReturnLowestCheese(Int32 cheeseUnlocked)
         {
-            MockedRandom.Setup(x => x.Next(It.Is<Int32>(x => x >= 0))).Returns(0);
+            MockedRandom.SetupReturnMinimum();
 
             var result = Sut.GetRandomType(cheeseUnlocked);
 
@@ -33,7 +29,7 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Points.CheeseRepositorie
         [InlineData(2)]
         public void ShouldReturnHighestUnlockedCheese(Int32 cheeseUnlocked)
         {
-            MockedRandom.Setup(x => x.Next(It.IsAny<Int32>())).Returns<Int32>(x => x);
+            MockedRandom.SetupReturnMaximum();
 
             var result = Sut.GetRandomType(cheeseUnlocked);
 
@@ -47,7 +43,7 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Points.CheeseRepositorie
         {
             Int32 maxCheeseUnlocked = CheeseRepository.Cheeses.Count - 1;
 
-            MockedRandom.Setup(x => x.Next(It.IsAny<Int32>())).Returns<Int32>(x => x);
+            MockedRandom.SetupReturnMaximum();
 
             var result = Sut.GetRandomType(maxCheeseUnlocked);
 
@@ -61,7 +57,7 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Points.CheeseRepositorie
         {
             Int32 maxCheeseUnlocked = CheeseRepository.Cheeses.Count;
 
-            MockedRandom.Setup(x => x.Next(It.IsAny<Int32>())).Returns<Int32>(x => x);
+            MockedRandom.SetupReturnMaximum();
 
             var result = Sut.GetRandomType(maxCheeseUnlocked);
 
@@ -75,7 +71,7 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Points.CheeseRepositorie
         {
             Int32 invalidCheeseUnlocked = -1;
 
-            MockedRandom.Setup(x => x.Next(It.Is<Int32>(x => x >= 0))).Returns(0);
+            MockedRandom.SetupReturnMinimum();
 
             var result = Sut.GetRandomType(invalidCheeseUnlocked);
 
