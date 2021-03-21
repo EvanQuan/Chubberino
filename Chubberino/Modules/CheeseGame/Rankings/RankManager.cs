@@ -1,5 +1,4 @@
 ﻿using Chubberino.Client;
-using Chubberino.Client.Abstractions;
 using Chubberino.Database.Contexts;
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.PlayerExtensions;
@@ -14,14 +13,14 @@ namespace Chubberino.Modules.CheeseGame.Rankings
     {
         private IReadOnlyDictionary<Rank, Int32> PointsToRank { get; } = new Dictionary<Rank, Int32>()
         {
-            {  Rank.Bronze, 200 },
-            {  Rank.Silver, 400 },
-            {  Rank.Gold, 800 },
-            {  Rank.Platinum, 1600 },
-            {  Rank.Diamond, 3200 },
-            {  Rank.Master, 6400 },
-            {  Rank.Grandmaster, 12800 },
-            {  Rank.Legend, 25600 },
+            {  Rank.Bronze, 250 },
+            {  Rank.Silver, 500 },
+            {  Rank.Gold, 1000 },
+            {  Rank.Platinum, 2000 },
+            {  Rank.Diamond, 4000 },
+            {  Rank.Master, 8000 },
+            {  Rank.Grandmaster, 16000 },
+            {  Rank.Legend, 32000 },
         };
 
         public RankManager(IApplicationContext context, ITwitchClientManager client, Random random, IEmoteManager emoteManager)
@@ -37,14 +36,13 @@ namespace Chubberino.Modules.CheeseGame.Rankings
 
             if (PointsToRank.TryGetValue(player.Rank, out Int32 pointsToRank))
             {
-                Rank newRank = player.Rank.Next();
+                Rank nextRank = player.Rank.Next();
 
                 if (player.Points >= pointsToRank)
                 {
-                    if (newRank == Rank.Bronze)
+                    if (nextRank == Rank.None)
                     {
                         // Prestige instead of rank up
-                        player.Points -= pointsToRank;
                         player.ResetRank();
                         player.Prestige++;
                         Context.SaveChanges();
@@ -53,21 +51,21 @@ namespace Chubberino.Modules.CheeseGame.Rankings
                     else
                     {
                         player.Points -= pointsToRank;
-                        player.Rank = newRank;
+                        player.Rank = nextRank;
                         Context.SaveChanges();
-                        outputMessage = $"You ranked up to {newRank}. (-{pointsToRank} cheese)";
+                        outputMessage = $"You ranked up to {nextRank}. {EmoteManager.GetRandomPositiveEmote(message.Channel)} (-{pointsToRank} cheese)";
                     }
                 }
                 else
                 {
                     var pointsNeededToRank = pointsToRank - player.Points;
-                    if (newRank == Rank.Bronze)
+                    if (nextRank == Rank.None)
                     {
                         outputMessage = $"You need {pointsNeededToRank} more cheese in order to prestige back to {Rank.Bronze} rank. You will lose all your cheese and upgrades, but will gain a permanent {(Int32)(Constants.PrestigeBonus * 100)}% bonus on your cheese gains.";
                     }
                     else
                     {
-                        outputMessage = $"You need {pointsNeededToRank} more cheese in order to rank up to {newRank}.";
+                        outputMessage = $"You need {pointsNeededToRank} more cheese in order to rank up to {nextRank}.";
                     }
                 }
             }
@@ -101,7 +99,7 @@ namespace Chubberino.Modules.CheeseGame.Rankings
                     nextRankInformation = $"You have enough cheese ({pointsToRank}) to rankup right now to ";
                 }
 
-                if (nextRank == Rank.Bronze)
+                if (nextRank == Rank.None)
                 {
                     nextRankInformation += $"prestige back to {Rank.Bronze} rank. You will lose all your cheese and upgrades, but will gain a permanent {(Int32)(Constants.PrestigeBonus * 100)}% bonus on your cheese gains.";
                 }

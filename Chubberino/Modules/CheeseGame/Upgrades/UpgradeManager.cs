@@ -10,7 +10,7 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
     {
         private const String StorageDescription = "+{0}% -> +{1}% storage increase";
 
-        private const String QuestRewardDescription = "{0}% -> {1}% quest reward increase";
+        private const String QuestRewardDescription = "{0}% -> {1}% cheese quest reward increase";
 
         private const String ProductionDescription = "+{0}% -> +{1}% cheese per worker";
 
@@ -21,11 +21,6 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
         public UpgradeManager(ICalculator calculator)
         {
             Calculator = calculator;
-        }
-
-        public Upgrade GetNextUpgradeToUnlock(Player player)
-        {
-            return GetNextUpgrade(player);
         }
 
         public static Upgrade GetNextStorageUpgrade(Player player)
@@ -72,28 +67,30 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
                 x => x.NextWorkerProductionUpgradeUnlock++);
         }
 
-        public Upgrade GetNextUpgrade(Player player)
+        public Boolean TryGetNextUpgradeToUnlock(Player player, out Upgrade upgrade)
         {
             if (player.NextCriticalCheeseUpgradeUnlock > player.NextStorageUpgradeUnlock)
             {
-                return GetNextStorageUpgrade(player);
+                upgrade = GetNextStorageUpgrade(player);
             }
             else if (player.NextQuestRewardUpgradeUnlock > player.NextCriticalCheeseUpgradeUnlock)
             {
-                return GetNextCriticalCheeseUpgrade(player);
+                upgrade = GetNextCriticalCheeseUpgrade(player);
             }
             else if (player.NextWorkerProductionUpgradeUnlock > player.NextQuestRewardUpgradeUnlock)
             {
-                return GetNextQuestRewardUpgrade(player);
+                upgrade = GetNextQuestRewardUpgrade(player);
             }
             else if (player.NextWorkerProductionUpgradeUnlock <= Rank.Legend)
             {
-                return GetNextWorkerProductionUpgrade(player);
+                upgrade = GetNextWorkerProductionUpgrade(player);
             }
             else
             {
-                return null;
+                upgrade = default;
+                return false;
             }
+            return true;
         }
     }
 }

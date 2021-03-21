@@ -39,38 +39,38 @@ namespace Chubberino.Modules.CheeseGame.Shops
 
             PriceList prices = ItemManager.GetPrices(player);
 
-            CheeseType nextCheeseToUnlock = CheeseRepository.GetNextCheeseToUnlock(player);
-
             String recipePrompt;
-
-            if (nextCheeseToUnlock == null)
+            if (CheeseRepository.TryGetNextCheeseToUnlock(player, out CheeseType nextCheeseToUnlock))
+            {
+                if (nextCheeseToUnlock.RankToUnlock > player.Rank)
+                {
+                    recipePrompt = $"{nextCheeseToUnlock.Name} (+{nextCheeseToUnlock.PointValue})] unlocked at {player.Rank.Next()} rank"; 
+                }
+                else
+                {
+                    recipePrompt = $"{nextCheeseToUnlock.Name} (+{nextCheeseToUnlock.PointValue})] for {nextCheeseToUnlock.CostToUnlock} cheese"; 
+                }
+            }
+            else
             {
                 recipePrompt = "OUT OF ORDER]";
             }
-            else if (nextCheeseToUnlock.RankToUnlock > player.Rank)
-            {
-                recipePrompt = $"{nextCheeseToUnlock.Name} (+{nextCheeseToUnlock.PointValue})] unlocked at {player.Rank.Next()} rank"; 
-            }
-            else
-            {
-                recipePrompt = $"{nextCheeseToUnlock.Name} (+{nextCheeseToUnlock.PointValue})] for {nextCheeseToUnlock.CostToUnlock} cheese"; 
-            }
-
-            Upgrade upgrade = UpgradeManager.GetNextUpgradeToUnlock(player);
 
             String upgradePrompt;
-
-            if (upgrade == null)
+            if (UpgradeManager.TryGetNextUpgradeToUnlock(player, out Upgrade upgrade))
             {
-                upgradePrompt = "OUT OF ORDER]";
-            }
-            else if (upgrade.RankToUnlock > player.Rank)
-            {
-                upgradePrompt = $"{upgrade.Description}] unlocked at {upgrade.RankToUnlock} rank";
+                if (upgrade.RankToUnlock > player.Rank)
+                {
+                    upgradePrompt = $"{upgrade.Description}] unlocked at {upgrade.RankToUnlock} rank";
+                }
+                else
+                {
+                    upgradePrompt = $"{upgrade.Description}] for {upgrade.Price} cheese";
+                }
             }
             else
             {
-                upgradePrompt = $"{upgrade.Description}] for {upgrade.Price} cheese";
+                upgradePrompt = "OUT OF ORDER]";
             }
 
             Int32 storageGain = (Int32)(Constants.ShopStorageQuantity * player.GetStorageUpgradeMultiplier());
@@ -157,52 +157,56 @@ namespace Chubberino.Modules.CheeseGame.Shops
                     }
                     break;
                 case 'r':
-                    var nextCheeseToUnlock = CheeseRepository.GetNextCheeseToUnlock(player);
-                    if (nextCheeseToUnlock == null)
+                    if (CheeseRepository.TryGetNextCheeseToUnlock(player, out CheeseType nextCheeseToUnlock))
+                    {
+                        if (nextCheeseToUnlock.RankToUnlock > player.Rank)
+                        {
+                            outputMessage = $"You must rankup to {nextCheeseToUnlock.RankToUnlock} rank before you can buy the {nextCheeseToUnlock.Name} recipe.";
+                        }
+                        else if (player.Points >= nextCheeseToUnlock.CostToUnlock)
+                        {
+                            player.CheeseUnlocked++;
+                            if (nextCheeseToUnlock.UnlocksNegativeCheese)
+                            {
+                                // Increment again so that the next cheese to unlock is not a negative one.
+                                player.CheeseUnlocked++;
+                            }
+                            player.Points -= nextCheeseToUnlock.CostToUnlock;
+                            Context.SaveChanges();
+                            outputMessage = $"You bought the {nextCheeseToUnlock.Name} recipe. (-{nextCheeseToUnlock.CostToUnlock} cheese)";
+                        }
+                        else
+                        {
+                            outputMessage = $"You need {nextCheeseToUnlock.CostToUnlock - player.Points} more cheese to buy the {nextCheeseToUnlock.Name} recipe.";
+                        }
+                    }
+                    else
                     {
                         outputMessage = $"There is no recipe for sale right now.";
                     }
-                    else if (nextCheeseToUnlock.RankToUnlock > player.Rank)
-                    {
-                        outputMessage = $"You must rankup to {nextCheeseToUnlock.RankToUnlock} rank before you can buy the {nextCheeseToUnlock.Name} recipe.";
-                    }
-                    else if (player.Points >= nextCheeseToUnlock.CostToUnlock)
-                    {
-                        player.CheeseUnlocked++;
-                        if (nextCheeseToUnlock.UnlocksNegativeCheese)
-                        {
-                            // Increment again so that the next cheese to unlock is not a negative one.
-                            player.CheeseUnlocked++;
-                        }
-                        player.Points -= nextCheeseToUnlock.CostToUnlock;
-                        Context.SaveChanges();
-                        outputMessage = $"You bought the {nextCheeseToUnlock.Name} recipe. (-{nextCheeseToUnlock.CostToUnlock} cheese)";
-                    }
-                    else
-                    {
-                        outputMessage = $"You need {nextCheeseToUnlock.CostToUnlock - player.Points} more cheese to buy the {nextCheeseToUnlock.Name} recipe.";
-                    }
                     break;
                 case 'u':
-                    var upgrade = UpgradeManager.GetNextUpgradeToUnlock(player);
-                    if (upgrade == null)
+                    if (UpgradeManager.TryGetNextUpgradeToUnlock(player, out Upgrade upgrade))
                     {
-                        outputMessage = $"There is no upgrade for sale right now.";
-                    }
-                    else if (upgrade.RankToUnlock > player.Rank)
-                    {
-                        outputMessage = $"You must rankup to {upgrade.RankToUnlock} rank before you can buy the {upgrade.Description} upgrade.";
-                    }
-                    else if (player.Points >= upgrade.Price)
-                    {
-                        upgrade.UpdatePlayer(player);
-                        player.Points -= upgrade.Price;
-                        Context.SaveChanges();
-                        outputMessage = $"You bought the {upgrade.Description} upgrade. (-{upgrade.Price} cheese)";
+                        if (upgrade.RankToUnlock > player.Rank)
+                        {
+                            outputMessage = $"You must rankup to {upgrade.RankToUnlock} rank before you can buy the {upgrade.Description} upgrade.";
+                        }
+                        else if (player.Points >= upgrade.Price)
+                        {
+                            upgrade.UpdatePlayer(player);
+                            player.Points -= upgrade.Price;
+                            Context.SaveChanges();
+                            outputMessage = $"You bought the {upgrade.Description} upgrade. (-{upgrade.Price} cheese)";
+                        }
+                        else
+                        {
+                            outputMessage = $"You need {upgrade.Price - player.Points} more cheese to buy the {upgrade.Description} upgrade.";
+                        }
                     }
                     else
                     {
-                        outputMessage = $"You need {upgrade.Price - player.Points} more cheese to buy the {upgrade.Description} upgrade.";
+                        outputMessage = $"There is no upgrade for sale right now.";
                     }
                     break;
                 case 'm':

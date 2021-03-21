@@ -64,11 +64,9 @@ namespace Chubberino.Modules.CheeseGame.Quests
 
             Boolean successful = Random.TryPercentChance(successChance);
 
-            Boolean useChannelEmotes = message.Channel.Equals("ChubbehMouse", StringComparison.OrdinalIgnoreCase);
-
             var resultMessage = successful
-                ? OnSuccess(player) + " " + EmoteManager.GetRandomPositiveEmote(useChannelEmotes)
-                : OnFailure(player) + " " + EmoteManager.GetRandomNegativeEmote(useChannelEmotes);
+                ? OnSuccess(player) + " " + EmoteManager.GetRandomPositiveEmote(message.Channel)
+                : OnFailure(player) + " " + EmoteManager.GetRandomNegativeEmote(message.Channel);
 
             TwitchClientManager.SpoolMessageAsMe(message.Channel, player, $"[Quest {Math.Round((successChance * 100), 2)}% success] {OnIntroduction(player)} {resultMessage}");
 

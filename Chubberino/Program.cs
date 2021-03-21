@@ -155,11 +155,16 @@ namespace Chubberino
             builder.RegisterType<ItemManager>().As<IItemManager>().SingleInstance();
 
             // Quests
+            builder.RegisterType<CaciottaCliff>().AsSelf().SingleInstance();
             builder.RegisterType<MagnaMountainQuest>().AsSelf().SingleInstance();
+            builder.RegisterType<MadronaMarsh>().AsSelf().SingleInstance();
             builder.RegisterType<LakeLaguioleQuest>().AsSelf().SingleInstance();
-            builder.RegisterType<FindTravellerQuest>().AsSelf().SingleInstance();
+            builder.RegisterType<PanelaPlainsQuest>().AsSelf().SingleInstance();
+            builder.RegisterType<RiverRagstoneQuest>().AsSelf().SingleInstance();
             builder.RegisterType<FontiagoForestQuest>().AsSelf().SingleInstance();
-            builder.RegisterType<FindTombQuest>().AsSelf().SingleInstance();
+            builder.RegisterType<DurrusDesertQuest>().AsSelf().SingleInstance();
+            builder.RegisterType<HayloftHillsQuest>().AsSelf().SingleInstance();
+            builder.RegisterType<ValencayValley>().AsSelf().SingleInstance();
 
             IContainer container = builder.Build();
 
@@ -179,11 +184,17 @@ namespace Chubberino
 
             var questManager = scope.Resolve<IQuestManager>();
             questManager
+                .AddQuest(scope.Resolve<CaciottaCliff>())
                 .AddQuest(scope.Resolve<MagnaMountainQuest>())
+                .AddQuest(scope.Resolve<MadronaMarsh>())
                 .AddQuest(scope.Resolve<LakeLaguioleQuest>())
-                .AddQuest(scope.Resolve<FindTravellerQuest>())
+                .AddQuest(scope.Resolve<PanelaPlainsQuest>())
+                .AddQuest(scope.Resolve<RiverRagstoneQuest>())
                 .AddQuest(scope.Resolve<FontiagoForestQuest>())
-                .AddQuest(scope.Resolve<FindTombQuest>());
+                .AddQuest(scope.Resolve<DurrusDesertQuest>())
+                .AddQuest(scope.Resolve<HayloftHillsQuest>())
+                .AddQuest(scope.Resolve<ValencayValley>());
+
 
             var commandRepository = scope.Resolve<ICommandRepository>();
             commandRepository

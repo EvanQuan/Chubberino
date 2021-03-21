@@ -4,11 +4,11 @@ using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.Points;
 using System;
 
-namespace Chubberino.Modules.CheeseGame.Quests.GainCheese
+namespace Chubberino.Modules.CheeseGame.Quests.GainStorage
 {
-    public sealed class MagnaMountainQuest : GainCheeseQuest
+    public sealed class DurrusDesertQuest : GainStorageQuest
     {
-        public MagnaMountainQuest(
+        public DurrusDesertQuest(
             IApplicationContext context,
             Random random,
             ITwitchClientManager client,
@@ -18,19 +18,19 @@ namespace Chubberino.Modules.CheeseGame.Quests.GainCheese
         {
         }
 
-        protected override Int32 BaseRewardPoints => 100;
+        protected override Int32 BaseRewardStorage => Constants.ShopStorageQuantity * 2;
 
-        protected override String SuccessMessage =>
-            "You find a giant vein of Magna cheese and mine at it for hours.";
+        protected override String SuccessMessage { get; }
+            = "You come across an ancient tomb. It appears to be empty inside, so you claim it for yourself to store cheese.";
 
         protected override String OnFailure(Player player)
         {
-            return $"You search the cavern depths, but with no luck.";
+            return "The dunes go on forever, and you quickly go back without success.";
         }
 
         protected override String OnIntroduction(Player player)
         {
-            return $"{GetPlayerWithWorkers(player)} venture into the caves of Mount Magna.";
+            return $"{GetPlayerWithWorkers(player)} travel into the Durrus Desert.";
         }
     }
 }

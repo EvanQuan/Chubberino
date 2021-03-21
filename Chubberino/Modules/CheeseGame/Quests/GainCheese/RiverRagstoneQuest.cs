@@ -6,9 +6,9 @@ using System;
 
 namespace Chubberino.Modules.CheeseGame.Quests.GainCheese
 {
-    public sealed class MagnaMountainQuest : GainCheeseQuest
+    public sealed class RiverRagstoneQuest : GainCheeseQuest
     {
-        public MagnaMountainQuest(
+        public RiverRagstoneQuest(
             IApplicationContext context,
             Random random,
             ITwitchClientManager client,
@@ -18,19 +18,19 @@ namespace Chubberino.Modules.CheeseGame.Quests.GainCheese
         {
         }
 
-        protected override Int32 BaseRewardPoints => 100;
+        protected override Int32 BaseRewardPoints => 60;
 
         protected override String SuccessMessage =>
-            "You find a giant vein of Magna cheese and mine at it for hours.";
+            "You find some cheese floating down the stream and grab it before it gets away.";
 
         protected override String OnFailure(Player player)
         {
-            return $"You search the cavern depths, but with no luck.";
+            return "You sit at river for hours without anything appearing.";
         }
 
         protected override String OnIntroduction(Player player)
         {
-            return $"{GetPlayerWithWorkers(player)} venture into the caves of Mount Magna.";
+            return $"{GetPlayerWithWorkers(player)} travel to the River Ragstone.";
         }
     }
 }
