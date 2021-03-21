@@ -43,7 +43,7 @@ namespace Chubberino.Modules.CheeseGame.Points
             new CheeseType("Parmesan", 23, Rank.Gold, 440),
             new CheeseType("Roquefort", 24, Rank.Gold, 480),
 
-            new CheeseType("Kasseri", 25, Rank.Gold, 560, true), // 24
+            new CheeseType("Kasseri", 25, Rank.Platinum, 560, true), // 24
             new CheeseType("Limburger", -19),
             new CheeseType("Emmental", 26, Rank.Platinum, 640),
             new CheeseType("Ogleshield", 27, Rank.Platinum, 720),
