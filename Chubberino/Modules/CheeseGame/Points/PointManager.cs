@@ -7,6 +7,7 @@ using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.PlayerExtensions;
 using Chubberino.Utility;
 using System;
+using System.Linq;
 using TwitchLib.Client.Models;
 
 namespace Chubberino.Modules.CheeseGame.Points
@@ -19,6 +20,7 @@ namespace Chubberino.Modules.CheeseGame.Points
 
         public IHazardManager HazardManager { get; }
         public IDateTimeService DateTime { get; }
+        public IConsole Console { get; }
         public ICalculator Calculator { get; }
 
         public PointManager(
@@ -29,12 +31,14 @@ namespace Chubberino.Modules.CheeseGame.Points
             IEmoteManager emoteManager,
             IHazardManager hazardManager,
             IDateTimeService dateTime,
+            IConsole console,
             ICalculator calculator)
             : base(context, client, random, emoteManager)
         {
             CheeseRepository = cheeseRepository;
             HazardManager = hazardManager;
             DateTime = dateTime;
+            Console = console;
             Calculator = calculator;
         }
 
@@ -105,6 +109,35 @@ namespace Chubberino.Modules.CheeseGame.Points
                 String timeToWait = timeUntilNextValidPointGain.Format();
 
                 TwitchClientManager.SpoolMessageAsMe(message.Channel, player, $"You must wait {timeToWait} until you can make more cheese.");
+            }
+        }
+
+        public void AddPoints(String channel, String username, Int32 points)
+        {
+            var player = Context.Players.FirstOrDefault(x => x.Name.Equals(username));
+
+            if (player == default)
+            {
+                Console.WriteLine($"Cannot find player {username} to add points.");
+                return;
+            }
+
+            Int32 oldPoints = player.Points;
+
+            player.AddPoints(points);
+            Context.SaveChanges();
+
+            Int32 newPoints = player.Points;
+
+            Int32 pointGain = newPoints - oldPoints;
+
+            if (pointGain > 0)
+            {
+                TwitchClientManager.SpoolMessageAsMe(channel, player, $"The Magical Cheese Fairy descends from the heavens and hands you a gift. (+{pointGain} cheese)");
+            }
+            else if (pointGain < 0)
+            {
+                TwitchClientManager.SpoolMessageAsMe(channel, player, $"The Mischievious Cheese Demon sneaks up on you and pickpockets some cheese. ({pointGain} cheese)");
             }
         }
     }
