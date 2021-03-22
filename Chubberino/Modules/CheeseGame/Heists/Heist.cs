@@ -13,10 +13,14 @@ namespace Chubberino.Modules.CheeseGame.Heists
 {
     public sealed class Heist : IHeist
     {
+        public const String FailToJoinHeistMessage = "You must wager a positive number of cheese to join the heist.";
+        public const String SucceedToUpdateHeistMessage = "You update your heist wager to {0} cheese.";
+        public const String SucceedToJoinHeistMessage = "You join the heist, wagering {0} cheese.";
+        public const String SucceedToLeaveHeistMessage = "You left the heist, and are refunded your {0} cheese.";
         public const Double MinimumWinnerPercent = 0.33;
         public const Double MaximumWinnerPercent = 1;
 
-        private IList<Wager> Wagers { get; }
+        public IList<Wager> Wagers { get; }
 
         public Heist(
             ChatMessage message,
@@ -106,38 +110,43 @@ namespace Chubberino.Modules.CheeseGame.Heists
         {
             String updateMessage;
 
-            // Updated so that points is never greater than what the player has.
-            Int32 updatedPoints = Math.Min(player.Points, points);
-
             if (Wagers.TryGetFirst(x => x.PlayerTwitchID == player.TwitchUserID, out var wager))
             {
+                // Already in the heist and updating.
+
+                // Refund points.
+                player.AddPoints(wager.WageredPoints);
+
+                // Updated so that points is never greater than what the player has.
+                Int32 updatedPoints = Math.Min(player.Points, points);
+
                 if (updatedPoints <= 0)
                 {
-                    player.AddPoints(wager.WageredPoints);
                     Wagers.Remove(wager);
-                    Context.SaveChanges();
-                    updateMessage = $"You left the heist.";
+                    updateMessage = String.Format(SucceedToLeaveHeistMessage, wager.WageredPoints);
                 }
                 else
                 {
-                    var pointDifference = updatedPoints - wager.WageredPoints;
                     wager.WageredPoints = updatedPoints;
-                    player.AddPoints(-pointDifference);
-                    Context.SaveChanges();
-                    updateMessage = $"You update your heist wager to {updatedPoints} cheese.";
+                    player.AddPoints(-updatedPoints);
+                    updateMessage = String.Format(SucceedToUpdateHeistMessage, updatedPoints);
                 }
+                Context.SaveChanges();
 
             }
-            else if (updatedPoints <= 0)
+            else if (points <= 0)
             {
-                updateMessage = $"You must wager a positive number of cheese to join the heist.";
+                // Trying to join the heist, but failing.
+                updateMessage = FailToJoinHeistMessage;
             }
             else
             {
+                // Joining the heist for the first time.
+                Int32 updatedPoints = Math.Min(player.Points, points);
                 Wagers.Add(new Wager(player.TwitchUserID, updatedPoints));
                 player.AddPoints(-updatedPoints);
                 Context.SaveChanges();
-                updateMessage = $"You join the heist, wagering {updatedPoints} cheese.";
+                updateMessage = String.Format(SucceedToJoinHeistMessage, updatedPoints);
             }
 
             TwitchClient.SpoolMessageAsMe(InitiatorMessage.Channel, player, "[Heist] " + updateMessage);

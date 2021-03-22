@@ -17,7 +17,7 @@ namespace Chubberino.Modules.CheeseGame.Points
         public static TimeSpan PointGainCooldown { get; set; } = TimeSpan.FromMinutes(15);
 
         public ICheeseRepository CheeseRepository { get; }
-
+        public ICheeseModifierManager CheeseModifierManager { get; }
         public IHazardManager HazardManager { get; }
         public IDateTimeService DateTime { get; }
         public IConsole Console { get; }
@@ -27,6 +27,7 @@ namespace Chubberino.Modules.CheeseGame.Points
             IApplicationContext context,
             ITwitchClientManager client,
             ICheeseRepository cheeseRepository,
+            ICheeseModifierManager cheeseModifierManager,
             Random random,
             IEmoteManager emoteManager,
             IHazardManager hazardManager,
@@ -36,6 +37,7 @@ namespace Chubberino.Modules.CheeseGame.Points
             : base(context, client, random, emoteManager)
         {
             CheeseRepository = cheeseRepository;
+            CheeseModifierManager = cheeseModifierManager;
             HazardManager = hazardManager;
             DateTime = dateTime;
             Console = console;
@@ -59,7 +61,11 @@ namespace Chubberino.Modules.CheeseGame.Points
                 }
                 else
                 {
-                    CheeseType cheese = CheeseRepository.GetRandomType(player.CheeseUnlocked);
+                    CheeseType initialCheese = CheeseRepository.GetRandomType(player.CheeseUnlocked);
+
+                    CheeseModifier modifier = CheeseModifierManager.GetRandomModifier(player.NextCheeseModifierUpgradeUnlock);
+
+                    CheeseType cheese = modifier.Modify(initialCheese);
 
                     String outputMessage = HazardManager.UpdateMouseInfestationStatus(player);
 

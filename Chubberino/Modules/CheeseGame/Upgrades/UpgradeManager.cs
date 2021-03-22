@@ -16,11 +16,15 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
 
         private const String CriticalCheeseDescription = "{0}% -> {1}% critical cheese chance";
 
-        public ICalculator Calculator { get; }
+        private const String ModifierDescription = "Chance to make cheese {0} (+{1} cheese)";
 
-        public UpgradeManager(ICalculator calculator)
+        public ICalculator Calculator { get; }
+        public ICheeseModifierManager CheeseModifierManager { get; }
+
+        public UpgradeManager(ICalculator calculator, ICheeseModifierManager cheeseModifierManager)
         {
             Calculator = calculator;
+            CheeseModifierManager = cheeseModifierManager;
         }
 
         public static Upgrade GetNextStorageUpgrade(Player player)
@@ -67,9 +71,26 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
                 x => x.NextWorkerProductionUpgradeUnlock++);
         }
 
+        public Upgrade GetNextCheeseModifierUpgrade(Player player)
+        {
+            if (CheeseModifierManager.TryGetNextModifierToUnlock(player.NextCheeseModifierUpgradeUnlock, out var cheeseModifier))
+            {
+                return new Upgrade(
+                    String.Format(ModifierDescription, cheeseModifier.Name, cheeseModifier.Points),
+                    player.NextCheeseModifierUpgradeUnlock,
+                    (Int32)(100 + Math.Pow(2, (Int32)player.NextCheeseModifierUpgradeUnlock) * 90),
+                    x => x.NextCheeseModifierUpgradeUnlock++);
+            }
+            return null;
+        }
+
         public Boolean TryGetNextUpgradeToUnlock(Player player, out Upgrade upgrade)
         {
-            if (player.NextCriticalCheeseUpgradeUnlock > player.NextStorageUpgradeUnlock)
+            if (player.NextStorageUpgradeUnlock > player.NextCheeseModifierUpgradeUnlock)
+            {
+                upgrade = GetNextCheeseModifierUpgrade(player);
+            }
+            else if (player.NextCriticalCheeseUpgradeUnlock > player.NextStorageUpgradeUnlock)
             {
                 upgrade = GetNextStorageUpgrade(player);
             }

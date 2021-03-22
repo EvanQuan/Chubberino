@@ -17,6 +17,7 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
             player.CheeseUnlocked = 0;
             player.NextWorkerProductionUpgradeUnlock = 0;
             player.NextQuestRewardUpgradeUnlock = 0;
+            player.NextCheeseModifierUpgradeUnlock = 0;
             player.NextStorageUpgradeUnlock = 0;
             player.NextCriticalCheeseUpgradeUnlock = 0;
             player.MouseTrapCount = 0;
