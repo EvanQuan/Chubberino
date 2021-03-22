@@ -34,6 +34,25 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
             IsEnabled = TwitchClientManager.IsBot;
         }
 
+        public override void Execute(IEnumerable<String> arguments)
+        {
+            if (!arguments.Any()) { return; }
+
+            switch (arguments.First().ToLower())
+            {
+                case "g":
+                case "give":
+                    if (arguments.Count() < 3) { return; }
+
+                    String name = arguments.Skip(1).FirstOrDefault();
+
+                    Int32 points = Int32.TryParse(arguments.Skip(2).FirstOrDefault(), out points) ? points : 0;
+
+                    PointManager.AddPoints(TwitchClientManager.PrimaryChannelName, name, points);
+                    break;
+            }
+        }
+
         private void TwitchClient_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
         {
             if (!TryValidateCommand(e, out IEnumerable<String> words)) { return; }
