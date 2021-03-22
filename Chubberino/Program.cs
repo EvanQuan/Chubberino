@@ -151,6 +151,7 @@ namespace Chubberino
             builder.RegisterType<EmoteManager>().As<IEmoteManager>().SingleInstance();
             builder.RegisterType<UpgradeManager>().As<IUpgradeManager>().SingleInstance();
             builder.RegisterType<CheeseRepository>().As<ICheeseRepository>().SingleInstance();
+            builder.RegisterType<CheeseModifierManager>().As<ICheeseModifierManager>().SingleInstance();
             builder.RegisterType<HazardManager>().As<IHazardManager>().SingleInstance();
             builder.RegisterType<ItemManager>().As<IItemManager>().SingleInstance();
 

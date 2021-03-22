@@ -1,0 +1,86 @@
+﻿using Chubberino.Modules.CheeseGame.Heists;
+using Moq;
+using System;
+using Xunit;
+
+namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Heists
+{
+    public sealed class WhenUpdatingWager : UsingHeist
+    {
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-1)]
+        public void ShouldFailToJoinHeist(Int32 points)
+        {
+            Sut.UpdateWager(Player, points);
+
+            MockedTwitchClient.Verify(x => x.SpoolMessage(ChatMessage.Channel, It.Is<String>(x => x.Contains(Heist.FailToJoinHeistMessage))), Times.Once());
+        }
+
+        [Theory]
+        [InlineData(2, 1, 1, 1, 0)]
+        [InlineData(2, 1, 2, 1, 1)]
+        [InlineData(2, 2, 1, 1, 0)]
+        public void ShouldJoinHeistForFirstTime(
+            Int32 playerStorage,
+            Int32 pointsWagered,
+            Int32 playerPoints,
+            Int32 expectedPointsToWager,
+            Int32 expectedPlayerPointsAfterWager)
+        {
+            Player.MaximumPointStorage = playerStorage;
+            Player.Points = playerPoints;
+            Sut.UpdateWager(Player, pointsWagered);
+
+            Assert.Contains(Sut.Wagers, x => x.PlayerTwitchID.Equals(Player.TwitchUserID) && x.WageredPoints == expectedPointsToWager);
+            MockedTwitchClient.Verify(x => x.SpoolMessage(ChatMessage.Channel, It.Is<String>(x => x.Contains(String.Format(Heist.SucceedToJoinHeistMessage, expectedPointsToWager)))), Times.Once());
+            Assert.Equal(expectedPlayerPointsAfterWager, Player.Points);
+        }
+
+        [Theory]
+        [InlineData(2, 2, 1, 2, 2, 0)]
+        [InlineData(2, 2, 1, 3, 2, 0)]
+        [InlineData(2, 2, 2, 1, 1, 1)]
+        public void ShouldUpdatePreexistingWager(
+            Int32 playerStorage,
+            Int32 playerPoints,
+            Int32 initialPointsWagered,
+            Int32 newPointsWagered,
+            Int32 expectedNewPointsWagered,
+            Int32 expectedPlayerPointsAfterWager)
+        {
+            Player.MaximumPointStorage = playerStorage;
+            Player.Points = playerPoints;
+            Sut.Wagers.Add(new Wager(Player.TwitchUserID, initialPointsWagered));
+
+            Sut.UpdateWager(Player, newPointsWagered);
+
+            Assert.Contains(Sut.Wagers, x => x.PlayerTwitchID.Equals(Player.TwitchUserID) && x.WageredPoints == expectedNewPointsWagered);
+            MockedTwitchClient.Verify(x => x.SpoolMessage(ChatMessage.Channel, It.Is<String>(x => x.Contains(String.Format(Heist.SucceedToUpdateHeistMessage, expectedNewPointsWagered)))), Times.Once());
+            Assert.Equal(expectedPlayerPointsAfterWager, Player.Points);
+        }
+
+        [Theory]
+        [InlineData(1, 0, 2, 0, 1)]
+        [InlineData(1, 0, 2, -1, 1)]
+        [InlineData(1, 0, 1, 0, 1)]
+        [InlineData(1, 0, 1, -1, 1)]
+        public void ShouldLeaveHeist(
+            Int32 playerStorage,
+            Int32 playerPoints,
+            Int32 initialPointsWagered,
+            Int32 newPointsWagered,
+            Int32 expectedPlayerPointsAfterWager)
+        {
+            Player.MaximumPointStorage = playerStorage;
+            Player.Points = playerPoints;
+            Sut.Wagers.Add(new Wager(Player.TwitchUserID, initialPointsWagered));
+
+            Sut.UpdateWager(Player, newPointsWagered);
+
+            Assert.DoesNotContain(Sut.Wagers, x => x.PlayerTwitchID.Equals(Player.TwitchUserID));
+            MockedTwitchClient.Verify(x => x.SpoolMessage(ChatMessage.Channel, It.Is<String>(x => x.Contains(String.Format(Heist.SucceedToLeaveHeistMessage, initialPointsWagered)))), Times.Once());
+            Assert.Equal(expectedPlayerPointsAfterWager, Player.Points);
+        }
+    }
+}
