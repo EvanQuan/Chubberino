@@ -25,7 +25,7 @@ namespace Chubberino.Modules.CheeseGame.Quests.GainCheese
 
         protected override String OnFailure(Player player)
         {
-            return "You sit at river for hours without anything appearing.";
+            return "You sit at the river for hours without anything appearing.";
         }
 
         protected override String OnIntroduction(Player player)
