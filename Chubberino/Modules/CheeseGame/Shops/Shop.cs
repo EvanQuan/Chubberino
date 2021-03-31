@@ -232,12 +232,17 @@ namespace Chubberino.Modules.CheeseGame.Shops
                         outputMessage = $"You need {prices.MouseTrap - player.Points} more cheese to buy a mousetrap.";
                     }
                     break;
+                case 'c':
+                    if (player.Points >= prices.Cat)
+                    {
+                        player.CatCount++;
+                        player.Points -= prices.Cat;
                         Context.SaveChanges();
-                        outputMessage = $"You bought 1 mousetrap. (-{prices.MouseTrap} cheese)";
+                        outputMessage = $"You bought 1 cat. (-{prices.Cat} cheese)";
                     }
                     else
                     {
-                        outputMessage = $"You need {prices.MouseTrap - player.Points} more cheese to buy 1 mousetrap.";
+                        outputMessage = $"You need {prices.Cat - player.Points} more cheese to buy 1 cat.";
                     }
                     break;
                 default:
@@ -265,6 +270,7 @@ namespace Chubberino.Modules.CheeseGame.Shops
                     $"| buy <item> - buy an item at the shop " +
                     $"| help <item> - get information about an item in the shop " +
                     $"| quest - potentially get a big reward. The more workers you have, the greater chance of success. " +
+                    $"| heist - Gamble some cheese, to potentially get more in return. " +
                     $"| rank - show information about your rank " +
                     $"| rankup - Spend cheese to unlock new items to buy at the shop.");
                 return;
@@ -282,6 +288,7 @@ namespace Chubberino.Modules.CheeseGame.Shops
                 "r" or "rank" or "ranks" => $"Ranks unlock new items to buy at the shop. Eventually ranking will give you prestige, reseting your rank and everything you have to restart the climb. For every prestige you gain, you get a permanent {(Int32)(Constants.PrestigeBonus * 100)}% boost to your cheese gains, which can stack.",
                 "u" or "upgrade" or "upgrades" => $"Upgrades provide a permanent bonus to your cheese factory until you prestige.",
                 "m" or "mouse" or "mousetrap" or "mousetraps" => $"Mousetraps kills giant rats that infest your cheese factory.",
+                "c" or "cat" or "cats" => $"[CURRENTLY DO NOTHING] Cats help you fight against the giant evil mouse, Chubshan the Immortal. The more cats you have, the more you will be rewarded when Chubshan is defeated.",
                 _ => $"Invalid item \"{itemToBuy}\" name. Type \"!cheese shop\" to see the items available for purchase.",
             };
             TwitchClientManager.SpoolMessageAsMe(message.Channel, player, outputMessage);
