@@ -22,6 +22,8 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
             player.NextCriticalCheeseUpgradeUnlock = 0;
             player.MouseTrapCount = 0;
             player.MouseCount = 0;
+            player.CatCount = 0;
+            player.ContributedDamageToBoss = 0;
 
             return player;
         }
