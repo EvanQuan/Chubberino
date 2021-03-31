@@ -1,10 +1,7 @@
-﻿using Chubberino.Client;
-using Chubberino.Database.Contexts;
+﻿using Chubberino.Database.Contexts;
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Models;
-using Chubberino.Modules.CheeseGame.PlayerExtensions;
 using System;
-using System.Linq;
 using TwitchLib.Client.Models;
 
 namespace Chubberino.Modules.CheeseGame
@@ -15,7 +12,11 @@ namespace Chubberino.Modules.CheeseGame
 
         public ITwitchClientManager TwitchClientManager { get; set; }
 
-        public AbstractCommandStrategy(IApplicationContext context, ITwitchClientManager client, Random random, IEmoteManager emoteManager)
+        public AbstractCommandStrategy(
+            IApplicationContext context,
+            ITwitchClientManager client,
+            Random random,
+            IEmoteManager emoteManager)
         {
             Context = context;
             TwitchClientManager = client;
