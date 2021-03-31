@@ -11,7 +11,7 @@ namespace Chubberino.Modules.CheeseGame.Rankings
 {
     public class RankManager : AbstractCommandStrategy, IRankManager
     {
-        private IReadOnlyDictionary<Rank, Int32> PointsToRank { get; } = new Dictionary<Rank, Int32>()
+        public static IReadOnlyDictionary<Rank, Int32> RanksToPoints { get; } = new Dictionary<Rank, Int32>()
         {
             {  Rank.Bronze, 250 },
             {  Rank.Silver, 500 },
@@ -34,7 +34,7 @@ namespace Chubberino.Modules.CheeseGame.Rankings
 
             String outputMessage;
 
-            if (PointsToRank.TryGetValue(player.Rank, out Int32 pointsToRank))
+            if (RanksToPoints.TryGetValue(player.Rank, out Int32 pointsToRank))
             {
                 Rank nextRank = player.Rank.Next();
 
@@ -85,7 +85,7 @@ namespace Chubberino.Modules.CheeseGame.Rankings
 
             String outputMessage;
 
-            if (PointsToRank.TryGetValue(player.Rank, out Int32 pointsToRank))
+            if (RanksToPoints.TryGetValue(player.Rank, out Int32 pointsToRank))
             {
                 String nextRankInformation;
 
