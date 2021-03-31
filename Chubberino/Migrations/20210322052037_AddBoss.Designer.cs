@@ -4,14 +4,16 @@ using Chubberino.Database.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Chubberino.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20210322052037_AddBoss")]
+    partial class AddBoss
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,21 +40,6 @@ namespace Chubberino.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("ApplicationCredentials");
-                });
-
-            modelBuilder.Entity("Chubberino.Database.Models.Boss", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("Health")
-                        .HasColumnType("int");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("Bosses");
                 });
 
             modelBuilder.Entity("Chubberino.Database.Models.StartupChannel", b =>
@@ -105,9 +92,6 @@ namespace Chubberino.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("CheeseUnlocked")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ContributedDamageToBoss")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("LastHeistInitiated")
