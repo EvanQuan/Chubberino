@@ -101,7 +101,7 @@ namespace Chubberino.Modules.CheeseGame.Shops
             }
 
             // Cut out space between buy and item
-            arguments.GetNextWord(out String itemToBuy);
+            String remainingArguments = arguments.GetNextWord(out String itemToBuy);
 
             PriceList prices = ItemManager.GetPrices(player);
 
@@ -212,8 +212,26 @@ namespace Chubberino.Modules.CheeseGame.Shops
                 case 'm':
                     if (player.Points >= prices.MouseTrap)
                     {
-                        player.MouseTrapCount++;
-                        player.Points -= prices.MouseTrap;
+                        remainingArguments.GetNextWord(out String quantityString);
+
+                        Int32 quantityRequested = Int32.TryParse(quantityString, out Int32 result) && result > 0 ? result : 1;
+
+                        Int32 quantityCanAfford = (Int32)Math.Floor(player.Points / (Double)prices.MouseTrap);
+
+                        Int32 quantityToPurchase = Math.Min(quantityRequested, quantityCanAfford);
+
+                        Int32 totalPrice = prices.MouseTrap * quantityToPurchase; 
+
+                        player.MouseTrapCount += quantityToPurchase;
+                        player.Points -= totalPrice;
+                        Context.SaveChanges();
+                        outputMessage = $"You bought {quantityToPurchase} mousetrap{(quantityToPurchase == 1 ? "" : "s")}. (-{totalPrice} cheese)";
+                    }
+                    else
+                    {
+                        outputMessage = $"You need {prices.MouseTrap - player.Points} more cheese to buy a mousetrap.";
+                    }
+                    break;
                         Context.SaveChanges();
                         outputMessage = $"You bought 1 mousetrap. (-{prices.MouseTrap} cheese)";
                     }
