@@ -4,9 +4,9 @@ using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.Points;
 using System;
 
-namespace Chubberino.Modules.CheeseGame.Quests.GainStorage
+namespace Chubberino.Modules.CheeseGame.Quests.GainCheese
 {
-    public sealed class ValencayValley : GainStorageQuest
+    public sealed class ValencayValley : GainCheeseQuest
     {
         public ValencayValley(
             IApplicationContext context,
@@ -18,10 +18,10 @@ namespace Chubberino.Modules.CheeseGame.Quests.GainStorage
         {
         }
 
-        protected override Int32 BaseRewardStorage => Constants.ShopStorageQuantity;
+        protected override Int32 BaseRewardPoints => 70;
 
         protected override String SuccessMessage { get; }
-        = "You find a small cave in the side of the valley, which you claim for cheese storage.";
+        = "You find a small cave in the side of the valley, containing a treasure trove of cheese.";
 
         protected override String OnFailure(Player player)
         {

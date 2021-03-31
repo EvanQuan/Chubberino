@@ -18,7 +18,7 @@ namespace Chubberino.Modules.CheeseGame.Quests.GainStorage
         {
         }
 
-        protected override Int32 BaseRewardStorage => (Int32)(Constants.ShopStorageQuantity * 1.5);
+        protected override Int32 BaseRewardStorage => (Int32)(Constants.ShopStorageQuantity * 0.75);
 
         protected override String SuccessMessage { get; }
         = "An abandoned hut sits atop a hill, which you claim to store cheese.";
