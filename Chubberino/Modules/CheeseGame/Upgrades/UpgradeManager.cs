@@ -10,7 +10,7 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
     {
         private const String StorageDescription = "+{0}% -> +{1}% storage increase";
 
-        private const String QuestRewardDescription = "{0}% -> {1}% cheese quest reward increase";
+        private const String QuestRewardDescription = "x{0} -> x{1} cheese quest rewards";
 
         private const String ProductionDescription = "+{0}% -> +{1}% cheese per worker";
 
@@ -45,18 +45,18 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
             return new Upgrade(
                 String.Format(CriticalCheeseDescription, currentUpgradePercent, nextUpgradePercent),
                 player.NextCriticalCheeseUpgradeUnlock,
-                50 + (Int32)(Math.Pow(1.5, (Int32)player.NextCriticalCheeseUpgradeUnlock) * 75),
+                50 + (Int32)(Math.Pow(1.5, (Int32)player.NextCriticalCheeseUpgradeUnlock) * 80),
                 x => x.NextCriticalCheeseUpgradeUnlock++);
         }
 
         public Upgrade GetNextQuestRewardUpgrade(Player player)
         {
-            Int32 currentUpgradePercent = (Int32)(Calculator.GetQuestRewardMultiplier(player.NextQuestRewardUpgradeUnlock) * 100);
-            Int32 nextUpgradePercent = (Int32)(Calculator.GetQuestRewardMultiplier(player.NextQuestRewardUpgradeUnlock.Next()) * 100);
+            String currentUpgradePercent = String.Format("{0:0.00}", Calculator.GetQuestRewardMultiplier(player.NextQuestRewardUpgradeUnlock));
+            String nextUpgradePercent = String.Format("{0:0.00}", Calculator.GetQuestRewardMultiplier(player.NextQuestRewardUpgradeUnlock.Next()));
             return new Upgrade(
                 String.Format(QuestRewardDescription, currentUpgradePercent, nextUpgradePercent),
                 player.NextQuestRewardUpgradeUnlock,
-                (Int32)(50 + Math.Pow(1.5, (Int32)player.NextQuestRewardUpgradeUnlock) * 80),
+                (Int32)(50 + Math.Pow(1.5, (Int32)player.NextQuestRewardUpgradeUnlock) * 90),
                 x => x.NextQuestRewardUpgradeUnlock++);
         }
 
