@@ -18,6 +18,8 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
 
         private const String ModifierDescription = "Chance to make cheese {0} (+{1} cheese)";
 
+        private const String QuestingDescription = "Map to start questing with \"!cheese quest\"";
+
         public ICalculator Calculator { get; }
         public ICheeseModifierManager CheeseModifierManager { get; }
 
@@ -84,9 +86,22 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
             return null;
         }
 
+        private static Upgrade GetUnlockQuestingUpgrade(Player player)
+        {
+            return new Upgrade(
+                QuestingDescription,
+                Rank.Bronze,
+                100,
+                x => x.HasQuestingUnlocked = true);
+        }
+
         public Boolean TryGetNextUpgradeToUnlock(Player player, out Upgrade upgrade)
         {
-            if (player.NextStorageUpgradeUnlock > player.NextCheeseModifierUpgradeUnlock)
+            if (!player.HasQuestingUnlocked)
+            {
+                upgrade = GetUnlockQuestingUpgrade(player);
+            }
+            else if (player.NextStorageUpgradeUnlock > player.NextCheeseModifierUpgradeUnlock)
             {
                 upgrade = GetNextCheeseModifierUpgrade(player);
             }

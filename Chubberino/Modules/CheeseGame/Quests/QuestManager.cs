@@ -38,6 +38,15 @@ namespace Chubberino.Modules.CheeseGame.Quests
         public void StartQuest(ChatMessage message)
         {
             var player = GetPlayer(message);
+
+            if (!player.HasQuestingUnlocked)
+            {
+                TwitchClientManager.SpoolMessageAsMe(message.Channel, player,
+                    $"[Quest] You are unfamiliar with the lands around you and quickly get lost. You must buy a map from the shop with \"!cheese buy upgrade\" before you can start questing.",
+                    Priority.Low);
+                return;
+            }
+
             var now = DateTime.Now;
 
             var timeSinceLastQuestVentured = now - player.LastQuestVentured;
@@ -58,7 +67,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
 
                 var timeToWait = timeUntilNextQuestAvailable.Format();
 
-                TwitchClientManager.SpoolMessageAsMe(message.Channel, player, $"[Quest {Math.Round((player.GetQuestSuccessChance() * 100), 2)}% success] You must wait {timeToWait} until you can go on your next quest.");
+                TwitchClientManager.SpoolMessageAsMe(message.Channel, player, $"[Quest {Math.Round((player.GetQuestSuccessChance() * 100), 2)}% success] You must wait {timeToWait} until you can go on your next quest.", Priority.Low);
             }
         }
     }

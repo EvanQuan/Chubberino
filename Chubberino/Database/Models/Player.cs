@@ -51,5 +51,7 @@ namespace Chubberino.Modules.CheeseGame.Models
         public Int32 CatCount { get; set; }
 
         public Int32 ContributedDamageToBoss { get; set; }
+        
+        public Boolean HasQuestingUnlocked { get; set; }
     }
 }

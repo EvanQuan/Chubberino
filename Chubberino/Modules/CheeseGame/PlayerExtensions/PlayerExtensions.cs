@@ -24,6 +24,7 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
             player.MouseCount = 0;
             player.CatCount = 0;
             player.ContributedDamageToBoss = 0;
+            player.HasQuestingUnlocked = false;
 
             return player;
         }
