@@ -192,9 +192,10 @@ namespace Chubberino.Client
 
             TimeSpan timeSinceLastMessage = DateTime.Now - lastSent;
 
-            if (timeSinceLastMessage >= TimeSpan.FromSeconds(1))
+            if (timeSinceLastMessage >= TimeSpan.FromSeconds(2))
             {
                 SendMessageDirectly(channelName, message);
+                LastLowPriorityMessageSent.AddOrUpdate(channelName, DateTime.Now, (_, _) => DateTime.Now);
             }
         }
 
