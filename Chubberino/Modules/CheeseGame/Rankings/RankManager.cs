@@ -23,7 +23,11 @@ namespace Chubberino.Modules.CheeseGame.Rankings
             {  Rank.Legend, 32000 },
         };
 
-        public RankManager(IApplicationContext context, ITwitchClientManager client, Random random, IEmoteManager emoteManager)
+        public RankManager(
+            IApplicationContext context,
+            ITwitchClientManager client,
+            Random random,
+            IEmoteManager emoteManager)
             : base(context, client, random, emoteManager)
         {
         }
@@ -34,6 +38,8 @@ namespace Chubberino.Modules.CheeseGame.Rankings
 
             String outputMessage;
 
+            Priority priority = Priority.Low;
+
             if (RanksToPoints.TryGetValue(player.Rank, out Int32 pointsToRank))
             {
                 Rank nextRank = player.Rank.Next();
@@ -42,11 +48,19 @@ namespace Chubberino.Modules.CheeseGame.Rankings
                 {
                     if (nextRank == Rank.None)
                     {
-                        // Prestige instead of rank up
-                        player.ResetRank();
-                        player.Prestige++;
-                        Context.SaveChanges();
-                        outputMessage = $"You prestiged back to {Rank.Bronze} and have gained a permanent {(Int32)(Constants.PrestigeBonus * 100)}% cheese gain boost.";
+                        if (player.HasUnlockedAllCheeses())
+                        {
+                            // Prestige instead of rank up
+                            player.ResetRank();
+                            player.Prestige++;
+                            Context.SaveChanges();
+                            outputMessage = $"You prestiged back to {Rank.Bronze} and have gained a permanent {(Int32)(Constants.PrestigeBonus * 100)}% cheese gain boost.";
+                            priority = Priority.Medium;
+                        }
+                        else
+                        {
+                            outputMessage = $"You need to buy all cheese recipes in order to prestige back to {Rank.Bronze} rank. You will lose all your cheese and upgrades, but will gain a permanent {(Int32)(Constants.PrestigeBonus * 100)}% bonus on your cheese gains.";
+                        }
                     }
                     else
                     {
@@ -54,6 +68,7 @@ namespace Chubberino.Modules.CheeseGame.Rankings
                         player.Rank = nextRank;
                         Context.SaveChanges();
                         outputMessage = $"You ranked up to {nextRank}. {EmoteManager.GetRandomPositiveEmote(message.Channel)} (-{pointsToRank} cheese)";
+                        priority = Priority.Medium;
                     }
                 }
                 else
@@ -74,7 +89,7 @@ namespace Chubberino.Modules.CheeseGame.Rankings
                 outputMessage = $"Uh oh, you broke something. You have an invalid rank of {player.Rank}.";
             }
 
-            TwitchClientManager.SpoolMessageAsMe(message.Channel, player, outputMessage);
+            TwitchClientManager.SpoolMessageAsMe(message.Channel, player, outputMessage, priority);
         }
 
         public void ShowRank(ChatMessage message)
