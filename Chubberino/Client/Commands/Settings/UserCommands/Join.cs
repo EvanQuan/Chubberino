@@ -101,7 +101,7 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
 
             // If the user inputs any second argument, it will join that channel and not leave the existing channel.
 
-            TwitchClientManager.Client.EnsureJoinedToChannel(channelName);
+            TwitchClientManager.EnsureJoinedToChannel(channelName);
         }
 
         public override string GetHelp()

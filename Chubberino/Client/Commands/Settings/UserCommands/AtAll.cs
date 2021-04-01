@@ -40,7 +40,7 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
 
             foreach (var user in chatters)
             {
-                TwitchClientManager.Client.SpoolMessage(TwitchClientManager.PrimaryChannelName, user.Username + message);
+                TwitchClientManager.SpoolMessage(TwitchClientManager.PrimaryChannelName, user.Username + message);
             };
         }
 

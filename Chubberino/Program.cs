@@ -55,12 +55,10 @@ namespace Chubberino
             builder.RegisterType<TwitchClientManager>().As<ITwitchClientManager>().SingleInstance();
             builder.RegisterType<CrendentialsManager>().As<ICredentialsManager>().SingleInstance();
             builder.RegisterType<CommandRepository>().As<ICommandRepository>().SingleInstance();
-            builder.Register(c => new ExtendedClientFactory(
+            builder.Register(c => new TwitchClientFactory(
                 (IClientOptions options) => new WebSocketClient(options),
                 ClientProtocol.WebSocket,
-                c.Resolve<IConsole>(),
-                c.Resolve<ISpinWait>(),
-                null)).As<IExtendedClientFactory>().SingleInstance();
+                null)).As<ITwitchClientFactory>().SingleInstance();
 
             builder.RegisterType<DateTimeService>().As<IDateTimeService>().SingleInstance();
 

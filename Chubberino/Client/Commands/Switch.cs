@@ -28,7 +28,7 @@ namespace Chubberino.Client.Commands
                 TwitchClientManager.Client.LeaveChannel(channel);
             }
 
-            TwitchClientManager.Client.EnsureJoinedToChannel(channelName);
+            TwitchClientManager.EnsureJoinedToChannel(channelName);
         }
     }
 }

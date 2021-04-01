@@ -25,9 +25,9 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.TrackJimboxes
             String[] expectedContributors,
             String expectedBorder)
         {
-            MockedTwitchClient
-                .Setup(x => x.SpoolMessage(It.IsAny<String>(), It.IsAny<String>()))
-                .Callback((String channelName, String message) =>
+            MockedTwitchClientManager
+                .Setup(x => x.SpoolMessage(It.IsAny<String>(), It.IsAny<String>(), It.IsAny<Priority>()))
+                .Callback((String channelName, String message, Priority priority) =>
                 {
                     Assert.Equal(PrimaryChannelName, channelName);
 
@@ -54,7 +54,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.TrackJimboxes
                 });
             }
 
-            MockedTwitchClient.Verify(x => x.SpoolMessage(PrimaryChannelName, It.IsAny<String>()), Times.Once());
+            MockedTwitchClientManager.Verify(x => x.SpoolMessage(PrimaryChannelName, It.IsAny<String>(), Priority.Medium), Times.Once());
         }
 
         public static IEnumerable<Object[]> ValidJimboxes { get; } = new List<Object[]>

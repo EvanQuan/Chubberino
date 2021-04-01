@@ -4,43 +4,34 @@ using System;
 using System.IO;
 using TwitchLib.Client;
 using TwitchLib.Client.Enums;
+using TwitchLib.Client.Interfaces;
 using TwitchLib.Communication.Interfaces;
 
 namespace Chubberino.Client
 {
-    public sealed class ExtendedClientFactory : IExtendedClientFactory
+    public sealed class TwitchClientFactory : ITwitchClientFactory
     {
         private Func<IClientOptions, IClient> ClientFactory { get; }
 
         private ClientProtocol ClientProtocol { get; }
 
-        private IConsole Console { get; }
-
-        private ISpinWait SpinWait { get; }
-
         private ILogger<TwitchClient> Logger { get; }
 
-        public ExtendedClientFactory(
+        public TwitchClientFactory(
             Func<IClientOptions, IClient> clientFactory,
             ClientProtocol clientProtocol,
-            IConsole console,
-            ISpinWait spinWait,
             ILogger<TwitchClient> logger)
         {
             ClientFactory = clientFactory;
             ClientProtocol = clientProtocol;
-            Console = console;
-            SpinWait = spinWait;
             Logger = logger;
         }
 
-        public IExtendedClient GetClient(IClientOptions options)
+        public ITwitchClient GetClient(IClientOptions options)
         {
-            return new ExtendedClient(
+            return new TwitchClient(
                 ClientFactory(options),
                 ClientProtocol,
-                Console,
-                SpinWait,
                 Logger);
         }
     }

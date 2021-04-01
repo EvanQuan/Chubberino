@@ -3,6 +3,7 @@ using Chubberino.Client.Abstractions;
 using Chubberino.Database.Contexts;
 using Moq;
 using System;
+using TwitchLib.Client.Interfaces;
 using TwitchLib.Communication.Models;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands
@@ -13,7 +14,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands
 
         protected Mock<ITwitchClientManager> MockedTwitchClientManager { get; }
 
-        protected Mock<IExtendedClient> MockedTwitchClient { get; }
+        protected Mock<ITwitchClient> MockedTwitchClient { get; }
 
         protected Mock<IRepeater> MockedRepeater { get; }
 
@@ -38,7 +39,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands
 
             MockedContext = new Mock<IApplicationContext>();
 
-            MockedTwitchClient = new Mock<IExtendedClient>();
+            MockedTwitchClient = new Mock<ITwitchClient>();
 
             MockedTwitchClientManager = new Mock<ITwitchClientManager>();
 
