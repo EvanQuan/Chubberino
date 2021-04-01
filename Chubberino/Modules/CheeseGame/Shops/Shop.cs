@@ -232,19 +232,6 @@ namespace Chubberino.Modules.CheeseGame.Shops
                         outputMessage = $"You need {prices.MouseTrap - player.Points} more cheese to buy a mousetrap.";
                     }
                     break;
-                case 'c':
-                    if (player.Points >= prices.Cat)
-                    {
-                        player.CatCount++;
-                        player.Points -= prices.Cat;
-                        Context.SaveChanges();
-                        outputMessage = $"You bought 1 cat. (-{prices.Cat} cheese)";
-                    }
-                    else
-                    {
-                        outputMessage = $"You need {prices.Cat - player.Points} more cheese to buy 1 cat.";
-                    }
-                    break;
                 default:
                     outputMessage = $"Invalid item \"{itemToBuy}\" to buy. Type \"!cheese shop\" to see the items available for purchase.";
                     break;

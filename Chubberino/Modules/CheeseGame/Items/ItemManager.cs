@@ -12,8 +12,7 @@ namespace Chubberino.Modules.CheeseGame.Items
                 storage: 25 + player.MaximumPointStorage / 2,
                 population: (Int32)(20 + Math.Pow(player.PopulationCount, 2)),
                 worker: (Int32)(100 + 10 * Math.Pow(player.WorkerCount, 1.4)),
-                mousetrap: 25,
-                cat: RankManager.RanksToPoints.TryGetValue(player.Rank, out Int32 rankPrice) ? rankPrice / 10 : Int32.MaxValue);
+                mousetrap: 25);
         }
     }
 }
