@@ -112,5 +112,10 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
 
             return baseSuccessChance + workerSuccessChance;
         }
+
+        public static Boolean HasUnlockedAllCheeses(this Player player)
+        {
+            return player.CheeseUnlocked + 1 >= CheeseRepository.Cheeses.Count;
+        }
     }
 }
