@@ -112,10 +112,5 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
 
             return baseSuccessChance + workerSuccessChance;
         }
-
-        public static Double GetQuestRewardMultiplier(this Player player)
-        {
-            return 1 + ((Int32)player.NextQuestRewardUpgradeUnlock * Constants.QuestRewardUpgradePercent);
-        }
     }
 }
