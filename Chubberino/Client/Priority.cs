@@ -8,8 +8,14 @@
         Low = 0,
 
         /// <summary>
-        /// Added to the back of the queue.
+        /// Will directly send message.
         /// </summary>
-        High = 1
+        Medium = 1,
+
+        /// <summary>
+        /// Added to the back of the delayed message queue, ensuring the
+        /// message will be sent, although it may be heavily delayed.
+        /// </summary>
+        High = 2
     }
 }
