@@ -62,6 +62,18 @@ namespace Chubberino.Client.Commands.Settings
                 TwitchClientManager.SpoolMessage(Channel, "!cookie");
                 SpinWait.SpinUntil(() => Responded, TimeSpan.FromSeconds(5));
             }
+            Responded = false;
+            while (!Responded)
+            {
+                TwitchClientManager.SpoolMessage(Channel, "!cdr");
+                SpinWait.SpinUntil(() => Responded, TimeSpan.FromSeconds(5));
+            }
+            Responded = false;
+            while (!Responded)
+            {
+                TwitchClientManager.SpoolMessage(Channel, "!cookie");
+                SpinWait.SpinUntil(() => Responded, TimeSpan.FromSeconds(5));
+            }
             LastCookieTime = DateTime.Now;
             Responded = false;
         }
