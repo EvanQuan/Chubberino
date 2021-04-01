@@ -18,7 +18,7 @@ namespace Chubberino.Modules.CheeseGame.Quests.GainStorage
         {
         }
 
-        protected override Int32 BaseRewardStorage => Constants.ShopStorageQuantity * 2;
+        protected override Int32 BaseRewardStorage => Constants.ShopStorageQuantity;
 
         protected override String SuccessMessage { get; }
             = "You come across an ancient tomb. It appears to be empty inside, so you claim it for yourself to store cheese.";
