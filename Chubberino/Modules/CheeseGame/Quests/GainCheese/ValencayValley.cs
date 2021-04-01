@@ -18,7 +18,7 @@ namespace Chubberino.Modules.CheeseGame.Quests.GainCheese
         {
         }
 
-        protected override Int32 BaseRewardPoints => 110;
+        protected override Int32 BaseRewardPoints => 55;
 
         protected override String SuccessMessage { get; }
         = "You find a small cave in the side of the valley, containing a treasure trove of cheese.";

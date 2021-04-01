@@ -18,7 +18,7 @@ namespace Chubberino.Modules.CheeseGame.Quests.GainCheese
         {
         }
 
-        protected override Int32 BaseRewardPoints => 120;
+        protected override Int32 BaseRewardPoints => 60;
 
         protected override String SuccessMessage =>
             "You find some cheese hidden in the depths that must have been aging for decades.";

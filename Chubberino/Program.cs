@@ -164,6 +164,7 @@ namespace Chubberino
             builder.RegisterType<DurrusDesertQuest>().AsSelf().SingleInstance();
             builder.RegisterType<HayloftHillsQuest>().AsSelf().SingleInstance();
             builder.RegisterType<ValencayValley>().AsSelf().SingleInstance();
+            builder.RegisterType<WeichkaeseWoods>().AsSelf().SingleInstance();
 
             IContainer container = builder.Build();
 
@@ -192,7 +193,8 @@ namespace Chubberino
                 .AddQuest(scope.Resolve<FontiagoForestQuest>())
                 .AddQuest(scope.Resolve<DurrusDesertQuest>())
                 .AddQuest(scope.Resolve<HayloftHillsQuest>())
-                .AddQuest(scope.Resolve<ValencayValley>());
+                .AddQuest(scope.Resolve<ValencayValley>())
+                .AddQuest(scope.Resolve<WeichkaeseWoods>());
 
 
             var commandRepository = scope.Resolve<ICommandRepository>();

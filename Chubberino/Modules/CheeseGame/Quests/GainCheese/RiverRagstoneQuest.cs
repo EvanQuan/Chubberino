@@ -18,7 +18,7 @@ namespace Chubberino.Modules.CheeseGame.Quests.GainCheese
         {
         }
 
-        protected override Int32 BaseRewardPoints => 60;
+        protected override Int32 BaseRewardPoints => 30;
 
         protected override String SuccessMessage =>
             "You find some cheese floating down the stream and grab it before it gets away.";

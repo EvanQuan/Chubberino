@@ -6,9 +6,9 @@ using System;
 
 namespace Chubberino.Modules.CheeseGame.Quests.GainCheese
 {
-    public sealed class CaciottaCliff : GainCheeseQuest
+    public sealed class WeichkaeseWoods : GainCheeseQuest
     {
-        public CaciottaCliff(
+        public WeichkaeseWoods(
             IApplicationContext context,
             Random random,
             ITwitchClientManager client,
@@ -18,19 +18,19 @@ namespace Chubberino.Modules.CheeseGame.Quests.GainCheese
         {
         }
 
-        protected override Int32 BaseRewardPoints => 45;
+        protected override Int32 BaseRewardPoints => 40;
 
         protected override String SuccessMessage =>
-            "You find some cheese along the edge of the cliffside, which you carefully take.";
+            "You find a haunted mansion secluded in the maze of trees. Inside is some strange floating cheese, which you take.";
 
         protected override String OnFailure(Player player)
         {
-            return "The heights get to you, and you go back without finding anything.";
+            return "You get scared by the spooky noises, and you turn back.";
         }
 
         protected override String OnIntroduction(Player player)
         {
-            return $"{GetPlayerWithWorkers(player)} travel to the Caciotta Cliff.";
+            return $"{GetPlayerWithWorkers(player)} travel to the Weichkaese Woods.";
         }
     }
 }
