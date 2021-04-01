@@ -82,7 +82,8 @@ namespace Chubberino.Modules.CheeseGame.Shops
                 $" | Worker [+1] for {prices.Worker} cheese" +
                 $" | Upgrade [{upgradePrompt}" + 
                 $" | Mousetrap [+1] for {prices.MouseTrap} " +
-                "|");
+                "|",
+                Priority.Low);
         }
 
         public void BuyItem(ChatMessage message)
@@ -96,7 +97,7 @@ namespace Chubberino.Modules.CheeseGame.Shops
 
             if (String.IsNullOrWhiteSpace(arguments))
             {
-                TwitchClientManager.SpoolMessageAsMe(message.Channel, player, $"Please enter an item to buy. Type \"!cheese shop\" to see the items available for purchase.");
+                TwitchClientManager.SpoolMessageAsMe(message.Channel, player, $"Please enter an item to buy with \"!cheese buy <name of item>\". Type \"!cheese shop\" to see the items available for purchase.", Priority.Low);
                 return;
             }
 
@@ -106,6 +107,8 @@ namespace Chubberino.Modules.CheeseGame.Shops
             PriceList prices = ItemManager.GetPrices(player);
 
             String outputMessage;
+
+            Priority priority = Priority.Low;
 
             switch (itemToBuy.ToLower()[0])
             {
@@ -117,6 +120,7 @@ namespace Chubberino.Modules.CheeseGame.Shops
                         player.Points -= prices.Storage;
                         Context.SaveChanges();
                         outputMessage = $"You bought {storageGain} storage space. (-{prices.Storage} cheese)";
+                        priority = Priority.Medium;
                     }
                     else
                     {
@@ -130,6 +134,7 @@ namespace Chubberino.Modules.CheeseGame.Shops
                         player.Points -= prices.Population;
                         Context.SaveChanges();
                         outputMessage = $"You bought 5 population slots. (-{prices.Population} cheese)";
+                        priority = Priority.Medium;
                     }
                     else
                     {
@@ -145,6 +150,7 @@ namespace Chubberino.Modules.CheeseGame.Shops
                             player.Points -= prices.Worker;
                             Context.SaveChanges();
                             outputMessage = $"You bought 1 worker. (-{prices.Worker} cheese)";
+                            priority = Priority.Medium;
                         }
                         else
                         {
@@ -174,6 +180,7 @@ namespace Chubberino.Modules.CheeseGame.Shops
                             player.Points -= nextCheeseToUnlock.CostToUnlock;
                             Context.SaveChanges();
                             outputMessage = $"You bought the {nextCheeseToUnlock.Name} recipe. (-{nextCheeseToUnlock.CostToUnlock} cheese)";
+                            priority = Priority.Medium;
                         }
                         else
                         {
@@ -198,6 +205,7 @@ namespace Chubberino.Modules.CheeseGame.Shops
                             player.Points -= upgrade.Price;
                             Context.SaveChanges();
                             outputMessage = $"You bought the {upgrade.Description} upgrade. (-{upgrade.Price} cheese)";
+                            priority = Priority.Medium;
                         }
                         else
                         {
@@ -226,6 +234,7 @@ namespace Chubberino.Modules.CheeseGame.Shops
                         player.Points -= totalPrice;
                         Context.SaveChanges();
                         outputMessage = $"You bought {quantityToPurchase} mousetrap{(quantityToPurchase == 1 ? "" : "s")}. (-{totalPrice} cheese)";
+                        priority = Priority.Medium;
                     }
                     else
                     {
@@ -237,7 +246,7 @@ namespace Chubberino.Modules.CheeseGame.Shops
                     break;
             }
 
-            TwitchClientManager.SpoolMessageAsMe(message.Channel, player, outputMessage);
+            TwitchClientManager.SpoolMessageAsMe(message.Channel, player, outputMessage, priority);
         }
 
         public void HelpItem(ChatMessage message)
@@ -259,7 +268,8 @@ namespace Chubberino.Modules.CheeseGame.Shops
                     $"| quest - potentially get a big reward. The more workers you have, the greater chance of success. " +
                     $"| heist - Gamble some cheese, to potentially get more in return. " +
                     $"| rank - show information about your rank " +
-                    $"| rankup - Spend cheese to unlock new items to buy at the shop.");
+                    $"| rankup - Spend cheese to unlock new items to buy at the shop.",
+                    Priority.Low);
                 return;
             }
 
@@ -278,7 +288,7 @@ namespace Chubberino.Modules.CheeseGame.Shops
                 "c" or "cat" or "cats" => $"[CURRENTLY DO NOTHING] Cats help you fight against the giant evil mouse, Chubshan the Immortal. The more cats you have, the more you will be rewarded when Chubshan is defeated.",
                 _ => $"Invalid item \"{itemToBuy}\" name. Type \"!cheese shop\" to see the items available for purchase.",
             };
-            TwitchClientManager.SpoolMessageAsMe(message.Channel, player, outputMessage);
+            TwitchClientManager.SpoolMessageAsMe(message.Channel, player, outputMessage, Priority.Low);
         }
     }
 }

@@ -115,7 +115,7 @@ namespace Chubberino.Modules.CheeseGame.Rankings
                 outputMessage = $"Uh oh, you broke something. You have an invalid rank of {player.Rank}.";
             }
 
-            TwitchClientManager.SpoolMessageAsMe(message.Channel, player, outputMessage);
+            TwitchClientManager.SpoolMessageAsMe(message.Channel, player, outputMessage, Priority.Low);
 
         }
     }
