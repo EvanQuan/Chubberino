@@ -10,10 +10,10 @@ namespace Chubberino.Modules.CheeseGame.Points
         public static IReadOnlyList<CheeseModifier> Modifiers { get; } = new List<CheeseModifier>()
         {
             null,
-            new CheeseModifier("mild", 1),
-            new CheeseModifier("fresh", 2),
+            new CheeseModifier("fresh", 1),
+            new CheeseModifier("sharp", 2),
             new CheeseModifier("extra-salted", 3),
-            new CheeseModifier("sharp", 4),
+            new CheeseModifier("smoked", 4),
             new CheeseModifier("extra-creamy", 5),
             new CheeseModifier("aged", 6),
             new CheeseModifier("extra-aged", 7),
