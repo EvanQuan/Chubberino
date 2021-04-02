@@ -12,8 +12,8 @@ namespace Chubberino.Modules.CheeseGame.Points
         {
             // Players cannot have an unlock level equal to a value immediately
             // before a negative cheese.
-            new CheeseType("Spray", 1),
-            new CheeseType("Spread", 2, Rank.Bronze, 3),
+            new CheeseType("Easy Cheese", 1),
+            new CheeseType("Cheez Wiz", 2, Rank.Bronze, 3),
             new CheeseType("Velveeta", 3, Rank.Bronze, 5),
             new CheeseType("American", 4, Rank.Bronze, 10),
 
