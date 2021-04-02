@@ -36,7 +36,7 @@ namespace Chubberino.Modules.CheeseGame.Points
             new CheeseType("Red Cloud", 17, Rank.Silver, 220),
             new CheeseType("Camembert", 18, Rank.Silver, 240),
 
-            new CheeseType("Dry Jack", 19, Rank.Gold, 280, true), // 20
+            new CheeseType("Lacey Grey", 19, Rank.Gold, 280, true), // 20
             new CheeseType("Cheshire", -13),
             new CheeseType("Grana", 20, Rank.Gold, 320),
             new CheeseType("Kasseri", 21, Rank.Gold, 360),
