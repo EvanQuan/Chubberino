@@ -55,7 +55,7 @@ namespace Chubberino.Modules.CheeseGame.Points
             new CheeseType("Neufchatel", 31, Rank.Diamond, 1120, true), // 34
             new CheeseType("Oxford Blue", -25),
             new CheeseType("Halloumi", 32, Rank.Diamond, 1280),
-            new CheeseType("Stilton", 33, Rank.Diamond, 1440),
+            new CheeseType("Alpine Gold", 33, Rank.Diamond, 1440),
             new CheeseType("Gorgonzola", 34, Rank.Diamond, 1600),
             new CheeseType("Lairobell", 35, Rank.Diamond, 1760),
             new CheeseType("Reblochon", 36, Rank.Diamond, 1920),
