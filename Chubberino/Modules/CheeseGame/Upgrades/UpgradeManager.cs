@@ -91,7 +91,7 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
             return new Upgrade(
                 QuestingDescription,
                 Rank.Bronze,
-                100,
+                75,
                 x => x.HasQuestingUnlocked = true);
         }
 
