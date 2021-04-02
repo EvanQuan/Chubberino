@@ -16,24 +16,22 @@ namespace Chubberino.Modules.CheeseGame.Points
     {
         public static TimeSpan PointGainCooldown { get; set; } = TimeSpan.FromMinutes(15);
 
-        public ICheeseRepository CheeseRepository { get; }
+        public IRepository<CheeseType> CheeseRepository { get; }
         public ICheeseModifierManager CheeseModifierManager { get; }
         public IHazardManager HazardManager { get; }
         public IDateTimeService DateTime { get; }
         public IConsole Console { get; }
-        public ICalculator Calculator { get; }
 
         public PointManager(
             IApplicationContext context,
             ITwitchClientManager client,
-            ICheeseRepository cheeseRepository,
+            IRepository<CheeseType> cheeseRepository,
             ICheeseModifierManager cheeseModifierManager,
             Random random,
             IEmoteManager emoteManager,
             IHazardManager hazardManager,
             IDateTimeService dateTime,
-            IConsole console,
-            ICalculator calculator)
+            IConsole console)
             : base(context, client, random, emoteManager)
         {
             CheeseRepository = cheeseRepository;
@@ -41,7 +39,6 @@ namespace Chubberino.Modules.CheeseGame.Points
             HazardManager = hazardManager;
             DateTime = dateTime;
             Console = console;
-            Calculator = calculator;
         }
 
         public void AddPoints(ChatMessage message)
@@ -61,7 +58,7 @@ namespace Chubberino.Modules.CheeseGame.Points
                 }
                 else
                 {
-                    CheeseType initialCheese = CheeseRepository.GetRandomType(player.CheeseUnlocked);
+                    CheeseType initialCheese = CheeseRepository.GetRandom(player.CheeseUnlocked);
 
                     CheeseModifier modifier = CheeseModifierManager.GetRandomModifier(player.NextCheeseModifierUpgradeUnlock);
 
@@ -85,7 +82,7 @@ namespace Chubberino.Modules.CheeseGame.Points
                         }
                     }
 
-                    player.AddPoints(cheese, Calculator, !player.IsMouseInfested(), isCritical);
+                    player.AddPoints(cheese, !player.IsMouseInfested(), isCritical);
 
                     Int32 newPoints = player.Points;
 
@@ -103,7 +100,7 @@ namespace Chubberino.Modules.CheeseGame.Points
                         : EmoteManager.GetRandomNegativeEmote(message.Channel);
 
 
-                    outputMessage += $"You made some {cheese.Name} cheese. {emote} ({(isPositive ? "+" : String.Empty)}{pointsGained} cheese)";
+                    outputMessage += $"You made some {cheese.Name}. {emote} ({(isPositive ? "+" : String.Empty)}{pointsGained} cheese)";
 
                     TwitchClientManager.SpoolMessageAsMe(message.Channel, player, outputMessage);
                 }
@@ -114,7 +111,9 @@ namespace Chubberino.Modules.CheeseGame.Points
 
                 String timeToWait = timeUntilNextValidPointGain.Format();
 
-                TwitchClientManager.SpoolMessageAsMe(message.Channel, player, $"You must wait {timeToWait} until you can make more cheese.");
+                TwitchClientManager.SpoolMessageAsMe(message.Channel, player,
+                    $"You must wait {timeToWait} until you can make more cheese.",
+                    Priority.Low);
             }
         }
 

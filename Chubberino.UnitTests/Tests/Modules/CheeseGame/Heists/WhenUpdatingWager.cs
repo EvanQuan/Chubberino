@@ -1,4 +1,5 @@
-﻿using Chubberino.Modules.CheeseGame.Heists;
+﻿using Chubberino.Client;
+using Chubberino.Modules.CheeseGame.Heists;
 using Moq;
 using System;
 using Xunit;
@@ -14,7 +15,7 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Heists
         {
             Sut.UpdateWager(Player, points);
 
-            MockedTwitchClient.Verify(x => x.SpoolMessage(ChatMessage.Channel, It.Is<String>(x => x.Contains(Heist.FailToJoinHeistMessage))), Times.Once());
+            MockedTwitchClientManager.Verify(x => x.SpoolMessage(ChatMessage.Channel, It.Is<String>(x => x.Contains(Heist.FailToJoinHeistMessage)), Priority.Medium), Times.Once());
         }
 
         [Theory]
@@ -33,7 +34,7 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Heists
             Sut.UpdateWager(Player, pointsWagered);
 
             Assert.Contains(Sut.Wagers, x => x.PlayerTwitchID.Equals(Player.TwitchUserID) && x.WageredPoints == expectedPointsToWager);
-            MockedTwitchClient.Verify(x => x.SpoolMessage(ChatMessage.Channel, It.Is<String>(x => x.Contains(String.Format(Heist.SucceedToJoinHeistMessage, expectedPointsToWager)))), Times.Once());
+            MockedTwitchClientManager.Verify(x => x.SpoolMessage(ChatMessage.Channel, It.Is<String>(x => x.Contains(String.Format(Heist.SucceedToJoinHeistMessage, expectedPointsToWager))), Priority.Medium), Times.Once());
             Assert.Equal(expectedPlayerPointsAfterWager, Player.Points);
         }
 
@@ -56,7 +57,7 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Heists
             Sut.UpdateWager(Player, newPointsWagered);
 
             Assert.Contains(Sut.Wagers, x => x.PlayerTwitchID.Equals(Player.TwitchUserID) && x.WageredPoints == expectedNewPointsWagered);
-            MockedTwitchClient.Verify(x => x.SpoolMessage(ChatMessage.Channel, It.Is<String>(x => x.Contains(String.Format(Heist.SucceedToUpdateHeistMessage, expectedNewPointsWagered)))), Times.Once());
+            MockedTwitchClientManager.Verify(x => x.SpoolMessage(ChatMessage.Channel, It.Is<String>(x => x.Contains(String.Format(Heist.SucceedToUpdateHeistMessage, expectedNewPointsWagered))), Priority.Medium), Times.Once());
             Assert.Equal(expectedPlayerPointsAfterWager, Player.Points);
         }
 
@@ -79,7 +80,7 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Heists
             Sut.UpdateWager(Player, newPointsWagered);
 
             Assert.DoesNotContain(Sut.Wagers, x => x.PlayerTwitchID.Equals(Player.TwitchUserID));
-            MockedTwitchClient.Verify(x => x.SpoolMessage(ChatMessage.Channel, It.Is<String>(x => x.Contains(String.Format(Heist.SucceedToLeaveHeistMessage, initialPointsWagered)))), Times.Once());
+            MockedTwitchClientManager.Verify(x => x.SpoolMessage(ChatMessage.Channel, It.Is<String>(x => x.Contains(String.Format(Heist.SucceedToLeaveHeistMessage, initialPointsWagered))), Priority.Medium), Times.Once());
             Assert.Equal(expectedPlayerPointsAfterWager, Player.Points);
         }
     }

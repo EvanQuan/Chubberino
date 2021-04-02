@@ -1,99 +1,56 @@
-﻿using Chubberino.Client;
-using Chubberino.Database.Contexts;
-using Chubberino.Modules.CheeseGame.Emotes;
-using Chubberino.Modules.CheeseGame.Models;
-using Chubberino.Modules.CheeseGame.PlayerExtensions;
-using Chubberino.Modules.CheeseGame.Points;
-using Chubberino.Utility;
+﻿using Chubberino.Modules.CheeseGame.Models;
+using Chubberino.Modules.CheeseGame.Rankings;
 using System;
-using TwitchLib.Client.Models;
 
 namespace Chubberino.Modules.CheeseGame.Quests
 {
-    public abstract class Quest : IQuest
+    public abstract class Quest
     {
+        /// <summary>
+        /// Name of the quest location.
+        /// </summary>
+        public String Location { get; }
+
+        /// <summary>
+        /// Message on failure.
+        /// </summary>
+        public String FailureMessage { get; }
+
+        /// <summary>
+        /// Modifies player on success.
+        /// Returns success message.
+        /// </summary>
+        public Func<Player, String, String> OnSuccess { get; }
+
+        /// <summary>
+        /// Reward description for shop purposes. Displays base reward values.
+        /// </summary>
+        public String RewardDescription { get; }
+
+        /// <summary>
+        /// Rank needed to unlock.
+        /// </summary>
+        public Rank RankToUnlock { get; }
+
+        /// <summary>
+        /// Price to unlock.
+        /// </summary>
+        public Int32 Price { get; }
+
         public Quest(
-            IApplicationContext context,
-            Random random,
-            ITwitchClientManager client,
-            IEmoteManager emoteManager,
-            ICalculator calculation)
+            String location,
+            String failureMessage,
+            Func<Player, String, String> onSuccess,
+            String rewardDescription,
+            Rank rankToUnlock,
+            Int32 price)
         {
-            Context = context;
-            Random = random;
-            TwitchClientManager = client;
-            EmoteManager = emoteManager;
-            Calculator = calculation;
-        }
-
-        public IApplicationContext Context { get; }
-
-        public Random Random { get; }
-
-        public ITwitchClientManager TwitchClientManager { get; }
-
-        public IEmoteManager EmoteManager { get; }
-        public ICalculator Calculator { get; }
-
-        /// <summary>
-        /// Message on quest failure.
-        /// </summary>
-        /// <param name="message"></param>
-        /// <param name="player"></param>
-        /// <returns>Formatted failure message.</returns>
-        protected abstract String OnFailure(Player player);
-        
-        /// <summary>
-        /// Message on quest success.
-        /// </summary>
-        /// <param name="message"></param>
-        /// <param name="player"></param>
-        /// <returns>Formatted success message.</returns>
-        protected abstract String OnSuccess(Player player);
-
-        /// <summary>
-        /// Message on start of quest.
-        /// </summary>
-        /// <param name="player"></param>
-        /// <returns></returns>
-        protected abstract String OnIntroduction(Player player);
-
-        public Boolean Start(ChatMessage message, Player player)
-        {
-            Double successChance = player.GetQuestSuccessChance();
-
-            Boolean successful = Random.TryPercentChance(successChance);
-
-            var resultMessage = successful
-                ? OnSuccess(player) + " " + EmoteManager.GetRandomPositiveEmote(message.Channel)
-                : OnFailure(player) + " " + EmoteManager.GetRandomNegativeEmote(message.Channel);
-
-            TwitchClientManager.SpoolMessageAsMe(message.Channel, player, $"[Quest {Math.Round((successChance * 100), 2)}% success] {OnIntroduction(player)} {resultMessage}");
-
-            return successful;
-        }
-
-        protected Boolean TryLoseWorker(Player player)
-        {
-            Boolean hasWorkers = player.WorkerCount > 0;
-
-            if (hasWorkers)
-            {
-                player.WorkerCount--;
-                Context.SaveChanges();
-            }
-
-            return hasWorkers;
-        }
-
-        protected static String GetPlayerWithWorkers(Player player)
-        {
-            return (player.IsMouseInfested() ? 0 : player.WorkerCount) switch
-            {
-                0 => "You",
-                1 => "You and your worker",
-                _ => $"You and your {player.WorkerCount} workers",
-            };
+            Location = location;
+            FailureMessage = failureMessage;
+            OnSuccess = onSuccess;
+            RewardDescription = rewardDescription;
+            RankToUnlock = rankToUnlock;
+            Price = price;
         }
     }
 }

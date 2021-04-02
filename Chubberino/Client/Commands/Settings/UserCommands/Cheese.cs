@@ -88,7 +88,7 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
                 case "q":
                 case "quest":
                 case "quests":
-                    QuestManager.StartQuest(e.ChatMessage);
+                    QuestManager.TryStartQuest(e.ChatMessage);
                     break;
                 case "heist":
                     // Run in a separate thread as it involves sleeping to wait for joiners.

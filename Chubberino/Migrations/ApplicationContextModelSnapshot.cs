@@ -40,6 +40,21 @@ namespace Chubberino.Migrations
                     b.ToTable("ApplicationCredentials");
                 });
 
+            modelBuilder.Entity("Chubberino.Database.Models.Boss", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Health")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Bosses");
+                });
+
             modelBuilder.Entity("Chubberino.Database.Models.StartupChannel", b =>
                 {
                     b.Property<int>("ID")
@@ -86,7 +101,13 @@ namespace Chubberino.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("CatCount")
+                        .HasColumnType("int");
+
                     b.Property<int>("CheeseUnlocked")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ContributedDamageToBoss")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("LastHeistInitiated")
@@ -132,6 +153,9 @@ namespace Chubberino.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("Prestige")
+                        .HasColumnType("int");
+
+                    b.Property<int>("QuestsUnlockedCount")
                         .HasColumnType("int");
 
                     b.Property<int>("Rank")

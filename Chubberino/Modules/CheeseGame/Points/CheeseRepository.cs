@@ -6,14 +6,14 @@ using System.Collections.Generic;
 
 namespace Chubberino.Modules.CheeseGame.Points
 {
-    public sealed class CheeseRepository : ICheeseRepository
+    public sealed class CheeseRepository : IRepository<CheeseType>
     {
         public static IReadOnlyList<CheeseType> Cheeses { get; } = new List<CheeseType>()
         {
             // Players cannot have an unlock level equal to a value immediately
             // before a negative cheese.
-            new CheeseType("Spray", 1),
-            new CheeseType("Spread", 2, Rank.Bronze, 3),
+            new CheeseType("Easy Cheese", 1),
+            new CheeseType("Cheez Wiz", 2, Rank.Bronze, 3),
             new CheeseType("Velveeta", 3, Rank.Bronze, 5),
             new CheeseType("American", 4, Rank.Bronze, 10),
 
@@ -36,7 +36,7 @@ namespace Chubberino.Modules.CheeseGame.Points
             new CheeseType("Red Cloud", 17, Rank.Silver, 220),
             new CheeseType("Camembert", 18, Rank.Silver, 240),
 
-            new CheeseType("Dry Jack", 19, Rank.Gold, 280, true), // 20
+            new CheeseType("Lacey Grey", 19, Rank.Gold, 280, true), // 20
             new CheeseType("Cheshire", -13),
             new CheeseType("Grana", 20, Rank.Gold, 320),
             new CheeseType("Kasseri", 21, Rank.Gold, 360),
@@ -55,7 +55,7 @@ namespace Chubberino.Modules.CheeseGame.Points
             new CheeseType("Neufchatel", 31, Rank.Diamond, 1120, true), // 34
             new CheeseType("Oxford Blue", -25),
             new CheeseType("Halloumi", 32, Rank.Diamond, 1280),
-            new CheeseType("Stilton", 33, Rank.Diamond, 1440),
+            new CheeseType("Alpine Gold", 33, Rank.Diamond, 1440),
             new CheeseType("Gorgonzola", 34, Rank.Diamond, 1600),
             new CheeseType("Lairobell", 35, Rank.Diamond, 1760),
             new CheeseType("Reblochon", 36, Rank.Diamond, 1920),
@@ -86,34 +86,29 @@ namespace Chubberino.Modules.CheeseGame.Points
             new CheeseType("Chubmeister", 100, Rank.Legend, 16000),
         };
 
+        public Random Random { get; }
+
         public CheeseRepository(Random random)
         {
             Random = random;
         }
 
-        public Random Random { get; }
+        public CheeseType GetRandom(Int32 unlocked)
+        {
+            return Cheeses[Random.Next(unlocked.Min(Cheeses.Count - 1).Max(0))];
+        }
 
-        public Boolean TryGetNextCheeseToUnlock(Player player, out CheeseType cheeseType)
+        public Boolean TryGetNextToUnlock(Player player, out CheeseType nextUnlock)
         {
             Int32 nextCheese = player.CheeseUnlocked + 1;
             if (nextCheese >= Cheeses.Count)
             {
-                cheeseType = default;
+                nextUnlock = default;
                 return false;
             }
 
-            cheeseType = Cheeses[nextCheese];
+            nextUnlock = Cheeses[nextCheese];
             return true;
-        }
-
-        public CheeseType GetRandomType(Int32 cheeseUnlocked)
-        {
-            return GetRandomBaseType(cheeseUnlocked);
-        }
-
-        private CheeseType GetRandomBaseType(Int32 cheeseUnlocked)
-        {
-            return Cheeses[Random.Next(cheeseUnlocked.Min(Cheeses.Count - 1).Max(0))];
         }
     }
 }

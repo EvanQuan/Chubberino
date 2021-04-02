@@ -13,15 +13,13 @@ using Chubberino.Client.Services;
 using Chubberino.Client.Threading;
 using Chubberino.Database.Contexts;
 using Chubberino.Database.Models;
+using Chubberino.Modules.CheeseGame;
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Hazards;
 using Chubberino.Modules.CheeseGame.Heists;
 using Chubberino.Modules.CheeseGame.Items;
 using Chubberino.Modules.CheeseGame.Points;
 using Chubberino.Modules.CheeseGame.Quests;
-using Chubberino.Modules.CheeseGame.Quests.GainCheese;
-using Chubberino.Modules.CheeseGame.Quests.GainStorage;
-using Chubberino.Modules.CheeseGame.Quests.GainWorkers;
 using Chubberino.Modules.CheeseGame.Rankings;
 using Chubberino.Modules.CheeseGame.Shops;
 using Chubberino.Modules.CheeseGame.Upgrades;
@@ -55,16 +53,12 @@ namespace Chubberino
             builder.RegisterType<TwitchClientManager>().As<ITwitchClientManager>().SingleInstance();
             builder.RegisterType<CrendentialsManager>().As<ICredentialsManager>().SingleInstance();
             builder.RegisterType<CommandRepository>().As<ICommandRepository>().SingleInstance();
-            builder.Register(c => new ExtendedClientFactory(
+            builder.Register(c => new TwitchClientFactory(
                 (IClientOptions options) => new WebSocketClient(options),
                 ClientProtocol.WebSocket,
-                c.Resolve<IConsole>(),
-                c.Resolve<ISpinWait>(),
-                null)).As<IExtendedClientFactory>().SingleInstance();
+                null)).As<ITwitchClientFactory>().SingleInstance();
 
             builder.RegisterType<DateTimeService>().As<IDateTimeService>().SingleInstance();
-
-            builder.RegisterType<Calculator>().As<ICalculator>().SingleInstance();
 
             builder.RegisterType<StopSettingStrategy>().As<IStopSettingStrategy>().SingleInstance();
             builder.RegisterType<Repeater>().As<IRepeater>();
@@ -150,22 +144,13 @@ namespace Chubberino
             builder.RegisterType<HeistManager>().As<IHeistManager>().SingleInstance();
             builder.RegisterType<EmoteManager>().As<IEmoteManager>().SingleInstance();
             builder.RegisterType<UpgradeManager>().As<IUpgradeManager>().SingleInstance();
-            builder.RegisterType<CheeseRepository>().As<ICheeseRepository>().SingleInstance();
+            builder.RegisterType<CheeseRepository>().As<IRepository<CheeseType>>().SingleInstance();
             builder.RegisterType<CheeseModifierManager>().As<ICheeseModifierManager>().SingleInstance();
             builder.RegisterType<HazardManager>().As<IHazardManager>().SingleInstance();
             builder.RegisterType<ItemManager>().As<IItemManager>().SingleInstance();
 
             // Quests
-            builder.RegisterType<CaciottaCliff>().AsSelf().SingleInstance();
-            builder.RegisterType<MagnaMountainQuest>().AsSelf().SingleInstance();
-            builder.RegisterType<MadronaMarsh>().AsSelf().SingleInstance();
-            builder.RegisterType<LakeLaguioleQuest>().AsSelf().SingleInstance();
-            builder.RegisterType<PanelaPlainsQuest>().AsSelf().SingleInstance();
-            builder.RegisterType<RiverRagstoneQuest>().AsSelf().SingleInstance();
-            builder.RegisterType<FontiagoForestQuest>().AsSelf().SingleInstance();
-            builder.RegisterType<DurrusDesertQuest>().AsSelf().SingleInstance();
-            builder.RegisterType<HayloftHillsQuest>().AsSelf().SingleInstance();
-            builder.RegisterType<ValencayValley>().AsSelf().SingleInstance();
+            builder.RegisterType<QuestRepository>().As<IRepository<Quest>>().SingleInstance();
 
             IContainer container = builder.Build();
 
@@ -182,20 +167,6 @@ namespace Chubberino
                 console.WriteLine("Failed to start");
                 return;
             }
-
-            var questManager = scope.Resolve<IQuestManager>();
-            questManager
-                .AddQuest(scope.Resolve<CaciottaCliff>())
-                .AddQuest(scope.Resolve<MagnaMountainQuest>())
-                .AddQuest(scope.Resolve<MadronaMarsh>())
-                .AddQuest(scope.Resolve<LakeLaguioleQuest>())
-                .AddQuest(scope.Resolve<PanelaPlainsQuest>())
-                .AddQuest(scope.Resolve<RiverRagstoneQuest>())
-                .AddQuest(scope.Resolve<FontiagoForestQuest>())
-                .AddQuest(scope.Resolve<DurrusDesertQuest>())
-                .AddQuest(scope.Resolve<HayloftHillsQuest>())
-                .AddQuest(scope.Resolve<ValencayValley>());
-
 
             var commandRepository = scope.Resolve<ICommandRepository>();
             commandRepository

@@ -8,7 +8,7 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Points.CheeseRepositorie
         [Fact]
         public void ShouldReturnFirstUnlockableCheese()
         {
-            var result = Sut.TryGetNextCheeseToUnlock(Player, out CheeseType cheeseType);
+            var result = Sut.TryGetNextToUnlock(Player, out CheeseType cheeseType);
 
             var firstCheeseToUnlock = CheeseRepository.Cheeses[1];
             Assert.True(result);
@@ -20,7 +20,7 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Points.CheeseRepositorie
         public void ShouldReturnLastUnlockableCheese()
         {
             Player.CheeseUnlocked = CheeseRepository.Cheeses.Count - 2;
-            var result = Sut.TryGetNextCheeseToUnlock(Player, out CheeseType cheeseType);
+            var result = Sut.TryGetNextToUnlock(Player, out CheeseType cheeseType);
 
             var lastCheese = CheeseRepository.Cheeses[CheeseRepository.Cheeses.Count - 1];
     
@@ -33,7 +33,7 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Points.CheeseRepositorie
         public void ShouldReturnFalse()
         {
             Player.CheeseUnlocked = CheeseRepository.Cheeses.Count - 1;
-            var result = Sut.TryGetNextCheeseToUnlock(Player, out CheeseType cheeseType);
+            var result = Sut.TryGetNextToUnlock(Player, out CheeseType cheeseType);
 
             Assert.False(result);
             Assert.Null(cheeseType);

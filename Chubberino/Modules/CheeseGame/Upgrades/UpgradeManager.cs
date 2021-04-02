@@ -10,7 +10,7 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
     {
         private const String StorageDescription = "+{0}% -> +{1}% storage increase";
 
-        private const String QuestRewardDescription = "{0}% -> {1}% cheese quest reward increase";
+        private const String QuestRewardDescription = "x{0} -> x{1} cheese quest rewards";
 
         private const String ProductionDescription = "+{0}% -> +{1}% cheese per worker";
 
@@ -18,12 +18,10 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
 
         private const String ModifierDescription = "Chance to make cheese {0} (+{1} cheese)";
 
-        public ICalculator Calculator { get; }
         public ICheeseModifierManager CheeseModifierManager { get; }
 
-        public UpgradeManager(ICalculator calculator, ICheeseModifierManager cheeseModifierManager)
+        public UpgradeManager(ICheeseModifierManager cheeseModifierManager)
         {
-            Calculator = calculator;
             CheeseModifierManager = cheeseModifierManager;
         }
 
@@ -43,27 +41,27 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
             Double currentUpgradePercent = (Int32)(player.NextCriticalCheeseUpgradeUnlock) * Constants.CriticalCheeseUpgradePercent * 100;
             Double nextUpgradePercent = (Int32)(player.NextCriticalCheeseUpgradeUnlock + 1) * Constants.CriticalCheeseUpgradePercent * 100;
             return new Upgrade(
-                String.Format(CriticalCheeseDescription, currentUpgradePercent, nextUpgradePercent),
+                String.Format(CriticalCheeseDescription, String.Format("{0:0.0}", currentUpgradePercent), String.Format("{0:0.0}", nextUpgradePercent)),
                 player.NextCriticalCheeseUpgradeUnlock,
-                50 + (Int32)(Math.Pow(1.5, (Int32)player.NextCriticalCheeseUpgradeUnlock) * 75),
+                50 + (Int32)(Math.Pow(1.5, (Int32)player.NextCriticalCheeseUpgradeUnlock) * 80),
                 x => x.NextCriticalCheeseUpgradeUnlock++);
         }
 
-        public Upgrade GetNextQuestRewardUpgrade(Player player)
+        public static Upgrade GetNextQuestRewardUpgrade(Player player)
         {
-            Int32 currentUpgradePercent = (Int32)(Calculator.GetQuestRewardMultiplier(player.NextQuestRewardUpgradeUnlock) * 100);
-            Int32 nextUpgradePercent = (Int32)(Calculator.GetQuestRewardMultiplier(player.NextQuestRewardUpgradeUnlock.Next()) * 100);
+            String currentUpgradePercent = String.Format("{0:0.0}", player.NextQuestRewardUpgradeUnlock.GetQuestRewardMultiplier());
+            String nextUpgradePercent = String.Format("{0:0.0}", player.NextQuestRewardUpgradeUnlock.Next().GetQuestRewardMultiplier());
             return new Upgrade(
                 String.Format(QuestRewardDescription, currentUpgradePercent, nextUpgradePercent),
                 player.NextQuestRewardUpgradeUnlock,
-                (Int32)(50 + Math.Pow(1.5, (Int32)player.NextQuestRewardUpgradeUnlock) * 80),
+                (Int32)(50 + Math.Pow(1.5, (Int32)player.NextQuestRewardUpgradeUnlock) * 90),
                 x => x.NextQuestRewardUpgradeUnlock++);
         }
 
-        public Upgrade GetNextWorkerProductionUpgrade(Player player)
+        public static Upgrade GetNextWorkerProductionUpgrade(Player player)
         {
-            Int32 currentUpgradePercent = (Int32)(Calculator.GetWorkerPointMultiplier(player.NextWorkerProductionUpgradeUnlock) * 100);
-            Int32 nextUpgradePercent = (Int32)(Calculator.GetWorkerPointMultiplier(player.NextWorkerProductionUpgradeUnlock.Next()) * 100);
+            Int32 currentUpgradePercent = (Int32)(player.NextWorkerProductionUpgradeUnlock.GetWorkerPointMultiplier() * 100);
+            Int32 nextUpgradePercent = (Int32)(player.NextWorkerProductionUpgradeUnlock.Next().GetWorkerPointMultiplier() * 100);
             return new Upgrade(
                 String.Format(ProductionDescription, currentUpgradePercent, nextUpgradePercent),
                 player.NextWorkerProductionUpgradeUnlock,

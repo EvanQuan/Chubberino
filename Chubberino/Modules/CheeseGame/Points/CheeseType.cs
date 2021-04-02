@@ -13,7 +13,12 @@ namespace Chubberino.Modules.CheeseGame.Points
             RankToUnlock = Rank.Bronze;
             UnlocksNegativeCheese = false;
         }
-        public CheeseType(String name, Int32 pointValue, Rank rankToUnlock, Int32 costToUnlock, Boolean unlocksNegativeCheese = false)
+        public CheeseType(
+            String name,
+            Int32 pointValue,
+            Rank rankToUnlock,
+            Int32 costToUnlock,
+            Boolean unlocksNegativeCheese = false)
         {
             Name = name;
             PointValue = pointValue;

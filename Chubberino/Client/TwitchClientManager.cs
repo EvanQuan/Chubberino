@@ -1,11 +1,15 @@
 ﻿using Chubberino.Client.Abstractions;
 using Chubberino.Client.Credentials;
+using Chubberino.Client.Services;
 using Chubberino.Database.Contexts;
 using Chubberino.Database.Models;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using TwitchLib.Client.Events;
+using TwitchLib.Client.Exceptions;
+using TwitchLib.Client.Interfaces;
 using TwitchLib.Client.Models;
 using TwitchLib.Communication.Interfaces;
 
@@ -15,16 +19,19 @@ namespace Chubberino.Client
     {
         public String PrimaryChannelName { get; set; }
 
+        private String PreviousMessage { get; set; }
+
         public Boolean IsBot { get; private set; }
 
-        public IExtendedClient Client { get; private set; }
+        public ITwitchClient Client { get; private set; }
 
         public IApplicationContext Context { get; }
 
-        private IExtendedClientFactory Factory { get; }
+        private ITwitchClientFactory Factory { get; }
 
         private ICredentialsManager CredentialsManager { get; }
-
+        private ISpinWait SpinWait { get; }
+        public IDateTimeService DateTime { get; }
         private ApplicationCredentials ApplicationCredentials { get; }
 
         public IConsole Console { get; }
@@ -33,18 +40,25 @@ namespace Chubberino.Client
 
         private ConnectionCredentials ConnectionCredentials { get; set; }
 
+        private ConcurrentDictionary<String, DateTime> LastLowPriorityMessageSent { get; }
+
         public TwitchClientManager(
             IApplicationContext context,
-            IExtendedClientFactory factory,
+            ITwitchClientFactory factory,
             ICredentialsManager credentialsManager,
+            ISpinWait spinWait,
+            IDateTimeService dateTime,
             ApplicationCredentials applicationCredentials,
             IConsole console)
         {
             Context = context;
             Factory = factory;
             CredentialsManager = credentialsManager;
+            SpinWait = spinWait;
+            DateTime = dateTime;
             ApplicationCredentials = applicationCredentials;
             Console = console;
+            LastLowPriorityMessageSent = new ConcurrentDictionary<String, DateTime>();
         }
 
         public Boolean TryInitialize(
@@ -100,7 +114,7 @@ namespace Chubberino.Client
 
         public Boolean TryJoinInitialChannels(IReadOnlyList<JoinedChannel> previouslyJoinedChannels = null)
         {
-            Boolean channelJoined = Client.EnsureJoinedToChannel(PrimaryChannelName);
+            Boolean channelJoined = EnsureJoinedToChannel(PrimaryChannelName);
 
             if (!channelJoined) { return false; }
 
@@ -119,13 +133,108 @@ namespace Chubberino.Client
                     var channelName = channel.Channel;
 
                     Console.WriteLine("Connecting to " + channelName);
-                    channelJoined = Client.EnsureJoinedToChannel(channelName);
+                    channelJoined = EnsureJoinedToChannel(channelName);
 
                     if (!channelJoined) { return false; }
                 }
             }
 
             return true;
+        }
+
+
+        public Boolean EnsureJoinedToChannel(String channelName)
+        {
+            Boolean isConnected = SpinWait.SpinUntil(() =>
+            {
+                if (!Client.IsConnected)
+                {
+                    Client.Connect();
+                    SpinWait.Sleep(TimeSpan.FromSeconds(1));
+                    return Client.IsConnected;
+                }
+                return true;
+
+            },
+            TimeSpan.FromSeconds(10));
+
+            if (!isConnected) { return false; }
+
+            Boolean isJoined = SpinWait.SpinUntil(() =>
+            {
+                Client.JoinChannel(channelName);
+                return Client.JoinedChannels.Any(x => x.Channel.Equals(channelName, StringComparison.OrdinalIgnoreCase));
+            },
+            TimeSpan.FromSeconds(10));
+
+            return isJoined;
+        }
+
+        public void SpoolMessage(String channelName, String message, Priority priority = Priority.Medium)
+        {
+            switch (priority)
+            {
+                case Priority.Low:
+                    SendMessageConditionally(channelName, message);
+                    break;
+                case Priority.Medium:
+                    SendMessageDirectly(channelName, message);
+                    break;
+                case Priority.High:
+                    AddMessageToQueue(channelName, message);
+                    break;
+            }
+        }
+
+        private void SendMessageConditionally(String channelName, String message)
+        {
+            DateTime lastSent = LastLowPriorityMessageSent.GetOrAdd(channelName, DateTime.MinValue);
+
+            TimeSpan timeSinceLastMessage = DateTime.Now - lastSent;
+
+            if (timeSinceLastMessage >= TimeSpan.FromSeconds(2))
+            {
+                SendMessageDirectly(channelName, message);
+                LastLowPriorityMessageSent.AddOrUpdate(channelName, DateTime.Now, (_, _) => DateTime.Now);
+            }
+        }
+
+        private void AddMessageToQueue(String channelName, String message)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void SendMessageDirectly(String channelName, String message)
+        {
+            if (message == PreviousMessage)
+            {
+                message += " " + Data.InvisibleCharacter;
+            }
+
+            Boolean messageSent = false;
+            do
+            {
+                try
+                {
+                    Client.SendMessage(channelName, message);
+                    PreviousMessage = message;
+                    messageSent = true;
+                }
+                catch (BadStateException e)
+                {
+                    Console.WriteLine("ERROR: Failed to send message");
+                    Console.WriteLine(e.Message);
+
+                    Boolean connected;
+                    do
+                    {
+                        Console.WriteLine("Reconnecting");
+                        connected = EnsureJoinedToChannel(channelName);
+                    }
+                    while (!connected);
+                }
+            }
+            while (!messageSent);
         }
     }
 }

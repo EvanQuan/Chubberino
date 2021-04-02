@@ -4,6 +4,7 @@ using Chubberino.Modules.CheeseGame.Heists;
 using Chubberino.Modules.CheeseGame.Models;
 using Moq;
 using System;
+using TwitchLib.Client.Interfaces;
 using TwitchLib.Client.Models;
 using TwitchLib.Client.Models.Builders;
 
@@ -21,7 +22,7 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Heists
 
         protected Mock<ITwitchClientManager> MockedTwitchClientManager { get; }
 
-        protected Mock<IExtendedClient> MockedTwitchClient { get; }
+        protected Mock<ITwitchClient> MockedTwitchClient { get; }
 
         protected Player Player { get; }
 
@@ -37,7 +38,7 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Heists
 
             MockedTwitchClientManager = new Mock<ITwitchClientManager>();
 
-            MockedTwitchClient = new Mock<IExtendedClient>();
+            MockedTwitchClient = new Mock<ITwitchClient>();
 
             MockedTwitchClientManager.Setup(x => x.Client).Returns(MockedTwitchClient.Object);
 

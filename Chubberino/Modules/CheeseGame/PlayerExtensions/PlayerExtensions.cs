@@ -22,6 +22,9 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
             player.NextCriticalCheeseUpgradeUnlock = 0;
             player.MouseTrapCount = 0;
             player.MouseCount = 0;
+            player.CatCount = 0;
+            player.ContributedDamageToBoss = 0;
+            player.QuestsUnlockedCount = 0;
 
             return player;
         }
@@ -51,7 +54,7 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
             player.AddPoints((Int32) points);
         }
 
-        public static void AddPoints(this Player player, CheeseType cheese, ICalculator calculator, Boolean withWorkers = true, Boolean isCritical = false)
+        public static void AddPoints(this Player player, CheeseType cheese, Boolean withWorkers = true, Boolean isCritical = false)
         {
             // Cannot reach negative points.
             // Cannot go above the point storage.
@@ -60,7 +63,7 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
             Int32 workerPoints = 0;
             if (withWorkers)
             {
-                Double workerPointMultipler = calculator.GetWorkerPointMultiplier(player.NextWorkerProductionUpgradeUnlock);
+                Double workerPointMultipler = player.NextWorkerProductionUpgradeUnlock.GetWorkerPointMultiplier();
                 Int32 absoluteWorkerPoints = (Int32)(Math.Abs(cheese.PointValue) * (player.WorkerCount * workerPointMultipler)).Max(player.WorkerCount == 0 ? 0 : 1);
                 workerPoints = Math.Sign(cheese.PointValue) * absoluteWorkerPoints;
             }
@@ -110,9 +113,14 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
             return baseSuccessChance + workerSuccessChance;
         }
 
-        public static Double GetQuestRewardMultiplier(this Player player)
+        public static Boolean HasUnlockedAllCheeses(this Player player)
         {
-            return 1 + ((Int32)player.NextQuestRewardUpgradeUnlock * Constants.QuestRewardUpgradePercent);
+            return player.CheeseUnlocked + 1 >= CheeseRepository.Cheeses.Count;
+        }
+
+        public static Boolean HasQuestingUnlocked(this Player player)
+        {
+            return player.QuestsUnlockedCount > 0;
         }
     }
 }

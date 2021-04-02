@@ -3,6 +3,7 @@ using Chubberino.Client.Abstractions;
 using Chubberino.Client.Commands;
 using Moq;
 using System.IO;
+using TwitchLib.Client.Interfaces;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
 {
@@ -13,7 +14,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
         /// </summary>
         protected CommandRepository Sut { get; }
 
-        protected Mock<IExtendedClient> MockedClient { get; }
+        protected Mock<ITwitchClient> MockedClient { get; }
 
         protected Mock<IConsole> MockedConsole { get; }
 
@@ -21,7 +22,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
 
         public UsingCommandRepository()
         {
-            MockedClient = new Mock<IExtendedClient>();
+            MockedClient = new Mock<ITwitchClient>();
 
             MockedConsole = new Mock<IConsole>();
 
