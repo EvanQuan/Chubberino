@@ -100,11 +100,10 @@ namespace Chubberino.Modules.CheeseGame.Shops
             TwitchClientManager.SpoolMessageAsMe(message.Channel, player,
                 $" | Recipe [{recipePrompt}" +
                 $" | Storage [+{storageGain}] for {prices.Storage} cheese" +
-                $" | Recipe [{recipePrompt}" +
-                $" | Quest [{recipePrompt}" +
+                $" | Quest [{questPrompt}" +
+                $" | Upgrade [{upgradePrompt}" + 
                 $" | Worker [+1] for {prices.Worker} cheese" +
                 $" | Population [+5] for {prices.Population} cheese" +
-                $" | Upgrade [{upgradePrompt}" + 
                 $" | Mousetrap [+1] for {prices.MouseTrap} " +
                 "|",
                 Priority.Low);
