@@ -5,6 +5,7 @@ using Chubberino.Modules.CheeseGame.Items;
 using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.PlayerExtensions;
 using Chubberino.Modules.CheeseGame.Points;
+using Chubberino.Modules.CheeseGame.Quests;
 using Chubberino.Modules.CheeseGame.Upgrades;
 using Chubberino.Utility;
 using System;
@@ -15,6 +16,7 @@ namespace Chubberino.Modules.CheeseGame.Shops
     public class Shop : AbstractCommandStrategy, IShop
     {
         public IRepository<CheeseType> CheeseRepository { get; }
+        public IRepository<Quest> QuestRepository { get; }
         public IUpgradeManager UpgradeManager { get; }
         public IItemManager ItemManager { get; }
 
@@ -22,6 +24,7 @@ namespace Chubberino.Modules.CheeseGame.Shops
             IApplicationContext context,
             ITwitchClientManager client,
             IRepository<CheeseType> cheeseRepository,
+            IRepository<Quest> questRepository,
             Random random,
             IEmoteManager emoteManager,
             IUpgradeManager upgradeManager,
@@ -29,6 +32,7 @@ namespace Chubberino.Modules.CheeseGame.Shops
             : base(context, client, random, emoteManager)
         {
             CheeseRepository = cheeseRepository;
+            QuestRepository = questRepository;
             UpgradeManager = upgradeManager;
             ItemManager = itemManager;
         }
@@ -56,6 +60,24 @@ namespace Chubberino.Modules.CheeseGame.Shops
                 recipePrompt = "OUT OF ORDER]";
             }
 
+            String questPrompt;
+            if (QuestRepository.TryGetNextToUnlock(player, out Quest nextQuestToUnlock))
+            {
+                if (nextQuestToUnlock.RankToUnlock > player.Rank)
+                {
+                    questPrompt = $"{nextQuestToUnlock.Location} ({nextQuestToUnlock.RewardDescription})] unlocked at {player.Rank.Next()} rank"; 
+                }
+                else
+                {
+                    questPrompt = $"{nextQuestToUnlock.Location} ({nextQuestToUnlock.RewardDescription})] for {nextQuestToUnlock.Price} cheese"; 
+                }
+            }
+            else
+            {
+                questPrompt = "OUT OF ORDER]";
+            }
+            
+
             String upgradePrompt;
             if (UpgradeManager.TryGetNextUpgradeToUnlock(player, out Upgrade upgrade))
             {
@@ -78,8 +100,10 @@ namespace Chubberino.Modules.CheeseGame.Shops
             TwitchClientManager.SpoolMessageAsMe(message.Channel, player,
                 $" | Recipe [{recipePrompt}" +
                 $" | Storage [+{storageGain}] for {prices.Storage} cheese" +
-                $" | Population [+5] for {prices.Population} cheese" +
+                $" | Recipe [{recipePrompt}" +
+                $" | Quest [{recipePrompt}" +
                 $" | Worker [+1] for {prices.Worker} cheese" +
+                $" | Population [+5] for {prices.Population} cheese" +
                 $" | Upgrade [{upgradePrompt}" + 
                 $" | Mousetrap [+1] for {prices.MouseTrap} " +
                 "|",
@@ -190,6 +214,31 @@ namespace Chubberino.Modules.CheeseGame.Shops
                     else
                     {
                         outputMessage = $"There is no recipe for sale right now.";
+                    }
+                    break;
+                case 'q':
+                    if (QuestRepository.TryGetNextToUnlock(player, out Quest nextQuestToUnlock))
+                    {
+                        if (nextQuestToUnlock.RankToUnlock > player.Rank)
+                        {
+                            outputMessage = $"You must rankup to {nextQuestToUnlock.RankToUnlock} rank before you can buy a map to {nextQuestToUnlock.Location}.";
+                        }
+                        else if (player.Points >= nextQuestToUnlock.Price)
+                        {
+                            player.QuestsUnlockedCount++;
+                            player.Points -= nextQuestToUnlock.Price;
+                            Context.SaveChanges();
+                            outputMessage = $"You bought a map to {nextQuestToUnlock.Location}. (-{nextQuestToUnlock.Price} cheese)";
+                            priority = Priority.Medium;
+                        }
+                        else
+                        {
+                            outputMessage = $"You need {nextQuestToUnlock.Price - player.Points} more cheese to buy a map to {nextQuestToUnlock.Location}.";
+                        }
+                    }
+                    else
+                    {
+                        outputMessage = $"There is no quest map for sale right now.";
                     }
                     break;
                 case 'u':

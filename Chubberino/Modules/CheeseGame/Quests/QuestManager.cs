@@ -2,7 +2,9 @@
 using Chubberino.Client.Services;
 using Chubberino.Database.Contexts;
 using Chubberino.Modules.CheeseGame.Emotes;
+using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.PlayerExtensions;
+using Chubberino.Modules.CheeseGame.Rankings;
 using Chubberino.Utility;
 using System;
 using System.Collections.Generic;
@@ -12,37 +14,33 @@ namespace Chubberino.Modules.CheeseGame.Quests
 {
     public sealed class QuestManager : AbstractCommandStrategy, IQuestManager
     {
-        private IList<IQuest> Quests { get; }
         public static TimeSpan QuestCooldown { get; set; } = TimeSpan.FromHours(2);
         public IDateTimeService DateTime { get; }
+        public IRepository<Quest> QuestRepository { get; }
 
         public QuestManager(
             IApplicationContext context,
             ITwitchClientManager client,
             Random random,
             IEmoteManager emoteManager,
-            IDateTimeService dateTime)
+            IDateTimeService dateTime,
+            IRepository<Quest> questRepository)
             : base(context, client, random, emoteManager)
         {
-            Quests = new List<IQuest>();
             DateTime = dateTime;
+            QuestRepository = questRepository;
         }
 
-        public IQuestManager AddQuest(IQuest quest)
-        {
-            Quests.Add(quest);
-
-            return this;
-        }
-
-        public void StartQuest(ChatMessage message)
+        public void TryStartQuest(ChatMessage message)
         {
             var player = GetPlayer(message);
 
             if (!player.HasQuestingUnlocked())
             {
                 TwitchClientManager.SpoolMessageAsMe(message.Channel, player,
-                    $"[Quest 0% success] You are unfamiliar with the lands around you and quickly get lost. You must buy a map from the shop with \"!cheese buy upgrade\" before you can start questing.",
+                    "[Quest 0% success] " +
+                    "You are unfamiliar with the lands around you and quickly get lost. " +
+                    "You must buy a quest map from the shop with \"!cheese buy quest\" before you can start questing.",
                     Priority.Low);
                 return;
             }
@@ -53,9 +51,9 @@ namespace Chubberino.Modules.CheeseGame.Quests
 
             if (timeSinceLastQuestVentured >= QuestCooldown)
             {
-                var quest = Random.GetElement(Quests);
+                var quest = QuestRepository.GetRandom(player.QuestsUnlockedCount);
 
-                quest.Start(message, player);
+                StartQuest(message, player, quest);
 
                 player.LastQuestVentured = now;
 
@@ -67,8 +65,36 @@ namespace Chubberino.Modules.CheeseGame.Quests
 
                 var timeToWait = timeUntilNextQuestAvailable.Format();
 
-                TwitchClientManager.SpoolMessageAsMe(message.Channel, player, $"[Quest {Math.Round((player.GetQuestSuccessChance() * 100), 2)}% success] You must wait {timeToWait} until you can go on your next quest.", Priority.Low);
+                TwitchClientManager.SpoolMessageAsMe(message.Channel, player,
+                    $"[Quest {String.Format("{0:0.0}", player.GetQuestSuccessChance() * 100)}% success] " +
+                    $"You must wait {timeToWait} until you can go on your next quest.",
+                    Priority.Low);
             }
+        }
+
+        private void StartQuest(ChatMessage message, Player player, Quest quest)
+        {
+            Double successChance = player.GetQuestSuccessChance();
+
+            Boolean successful = Random.TryPercentChance(successChance);
+
+            var resultMessage = successful
+                ? quest.OnSuccess(player, EmoteManager.GetRandomPositiveEmote(message.Channel))
+                : quest.FailureMessage + " " + EmoteManager.GetRandomNegativeEmote(message.Channel);
+
+            TwitchClientManager.SpoolMessageAsMe(message.Channel, player,
+                $"[Quest {String.Format("{0:0.0}", successChance * 100)}% success] " +
+                $"{GetPlayerWithWorkers(player)} travel to {quest.Location}. {resultMessage}");
+        }
+
+        private static String GetPlayerWithWorkers(Player player)
+        {
+            return (player.IsMouseInfested() ? 0 : player.WorkerCount) switch
+            {
+                0 => "You",
+                1 => "You and your worker",
+                _ => $"You and your workers",
+            };
         }
     }
 }

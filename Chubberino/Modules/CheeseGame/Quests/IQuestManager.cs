@@ -4,8 +4,6 @@ namespace Chubberino.Modules.CheeseGame.Quests
 {
     public interface IQuestManager
     {
-        void StartQuest(ChatMessage message);
-
-        IQuestManager AddQuest(IQuest quest);
+        void TryStartQuest(ChatMessage message);
     }
 }

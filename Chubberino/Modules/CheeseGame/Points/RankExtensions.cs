@@ -3,12 +3,11 @@ using System;
 
 namespace Chubberino.Modules.CheeseGame.Points
 {
-    public sealed class Calculator : ICalculator
+    public static class RankExtensions
     {
-
         public const Double QuestRewardRankMultiplier = 0.75;
 
-        public const Double QuestRewardRankExponent = 2;
+        public const Double QuestRewardRankExponent = 2.5;
 
         /// <summary>
         /// The additional worker point percent increase per upgrade.
@@ -21,12 +20,12 @@ namespace Chubberino.Modules.CheeseGame.Points
         public const Double BaseWorkerPointPercent = 0.1;
 
 
-        public Double GetQuestRewardMultiplier(Rank rank)
+        public static Double GetQuestRewardMultiplier(this Rank rank)
         {
             return Math.Pow((1 + (Int32)rank * QuestRewardRankMultiplier), QuestRewardRankExponent);
         }
 
-        public Double GetWorkerPointMultiplier(Rank rank)
+        public static Double GetWorkerPointMultiplier(this Rank rank)
         {
             return BaseWorkerPointPercent + ((Int32)rank) * WorkerUpgradePercent;
         }

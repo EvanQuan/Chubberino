@@ -21,12 +21,10 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
 
         private const String QuestingDescription = "Map to start questing with \"!cheese quest\"";
 
-        public ICalculator Calculator { get; }
         public ICheeseModifierManager CheeseModifierManager { get; }
 
-        public UpgradeManager(ICalculator calculator, ICheeseModifierManager cheeseModifierManager)
+        public UpgradeManager(ICheeseModifierManager cheeseModifierManager)
         {
-            Calculator = calculator;
             CheeseModifierManager = cheeseModifierManager;
         }
 
@@ -46,7 +44,7 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
             Double currentUpgradePercent = (Int32)(player.NextCriticalCheeseUpgradeUnlock) * Constants.CriticalCheeseUpgradePercent * 100;
             Double nextUpgradePercent = (Int32)(player.NextCriticalCheeseUpgradeUnlock + 1) * Constants.CriticalCheeseUpgradePercent * 100;
             return new Upgrade(
-                String.Format(CriticalCheeseDescription, currentUpgradePercent, nextUpgradePercent),
+                String.Format(CriticalCheeseDescription, String.Format("{0:0.0}", currentUpgradePercent), String.Format("{0:0.0}", nextUpgradePercent)),
                 player.NextCriticalCheeseUpgradeUnlock,
                 50 + (Int32)(Math.Pow(1.5, (Int32)player.NextCriticalCheeseUpgradeUnlock) * 80),
                 x => x.NextCriticalCheeseUpgradeUnlock++);
@@ -54,8 +52,8 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
 
         public Upgrade GetNextQuestRewardUpgrade(Player player)
         {
-            String currentUpgradePercent = String.Format("{0:0.00}", Calculator.GetQuestRewardMultiplier(player.NextQuestRewardUpgradeUnlock));
-            String nextUpgradePercent = String.Format("{0:0.00}", Calculator.GetQuestRewardMultiplier(player.NextQuestRewardUpgradeUnlock.Next()));
+            String currentUpgradePercent = String.Format("{0:0.0}", player.NextQuestRewardUpgradeUnlock.GetQuestRewardMultiplier());
+            String nextUpgradePercent = String.Format("{0:0.0}", player.NextQuestRewardUpgradeUnlock.Next().GetQuestRewardMultiplier());
             return new Upgrade(
                 String.Format(QuestRewardDescription, currentUpgradePercent, nextUpgradePercent),
                 player.NextQuestRewardUpgradeUnlock,
@@ -65,8 +63,8 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
 
         public Upgrade GetNextWorkerProductionUpgrade(Player player)
         {
-            Int32 currentUpgradePercent = (Int32)(Calculator.GetWorkerPointMultiplier(player.NextWorkerProductionUpgradeUnlock) * 100);
-            Int32 nextUpgradePercent = (Int32)(Calculator.GetWorkerPointMultiplier(player.NextWorkerProductionUpgradeUnlock.Next()) * 100);
+            Int32 currentUpgradePercent = (Int32)(player.NextWorkerProductionUpgradeUnlock.GetWorkerPointMultiplier() * 100);
+            Int32 nextUpgradePercent = (Int32)(player.NextWorkerProductionUpgradeUnlock.Next().GetWorkerPointMultiplier() * 100);
             return new Upgrade(
                 String.Format(ProductionDescription, currentUpgradePercent, nextUpgradePercent),
                 player.NextWorkerProductionUpgradeUnlock,
