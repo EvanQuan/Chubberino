@@ -16,7 +16,7 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Points.CheeseRepositorie
         {
             MockedRandom.SetupReturnMinimum();
 
-            var result = Sut.GetRandomType(cheeseUnlocked);
+            var result = Sut.GetRandom(cheeseUnlocked);
 
             var expectedCheese = CheeseRepository.Cheeses[0];
 
@@ -31,7 +31,7 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Points.CheeseRepositorie
         {
             MockedRandom.SetupReturnMaximum();
 
-            var result = Sut.GetRandomType(cheeseUnlocked);
+            var result = Sut.GetRandom(cheeseUnlocked);
 
             var expectedCheese = CheeseRepository.Cheeses[cheeseUnlocked];
 
@@ -45,7 +45,7 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Points.CheeseRepositorie
 
             MockedRandom.SetupReturnMaximum();
 
-            var result = Sut.GetRandomType(maxCheeseUnlocked);
+            var result = Sut.GetRandom(maxCheeseUnlocked);
 
             var lastCheese = CheeseRepository.Cheeses[CheeseRepository.Cheeses.Count - 1];
 
@@ -59,7 +59,7 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Points.CheeseRepositorie
 
             MockedRandom.SetupReturnMaximum();
 
-            var result = Sut.GetRandomType(maxCheeseUnlocked);
+            var result = Sut.GetRandom(maxCheeseUnlocked);
 
             var lastCheese = CheeseRepository.Cheeses[CheeseRepository.Cheeses.Count - 1];
 
@@ -73,7 +73,7 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Points.CheeseRepositorie
 
             MockedRandom.SetupReturnMinimum();
 
-            var result = Sut.GetRandomType(invalidCheeseUnlocked);
+            var result = Sut.GetRandom(invalidCheeseUnlocked);
 
             var firstCheese = CheeseRepository.Cheeses[0];
 

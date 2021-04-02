@@ -14,14 +14,14 @@ namespace Chubberino.Modules.CheeseGame.Shops
 {
     public class Shop : AbstractCommandStrategy, IShop
     {
-        public ICheeseRepository CheeseRepository { get; }
+        public IRepository<CheeseType> CheeseRepository { get; }
         public IUpgradeManager UpgradeManager { get; }
         public IItemManager ItemManager { get; }
 
         public Shop(
             IApplicationContext context,
             ITwitchClientManager client,
-            ICheeseRepository cheeseRepository,
+            IRepository<CheeseType> cheeseRepository,
             Random random,
             IEmoteManager emoteManager,
             IUpgradeManager upgradeManager,
@@ -40,7 +40,7 @@ namespace Chubberino.Modules.CheeseGame.Shops
             PriceList prices = ItemManager.GetPrices(player);
 
             String recipePrompt;
-            if (CheeseRepository.TryGetNextCheeseToUnlock(player, out CheeseType nextCheeseToUnlock))
+            if (CheeseRepository.TryGetNextToUnlock(player, out CheeseType nextCheeseToUnlock))
             {
                 if (nextCheeseToUnlock.RankToUnlock > player.Rank)
                 {
@@ -163,7 +163,7 @@ namespace Chubberino.Modules.CheeseGame.Shops
                     }
                     break;
                 case 'r':
-                    if (CheeseRepository.TryGetNextCheeseToUnlock(player, out CheeseType nextCheeseToUnlock))
+                    if (CheeseRepository.TryGetNextToUnlock(player, out CheeseType nextCheeseToUnlock))
                     {
                         if (nextCheeseToUnlock.RankToUnlock > player.Rank)
                         {

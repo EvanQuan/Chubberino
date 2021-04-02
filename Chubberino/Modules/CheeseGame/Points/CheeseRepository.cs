@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Chubberino.Modules.CheeseGame.Points
 {
-    public sealed class CheeseRepository : ICheeseRepository
+    public sealed class CheeseRepository : IRepository<CheeseType>
     {
         public static IReadOnlyList<CheeseType> Cheeses { get; } = new List<CheeseType>()
         {
@@ -93,27 +93,22 @@ namespace Chubberino.Modules.CheeseGame.Points
 
         public Random Random { get; }
 
-        public Boolean TryGetNextCheeseToUnlock(Player player, out CheeseType cheeseType)
+        public Boolean TryGetNextToUnlock(Player player, out CheeseType nextUnlock)
         {
             Int32 nextCheese = player.CheeseUnlocked + 1;
             if (nextCheese >= Cheeses.Count)
             {
-                cheeseType = default;
+                nextUnlock = default;
                 return false;
             }
 
-            cheeseType = Cheeses[nextCheese];
+            nextUnlock = Cheeses[nextCheese];
             return true;
         }
 
-        public CheeseType GetRandomType(Int32 cheeseUnlocked)
+        public CheeseType GetRandom(Int32 unlocked)
         {
-            return GetRandomBaseType(cheeseUnlocked);
-        }
-
-        private CheeseType GetRandomBaseType(Int32 cheeseUnlocked)
-        {
-            return Cheeses[Random.Next(cheeseUnlocked.Min(Cheeses.Count - 1).Max(0))];
+            return Cheeses[Random.Next(unlocked.Min(Cheeses.Count - 1).Max(0))];
         }
     }
 }

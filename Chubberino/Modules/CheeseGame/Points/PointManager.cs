@@ -16,7 +16,7 @@ namespace Chubberino.Modules.CheeseGame.Points
     {
         public static TimeSpan PointGainCooldown { get; set; } = TimeSpan.FromMinutes(15);
 
-        public ICheeseRepository CheeseRepository { get; }
+        public IRepository<CheeseType> CheeseRepository { get; }
         public ICheeseModifierManager CheeseModifierManager { get; }
         public IHazardManager HazardManager { get; }
         public IDateTimeService DateTime { get; }
@@ -26,7 +26,7 @@ namespace Chubberino.Modules.CheeseGame.Points
         public PointManager(
             IApplicationContext context,
             ITwitchClientManager client,
-            ICheeseRepository cheeseRepository,
+            IRepository<CheeseType> cheeseRepository,
             ICheeseModifierManager cheeseModifierManager,
             Random random,
             IEmoteManager emoteManager,
@@ -61,7 +61,7 @@ namespace Chubberino.Modules.CheeseGame.Points
                 }
                 else
                 {
-                    CheeseType initialCheese = CheeseRepository.GetRandomType(player.CheeseUnlocked);
+                    CheeseType initialCheese = CheeseRepository.GetRandom(player.CheeseUnlocked);
 
                     CheeseModifier modifier = CheeseModifierManager.GetRandomModifier(player.NextCheeseModifierUpgradeUnlock);
 
