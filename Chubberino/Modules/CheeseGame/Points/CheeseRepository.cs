@@ -86,12 +86,17 @@ namespace Chubberino.Modules.CheeseGame.Points
             new CheeseType("Chubmeister", 100, Rank.Legend, 16000),
         };
 
+        public Random Random { get; }
+
         public CheeseRepository(Random random)
         {
             Random = random;
         }
 
-        public Random Random { get; }
+        public CheeseType GetRandom(Int32 unlocked)
+        {
+            return Cheeses[Random.Next(unlocked.Min(Cheeses.Count - 1).Max(0))];
+        }
 
         public Boolean TryGetNextToUnlock(Player player, out CheeseType nextUnlock)
         {
@@ -104,11 +109,6 @@ namespace Chubberino.Modules.CheeseGame.Points
 
             nextUnlock = Cheeses[nextCheese];
             return true;
-        }
-
-        public CheeseType GetRandom(Int32 unlocked)
-        {
-            return Cheeses[Random.Next(unlocked.Min(Cheeses.Count - 1).Max(0))];
         }
     }
 }

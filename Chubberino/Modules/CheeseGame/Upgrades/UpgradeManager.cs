@@ -1,4 +1,5 @@
 ﻿using Chubberino.Modules.CheeseGame.Models;
+using Chubberino.Modules.CheeseGame.PlayerExtensions;
 using Chubberino.Modules.CheeseGame.Points;
 using Chubberino.Modules.CheeseGame.Rankings;
 using Chubberino.Utility;
@@ -92,12 +93,12 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
                 QuestingDescription,
                 Rank.Bronze,
                 75,
-                x => x.HasQuestingUnlocked = true);
+                x => x.QuestsUnlockedCount++);
         }
 
         public Boolean TryGetNextUpgradeToUnlock(Player player, out Upgrade upgrade)
         {
-            if (!player.HasQuestingUnlocked)
+            if (!player.HasQuestingUnlocked())
             {
                 upgrade = GetUnlockQuestingUpgrade(player);
             }

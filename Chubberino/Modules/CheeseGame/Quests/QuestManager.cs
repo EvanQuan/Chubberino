@@ -39,7 +39,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
         {
             var player = GetPlayer(message);
 
-            if (!player.HasQuestingUnlocked)
+            if (!player.HasQuestingUnlocked())
             {
                 TwitchClientManager.SpoolMessageAsMe(message.Channel, player,
                     $"[Quest 0% success] You are unfamiliar with the lands around you and quickly get lost. You must buy a map from the shop with \"!cheese buy upgrade\" before you can start questing.",

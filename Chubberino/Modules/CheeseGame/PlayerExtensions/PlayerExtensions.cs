@@ -24,7 +24,7 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
             player.MouseCount = 0;
             player.CatCount = 0;
             player.ContributedDamageToBoss = 0;
-            player.HasQuestingUnlocked = false;
+            player.QuestsUnlockedCount = 0;
 
             return player;
         }
@@ -116,6 +116,11 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
         public static Boolean HasUnlockedAllCheeses(this Player player)
         {
             return player.CheeseUnlocked + 1 >= CheeseRepository.Cheeses.Count;
+        }
+
+        public static Boolean HasQuestingUnlocked(this Player player)
+        {
+            return player.QuestsUnlockedCount > 0;
         }
     }
 }
