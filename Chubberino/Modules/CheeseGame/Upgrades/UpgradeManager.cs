@@ -50,7 +50,7 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
                 x => x.NextCriticalCheeseUpgradeUnlock++);
         }
 
-        public Upgrade GetNextQuestRewardUpgrade(Player player)
+        public static Upgrade GetNextQuestRewardUpgrade(Player player)
         {
             String currentUpgradePercent = String.Format("{0:0.0}", player.NextQuestRewardUpgradeUnlock.GetQuestRewardMultiplier());
             String nextUpgradePercent = String.Format("{0:0.0}", player.NextQuestRewardUpgradeUnlock.Next().GetQuestRewardMultiplier());
@@ -61,7 +61,7 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
                 x => x.NextQuestRewardUpgradeUnlock++);
         }
 
-        public Upgrade GetNextWorkerProductionUpgrade(Player player)
+        public static Upgrade GetNextWorkerProductionUpgrade(Player player)
         {
             Int32 currentUpgradePercent = (Int32)(player.NextWorkerProductionUpgradeUnlock.GetWorkerPointMultiplier() * 100);
             Int32 nextUpgradePercent = (Int32)(player.NextWorkerProductionUpgradeUnlock.Next().GetWorkerPointMultiplier() * 100);
