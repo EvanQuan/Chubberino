@@ -1,5 +1,4 @@
 ﻿using Chubberino.Modules.CheeseGame.Models;
-using Chubberino.Modules.CheeseGame.PlayerExtensions;
 using Chubberino.Modules.CheeseGame.Points;
 using Chubberino.Modules.CheeseGame.Rankings;
 using Chubberino.Utility;
@@ -18,8 +17,6 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
         private const String CriticalCheeseDescription = "{0}% -> {1}% critical cheese chance";
 
         private const String ModifierDescription = "Chance to make cheese {0} (+{1} cheese)";
-
-        private const String QuestingDescription = "Map to start questing with \"!cheese quest\"";
 
         public ICheeseModifierManager CheeseModifierManager { get; }
 
@@ -85,22 +82,9 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
             return null;
         }
 
-        private static Upgrade GetUnlockQuestingUpgrade(Player player)
-        {
-            return new Upgrade(
-                QuestingDescription,
-                Rank.Bronze,
-                75,
-                x => x.QuestsUnlockedCount++);
-        }
-
         public Boolean TryGetNextUpgradeToUnlock(Player player, out Upgrade upgrade)
         {
-            if (!player.HasQuestingUnlocked())
-            {
-                upgrade = GetUnlockQuestingUpgrade(player);
-            }
-            else if (player.NextStorageUpgradeUnlock > player.NextCheeseModifierUpgradeUnlock)
+            if (player.NextStorageUpgradeUnlock > player.NextCheeseModifierUpgradeUnlock)
             {
                 upgrade = GetNextCheeseModifierUpgrade(player);
             }
