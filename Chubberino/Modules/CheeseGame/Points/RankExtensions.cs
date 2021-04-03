@@ -7,7 +7,7 @@ namespace Chubberino.Modules.CheeseGame.Points
     {
         public const Double QuestRewardRankMultiplier = 0.75;
 
-        public const Double QuestRewardRankExponent = 2.5;
+        public const Double QuestRewardRankExponent = 2;
 
         /// <summary>
         /// The additional worker point percent increase per upgrade.
