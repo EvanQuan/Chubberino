@@ -133,9 +133,10 @@ namespace Chubberino.Modules.CheeseGame.Shops
 
             Priority priority = Priority.Low;
 
-            switch (itemToBuy.ToLower()[0])
+            switch (itemToBuy.ToLower())
             {
-                case 's':
+                case "s":
+                case "storage":
                     Int32 storageGain = (Int32)(Constants.ShopStorageQuantity * player.GetStorageUpgradeMultiplier());
                     if (player.Points >= prices.Storage)
                     {
@@ -150,7 +151,9 @@ namespace Chubberino.Modules.CheeseGame.Shops
                         outputMessage = $"You need {prices.Storage - player.Points} more cheese to buy {storageGain} storage.";
                     }
                     break;
-                case 'p':
+                case "p":
+                case "pop":
+                case "population":
                     if (player.Points >= prices.Population)
                     {
                         player.PopulationCount += 5;
@@ -164,7 +167,9 @@ namespace Chubberino.Modules.CheeseGame.Shops
                         outputMessage = $"You need {prices.Population - player.Points} more cheese to buy 5 population slots.";
                     }
                     break;
-                case 'w':
+                case "w":
+                case "worker":
+                case "workers":
                     if (player.Points >= prices.Worker)
                     {
                         if (player.WorkerCount < player.PopulationCount)
@@ -185,7 +190,9 @@ namespace Chubberino.Modules.CheeseGame.Shops
                         outputMessage = $"You need {prices.Worker - player.Points} more cheese to buy 1 worker.";
                     }
                     break;
-                case 'r':
+                case "r":
+                case "recipe":
+                case "recipes":
                     if (CheeseRepository.TryGetNextToUnlock(player, out CheeseType nextCheeseToUnlock))
                     {
                         if (nextCheeseToUnlock.RankToUnlock > player.Rank)
@@ -215,7 +222,11 @@ namespace Chubberino.Modules.CheeseGame.Shops
                         outputMessage = $"There is no recipe for sale right now.";
                     }
                     break;
-                case 'q':
+                case "q":
+                case "quest":
+                case "quests":
+                case "map":
+                case "maps":
                     if (QuestRepository.TryGetNextToUnlock(player, out Quest nextQuestToUnlock))
                     {
                         if (nextQuestToUnlock.RankToUnlock > player.Rank)
@@ -240,7 +251,10 @@ namespace Chubberino.Modules.CheeseGame.Shops
                         outputMessage = $"There is no quest map for sale right now.";
                     }
                     break;
-                case 'u':
+                case "u":
+                case "up":
+                case "upgrade":
+                case "upgrades":
                     if (UpgradeManager.TryGetNextUpgradeToUnlock(player, out Upgrade upgrade))
                     {
                         if (upgrade.RankToUnlock > player.Rank)
@@ -265,7 +279,10 @@ namespace Chubberino.Modules.CheeseGame.Shops
                         outputMessage = $"There is no upgrade for sale right now.";
                     }
                     break;
-                case 'm':
+                case "m":
+                case "mouse":
+                case "mousetrap":
+                case "mousetraps":
                     if (player.Points >= prices.MouseTrap)
                     {
                         remainingArguments.GetNextWord(out String quantityString);
