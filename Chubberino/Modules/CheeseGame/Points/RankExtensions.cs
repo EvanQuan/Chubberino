@@ -5,7 +5,7 @@ namespace Chubberino.Modules.CheeseGame.Points
 {
     public static class RankExtensions
     {
-        public const Double QuestRewardRankMultiplier = 0.75;
+        public const Double QuestRewardRankMultiplier = 0.6;
 
         public const Double QuestRewardRankExponent = 2;
 
