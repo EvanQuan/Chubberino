@@ -4,10 +4,8 @@ using Chubberino.Database.Contexts;
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.PlayerExtensions;
-using Chubberino.Modules.CheeseGame.Rankings;
 using Chubberino.Utility;
 using System;
-using System.Collections.Generic;
 using TwitchLib.Client.Models;
 
 namespace Chubberino.Modules.CheeseGame.Quests
@@ -81,6 +79,8 @@ namespace Chubberino.Modules.CheeseGame.Quests
             var resultMessage = successful
                 ? quest.OnSuccess(player, EmoteManager.GetRandomPositiveEmote(message.Channel))
                 : quest.FailureMessage + " " + EmoteManager.GetRandomNegativeEmote(message.Channel);
+
+            Context.SaveChanges();
 
             TwitchClientManager.SpoolMessageAsMe(message.Channel, player,
                 $"[Quest {String.Format("{0:0.0}", successChance * 100)}% success] " +

@@ -1,6 +1,7 @@
 ﻿using Chubberino.Client;
 using Chubberino.Database.Contexts;
 using Chubberino.Modules.CheeseGame.Emotes;
+using Chubberino.Modules.CheeseGame.Heists;
 using Chubberino.Modules.CheeseGame.PlayerExtensions;
 using Chubberino.Utility;
 using System;
@@ -22,14 +23,17 @@ namespace Chubberino.Modules.CheeseGame.Rankings
             {  Rank.Grandmaster, 16000 },
             {  Rank.Legend, 32000 },
         };
+        public IHeistManager HeistManager { get; }
 
         public RankManager(
             IApplicationContext context,
             ITwitchClientManager client,
             Random random,
-            IEmoteManager emoteManager)
+            IEmoteManager emoteManager,
+            IHeistManager heistManager)
             : base(context, client, random, emoteManager)
         {
+            HeistManager = heistManager;
         }
 
         public void RankUp(ChatMessage message)
@@ -50,6 +54,7 @@ namespace Chubberino.Modules.CheeseGame.Rankings
                     {
                         if (player.HasUnlockedAllCheeses())
                         {
+                            HeistManager.LeaveAllHeists(player);
                             // Prestige instead of rank up
                             player.ResetRank();
                             player.Prestige++;

@@ -19,6 +19,9 @@ namespace Chubberino.Modules.CheeseGame
 
         public const Double CriticalCheeseUpgradePercent = 0.005;
 
+        /// <summary>
+        /// Point multiplier for critical cheese.
+        /// </summary>
         public const Int32 CriticalCheeseMultiplier = 5;
 
         /// <summary>
