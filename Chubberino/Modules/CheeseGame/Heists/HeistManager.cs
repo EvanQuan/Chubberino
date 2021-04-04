@@ -7,6 +7,8 @@ using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Utility;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TwitchLib.Client.Models;
 
@@ -126,6 +128,18 @@ namespace Chubberino.Modules.CheeseGame.Heists
             else
             {
                 TwitchClientManager.SpoolMessageAsMe(message.Channel, player, $"\"{countUnchecked}\" You must wager a positive number of cheese to join the heist.");
+            }
+        }
+
+        public void LeaveAllHeists(Player player)
+        {
+            IEnumerable<IHeist> heists = OngoingHeists
+                .Where(x => x.Value.Wagers.Any(x => x.PlayerTwitchID == player.TwitchUserID))
+                .Select(x => x.Value);
+
+            foreach (var heist in heists)
+            {
+                heist.UpdateWager(player, 0, silent: true);
             }
         }
     }

@@ -106,7 +106,7 @@ namespace Chubberino.Modules.CheeseGame.Heists
             return true;
         }
 
-        public void UpdateWager(Player player, Int32 points)
+        public void UpdateWager(Player player, Int32 points, Boolean silent = false)
         {
             String updateMessage;
 
@@ -149,7 +149,10 @@ namespace Chubberino.Modules.CheeseGame.Heists
                 updateMessage = String.Format(SucceedToJoinHeistMessage, updatedPoints);
             }
 
-            TwitchClient.SpoolMessageAsMe(InitiatorMessage.Channel, player, "[Heist] " + updateMessage);
+            if (!silent)
+            {
+                TwitchClient.SpoolMessageAsMe(InitiatorMessage.Channel, player, "[Heist] " + updateMessage);
+            }
         }
     }
 }
