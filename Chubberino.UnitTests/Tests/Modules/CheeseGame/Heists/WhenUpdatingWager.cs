@@ -57,7 +57,7 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Heists
             Sut.UpdateWager(Player, newPointsWagered);
 
             Assert.Contains(Sut.Wagers, x => x.PlayerTwitchID.Equals(Player.TwitchUserID) && x.WageredPoints == expectedNewPointsWagered);
-            MockedTwitchClientManager.Verify(x => x.SpoolMessage(ChatMessage.Channel, It.Is<String>(x => x.Contains(String.Format(Heist.SucceedToUpdateHeistMessage, expectedNewPointsWagered))), Priority.Medium), Times.Once());
+            MockedTwitchClientManager.Verify(x => x.SpoolMessage(ChatMessage.Channel, It.Is<String>(x => x.Contains(String.Format(Heist.SucceedToUpdateHeistMessage, initialPointsWagered, expectedNewPointsWagered))), Priority.Medium), Times.Once());
             Assert.Equal(expectedPlayerPointsAfterWager, Player.Points);
         }
 

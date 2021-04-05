@@ -7,11 +7,6 @@ namespace Chubberino.Modules.CheeseGame.Heists
     public interface IHeist
     {
         /// <summary>
-        /// Player that initiated the heist.
-        /// </summary>
-        String InitiatorName { get; }
-
-        /// <summary>
         /// Wagers in the heist.
         /// </summary>
         public IList<Wager> Wagers { get; }

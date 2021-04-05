@@ -14,11 +14,9 @@ namespace Chubberino.Modules.CheeseGame.Heists
     public sealed class Heist : IHeist
     {
         public const String FailToJoinHeistMessage = "You must wager a positive number of cheese to join the heist.";
-        public const String SucceedToUpdateHeistMessage = "You update your heist wager to {0} cheese.";
+        public const String SucceedToUpdateHeistMessage = "You update your heist wager from {0} to {1} cheese.";
         public const String SucceedToJoinHeistMessage = "You join the heist, wagering {0} cheese.";
-        public const String SucceedToLeaveHeistMessage = "You left the heist, and are refunded your {0} cheese.";
-        public const Double MinimumWinnerPercent = 0.33;
-        public const Double MaximumWinnerPercent = 1;
+        public const String SucceedToLeaveHeistMessage = "You leave the heist, and are refunded your {0} cheese.";
 
         public IList<Wager> Wagers { get; }
 
@@ -30,7 +28,6 @@ namespace Chubberino.Modules.CheeseGame.Heists
         {
             Wagers = new List<Wager>();
             InitiatorMessage = message;
-            InitiatorName = message.DisplayName;
             Context = context;
             Random = random;
             TwitchClient = client;
@@ -40,8 +37,6 @@ namespace Chubberino.Modules.CheeseGame.Heists
         public IApplicationContext Context { get; }
         public Random Random { get; }
         public ITwitchClientManager TwitchClient { get; }
-
-        public String InitiatorName { get; }
 
         public Boolean Start()
         {
@@ -60,7 +55,7 @@ namespace Chubberino.Modules.CheeseGame.Heists
 
             var intro = new StringBuilder($"[Heist] {people} into the lair of the great cheese dragon. ");
 
-            Double winnerPercent = Random.NextDouble(MinimumWinnerPercent, MaximumWinnerPercent);
+            Double winnerPercent = Random.NextDouble(0, 1);
 
             // Convert.ToInt32 will round up to the nearest Int32 instead of truncating with casting,
             // so a single wager will still have a chance to fail or succeed randomly.
@@ -74,18 +69,13 @@ namespace Chubberino.Modules.CheeseGame.Heists
                 return true;
             }
 
-
             if (winnerCount == Wagers.Count)
             {
                 intro.Append("Everyone made it out with the spoils! ");
             }
-            else if (winnerCount == 1)
-            {
-                intro.Append("One made it out with the spoils! ");
-            }
             else
             {
-                intro.Append("Some made it out with the spoils! ");
+                intro.Append($"{winnerCount} made it out with the spoils! ");
             }
 
             var winners = new List<Wager>();
@@ -127,9 +117,10 @@ namespace Chubberino.Modules.CheeseGame.Heists
                 }
                 else
                 {
+                    Int32 oldWager = wager.WageredPoints;
                     wager.WageredPoints = updatedPoints;
                     player.AddPoints(-updatedPoints);
-                    updateMessage = String.Format(SucceedToUpdateHeistMessage, updatedPoints);
+                    updateMessage = String.Format(SucceedToUpdateHeistMessage, oldWager, updatedPoints);
                 }
                 Context.SaveChanges();
 
