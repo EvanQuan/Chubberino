@@ -17,8 +17,6 @@ namespace Chubberino.Modules.CheeseGame.Heists
         public const String SucceedToUpdateHeistMessage = "You update your heist wager to {0} cheese.";
         public const String SucceedToJoinHeistMessage = "You join the heist, wagering {0} cheese.";
         public const String SucceedToLeaveHeistMessage = "You left the heist, and are refunded your {0} cheese.";
-        public const Double MinimumWinnerPercent = 0.33;
-        public const Double MaximumWinnerPercent = 1;
 
         public IList<Wager> Wagers { get; }
 
@@ -60,7 +58,7 @@ namespace Chubberino.Modules.CheeseGame.Heists
 
             var intro = new StringBuilder($"[Heist] {people} into the lair of the great cheese dragon. ");
 
-            Double winnerPercent = Random.NextDouble(MinimumWinnerPercent, MaximumWinnerPercent);
+            Double winnerPercent = Random.NextDouble(0, 1);
 
             // Convert.ToInt32 will round up to the nearest Int32 instead of truncating with casting,
             // so a single wager will still have a chance to fail or succeed randomly.
