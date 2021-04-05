@@ -69,18 +69,13 @@ namespace Chubberino.Modules.CheeseGame.Heists
                 return true;
             }
 
-
             if (winnerCount == Wagers.Count)
             {
                 intro.Append("Everyone made it out with the spoils! ");
             }
-            else if (winnerCount == 1)
-            {
-                intro.Append("One made it out with the spoils! ");
-            }
             else
             {
-                intro.Append("Some made it out with the spoils! ");
+                intro.Append($"{winnerCount} made it out with the spoils! ");
             }
 
             var winners = new List<Wager>();
