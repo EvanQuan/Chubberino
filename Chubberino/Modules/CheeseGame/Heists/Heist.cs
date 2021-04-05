@@ -28,7 +28,6 @@ namespace Chubberino.Modules.CheeseGame.Heists
         {
             Wagers = new List<Wager>();
             InitiatorMessage = message;
-            InitiatorName = message.DisplayName;
             Context = context;
             Random = random;
             TwitchClient = client;
@@ -38,8 +37,6 @@ namespace Chubberino.Modules.CheeseGame.Heists
         public IApplicationContext Context { get; }
         public Random Random { get; }
         public ITwitchClientManager TwitchClient { get; }
-
-        public String InitiatorName { get; }
 
         public Boolean Start()
         {
