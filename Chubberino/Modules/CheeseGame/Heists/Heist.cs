@@ -14,9 +14,9 @@ namespace Chubberino.Modules.CheeseGame.Heists
     public sealed class Heist : IHeist
     {
         public const String FailToJoinHeistMessage = "You must wager a positive number of cheese to join the heist.";
-        public const String SucceedToUpdateHeistMessage = "You update your heist wager to {0} cheese.";
+        public const String SucceedToUpdateHeistMessage = "You update your heist wager from {0} to {1} cheese.";
         public const String SucceedToJoinHeistMessage = "You join the heist, wagering {0} cheese.";
-        public const String SucceedToLeaveHeistMessage = "You left the heist, and are refunded your {0} cheese.";
+        public const String SucceedToLeaveHeistMessage = "You leave the heist, and are refunded your {0} cheese.";
 
         public IList<Wager> Wagers { get; }
 
@@ -117,9 +117,10 @@ namespace Chubberino.Modules.CheeseGame.Heists
                 }
                 else
                 {
+                    Int32 oldWager = wager.WageredPoints;
                     wager.WageredPoints = updatedPoints;
                     player.AddPoints(-updatedPoints);
-                    updateMessage = String.Format(SucceedToUpdateHeistMessage, updatedPoints);
+                    updateMessage = String.Format(SucceedToUpdateHeistMessage, oldWager, updatedPoints);
                 }
                 Context.SaveChanges();
 
