@@ -67,11 +67,11 @@ namespace Chubberino.Modules.CheeseGame.Shops
             {
                 if (nextQuestToUnlock.RankToUnlock > player.Rank)
                 {
-                    questPrompt = $"{nextQuestToUnlock.Location} ({nextQuestToUnlock.RewardDescription})] unlocked at {player.Rank.Next()} rank"; 
+                    questPrompt = $"{nextQuestToUnlock.Location} ({nextQuestToUnlock.RewardDescription(player)})] unlocked at {player.Rank.Next()} rank"; 
                 }
                 else
                 {
-                    questPrompt = $"{nextQuestToUnlock.Location} ({nextQuestToUnlock.RewardDescription})] for {nextQuestToUnlock.Price} cheese"; 
+                    questPrompt = $"{nextQuestToUnlock.Location} ({nextQuestToUnlock.RewardDescription(player)})] for {nextQuestToUnlock.Price} cheese"; 
                 }
             }
             else
