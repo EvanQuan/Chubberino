@@ -29,7 +29,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
                           $"{emote} (+1 worker)";
                       }
                   },
-                  "+1 worker",
+                  _ => "+1 worker",
                   rankToUnlock,
                   price)
         {

@@ -23,9 +23,9 @@ namespace Chubberino.Modules.CheeseGame.Quests
         public Func<Player, String, String> OnSuccess { get; }
 
         /// <summary>
-        /// Reward description for shop purposes. Displays base reward values.
+        /// Reward description for shop purposes. Displays reward values after player multipliers.
         /// </summary>
-        public String RewardDescription { get; }
+        public Func<Player, String> RewardDescription { get; }
 
         /// <summary>
         /// Rank needed to unlock.
@@ -41,7 +41,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
             String location,
             String failureMessage,
             Func<Player, String, String> onSuccess,
-            String rewardDescription,
+            Func<Player, String> rewardDescription,
             Rank rankToUnlock,
             Int32 price)
         {

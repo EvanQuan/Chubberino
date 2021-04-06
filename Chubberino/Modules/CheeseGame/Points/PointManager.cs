@@ -72,7 +72,7 @@ namespace Chubberino.Modules.CheeseGame.Points
 
                     if (isCritical)
                     {
-                        if (cheese.PointValue > 0)
+                        if (cheese.Points > 0)
                         {
                             outputMessage += $"{EmoteManager.GetRandomPositiveEmote(message.Channel)} CRITICAL CHEESE!!! {EmoteManager.GetRandomPositiveEmote(message.Channel)} ";
                         }
@@ -92,7 +92,7 @@ namespace Chubberino.Modules.CheeseGame.Points
 
                     Context.SaveChanges();
 
-                    Boolean isPositive = cheese.PointValue > 0;
+                    Boolean isPositive = cheese.Points > 0;
 
 
                     String emote = isPositive

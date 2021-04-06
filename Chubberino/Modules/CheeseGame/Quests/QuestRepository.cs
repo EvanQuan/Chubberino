@@ -8,6 +8,11 @@ namespace Chubberino.Modules.CheeseGame.Quests
 {
     public sealed class QuestRepository : IRepository<Quest>
     {
+        /// <summary>
+        /// Chance that a quest from the rare quest pool will be chosen.
+        /// </summary>
+        public const Double RareQuestChance = 0.01;
+
         public static IReadOnlyList<Quest> Quests { get; } = new List<Quest>()
         {
             new GainCheeseQuest(
@@ -186,6 +191,11 @@ namespace Chubberino.Modules.CheeseGame.Quests
             new GainWorkerQuest(
                 Rank.Legend,
                 4000)
+
+        };
+
+        public static IReadOnlyList<Quest> RareQuests { get; } = new List<Quest>()
+        {
 
         };
 

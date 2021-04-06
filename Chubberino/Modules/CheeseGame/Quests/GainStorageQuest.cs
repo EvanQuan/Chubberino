@@ -23,7 +23,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
 
                       return $"{successMessage} {emote} (+{rewardStorageWithMultiplier} storage)";
                   },
-                  $"+{rewardStorage} storage",
+                  player => $"+{(Int32)(rewardStorage * player.GetStorageUpgradeMultiplier())} storage",
                   rankToUnlock,
                   price)
         {

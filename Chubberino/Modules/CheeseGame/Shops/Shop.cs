@@ -46,13 +46,15 @@ namespace Chubberino.Modules.CheeseGame.Shops
             String recipePrompt;
             if (CheeseRepository.TryGetNextToUnlock(player, out CheeseType nextCheeseToUnlock))
             {
+                var cheesePoints = player.GetModifiedPoints(nextCheeseToUnlock.Points);
+
                 if (nextCheeseToUnlock.RankToUnlock > player.Rank)
                 {
-                    recipePrompt = $"{nextCheeseToUnlock.Name} (+{nextCheeseToUnlock.PointValue})] unlocked at {player.Rank.Next()} rank"; 
+                    recipePrompt = $"{nextCheeseToUnlock.Name} (+{cheesePoints})] unlocked at {player.Rank.Next()} rank"; 
                 }
                 else
                 {
-                    recipePrompt = $"{nextCheeseToUnlock.Name} (+{nextCheeseToUnlock.PointValue})] for {nextCheeseToUnlock.CostToUnlock} cheese"; 
+                    recipePrompt = $"{nextCheeseToUnlock.Name} (+{cheesePoints})] for {nextCheeseToUnlock.CostToUnlock} cheese"; 
                 }
             }
             else

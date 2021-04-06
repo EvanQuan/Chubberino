@@ -54,7 +54,7 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
             player.AddPoints((Int32) points);
         }
 
-        public static void AddPoints(this Player player, CheeseType cheese, Boolean withWorkers = true, Boolean isCritical = false)
+        public static Int32 GetModifiedPoints(this Player player, Int32 points, Boolean withWorkers = true, Boolean isCritical = false)
         {
             // Cannot reach negative points.
             // Cannot go above the point storage.
@@ -64,15 +64,18 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
             if (withWorkers)
             {
                 Double workerPointMultipler = player.NextWorkerProductionUpgradeUnlock.GetWorkerPointMultiplier();
-                Int32 absoluteWorkerPoints = (Int32)(Math.Abs(cheese.PointValue) * (player.WorkerCount * workerPointMultipler)).Max(player.WorkerCount == 0 ? 0 : 1);
-                workerPoints = Math.Sign(cheese.PointValue) * absoluteWorkerPoints;
+                Int32 absoluteWorkerPoints = (Int32)(Math.Abs(points) * (player.WorkerCount * workerPointMultipler)).Max(player.WorkerCount == 0 ? 0 : 1);
+                workerPoints = Math.Sign(points) * absoluteWorkerPoints;
             }
 
-            Double pointsToAddRaw = cheese.PointValue * (1 + Constants.PrestigeBonus * player.Prestige) + workerPoints;
+            Int32 pointsToAddRaw = (Int32)(points * (1 + Constants.PrestigeBonus * player.Prestige) + workerPoints);
 
-            Double pointsToAddWithCritical = pointsToAddRaw * (isCritical ? Constants.CriticalCheeseMultiplier : 1);
+            return pointsToAddRaw * (isCritical ? Constants.CriticalCheeseMultiplier : 1);
+        }
 
-            Double newPointsRaw = player.Points + pointsToAddWithCritical;
+        public static void AddPoints(this Player player, CheeseType cheese, Boolean withWorkers = true, Boolean isCritical = false)
+        {
+            Double newPointsRaw = player.Points + player.GetModifiedPoints(cheese.Points, withWorkers, isCritical);
 
             Int32 newPointsBounded = (Int32)newPointsRaw
                 .Min(player.GetTotalStorage())
