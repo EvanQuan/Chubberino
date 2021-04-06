@@ -65,7 +65,7 @@ namespace Chubberino.Client.Commands.Settings
 
         private void TwitchClient_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
         {
-            if (!UsersToReplyTo.Contains(e.ChatMessage.Username)) { return; }
+            if (UsersToReplyTo.Any() && !UsersToReplyTo.Contains(e.ChatMessage.Username)) { return; }
 
             if (!Comparator.Matches(e.ChatMessage.Message, TriggerMessage)) { return; }
 
