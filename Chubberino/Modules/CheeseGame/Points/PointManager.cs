@@ -78,7 +78,7 @@ namespace Chubberino.Modules.CheeseGame.Points
                         }
                         else
                         {
-                            outputMessage += $"{EmoteManager.GetRandomNegativeEmote(message.Channel)} CRITICAL NEGATIVE CHEESE!!! {EmoteManager.GetRandomNegativeEmote(message.Channel)} ";
+                            outputMessage += $"{EmoteManager.GetRandomNegativeEmote(message.Channel)} NEGATIVE CRITICAL CHEESE!!! {EmoteManager.GetRandomNegativeEmote(message.Channel)} ";
                         }
                     }
 
