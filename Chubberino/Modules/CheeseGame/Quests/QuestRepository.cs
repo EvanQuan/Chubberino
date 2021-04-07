@@ -129,16 +129,16 @@ namespace Chubberino.Modules.CheeseGame.Quests
                 1150),
 
             new GainCheeseQuest(
-                "Madrona Marsh",
-                "You get lost in the fog, and with some trouble, return safely.",
-                "You find some cheese hidden in the depths that must have been aging for decades.",
+                "Galbani Grotto",
+                "The ground is slippery and the lighting dark. You turn back before you get hurt.",
+                "Baskets of cheese lie in a dimmly-lit alcove.",
                 65,
                 Rank.Master,
                 1300),
             new GainCheeseQuest(
-                "Madrona Marsh",
-                "You get lost in the fog, and with some trouble, return safely.",
-                "You find some cheese hidden in the depths that must have been aging for decades.",
+                "Cotswold Canyon",
+                "The steep cliffsides tower over you, bringing a foreboding presence that makes you turn back.",
+                "Within the strata of the cliffsides, you find some ancient cheese of days long past.",
                 70,
                 Rank.Master,
                 1450),
@@ -196,7 +196,19 @@ namespace Chubberino.Modules.CheeseGame.Quests
 
         public static IReadOnlyList<Quest> RareQuests { get; } = new List<Quest>()
         {
-
+            new GainCatQuest(
+                Rank.Bronze,
+                0),
+            new GainStorageQuest(
+                "Cantal Chaparral",
+                "",
+                "",
+                Constants.ShopStorageQuantity,
+                Rank.Bronze,
+                0),
+            new GainWorkerQuest(
+                Rank.Bronze,
+                0)
         };
 
         public Random Random { get; }
