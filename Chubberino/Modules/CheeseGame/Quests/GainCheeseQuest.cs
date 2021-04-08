@@ -22,7 +22,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
                       player.AddPoints(finalPoints);
                       return $"{successMessage} {emote} (+{finalPoints} cheese)";
                   },
-                  $"+{rewardPoints} cheese",
+                  player => $"+{(Int32)(rewardPoints * player.Rank.GetQuestRewardMultiplier())} cheese",
                   rankToUnlock,
                   price)
         {

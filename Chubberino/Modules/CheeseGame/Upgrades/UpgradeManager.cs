@@ -84,25 +84,25 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
 
         public Boolean TryGetNextUpgradeToUnlock(Player player, out Upgrade upgrade)
         {
-            if (player.NextStorageUpgradeUnlock > player.NextCheeseModifierUpgradeUnlock)
+            if (player.NextStorageUpgradeUnlock > player.NextWorkerProductionUpgradeUnlock)
             {
-                upgrade = GetNextCheeseModifierUpgrade(player);
+                upgrade = GetNextWorkerProductionUpgrade(player);
             }
-            else if (player.NextCriticalCheeseUpgradeUnlock > player.NextStorageUpgradeUnlock)
+            else if (player.NextQuestRewardUpgradeUnlock > player.NextStorageUpgradeUnlock)
             {
                 upgrade = GetNextStorageUpgrade(player);
             }
-            else if (player.NextQuestRewardUpgradeUnlock > player.NextCriticalCheeseUpgradeUnlock)
-            {
-                upgrade = GetNextCriticalCheeseUpgrade(player);
-            }
-            else if (player.NextWorkerProductionUpgradeUnlock > player.NextQuestRewardUpgradeUnlock)
+            else if (player.NextCriticalCheeseUpgradeUnlock > player.NextQuestRewardUpgradeUnlock)
             {
                 upgrade = GetNextQuestRewardUpgrade(player);
             }
-            else if (player.NextWorkerProductionUpgradeUnlock <= Rank.Legend)
+            else if (player.NextCheeseModifierUpgradeUnlock > player.NextCriticalCheeseUpgradeUnlock)
             {
-                upgrade = GetNextWorkerProductionUpgrade(player);
+                upgrade = GetNextCriticalCheeseUpgrade(player);
+            }
+            else if (player.NextCheeseModifierUpgradeUnlock <= Rank.Legend)
+            {
+                upgrade = GetNextCheeseModifierUpgrade(player);
             }
             else
             {

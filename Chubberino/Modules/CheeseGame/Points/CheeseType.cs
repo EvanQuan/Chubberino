@@ -8,7 +8,7 @@ namespace Chubberino.Modules.CheeseGame.Points
         public CheeseType(String name, Int32 pointValue)
         {
             Name = name;
-            PointValue = pointValue;
+            Points = pointValue;
             CostToUnlock = 0;
             RankToUnlock = Rank.Bronze;
             UnlocksNegativeCheese = false;
@@ -21,7 +21,7 @@ namespace Chubberino.Modules.CheeseGame.Points
             Boolean unlocksNegativeCheese = false)
         {
             Name = name;
-            PointValue = pointValue;
+            Points = pointValue;
             RankToUnlock = rankToUnlock;
             CostToUnlock = costToUnlock;
             UnlocksNegativeCheese = unlocksNegativeCheese;
@@ -29,7 +29,7 @@ namespace Chubberino.Modules.CheeseGame.Points
 
         public String Name { get; }
 
-        public Int32 PointValue { get; }
+        public Int32 Points { get; }
 
         public Int32 CostToUnlock { get; }
 
