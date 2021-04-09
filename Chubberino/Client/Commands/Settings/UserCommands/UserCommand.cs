@@ -8,7 +8,7 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
 {
     public abstract class UserCommand : Setting, IUserCommand
     {
-        private static IReadOnlyList<String> UserIdsToIgnore { get; } = new List<String>()
+        public static IReadOnlyList<String> UserIdsToIgnore { get; } = new List<String>()
         {
             // Nightbot
             "19264788",
@@ -34,10 +34,10 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
 
             if (UserIdsToIgnore.Contains(args.ChatMessage.UserId)) { return false; }
             String message = args.ChatMessage.Message;
-
-            if (message.StartsWith('!' + Name, StringComparison.OrdinalIgnoreCase))
+            var allWords = message.Split(' ');
+            if (allWords[0].Equals('!' + Name, StringComparison.OrdinalIgnoreCase))
             {
-                words = message.Split(' ').Skip(1);
+                words = allWords.Skip(1);
             }
 
             return words != null;
