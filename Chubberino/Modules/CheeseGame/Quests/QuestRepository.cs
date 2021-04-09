@@ -161,7 +161,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
             new GainCheeseQuest(
                 "the Fields of Feta",
                 "A farmer spots you and threatens you to turn back.",
-                "You quickly stuff your pockets before anything sees you.",
+                "You quickly stuff your pockets before anyone sees you.",
                 80,
                 Rank.Grandmaster,
                 1950),
