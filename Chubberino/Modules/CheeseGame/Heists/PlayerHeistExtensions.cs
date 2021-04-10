@@ -11,25 +11,26 @@ namespace Chubberino.Modules.CheeseGame.Heists
             {
                 return true;
             }
-            else if (proposedWager.Equals("all", StringComparison.OrdinalIgnoreCase) || proposedWager.Equals("a", StringComparison.OrdinalIgnoreCase))
+
+            if (proposedWager.Equals("all", StringComparison.OrdinalIgnoreCase) || proposedWager.Equals("a", StringComparison.OrdinalIgnoreCase))
             {
                 wager = player.Points;
                 return true;
             }
-            else if (proposedWager.EndsWith("k", StringComparison.OrdinalIgnoreCase) && Double.TryParse(proposedWager.Substring(0, proposedWager.Length - 1), out Double wagerDouble))
+
+            if (proposedWager.EndsWith("k", StringComparison.OrdinalIgnoreCase) && Double.TryParse(proposedWager.Substring(0, proposedWager.Length - 1), out Double wagerDouble))
             {
                 wager = (Int32)Math.Ceiling(wagerDouble * 1000);
                 return true;
             }
-            else if (proposedWager.EndsWith('%') && Double.TryParse(proposedWager.Substring(0, proposedWager.Length - 1), out Double wagerPercent))
+
+            if (proposedWager.EndsWith('%') && Double.TryParse(proposedWager.Substring(0, proposedWager.Length - 1), out Double wagerPercent))
             {
                 wager = (Int32)Math.Ceiling(wagerPercent / 100.0 * player.Points);
                 return true;
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         }
     }
 }
