@@ -57,6 +57,7 @@ namespace Chubberino.Client.Commands.Settings
 
         private void SpoolRepeatMessages()
         {
+            Responded = false;
             while (!Responded)
             {
                 TwitchClientManager.SpoolMessage(Channel, "!cookie");
@@ -75,7 +76,6 @@ namespace Chubberino.Client.Commands.Settings
                 SpinWait.SpinUntil(() => Responded, TimeSpan.FromSeconds(5));
             }
             LastCookieTime = DateTime.Now;
-            Responded = false;
         }
 
         public override void Execute(IEnumerable<String> arguments)
