@@ -115,19 +115,15 @@ namespace Chubberino.Modules.CheeseGame.Heists
                 return;
             }
 
-            strippedCommand.GetNextWord(out String countUnchecked);
+            strippedCommand.GetNextWord(out String proposedWager);
 
-            if (Int32.TryParse(countUnchecked, out Int32 wager))
+            if (player.TryGetWager(proposedWager, out Int32 wager))
             {
                 heist.UpdateWager(player, wager);
             }
-            else if (countUnchecked.Equals("all", StringComparison.OrdinalIgnoreCase) || countUnchecked.Equals("a", StringComparison.OrdinalIgnoreCase))
-            {
-                heist.UpdateWager(player, player.Points);
-            }
             else
             {
-                TwitchClientManager.SpoolMessageAsMe(message.Channel, player, $"\"{countUnchecked}\" You must wager a positive number of cheese to join the heist.");
+                TwitchClientManager.SpoolMessageAsMe(message.Channel, player, $"Cannot wager \"{proposedWager}\". You must wager a positive number of cheese to join the heist.");
             }
         }
 
