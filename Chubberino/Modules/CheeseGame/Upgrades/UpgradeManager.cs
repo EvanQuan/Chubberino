@@ -32,7 +32,7 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
             return new Upgrade(
                 String.Format(StorageDescription, currentUpgradePercent, nextUpgradePercent),
                 player.NextStorageUpgradeUnlock,
-                (Int32)(200 + Math.Max(1.5, (Int32)player.NextStorageUpgradeUnlock) * 100),
+                (Int32)(200 + Math.Max(2, (Int32)player.NextStorageUpgradeUnlock) * 70),
                 x => x.NextStorageUpgradeUnlock++);
         }
 
@@ -43,7 +43,7 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
             return new Upgrade(
                 String.Format(CriticalCheeseDescription, String.Format("{0:0.0}", currentUpgradePercent), String.Format("{0:0.0}", nextUpgradePercent)),
                 player.NextCriticalCheeseUpgradeUnlock,
-                50 + (Int32)(Math.Pow(1.5, (Int32)player.NextCriticalCheeseUpgradeUnlock) * 80),
+                50 + (Int32)(Math.Pow(2, (Int32)player.NextCriticalCheeseUpgradeUnlock) * 80),
                 x => x.NextCriticalCheeseUpgradeUnlock++);
         }
 
@@ -54,7 +54,7 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
             return new Upgrade(
                 String.Format(QuestRewardDescription, currentUpgradePercent, nextUpgradePercent),
                 player.NextQuestRewardUpgradeUnlock,
-                (Int32)(50 + Math.Pow(1.5, (Int32)player.NextQuestRewardUpgradeUnlock) * 90),
+                (Int32)(50 + Math.Pow(2, (Int32)player.NextQuestRewardUpgradeUnlock) * 90),
                 x => x.NextQuestRewardUpgradeUnlock++);
         }
 
