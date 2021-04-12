@@ -14,7 +14,7 @@ namespace Chubberino.Utility
                 builder.Append(source.Hours);
                 builder.Append(" hour");
 
-                if (source.Hours > 1)
+                if (source.Hours != 1)
                 {
                     builder.Append('s');
                 }
@@ -38,13 +38,13 @@ namespace Chubberino.Utility
                 builder.Append(source.Minutes);
                 builder.Append(" minute");
 
-                if (source.Minutes > 1)
+                if (source.Minutes != 1)
                 {
                     builder.Append('s');
                 }
             }
 
-            if (source.Seconds > 0)
+            if (source.Seconds > 0 || builder.Length == 0)
             {
                 if (builder.Length > 0)
                 {
@@ -54,7 +54,7 @@ namespace Chubberino.Utility
                 builder.Append(source.Seconds);
                 builder.Append(" second");
 
-                if (source.Seconds > 1)
+                if (source.Seconds != 1)
                 {
                     builder.Append('s');
                 }
