@@ -66,8 +66,6 @@ namespace Chubberino.Modules.CheeseGame.Points
 
                     String outputMessage = HazardManager.UpdateMouseInfestationStatus(player);
 
-                    Int32 oldPoints = player.Points;
-
                     Boolean isCritical = Random.TryPercentChance((Int32)player.NextCriticalCheeseUpgradeUnlock * Constants.CriticalCheeseUpgradePercent);
 
                     if (isCritical)
@@ -82,11 +80,9 @@ namespace Chubberino.Modules.CheeseGame.Points
                         }
                     }
 
-                    player.AddPoints(cheese, !player.IsMouseInfested(), isCritical);
+                    var modifiedPoints = player.GetModifiedPoints(cheese.Points, isCritical);
 
-                    Int32 newPoints = player.Points;
-
-                    Int32 pointsGained = newPoints - oldPoints;
+                    player.AddPoints(modifiedPoints);
 
                     player.LastPointsGained = now;
 
@@ -100,7 +96,7 @@ namespace Chubberino.Modules.CheeseGame.Points
                         : EmoteManager.GetRandomNegativeEmote(message.Channel);
 
 
-                    outputMessage += $"You made some {cheese.Name}. {emote} ({(isPositive ? "+" : String.Empty)}{pointsGained} cheese)";
+                    outputMessage += $"You made some {cheese.Name}. {emote} ({(isPositive ? "+" : String.Empty)}{modifiedPoints} cheese)";
 
                     TwitchClientManager.SpoolMessageAsMe(message.Channel, player, outputMessage);
                 }
