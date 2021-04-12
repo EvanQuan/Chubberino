@@ -142,7 +142,7 @@ namespace Chubberino.Modules.CheeseGame.Points
             }
             else if (pointGain < 0)
             {
-                TwitchClientManager.SpoolMessageAsMe(channel, player, $"The Mischievious Cheese Demon sneaks up on you and pickpockets some cheese. ({pointGain} cheese)");
+                TwitchClientManager.SpoolMessageAsMe(channel, player, $"The Mischievious Cheese Goblin sneaks up on you and pickpockets some cheese. ({pointGain} cheese)");
             }
         }
     }
