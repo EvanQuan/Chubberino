@@ -7,6 +7,7 @@ namespace Chubberino.UnitTests.Tests.Utility.TimeSpanExtensions
     public sealed class WhenFormatting
     {
         [Theory]
+        [InlineData(0, 0, 0, "0 seconds")]
         [InlineData(0, 0, 1, "1 second")]
         [InlineData(0, 0, 2, "2 seconds")]
         [InlineData(0, 1, 0, "1 minute")]
