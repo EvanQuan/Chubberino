@@ -54,14 +54,14 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
             player.AddPoints((Int32) points);
         }
 
-        public static Int32 GetModifiedPoints(this Player player, Int32 points, Boolean withWorkers = true, Boolean isCritical = false)
+        public static Int32 GetModifiedPoints(this Player player, Int32 points, Boolean isCritical = false)
         {
             // Cannot reach negative points.
             // Cannot go above the point storage.
             // Prestige bonus is only applied to base cheese gained.
             // Workers will collectively add at least 1.
             Int32 workerPoints = 0;
-            if (withWorkers)
+            if (!player.IsMouseInfested())
             {
                 Double workerPointMultipler = player.NextWorkerProductionUpgradeUnlock.GetWorkerPointMultiplier();
                 Int32 absoluteWorkerPoints = (Int32)(Math.Abs(points) * (player.WorkerCount * workerPointMultipler)).Max(player.WorkerCount == 0 ? 0 : 1);
@@ -71,17 +71,6 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
             Int32 pointsToAddRaw = (Int32)(points * (1 + Constants.PrestigeBonus * player.Prestige) + workerPoints);
 
             return pointsToAddRaw * (isCritical ? Constants.CriticalCheeseMultiplier : 1);
-        }
-
-        public static void AddPoints(this Player player, CheeseType cheese, Boolean withWorkers = true, Boolean isCritical = false)
-        {
-            Double newPointsRaw = player.Points + player.GetModifiedPoints(cheese.Points, withWorkers, isCritical);
-
-            Int32 newPointsBounded = (Int32)newPointsRaw
-                .Min(player.GetTotalStorage())
-                .Max(0);
-
-            player.Points = newPointsBounded;
         }
 
         /// <summary>

@@ -102,7 +102,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
                 "You quickly tire and turn back.",
                 "An abandoned hut sits atop a hill with some cheese lying about, which you claim to for storage.",
                 45,
-                (Int32)(Constants.ShopStorageQuantity * 0.2),
+                (Int32)(Constants.ShopStorageQuantity * 0.1),
                 Rank.Platinum,
                 775),
 
@@ -147,7 +147,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
                 "The place is dark and the ground slippery. You go back immediately.",
                 "Traversing through the winding tunnels, you find stalagmites of cheese, which you knock down with your pickaxe. Certain alcoves make good spots for storage.",
                 60,
-                (Int32)(Constants.ShopStorageQuantity * 0.3),
+                (Int32)(Constants.ShopStorageQuantity * 0.1),
                 Rank.Master,
                 1600),
 
@@ -185,7 +185,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
                 "The terrain is disorienting and the vegetation is too overgrown to let you travel very deep.",
                 "You find cheese all over the place and take the effort to store some of it on the island in hidden caches.",
                 85,
-                (Int32)(Constants.ShopStorageQuantity * 0.4),
+                (Int32)(Constants.ShopStorageQuantity * 0.1),
                 Rank.Legend,
                 3500),
             new GainWorkerQuest(
