@@ -20,10 +20,7 @@ namespace Chubberino.UnitTests.Tests.Utility.TimeSpanExtensions
         [InlineData(2, 2, 2, "2 hours, 2 minutes and 2 seconds")]
         public void ShouldFormat(Int32 hours, Int32 minutes, Int32 seconds, String expectedResult)
         {
-            TimeSpan timespan = TimeSpan.Zero
-                .Add(TimeSpan.FromHours(hours))
-                .Add(TimeSpan.FromMinutes(minutes))
-                .Add(TimeSpan.FromSeconds(seconds));
+            TimeSpan timespan = new TimeSpan(hours, minutes, seconds);
 
             var result = timespan.Format();
 
