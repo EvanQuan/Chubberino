@@ -57,10 +57,11 @@ namespace Chubberino.Modules.CheeseGame.Emotes
             "sanaSnuggle",
             "seoaJam",
             "sheCrazy",
-            "squirtleJam",
+            "SquirtleJam",
             "vibePls",
             "yyjSUPERPOG",
             "yyjTasty",
+            "yyjTwerk",
         };
 
         private static IReadOnlyList<String> PositiveGlobalEmotes { get; } = new List<String>()
