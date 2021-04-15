@@ -28,5 +28,7 @@ namespace Chubberino.Database.Contexts
         public DbSet<ApplicationCredentials> ApplicationCredentials { get; set; }
 
         public DbSet<Boss> Bosses { get; set; }
+
+        public DbSet<Emote> Emotes { get; set; }
     }
 }

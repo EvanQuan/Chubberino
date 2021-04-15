@@ -18,6 +18,8 @@ namespace Chubberino.Database.Contexts
 
         DbSet<Boss> Bosses { get; set; }
 
+        DbSet<Emote> Emotes { get; set; }
+
         EntityEntry<TEntity> Add<TEntity>(TEntity entity) where TEntity : class;
 
         Int32 SaveChanges();
