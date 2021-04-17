@@ -82,6 +82,11 @@ namespace Chubberino.Client.Commands.Settings
         {
             base.Execute(arguments);
 
+            if (IsEnabled)
+            {
+                TwitchClientManager.EnsureJoinedToChannel(Channel);
+            }
+
             Repeater.IsRunning = IsEnabled;
         }
 
