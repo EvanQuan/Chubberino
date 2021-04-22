@@ -14,14 +14,14 @@ namespace Chubberino.Modules.CheeseGame.Rankings
     {
         public static IReadOnlyDictionary<Rank, Int32> RanksToPoints { get; } = new Dictionary<Rank, Int32>()
         {
-            {  Rank.Bronze, 250 },
-            {  Rank.Silver, 500 },
-            {  Rank.Gold, 1000 },
-            {  Rank.Platinum, 2000 },
-            {  Rank.Diamond, 4000 },
-            {  Rank.Master, 8000 },
-            {  Rank.Grandmaster, 16000 },
-            {  Rank.Legend, 32000 },
+            {  Rank.Bronze, 300 },
+            {  Rank.Silver, 600 },
+            {  Rank.Gold, 1200 },
+            {  Rank.Platinum, 2400 },
+            {  Rank.Diamond, 4800 },
+            {  Rank.Master, 9600 },
+            {  Rank.Grandmaster, 19200 },
+            {  Rank.Legend, 38400 },
         };
         public IHeistManager HeistManager { get; }
 
