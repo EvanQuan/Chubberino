@@ -6,7 +6,7 @@ namespace Chubberino.Database.Models
     {
         public Int32 ID { get; set; }
 
-        public String Name { get; }
+        public String Name { get; set;  }
 
         /// <summary>
         /// The Twitch user ID of the user that has the emote enabled.
