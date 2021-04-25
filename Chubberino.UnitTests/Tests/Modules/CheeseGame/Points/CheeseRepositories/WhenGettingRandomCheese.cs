@@ -27,6 +27,7 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Points.CheeseRepositorie
         [InlineData(0)]
         [InlineData(1)]
         [InlineData(2)]
+        [InlineData(26)]
         public void ShouldReturnHighestUnlockedCheese(Int32 cheeseUnlocked)
         {
             MockedRandom.SetupReturnMaximum();
