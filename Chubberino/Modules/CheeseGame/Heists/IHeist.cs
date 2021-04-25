@@ -23,6 +23,6 @@ namespace Chubberino.Modules.CheeseGame.Heists
         /// <param name="player">Player to add a wager for.</param>
         /// <param name="points">Points wagered by <paramref name="player"/>.</param>
         /// <param name="silent">Indicates if the update should be silent.</param>
-        public void UpdateWager(Player player, Int32 points, Boolean silent = false);
+        public void UpdateWager(Player player, Func<Player, Int32> points, Boolean silent = false);
     }
 }

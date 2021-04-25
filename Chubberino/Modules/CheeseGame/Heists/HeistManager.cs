@@ -117,7 +117,7 @@ namespace Chubberino.Modules.CheeseGame.Heists
 
             strippedCommand.GetNextWord(out String proposedWager);
 
-            if (player.TryGetWager(proposedWager, out Int32 wager))
+            if (proposedWager.TryGetWager(out var wager))
             {
                 heist.UpdateWager(player, wager);
             }
@@ -135,7 +135,7 @@ namespace Chubberino.Modules.CheeseGame.Heists
 
             foreach (var heist in heists)
             {
-                heist.UpdateWager(player, 0, silent: true);
+                heist.UpdateWager(player, p => 0, silent: true);
             }
         }
     }

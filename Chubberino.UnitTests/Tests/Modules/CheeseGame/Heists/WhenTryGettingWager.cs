@@ -35,10 +35,10 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Heists
                 Points = playerPoints
             };
 
-            Boolean result = player.TryGetWager(proposedWager, out Int32 wager);
+            Boolean result = proposedWager.TryGetWager(out var wager);
 
             Assert.True(result);
-            Assert.Equal(expectedWager, wager);
+            Assert.Equal(expectedWager, wager(player));
         }
 
         [Theory]
@@ -56,10 +56,10 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Heists
         {
             var player = new Player();
 
-            Boolean result = player.TryGetWager(proposedWager, out Int32 wager);
+            Boolean result = proposedWager.TryGetWager(out var wager);
 
             Assert.False(result);
-            Assert.Equal(0, wager);
+            Assert.Null(wager);
         }
     }
 }
