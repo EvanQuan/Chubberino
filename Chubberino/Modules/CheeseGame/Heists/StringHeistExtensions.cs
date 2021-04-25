@@ -19,6 +19,18 @@ namespace Chubberino.Modules.CheeseGame.Heists
                 return true;
             }
 
+            if (proposedWager.Equals("leave", StringComparison.OrdinalIgnoreCase) || proposedWager.Equals("l", StringComparison.OrdinalIgnoreCase))
+            {
+                wager = p => 0;
+                return true;
+            }
+
+            if (proposedWager.Equals("none", StringComparison.OrdinalIgnoreCase) || proposedWager.Equals("n", StringComparison.OrdinalIgnoreCase))
+            {
+                wager = p => 0;
+                return true;
+            }
+
             if (proposedWager.EndsWith("k", StringComparison.OrdinalIgnoreCase) && Double.TryParse(proposedWager[0..^1], out Double wagerDouble))
             {
                 wager = p => (Int32)Math.Ceiling(wagerDouble * 1000);
