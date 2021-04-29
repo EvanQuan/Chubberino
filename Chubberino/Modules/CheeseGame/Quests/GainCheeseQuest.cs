@@ -18,11 +18,11 @@ namespace Chubberino.Modules.CheeseGame.Quests
                   failureMessage,
                   (player, emote) =>
                   {
-                      Int32 finalPoints = (Int32)(rewardPoints * player.Rank.GetQuestRewardMultiplier());
+                      Int32 finalPoints = (Int32)(rewardPoints * player.NextQuestRewardUpgradeUnlock.GetQuestRewardMultiplier());
                       player.AddPoints(finalPoints);
                       return $"{successMessage} {emote} (+{finalPoints} cheese)";
                   },
-                  player => $"+{(Int32)(rewardPoints * player.Rank.GetQuestRewardMultiplier())} cheese",
+                  player => $"+{(Int32)(rewardPoints * player.NextQuestRewardUpgradeUnlock.GetQuestRewardMultiplier())} cheese",
                   rankToUnlock,
                   price)
         {
