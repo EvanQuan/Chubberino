@@ -45,5 +45,29 @@ namespace Chubberino.Utility
 
             return trimmedSource.Substring(firstSpaceIndex + 1);
         }
+
+        public static Boolean TryParseEnum<TEnum>(this String source, out TEnum value)
+            where TEnum : struct
+        {
+            if (!typeof(TEnum).IsEnum || String.IsNullOrWhiteSpace(source))
+            {
+                value = default;
+                return false;
+            }
+
+            var values = (TEnum[])Enum.GetValues(typeof(TEnum));
+
+            foreach (TEnum v in values)
+            {
+                if (v.ToString().StartsWith(source, StringComparison.OrdinalIgnoreCase))
+                {
+                    value = v;
+                    return true;
+                }
+            }
+
+            value = default;
+            return false;
+        }
     }
 }

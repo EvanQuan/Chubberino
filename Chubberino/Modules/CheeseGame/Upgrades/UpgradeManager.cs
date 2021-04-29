@@ -76,7 +76,7 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
                 return new Upgrade(
                     String.Format(ModifierDescription, cheeseModifier.Name, cheeseModifier.Points),
                     player.NextCheeseModifierUpgradeUnlock,
-                    (Int32)(100 + Math.Pow(2, (Int32)player.NextCheeseModifierUpgradeUnlock) * 90),
+                    (Int32)(100 + Math.Pow(2, (Int32)player.NextCheeseModifierUpgradeUnlock) * 85),
                     x => x.NextCheeseModifierUpgradeUnlock++);
             }
             return null;

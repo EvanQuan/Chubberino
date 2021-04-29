@@ -96,7 +96,7 @@ namespace Chubberino.Modules.CheeseGame.Heists
             return true;
         }
 
-        public void UpdateWager(Player player, Int32 points, Boolean silent = false)
+        public void UpdateWager(Player player, Func<Player, Int32> points, Boolean silent = false)
         {
             String updateMessage;
 
@@ -108,7 +108,7 @@ namespace Chubberino.Modules.CheeseGame.Heists
                 player.AddPoints(wager.WageredPoints);
 
                 // Updated so that points is never greater than what the player has.
-                Int32 updatedPoints = Math.Min(player.Points, points);
+                Int32 updatedPoints = Math.Min(player.Points, points(player));
 
                 if (updatedPoints <= 0)
                 {
@@ -125,7 +125,7 @@ namespace Chubberino.Modules.CheeseGame.Heists
                 Context.SaveChanges();
 
             }
-            else if (points <= 0)
+            else if (points(player) <= 0)
             {
                 // Trying to join the heist, but failing.
                 updateMessage = FailToJoinHeistMessage;
@@ -133,7 +133,7 @@ namespace Chubberino.Modules.CheeseGame.Heists
             else
             {
                 // Joining the heist for the first time.
-                Int32 updatedPoints = Math.Min(player.Points, points);
+                Int32 updatedPoints = Math.Min(player.Points, points(player));
                 Wagers.Add(new Wager(player.TwitchUserID, updatedPoints));
                 player.AddPoints(-updatedPoints);
                 Context.SaveChanges();

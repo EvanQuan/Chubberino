@@ -28,6 +28,26 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Heists
         [InlineData("A", 2, 2)]
         [InlineData("a", 0, 0)]
         [InlineData("A", 0, 0)]
+        [InlineData("none", 0, 0)]
+        [InlineData("NONE", 0, 0)]
+        [InlineData("nOnE", 0, 0)]
+        [InlineData("none", 1, 0)]
+        [InlineData("NONE", 1, 0)]
+        [InlineData("nOnE", 1, 0)]
+        [InlineData("n", 0, 0)]
+        [InlineData("N", 0, 0)]
+        [InlineData("n", 1, 0)]
+        [InlineData("N", 1, 0)]
+        [InlineData("leave", 0, 0)]
+        [InlineData("LEAVE", 0, 0)]
+        [InlineData("lEaVe", 0, 0)]
+        [InlineData("leave", 1, 0)]
+        [InlineData("LEAVE", 1, 0)]
+        [InlineData("lEaVe", 1, 0)]
+        [InlineData("l", 0, 0)]
+        [InlineData("L", 0, 0)]
+        [InlineData("l", 1, 0)]
+        [InlineData("L", 1, 0)]
         public void ShouldGetWager(String proposedWager, Int32 playerPoints, Int32 expectedWager)
         {
             var player = new Player()
@@ -35,10 +55,10 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Heists
                 Points = playerPoints
             };
 
-            Boolean result = player.TryGetWager(proposedWager, out Int32 wager);
+            Boolean result = proposedWager.TryGetWager(out var wager);
 
             Assert.True(result);
-            Assert.Equal(expectedWager, wager);
+            Assert.Equal(expectedWager, wager(player));
         }
 
         [Theory]
@@ -56,10 +76,10 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Heists
         {
             var player = new Player();
 
-            Boolean result = player.TryGetWager(proposedWager, out Int32 wager);
+            Boolean result = proposedWager.TryGetWager(out var wager);
 
             Assert.False(result);
-            Assert.Equal(0, wager);
+            Assert.Null(wager);
         }
     }
 }
