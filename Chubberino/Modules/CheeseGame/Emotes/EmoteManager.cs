@@ -151,5 +151,40 @@ namespace Chubberino.Modules.CheeseGame.Emotes
             databaseEmoteList = default;
             return false;
         }
+
+        public void Refresh(String channel)
+        {
+            foreach (EmoteCategory category in Enum.GetValues<EmoteCategory>().Skip(1))
+            {
+                TryGetAndCacheDatabaseEmoteList(channel, category, out _);
+            }
+        }
+
+        public void Add(String emote, EmoteCategory category, String channel)
+        {
+
+            Context.Emotes.Add(new Emote()
+            {
+                Name = emote,
+                TwitchDisplayName = channel,
+                Category = category,
+            });
+            Context.SaveChanges();
+
+            TryGetAndCacheDatabaseEmoteList(channel, category, out _);
+        }
+
+        public Boolean TryRemove(String emote, EmoteCategory category, String channel)
+        {
+            if (Context.Emotes.TryGetFirst(x => x.Name == emote && x.Category == category, out Emote found))
+            {
+                Context.Emotes.Remove(found);
+                Context.SaveChanges();
+                TryGetAndCacheDatabaseEmoteList(channel, category, out _);
+                return true;
+            };
+
+            return false;
+        }
     }
 }

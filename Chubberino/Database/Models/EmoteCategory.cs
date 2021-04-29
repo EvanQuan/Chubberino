@@ -2,7 +2,7 @@
 {
     public enum EmoteCategory
     {
-        None = 0,
+        Invalid = 0,
         Positive = 1,
         Negative = 2,
     }

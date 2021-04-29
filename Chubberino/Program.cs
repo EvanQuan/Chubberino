@@ -110,6 +110,7 @@ namespace Chubberino
             builder.RegisterType<Copy>().AsSelf().SingleInstance();
             builder.RegisterType<Count>().AsSelf().SingleInstance();
             builder.RegisterType<DisableAll>().AsSelf().SingleInstance();
+            builder.RegisterType<Emotes>().AsSelf().SingleInstance();
             builder.RegisterType<Greet>().AsSelf().SingleInstance();
             builder.RegisterType<Jimbox>().AsSelf().SingleInstance();
             builder.RegisterType<Join>().AsSelf().SingleInstance();
@@ -180,6 +181,7 @@ namespace Chubberino
                 .AddCommand(scope.Resolve<Copy>())
                 .AddCommand(scope.Resolve<Count>())
                 .AddCommand(scope.Resolve<DisableAll>())
+                .AddCommand(scope.Resolve<Emotes>())
                 .AddCommand(scope.Resolve<Greet>())
                 .AddCommand(scope.Resolve<Jimbox>())
                 .AddCommand(scope.Resolve<Join>())
