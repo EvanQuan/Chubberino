@@ -35,7 +35,7 @@ namespace Chubberino.Utility
         /// <param name="random">Source.</param>
         /// <param name="list">List to get an element from.</param>
         /// <returns>A random element of the <paramref name="list"/>.</returns>
-        public static TElement GetElement<TElement>(this Random random, IList<TElement> list)
+        public static TElement NextElement<TElement>(this Random random, IList<TElement> list)
         {
             return list[random.Next(list.Count)];
         }

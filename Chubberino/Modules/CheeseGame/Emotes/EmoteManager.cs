@@ -1,71 +1,31 @@
-﻿using System;
+﻿using Chubberino.Database.Contexts;
+using Chubberino.Database.Models;
+using Chubberino.Utility;
+using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Chubberino.Modules.CheeseGame.Emotes
 {
     public sealed class EmoteManager : IEmoteManager
     {
-        public EmoteManager(Random random)
+        public EmoteManager(IApplicationContext context, Random random)
         {
+            Context = context;
             Random = random;
+            CachedEmotes = new ConcurrentDictionary<String, ConcurrentDictionary<EmoteCategory, IList<String>>>();
         }
 
-        private static IReadOnlyList<String> PositiveChannelEmotes { get; } = new List<String>()
-        {
-            "BLANKIES",
-            "Brows",
-            "CHEESERS",
-            "CHUBBIES",
-            "COGGERS",
-            "Chubbehtusa",
-            "Chubbies",
-            "DONKERS",
-            "Kneecopter",
-            "MmmHmm",
-            "NODDERS",
-            "OkayChamp",
-            "PAGGING",
-            "PETTHECHUBBEH",
-            "POGCRAZY",
-            "POGGERS",
-            "Pepetusa",
-            "PogU",
-            "SUPERPOG",
-            "SquirtleJam",
-            "TriDance",
-            "VeryPog",
-            "WICKED",
-            "WOODY",
-            "berryJam",
-            "berryW",
-            "catJAM",
-            "catKiss",
-            "chubDuane",
-            "chubEars",
-            "chubJam",
-            "chubKiss",
-            "docJAM",
-            "elmoHype",
-            "iron95Pls",
-            "kittyGOGO",
-            "kumoJAM",
-            "peepoClap",
-            "peepoCocoa",
-            "peepoShy",
-            "pepeD",
-            "pepoBoogie",
-            "rareChubbeh",
-            "ratJAM",
-            "sanaSnuggle",
-            "seoaJam",
-            "sheCrazy",
-            "vibePls",
-            "yyjSUPERPOG",
-            "yyjTasty",
-            "yyjTwerk",
-        };
+        /// <summary>
+        /// Key: channel display name
+        /// Value:
+        ///     Key: Emote category
+        ///     Value: List of emotes for that category and channel
+        /// </summary>
+        public ConcurrentDictionary<String, ConcurrentDictionary<EmoteCategory, IList<String>>> CachedEmotes { get; set; }
 
-        private static IReadOnlyList<String> PositiveGlobalEmotes { get; } = new List<String>()
+        private static IList<String> PositiveGlobalEmotes { get; } = new List<String>()
         {
             ":)",
             ":D",
@@ -92,42 +52,7 @@ namespace Chubberino.Modules.CheeseGame.Emotes
             "bleedPurple",
         };
 
-        private static IReadOnlyList<String> NegativeChannelEmotes { get; } = new List<String>()
-        {
-            "4Weirder",
-            "ChubOest",
-            "DansChamp",
-            "GOTTEM",
-            "Jelleh",
-            "KEKBye",
-            "KEKW",
-            "Karen",
-            "LULW",
-            "MODS",
-            "NOIDONTTHINKSO",
-            "NOP",
-            "NOPERS",
-            "OMEGALUL",
-            "PainChamp",
-            "PepeLaugh",
-            "PogO",
-            "RiggedGame",
-            "Sadge",
-            "TearChub",
-            "WeirdChamp",
-            "WhatChamp",
-            "WideRage",
-            "ZULUL",
-            "chubLeave",
-            "chubOff",
-            "fuBaldi",
-            "monkaW",
-            "reeferSad",
-            "widepeepoLuL",
-            "widepeepoSad",
-        };
-
-        private static IReadOnlyList<String> NegativeGlobalEmotes { get; } = new List<String>()
+        private static IList<String> NegativeGlobalEmotes { get; } = new List<String>()
         {
             ":(",
             ":\\",
@@ -151,20 +76,80 @@ namespace Chubberino.Modules.CheeseGame.Emotes
             "YouWHY",
         };
 
+        public IApplicationContext Context { get; }
+
         public Random Random { get; }
 
         public String GetRandomPositiveEmote(String channelName)
         {
-            return channelName.Equals("ChubbehMouse", StringComparison.OrdinalIgnoreCase)
-                ? PositiveChannelEmotes[Random.Next(PositiveChannelEmotes.Count)]
-                : PositiveGlobalEmotes[Random.Next(PositiveGlobalEmotes.Count)];
+            var emoteList = GetEmoteList(channelName, EmoteCategory.Positive);
+            return Random.NextElement(emoteList);
         }
 
         public String GetRandomNegativeEmote(String channelName)
         {
-            return channelName.Equals("ChubbehMouse", StringComparison.OrdinalIgnoreCase)
-                ? NegativeChannelEmotes[Random.Next(NegativeChannelEmotes.Count)]
-                : NegativeGlobalEmotes[Random.Next(NegativeGlobalEmotes.Count)];
+            var emoteList = GetEmoteList(channelName, EmoteCategory.Negative);
+            return Random.NextElement(emoteList);
+        }
+
+        private IList<String> GetEmoteList(String channelName, EmoteCategory category)
+        {
+            return TryGetCachedEmoteList(channelName, category, out var cachedEmoteList)
+                ? cachedEmoteList
+                : TryGetAndCacheDatabaseEmoteList(channelName, category, out var databaseEmoteList)
+                    ? databaseEmoteList
+                    : GetDefaultEmoteList(category);
+        }
+
+        private static IList<String> GetDefaultEmoteList(EmoteCategory category)
+        {
+            return category switch
+            {
+                EmoteCategory.Positive => PositiveGlobalEmotes,
+                EmoteCategory.Negative => NegativeGlobalEmotes,
+                _ => default
+            };
+        }
+
+        private Boolean TryGetCachedEmoteList(String channelName, EmoteCategory category, out IList<String> cachedEmoteList)
+        {
+            if (CachedEmotes.TryGetValue(channelName, out var categoryList))
+            {
+                if (categoryList.TryGetValue(category, out var emoteList))
+                {
+                    cachedEmoteList = emoteList;
+                    return true;
+                }
+            }
+
+            cachedEmoteList = default;
+            return false;
+        }
+
+        private Boolean TryGetAndCacheDatabaseEmoteList(String channelName, EmoteCategory category, out IList<String> databaseEmoteList)
+        {
+            var categoryList = CachedEmotes.GetOrAdd(channelName, _ => new ConcurrentDictionary<EmoteCategory, IList<String>>());
+
+            IQueryable<String> emotes = Context.Emotes
+                .Where(x => x.TwitchDisplayName == channelName && x.Category == category)
+                .Select(x => x.Name);
+
+            if (emotes.Any())
+            {
+                databaseEmoteList = emotes.ToList();
+                var categoryEmotes = categoryList.GetOrAdd(category, _ => new List<String>());
+
+                foreach (var emote in databaseEmoteList)
+                {
+                    categoryEmotes.Add(emote);
+                }
+
+                return true;
+            }
+
+            categoryList.Remove(category, out _);
+            databaseEmoteList = default;
+            return false;
         }
     }
 }
