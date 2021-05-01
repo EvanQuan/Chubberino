@@ -2,8 +2,10 @@
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.PlayerExtensions;
+using Chubberino.Modules.CheeseGame.Rankings;
 using Chubberino.Utility;
 using System;
+using System.Collections.Generic;
 
 namespace Chubberino.Modules.CheeseGame.Hazards
 {
@@ -16,6 +18,36 @@ namespace Chubberino.Modules.CheeseGame.Hazards
         public const String KillOldRatMessage = "You set up a mousetrap, killing the giant mouse infesting your cheese factory. Your workers go back to the work. ";
 
         public const String KillNewRatMessage = "A giant mouse sneaks into your factory, but is promptly killed by a mousetrap you have set up. ";
+
+        /// <summary>
+        /// Maximum number of mice per infestation at each rank.
+        /// </summary>
+        public static IDictionary<Rank, Int32> InfestationMaximum { get; } = new Dictionary<Rank, Int32>()
+        {
+            { Rank.Bronze, 0 },
+            { Rank.Silver, 3 },
+            { Rank.Gold, 7 },
+            { Rank.Platinum, 12 },
+            { Rank.Diamond, 18 },
+            { Rank.Master, 25 },
+            { Rank.Grandmaster, 33 },
+            { Rank.Legend, 42 },
+        };
+
+        /// <summary>
+        /// Chance of mice infestation per !cheese at each rank.
+        /// </summary>
+        public static IDictionary<Rank, Double> InfestationChance { get; } = new Dictionary<Rank, Double>()
+        {
+            { Rank.Bronze, 0 },
+            { Rank.Silver, 0.01 },
+            { Rank.Gold, 0.012 },
+            { Rank.Platinum, 0.014 },
+            { Rank.Diamond, 0.016 },
+            { Rank.Master, 0.018 },
+            { Rank.Grandmaster, 0.02 },
+            { Rank.Legend, 0.022 },
+        };
 
         public HazardManager(IApplicationContext context, ITwitchClientManager client, Random random, IEmoteManager emoteManager) : base(context, client, random, emoteManager)
         {
@@ -57,9 +89,9 @@ namespace Chubberino.Modules.CheeseGame.Hazards
                     Context.SaveChanges();
                 }
             }
-            else if (Random.TryPercentChance(((Double)player.Rank) / 100.0))
+            else if (Random.TryPercentChance(InfestationChance[player.Rank]))
             {
-                Int32 mouseCount = Random.Next(1, (Int32)player.Rank + 1);
+                Int32 mouseCount = Random.Next(1, InfestationMaximum[player.Rank]);
 
                 Boolean isSingleMouse = mouseCount == 1;
                 String mouse = isSingleMouse ? "mouse" : "mice";
