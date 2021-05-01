@@ -1,4 +1,5 @@
-﻿using Chubberino.Database.Contexts;
+﻿using Chubberino.Client;
+using Chubberino.Database.Contexts;
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.PlayerExtensions;
@@ -49,7 +50,12 @@ namespace Chubberino.Modules.CheeseGame.Hazards
             { Rank.Legend, 0.022 },
         };
 
-        public HazardManager(IApplicationContext context, ITwitchClientManager client, Random random, IEmoteManager emoteManager) : base(context, client, random, emoteManager)
+        public HazardManager(
+            IApplicationContext context,
+            ITwitchClientManager client,
+            Random random,
+            IEmoteManager emoteManager)
+            : base(context, client, random, emoteManager)
         {
         }
 
