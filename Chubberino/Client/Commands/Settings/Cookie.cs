@@ -37,7 +37,7 @@ namespace Chubberino.Client.Commands.Settings
             SpinWait = spinWait;
             DateTime = dateTime;
             Repeater.Action = SpoolRepeatMessages;
-            Repeater.Interval = TimeSpan.FromHours(2);
+            Repeater.Interval = TimeSpan.FromHours(1);
             Channel = "thepositivebot";
 
             Enable = twitchClient => twitchClient.OnMessageReceived += TwitchClient_OnMessageReceived;
