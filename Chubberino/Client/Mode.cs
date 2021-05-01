@@ -1,5 +1,4 @@
-﻿using Chubberino.Client.Abstractions;
-using Chubberino.Client.Commands;
+﻿using Chubberino.Client.Commands;
 using System;
 using System.Collections.Generic;
 using System.Linq;

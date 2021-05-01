@@ -1,6 +1,7 @@
 ﻿using Chubberino.Client;
-using Chubberino.Client.Abstractions;
+using Chubberino.Client.Commands;
 using Chubberino.Client.Credentials;
+using Chubberino.Client.Threading;
 using Chubberino.Database.Contexts;
 using Chubberino.Database.Models;
 using Chubberino.Modules.CheeseGame.Models;

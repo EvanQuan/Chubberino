@@ -1,10 +1,7 @@
-﻿using Chubberino.Client.Abstractions;
-using Chubberino.Client.Commands.Pyramids;
+﻿using Chubberino.Client.Commands.Pyramids;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace Chubberino.Client.Commands.Settings.UserCommands
 {

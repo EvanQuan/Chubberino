@@ -43,7 +43,7 @@ namespace Chubberino.Utility
 
             word = trimmedSource.Substring(0, firstSpaceIndex);
 
-            return trimmedSource.Substring(firstSpaceIndex + 1);
+            return trimmedSource[(firstSpaceIndex + 1)..];
         }
 
         public static Boolean TryParseEnum<TEnum>(this String source, out TEnum value)

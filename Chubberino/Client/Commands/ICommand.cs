@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using TwitchLib.Client.Interfaces;
 
-namespace Chubberino.Client.Abstractions
+namespace Chubberino.Client.Commands
 {
     public interface ICommand
     {

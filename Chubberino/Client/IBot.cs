@@ -1,7 +1,7 @@
 ﻿using System;
 using TwitchLib.Communication.Interfaces;
 
-namespace Chubberino.Client.Abstractions
+namespace Chubberino.Client
 {
     public interface IBot : IDisposable
     {

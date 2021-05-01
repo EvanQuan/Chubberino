@@ -1,4 +1,4 @@
-﻿using Chubberino.Client.Abstractions;
+﻿using Chubberino.Client.Commands.Settings;
 using System.Collections.Generic;
 using Xunit;
 

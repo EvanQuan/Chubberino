@@ -1,5 +1,5 @@
-﻿using Chubberino.Client.Abstractions;
-using Chubberino.Client.Services;
+﻿using Chubberino.Client.Services;
+using Chubberino.Client.Threading;
 using Chubberino.Utility;
 using System;
 using System.Collections.Generic;

@@ -1,7 +1,7 @@
 ﻿using TwitchLib.Client.Interfaces;
 using TwitchLib.Communication.Interfaces;
 
-namespace Chubberino.Client.Abstractions
+namespace Chubberino.Client
 {
     public interface ITwitchClientFactory
     {

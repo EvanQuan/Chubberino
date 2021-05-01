@@ -1,8 +1,6 @@
-﻿using Chubberino.Client.Abstractions;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using TwitchLib.Client.Events;
 using TwitchLib.Client.Models;

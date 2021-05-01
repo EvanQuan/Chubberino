@@ -1,6 +1,5 @@
-﻿using Chubberino.Client.Abstractions;
+﻿using Chubberino.Client.Threading;
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Chubberino.Client.Commands

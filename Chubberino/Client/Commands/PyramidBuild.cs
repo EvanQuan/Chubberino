@@ -1,9 +1,6 @@
-﻿using Chubberino.Client.Abstractions;
-using Chubberino.Client.Commands.Pyramids;
-using Chubberino.Database.Contexts;
+﻿using Chubberino.Client.Commands.Pyramids;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace Chubberino.Client.Commands
@@ -20,7 +17,7 @@ namespace Chubberino.Client.Commands
 
         public override void Execute(IEnumerable<String> arguments)
         {
-            if (arguments.Count() == 0)
+            if (!arguments.Any())
             {
                 Console.WriteLine(GetHelp());
                 return;
@@ -35,7 +32,7 @@ namespace Chubberino.Client.Commands
 
             IEnumerable<String> pyramidBlockArguments = arguments.Skip(1);
 
-            if (pyramidBlockArguments.Count() == 0)
+            if (!pyramidBlockArguments.Any())
             {
                 Console.WriteLine("Pyramid block not supplied.");
                 return;

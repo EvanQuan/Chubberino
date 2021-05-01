@@ -1,5 +1,4 @@
-﻿using Chubberino.Client.Abstractions;
-using Chubberino.Client.Commands.Settings;
+﻿using Chubberino.Client.Commands.Settings;
 using Chubberino.Client.Commands.Strategies;
 using Moq;
 

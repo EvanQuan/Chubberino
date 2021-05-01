@@ -1,6 +1,4 @@
-﻿using Chubberino.Client.Abstractions;
-using System;
-using System.IO;
+﻿using System;
 using TwitchLib.Client.Events;
 
 namespace Chubberino.Client.Commands.Settings

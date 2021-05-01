@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Chubberino.Client.Commands.Settings;
+using Chubberino.Client.Commands.Settings.UserCommands;
+using System;
 using System.Collections.Generic;
 
-namespace Chubberino.Client.Abstractions
+namespace Chubberino.Client.Commands
 {
     public interface ICommandRepository
     {
