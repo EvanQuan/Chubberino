@@ -96,7 +96,7 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
                                     builder
                                         .Append(" Removed ")
                                         .Append(category)
-                                        .Append("emotes: ")
+                                        .Append(" emotes: ")
                                         .Append(String.Join(' ', results.Succeeded));
                                 }
 
@@ -105,7 +105,7 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
                                     builder
                                         .Append(" Failed to remove ")
                                         .Append(category)
-                                        .Append("emotes: ")
+                                        .Append(" emotes: ")
                                         .Append(String.Join(' ', results.Failed));
                                 }
 
@@ -123,8 +123,10 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
                                     .Append(e.ChatMessage.DisplayName)
                                     .Append(", ")
                                     .Append(category)
-                                    .Append("emotes: ")
+                                    .Append(" emotes: ")
                                     .Append(String.Join(' ', emotes));
+
+                                TwitchClientManager.SpoolMessage(e.ChatMessage.Channel, builder.ToString());
                             }
                         }
                         break;
