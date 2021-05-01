@@ -160,31 +160,79 @@ namespace Chubberino.Modules.CheeseGame.Emotes
             }
         }
 
-        public void Add(String emote, EmoteCategory category, String channel)
+        public EmoteManagerResult AddAll(IEnumerable<String> emotes, EmoteCategory category, String channel)
         {
+            IQueryable<String> databaseEmotes = Context.Emotes
+                .Where(x => x.TwitchDisplayName == channel && x.Category == category)
+                .Select(x => x.Name);
 
-            Context.Emotes.Add(new Emote()
+            List<String> succeeded = new();
+            List<String> failed = new();
+
+            foreach (String emote in emotes)
             {
-                Name = emote,
-                TwitchDisplayName = channel,
-                Category = category,
-            });
-            Context.SaveChanges();
+                if (databaseEmotes.Any(x => x == emote))
+                {
+                    failed.Add(emote);
+                }
+                else
+                {
+                    Context.Emotes.Add(new Emote()
+                    {
+                        Name = emote,
+                        TwitchDisplayName = channel,
+                        Category = category,
+                    });
 
-            TryGetAndCacheDatabaseEmoteList(channel, category, out _);
-        }
+                    succeeded.Add(emote);
+                }
+            }
 
-        public Boolean TryRemove(String emote, EmoteCategory category, String channel)
-        {
-            if (Context.Emotes.TryGetFirst(x => x.Name == emote && x.Category == category, out Emote found))
+            if (succeeded.Any())
             {
-                Context.Emotes.Remove(found);
                 Context.SaveChanges();
                 TryGetAndCacheDatabaseEmoteList(channel, category, out _);
-                return true;
-            };
+            }
 
-            return false;
+            return new EmoteManagerResult(succeeded, failed);
+        }
+
+        public EmoteManagerResult RemoveAll(IEnumerable<String> emotes, EmoteCategory category, String channel)
+        {
+            IQueryable<String> databaseEmotes = Context.Emotes
+                .Where(x => x.TwitchDisplayName == channel && x.Category == category)
+                .Select(x => x.Name);
+
+            List<String> succeeded = new();
+            List<String> failed = new();
+
+            foreach (String emote in emotes)
+            {
+                if (Context.Emotes.TryGetFirst(x => x.Name == emote && x.Category == category, out Emote found))
+                {
+                    Context.Emotes.Remove(found);
+                    succeeded.Add(emote);
+                }
+                else
+                {
+                    failed.Add(emote);
+                }
+            }
+
+            if (succeeded.Any())
+            {
+                Context.SaveChanges();
+                TryGetAndCacheDatabaseEmoteList(channel, category, out _);
+            }
+
+            return new EmoteManagerResult(succeeded, failed);
+        }
+
+        public IQueryable<String> Get(String channel, EmoteCategory category)
+        {
+            return Context.Emotes
+                .Where(x => x.TwitchDisplayName == channel && x.Category == category)
+                .Select(x => x.Name);
         }
     }
 }

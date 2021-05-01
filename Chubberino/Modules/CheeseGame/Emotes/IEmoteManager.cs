@@ -1,5 +1,7 @@
 ﻿using Chubberino.Database.Models;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Chubberino.Modules.CheeseGame.Emotes
 {
@@ -11,8 +13,10 @@ namespace Chubberino.Modules.CheeseGame.Emotes
 
         void Refresh(String channel);
 
-        void Add(String emote, EmoteCategory category, String channel);
+        EmoteManagerResult AddAll(IEnumerable<String> emotes, EmoteCategory category, String channel);
 
-        Boolean TryRemove(String emote, EmoteCategory category, String channel);
+        EmoteManagerResult RemoveAll(IEnumerable<String> emotes, EmoteCategory category, String channel);
+
+        IQueryable<String> Get(String channel, EmoteCategory category);
     }
 }
