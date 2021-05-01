@@ -1,4 +1,5 @@
-﻿using Chubberino.Database.Contexts;
+﻿using Chubberino.Client;
+using Chubberino.Database.Contexts;
 using Chubberino.Modules.CheeseGame.Heists;
 using Chubberino.Modules.CheeseGame.Models;
 using Moq;
