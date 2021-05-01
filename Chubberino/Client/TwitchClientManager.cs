@@ -1,6 +1,6 @@
-﻿using Chubberino.Client.Abstractions;
-using Chubberino.Client.Credentials;
+﻿using Chubberino.Client.Credentials;
 using Chubberino.Client.Services;
+using Chubberino.Client.Threading;
 using Chubberino.Database.Contexts;
 using Chubberino.Database.Models;
 using System;

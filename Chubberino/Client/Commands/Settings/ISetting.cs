@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Chubberino.Client.Abstractions
+namespace Chubberino.Client.Commands.Settings
 {
     public interface ISetting : ICommand
     {

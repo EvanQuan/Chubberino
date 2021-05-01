@@ -1,6 +1,5 @@
 using Autofac;
 using Chubberino.Client;
-using Chubberino.Client.Abstractions;
 using Chubberino.Client.Commands;
 using Chubberino.Client.Commands.Pyramids;
 using Chubberino.Client.Commands.Settings;

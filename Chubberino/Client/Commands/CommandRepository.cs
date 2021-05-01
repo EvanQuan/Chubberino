@@ -1,7 +1,7 @@
-﻿using Chubberino.Client.Abstractions;
+﻿using Chubberino.Client.Commands.Settings;
+using Chubberino.Client.Commands.Settings.UserCommands;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -97,7 +97,7 @@ namespace Chubberino.Client.Commands
 
         public String GetStatus()
         {
-            StringBuilder stringBuilder = new StringBuilder();
+            StringBuilder stringBuilder = new();
 
             // Disabled settings are first.
             var disabledSettingsFirst = Settings

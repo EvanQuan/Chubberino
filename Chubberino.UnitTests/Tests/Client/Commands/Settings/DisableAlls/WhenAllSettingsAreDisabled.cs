@@ -1,5 +1,4 @@
-﻿using Chubberino.Client.Abstractions;
-using Moq;
+﻿using Moq;
 using System;
 using Xunit;
 
@@ -17,7 +16,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.DisableAlls
         [Fact]
         public void ShouldDisableAllSettingsWithNoArguments()
         {
-            Sut.Execute(new String[] { });
+            Sut.Execute(Array.Empty<String>());
 
             MockedCommandRepository.Verify(x => x.DisableAllSettings(), Times.Once());
         }

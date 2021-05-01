@@ -1,5 +1,4 @@
-﻿using Chubberino.Client.Abstractions;
-using Chubberino.Client.Commands.Strategies;
+﻿using Chubberino.Client.Commands.Strategies;
 using System;
 using TwitchLib.Client.Events;
 

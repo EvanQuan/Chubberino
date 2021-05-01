@@ -1,5 +1,4 @@
-﻿using Chubberino.Client.Abstractions;
-using System;
+﻿using System;
 
 namespace Chubberino.Client.Threading
 {

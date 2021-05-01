@@ -1,6 +1,4 @@
-﻿using Chubberino.Client.Abstractions;
-using System;
-using System.IO;
+﻿using System;
 
 namespace Chubberino.Client.Commands.Settings
 {

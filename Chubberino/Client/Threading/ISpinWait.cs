@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Chubberino.Client.Abstractions
+namespace Chubberino.Client.Threading
 {
     /// <summary>
     /// Provides support for spin-based waiting.

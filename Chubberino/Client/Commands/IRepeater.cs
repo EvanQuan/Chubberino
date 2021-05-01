@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Chubberino.Client.Abstractions
+namespace Chubberino.Client.Commands
 {
     /// <summary>
     /// Repeats an Action at a set interval, asynch.

@@ -1,8 +1,6 @@
 ﻿using Chubberino.Client;
-using Chubberino.Client.Abstractions;
 using Chubberino.Client.Commands;
 using Moq;
-using System.IO;
 using TwitchLib.Client.Interfaces;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories

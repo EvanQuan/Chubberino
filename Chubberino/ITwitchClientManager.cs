@@ -1,5 +1,4 @@
 ﻿using Chubberino.Client;
-using Chubberino.Client.Abstractions;
 using System;
 using System.Collections.Generic;
 using TwitchLib.Client.Interfaces;

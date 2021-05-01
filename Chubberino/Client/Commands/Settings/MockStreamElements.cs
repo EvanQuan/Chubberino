@@ -1,7 +1,5 @@
-﻿using Chubberino.Client.Abstractions;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace Chubberino.Client.Commands.Settings

@@ -1,4 +1,4 @@
-﻿using Chubberino.Client.Abstractions;
+﻿using Chubberino.Client.Commands.Settings;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -46,7 +46,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
 
             String validCommandName = MockedSetting.Object.Name;
             String propertyName = arguments[0];
-            List<String> commandWithArguments = new List<String>() { validCommandName };
+            List<String> commandWithArguments = new() { validCommandName };
             commandWithArguments.AddRange(arguments);
 
             Sut.Execute("remove", commandWithArguments);
@@ -66,7 +66,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
         {
             String invalidCommandName = Guid.NewGuid().ToString();
             String propertyName = arguments[0];
-            List<String> commandWithArguments = new List<String>() { invalidCommandName };
+            List<String> commandWithArguments = new() { invalidCommandName };
             commandWithArguments.AddRange(arguments);
 
             Sut.Execute("remove", commandWithArguments);
@@ -86,7 +86,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
             String validCommandName = MockedSetting.Object.Name;
             String propertyName = arguments[0];
             IEnumerable<String> propertyValue = arguments.Skip(1);
-            List<String> commandWithArguments = new List<String>() { validCommandName };
+            List<String> commandWithArguments = new() { validCommandName };
             commandWithArguments.AddRange(arguments);
 
             Sut.Execute("remove", commandWithArguments);

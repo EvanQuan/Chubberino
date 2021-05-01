@@ -1,6 +1,6 @@
 ﻿using Chubberino.Client;
-using Chubberino.Client.Abstractions;
 using Chubberino.Client.Services;
+using Chubberino.Client.Threading;
 using Chubberino.Database.Contexts;
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Models;

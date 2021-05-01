@@ -1,5 +1,5 @@
 ﻿using Chubberino.Client;
-using Chubberino.Client.Abstractions;
+using Chubberino.Client.Commands;
 using Chubberino.Database.Contexts;
 using Moq;
 using System;

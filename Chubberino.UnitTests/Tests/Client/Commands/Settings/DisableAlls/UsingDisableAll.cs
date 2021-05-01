@@ -1,6 +1,4 @@
-﻿using Chubberino.Client.Abstractions;
-using Chubberino.Client.Commands;
-using Moq;
+﻿using Chubberino.Client.Commands;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.DisableAlls
 {
