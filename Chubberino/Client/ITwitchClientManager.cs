@@ -5,7 +5,7 @@ using TwitchLib.Client.Interfaces;
 using TwitchLib.Client.Models;
 using TwitchLib.Communication.Interfaces;
 
-namespace Chubberino
+namespace Chubberino.Client
 {
     public interface ITwitchClientManager
     {
