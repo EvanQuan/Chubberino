@@ -15,13 +15,13 @@ namespace Chubberino.Modules.CheeseGame.Rankings
         public static IReadOnlyDictionary<Rank, Int32> RanksToPoints { get; } = new Dictionary<Rank, Int32>()
         {
             {  Rank.Bronze, 300 },
-            {  Rank.Silver, 600 },
-            {  Rank.Gold, 1200 },
-            {  Rank.Platinum, 2400 },
-            {  Rank.Diamond, 4800 },
-            {  Rank.Master, 9600 },
-            {  Rank.Grandmaster, 19200 },
-            {  Rank.Legend, 38400 },
+            {  Rank.Silver, 900 },
+            {  Rank.Gold, 1800 },
+            {  Rank.Platinum, 3600 },
+            {  Rank.Diamond, 7200 },
+            {  Rank.Master, 14400 },
+            {  Rank.Grandmaster, 28800 },
+            {  Rank.Legend, 57600 },
         };
         public IHeistManager HeistManager { get; }
 
