@@ -13,11 +13,11 @@ namespace Chubberino.Modules.CheeseGame.Points
             new CheeseModifier("fresh", 1),
             new CheeseModifier("sharp", 2),
             new CheeseModifier("extra-salted", 3),
-            new CheeseModifier("smoked", 4),
-            new CheeseModifier("extra-creamy", 5),
-            new CheeseModifier("aged", 6),
-            new CheeseModifier("extra-aged", 7),
-            new CheeseModifier("perfect", 8),
+            new CheeseModifier("smoked", 5),
+            new CheeseModifier("extra-creamy", 7),
+            new CheeseModifier("aged", 9),
+            new CheeseModifier("extra-aged", 12),
+            new CheeseModifier("perfect", 15),
         };
 
         public Random Random { get; }
