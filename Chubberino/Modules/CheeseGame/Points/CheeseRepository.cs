@@ -40,7 +40,7 @@ namespace Chubberino.Modules.CheeseGame.Points
             new CheeseType("Muenster", 21, Rank.Silver, 0.75),
 
             new CheeseType("Lacey Grey", 22, Rank.Gold, 0.5, true), // 20
-            new CheeseType("Kraft Singles", -13),
+            new CheeseType("Kraft Singles", -16),
             new CheeseType("Grana", 23, Rank.Gold, 0.55),
             new CheeseType("Kasseri", 24, Rank.Gold, 0.6),
             new CheeseType("Brie", 25, Rank.Gold, 0.65),
@@ -48,7 +48,7 @@ namespace Chubberino.Modules.CheeseGame.Points
             new CheeseType("Roquefort", 27, Rank.Gold, 0.75),
 
             new CheeseType("Kasseri", 29, Rank.Platinum, 0.5, true), // 27
-            new CheeseType("Cheese Spread", -19),
+            new CheeseType("Cheese Spread", -22),
             new CheeseType("Emmental", 31, Rank.Platinum, 0.55),
             new CheeseType("Ogleshield", 33, Rank.Platinum, 0.6),
             new CheeseType("Mascarpone", 35, Rank.Platinum, 0.65),
@@ -56,7 +56,7 @@ namespace Chubberino.Modules.CheeseGame.Points
             new CheeseType("Bocconcini", 39, Rank.Platinum, 0.75),
 
             new CheeseType("Neufchatel", 41, Rank.Diamond, 0.5, true), // 34
-            new CheeseType("String Cheese", -25),
+            new CheeseType("String Cheese", -29),
             new CheeseType("Halloumi", 43, Rank.Diamond, 0.55),
             new CheeseType("Alpine Gold", 45, Rank.Diamond, 0.6),
             new CheeseType("Gorgonzola", 47, Rank.Diamond, 0.65),
@@ -64,7 +64,7 @@ namespace Chubberino.Modules.CheeseGame.Points
             new CheeseType("Reblochon", 51, Rank.Diamond, 0.75),
 
             new CheeseType("Edam", 53, Rank.Master, 0.5, true), // 41
-            new CheeseType("Velveeta", -31),
+            new CheeseType("Velveeta", -41),
             new CheeseType("Oaxaca", 55, Rank.Master, 0.55),
             new CheeseType("Ulloa", 57, Rank.Master, 0.6),
             new CheeseType("Adelost", 59, Rank.Master, 0.65),
@@ -72,7 +72,7 @@ namespace Chubberino.Modules.CheeseGame.Points
             new CheeseType("Garroxta", 63, Rank.Master, 0.75),
 
             new CheeseType("Cabrales", 66, Rank.Grandmaster, 0.5, true), // 48
-            new CheeseType("American", -37),
+            new CheeseType("American", -53),
             new CheeseType("Juustoleipa", 69, Rank.Grandmaster, 0.55),
             new CheeseType("Flagship Block", 72, Rank.Grandmaster, 0.6),
             new CheeseType("Castelmagno", 75, Rank.Grandmaster, 0.65),
@@ -80,7 +80,7 @@ namespace Chubberino.Modules.CheeseGame.Points
             new CheeseType("Myzithra", 81, Rank.Grandmaster, 0.75),
 
             new CheeseType("Beaufort D'Ete", 84, Rank.Legend, 0.5, true), // 55
-            new CheeseType("Stinking Bishop", -43),
+            new CheeseType("Stinking Bishop", -66),
             new CheeseType("Winnimere", 87, Rank.Legend, 0.55),
             new CheeseType("Cacio Bufala", 90, Rank.Legend, 0.6),
             new CheeseType("Lord of the Hundreds", 93, Rank.Legend, 0.65),
