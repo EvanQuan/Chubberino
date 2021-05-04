@@ -13,7 +13,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
             String successMessage,
             Int32 rewardPoints,
             Rank rankToUnlock,
-            Int32 price)
+            Double rankPricePercentPrice)
             : base(location,
                   failureMessage,
                   (player, emote) =>
@@ -24,7 +24,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
                   },
                   player => $"+{(Int32)(rewardPoints * player.NextQuestRewardUpgradeUnlock.GetQuestRewardMultiplier())} cheese",
                   rankToUnlock,
-                  price)
+                  rankPricePercentPrice)
         {
         }
     }

@@ -21,21 +21,21 @@ namespace Chubberino.Modules.CheeseGame.Quests
                 "You find a hidden cache. Inside is an impressive assortment of cheeses.",
                 10,
                 Rank.Bronze,
-                50),
+                0.15),
             new GainCheeseQuest(
                 "River Ragstone",
                 "You sit at the river for hours without anything appearing.",
                 "You find some cheese floating down the stream and grab it before it gets away.",
                 15,
                 Rank.Bronze,
-                75),
+                0.25),
             new GainCheeseQuest(
                 "Lake Laguiole",
                 "With the bad weather, you can't find any fish.",
                 "You go fishing and catch some Taleggio Tuna.",
                 20,
                 Rank.Bronze,
-                100),
+                0.35),
 
             new GainCheeseQuest(
                 "Weichkaese Woods",
@@ -43,14 +43,14 @@ namespace Chubberino.Modules.CheeseGame.Quests
                 "You find a haunted mansion secluded in the maze of trees. Inside is some strange floating cheese, which you take.",
                 25,
                 Rank.Silver,
-                150),
+                0.15),
             new GainCheeseQuest(
                 "Caciotta Cliff",
                 "The heights get to you, and you go back without finding anything.",
                 "You find some cheese along the edge of the cliffside, which you carefully take.",
                 30,
                 Rank.Silver,
-                200),
+                0.25),
             new GainCheeseAndStorageQuest(
                 "Valencay Valley",
                 "The valley winds on forever, and you return without anything.",
@@ -58,7 +58,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
                 20,
                 (Int32)(Constants.ShopStorageQuantity * 0.1),
                 Rank.Silver,
-                250),
+                0.35),
 
             new GainCheeseQuest(
                 "Mount Magna",
@@ -66,21 +66,21 @@ namespace Chubberino.Modules.CheeseGame.Quests
                 "You find a giant vein of Magna cheese and mine at it for hours.",
                 35,
                 Rank.Gold,
-                325),
+                0.15),
             new GainCheeseQuest(
                 "Madrona Marsh",
                 "You get lost in the fog, and with some trouble, return safely.",
                 "You find some cheese hidden in the depths that must have been aging for decades.",
                 40,
                 Rank.Gold,
-                400),
+                0.25),
             new GainCheeseQuest(
                 "Tavoliere Tundra",
                 "A blizzard keeps you from exploring very far.",
                 "You find cheese frozen in blocks of ice in a cave.",
                 45,
                 Rank.Gold,
-                475),
+                0.35),
 
 
             new GainCheeseQuest(
@@ -89,14 +89,14 @@ namespace Chubberino.Modules.CheeseGame.Quests
                 "Up in the treetops you find some rather exotic cheeses.",
                 50,
                 Rank.Platinum,
-                575),
+                0.15),
             new GainCheeseQuest(
                 "Sancerre Savannah",
                 "The lands stretch out into the horizon without anything in sight.",
                 "You find some melted cheese basking in the sun's light.",
                 55,
                 Rank.Platinum,
-                675),
+                0.25),
             new GainCheeseAndStorageQuest(
                 "Hayloft Hills",
                 "You quickly tire and turn back.",
@@ -104,7 +104,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
                 45,
                 (Int32)(Constants.ShopStorageQuantity * 0.1),
                 Rank.Platinum,
-                775),
+                0.35),
 
             new GainCheeseQuest(
                 "the Operetta Ocean",
@@ -112,21 +112,21 @@ namespace Chubberino.Modules.CheeseGame.Quests
                 "Boarding your submarine, you find a colony of cheese coral at the bottom of the ocean floor and take what you can find.",
                 50,
                 Rank.Diamond,
-                900),
+                0.15),
             new GainCheeseQuest(
                 "Tegan Taiga",
                 "The deep powder snow discourages you from travelling too far.",
                 "Hiding under the snow-covered branches of a particular pine tree is a small pile of cheese, untouched by the harsh weather.",
                 55,
                 Rank.Diamond,
-                1025),
+                0.25),
             new GainCheeseQuest(
                 "Bad Axe Beach",
                 "While the view is beautful, there is nothing to be found.",
                 "You uncover a treasure chest of cheese hidden under the sands.",
                 60,
                 Rank.Diamond,
-                1150),
+                0.35),
 
             new GainCheeseQuest(
                 "Galbani Grotto",
@@ -134,14 +134,14 @@ namespace Chubberino.Modules.CheeseGame.Quests
                 "Baskets of cheese lie in a dimmly-lit alcove.",
                 65,
                 Rank.Master,
-                1300),
+                0.15),
             new GainCheeseQuest(
                 "Cotswold Canyon",
                 "The steep cliffsides tower over you, bringing a foreboding presence that makes you turn back.",
                 "Within the strata of the cliffsides, you find some ancient cheese of days long past.",
                 70,
                 Rank.Master,
-                1450),
+                0.25),
             new GainCheeseAndStorageQuest(
                 "Caboc Cave",
                 "The place is dark and the ground slippery. You go back immediately.",
@@ -149,7 +149,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
                 60,
                 (Int32)(Constants.ShopStorageQuantity * 0.1),
                 Rank.Master,
-                1600),
+                0.35),
 
             new GainCheeseQuest(
                 "Vigneron Volcano",
@@ -157,21 +157,21 @@ namespace Chubberino.Modules.CheeseGame.Quests
                 "Amongst the lava is a pool of melted cheese.",
                 75,
                 Rank.Grandmaster,
-                1775),
+                0.15),
             new GainCheeseQuest(
                 "the Fields of Feta",
                 "A farmer spots you and threatens you to turn back.",
                 "You quickly stuff your pockets before anyone sees you.",
                 80,
                 Rank.Grandmaster,
-                1950),
+                0.25),
             new GainCheeseQuest(
                 "the Berkswell Badlands",
                 "The scorching heat quickly overwhelms you.",
                 "You reach the cheese hoodoos and gather all you can carry.",
                 85,
                 Rank.Grandmaster,
-                2125),
+                0.35),
 
             new GainCheeseQuest(
                 "the Landaff Labrynth",
@@ -179,7 +179,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
                 "At the heart of the maze, you find a giant mound of cheese for the taking.",
                 90,
                 Rank.Legend,
-                3000),
+                0.15),
             new GainCheeseAndStorageQuest(
                 "I' Blu Isle",
                 "The terrain is disorienting and the vegetation is too overgrown to let you travel very deep.",
@@ -187,25 +187,21 @@ namespace Chubberino.Modules.CheeseGame.Quests
                 85,
                 (Int32)(Constants.ShopStorageQuantity * 0.1),
                 Rank.Legend,
-                3500),
+                0.25),
             new GainWorkerQuest(
                 Rank.Legend,
-                4000)
+                0.35)
 
         };
 
         public static IReadOnlyList<Quest> RareQuests { get; } = new List<Quest>()
         {
-            new GainCatQuest(
-                Rank.Bronze,
-                0),
+            new GainCatQuest(),
             new GainStorageQuest(
                 "Cantal Chaparral",
                 "",
                 "",
-                Constants.ShopStorageQuantity,
-                Rank.Bronze,
-                0),
+                Constants.ShopStorageQuantity),
             new GainWorkerQuest(
                 Rank.Bronze,
                 0)
