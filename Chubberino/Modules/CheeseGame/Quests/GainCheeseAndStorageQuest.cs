@@ -1,5 +1,4 @@
 ﻿using Chubberino.Modules.CheeseGame.PlayerExtensions;
-using Chubberino.Modules.CheeseGame.Points;
 using Chubberino.Modules.CheeseGame.Rankings;
 using System;
 
@@ -19,7 +18,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
                   failureMessage,
                   (player, emote) =>
                   {
-                      Int32 finalPoints = (Int32)(rewardPoints * player.Rank.GetQuestRewardMultiplier());
+                      Int32 finalPoints = player.GetModifiedPoints(rewardPoints);
                       player.AddPoints(finalPoints);
 
                       Int32 rewardStorageWithMultiplier = (Int32)(rewardStorage * player.GetStorageUpgradeMultiplier());
@@ -29,7 +28,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
 
                       return $"{successMessage} {emote} (+{finalPoints} cheese, +{rewardStorageWithMultiplier} storage)";
                   },
-                  player => $"+{(Int32)(rewardPoints * player.Rank.GetQuestRewardMultiplier())} cheese, +{(Int32)(rewardStorage * player.GetStorageUpgradeMultiplier())} storage",
+                  player => $"+{player.GetModifiedPoints(rewardPoints)} cheese, +{(Int32)(rewardStorage * player.GetStorageUpgradeMultiplier())} storage",
                   rankToUnlock,
                   rankPricePercentPrice)
         {
