@@ -54,6 +54,13 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
             player.AddPoints((Int32) points);
         }
 
+        /// <summary>
+        /// Modify <paramref name="points"/> by the specified <paramref name="player"/>'s worker and prestige bonus.
+        /// </summary>
+        /// <param name="player">Player to get bonuses from.</param>
+        /// <param name="points">Initial points to modify.</param>
+        /// <param name="isCritical">Indicates if a critical bonus should be applied.</param>
+        /// <returns></returns>
         public static Int32 GetModifiedPoints(this Player player, Int32 points, Boolean isCritical = false)
         {
             // Cannot reach negative points.
