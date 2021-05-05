@@ -25,6 +25,7 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
             player.CatCount = 0;
             player.ContributedDamageToBoss = 0;
             player.QuestsUnlockedCount = 0;
+            player.GearCount = 0;
 
             return player;
         }
@@ -107,7 +108,7 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
         {
             Double baseSuccessChance = Constants.QuestBaseSuccessChance;
 
-            Double workerSuccessChance = player.IsMouseInfested() ? 0 : player.WorkerCount * Constants.QuestWorkerSuccessPercent;
+            Double workerSuccessChance = player.IsMouseInfested() ? 0 : player.GearCount * Constants.QuestGearSuccessPercent;
 
             return baseSuccessChance + workerSuccessChance;
         }
