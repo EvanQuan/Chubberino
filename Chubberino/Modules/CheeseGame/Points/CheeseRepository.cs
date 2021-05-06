@@ -25,7 +25,7 @@ namespace Chubberino.Modules.CheeseGame.Points
             new CheeseType("Camembert", 8, Rank.Bronze, 0.3),
             new CheeseType("Monterey Jack", 9, Rank.Bronze, 0.4),
             new CheeseType("Wensleydale", 10, Rank.Bronze, 0.5),
-            new CheeseType("Sirene", 11, Rank.Bronze, 0.55),
+            new CheeseType("Red Leicester", 11, Rank.Bronze, 0.55),
             new CheeseType("Abertam", 12, Rank.Bronze, 0.6),
             new CheeseType("Friulano", 13, Rank.Bronze, 0.65),
             new CheeseType("Piave", 14, Rank.Bronze, 0.7),
