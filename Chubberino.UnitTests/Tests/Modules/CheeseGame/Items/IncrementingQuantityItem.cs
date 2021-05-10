@@ -26,6 +26,11 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Items
             return "a Multiple Quantity Item";
         }
 
+        public override String GetSpecificNameForSuccessfulBuy(Player player, Int32 quantity)
+        {
+            return quantity == 1 ? "Multiple Quantity Item" : "Multiple Quantity Items";
+        }
+
         public override Int32 PriceFunction(Int32 priceDeterminer)
         {
             return StaticPrice;

@@ -100,5 +100,7 @@ namespace Chubberino.Modules.CheeseGame.Items
         {
             return PriceFunction(GetPriceFunctionDeterminer(player));
         }
+
+        public abstract String GetSpecificNameForSuccessfulBuy(Player player, Int32 quantity);
     }
 }

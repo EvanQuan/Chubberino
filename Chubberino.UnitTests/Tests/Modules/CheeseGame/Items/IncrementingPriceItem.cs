@@ -34,5 +34,10 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Items
         {
             return 0;
         }
+
+        public override String GetSpecificNameForSuccessfulBuy(Player player, Int32 quantity)
+        {
+            return quantity == 1 ? "Incrementing Price Item" : "Incrementing Price Items";
+        }
     }
 }

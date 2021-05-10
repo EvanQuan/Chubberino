@@ -12,5 +12,7 @@ namespace Chubberino.Modules.CheeseGame.Items
         Int32 GetPrice(Player player);
 
         Either<BuyResult, String> TryBuy(Int32 quantity, Player player);
+
+        String GetSpecificNameForSuccessfulBuy(Player player, Int32 quantity);
     }
 }

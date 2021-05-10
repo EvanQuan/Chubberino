@@ -22,6 +22,11 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Items
             return "a Static Price Item";
         }
 
+        public override String GetSpecificNameForSuccessfulBuy(Player player, Int32 quantity)
+        {
+            return quantity == 1 ? "Static Price Item" : "Static Price Items";
+        }
+
         public override Int32 PriceFunction(Int32 priceDeterminer)
         {
             return StaticPrice;

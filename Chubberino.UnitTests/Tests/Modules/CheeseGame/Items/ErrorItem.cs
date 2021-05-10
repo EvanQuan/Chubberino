@@ -22,6 +22,11 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Items
             return "an Error Item";
         }
 
+        public override String GetSpecificNameForSuccessfulBuy(Player player, Int32 quantity)
+        {
+            return quantity == 1 ? "Error Item" : "Error Items";
+        }
+
         public override Int32 PriceFunction(Int32 priceDeterminer)
         {
             return 0;
