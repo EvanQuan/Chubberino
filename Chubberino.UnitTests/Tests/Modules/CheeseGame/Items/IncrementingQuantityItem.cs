@@ -6,11 +6,15 @@ using System.Collections.Generic;
 
 namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Items
 {
-    public sealed class ErrorItem : Item
+    public sealed class IncrementingQuantityItem : Item
     {
-        public const String ErrorMessage = "a";
+        public const Int32 StaticPrice = 1;
 
-        public override IEnumerable<String> Names { get; } = new String[] { "ErrorItem", "e" };
+        public const Int32 InitialQuantity = 2;
+
+        public Int32 Quantity { get; private set; } = InitialQuantity;
+
+        public override IEnumerable<String> Names { get; } = new String[] { "IncrementingQuantityItem", "q" };
 
         public override Int32 GetPriceFunctionDeterminer(Player player)
         {
@@ -19,18 +23,18 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Items
 
         public override String GetSpecificNameForNotEnoughToBuy(Player player)
         {
-            return "an Error Item";
+            return "a Multiple Quantity Item";
         }
 
         public override Int32 PriceFunction(Int32 priceDeterminer)
         {
-            return 0;
+            return StaticPrice;
         }
 
         public override Either<Int32, String> TryBuySingleUnit(Player player, Int32 price)
         {
             player.Points -= price;
-            return () => ErrorMessage;
+            return () => Quantity++;
         }
     }
 }

@@ -17,7 +17,7 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Items
             return 0;
         }
 
-        public override String GetSpecificName(Player player)
+        public override String GetSpecificNameForNotEnoughToBuy(Player player)
         {
             return "a Static Price Item";
         }
@@ -27,10 +27,10 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Items
             return StaticPrice;
         }
 
-        public override Option<String> TryBuySingle(Player player, Int32 price)
+        public override Either<Int32, String> TryBuySingleUnit(Player player, Int32 price)
         {
             player.Points -= price;
-            return Option.Nothing<String>();
+            return () => 1;
         }
     }
 }

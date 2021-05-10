@@ -15,6 +15,7 @@ namespace Chubberino.Modules.CheeseGame.Items
         public Either<BuyResult, String> TryBuy(Int32 quantity, Player player)
         {
             Int32 quantityPurchased = 0;
+            Int32 unitQuantityPurchased = 0;
             Int32 pointsSpent = 0;
             Int32 currentPrice = GetPrice(player);
 
@@ -26,24 +27,34 @@ namespace Chubberino.Modules.CheeseGame.Items
             {
                 if (player.Points >= currentPrice)
                 {
-                    var error = TryBuySingle(player, currentPrice);
+                    EitherPair<Int32, String> result = TryBuySingleUnit(player, currentPrice)();
 
-                    if (error.HasValue())
+                    if (result.IsRight)
                     {
-                        errorMessage = error.Value();
+                        // Could not buy due to some item-specific non-price restriction.
+                        errorMessage = result.Right;
                         shouldContinue = false;
                     }
                     else
                     {
-                        quantityPurchased++;
+                        quantityPurchased += result.Left;
+                        unitQuantityPurchased++;
                         pointsSpent += currentPrice;
-                        shouldContinue = quantityPurchased < quantity;
+                        shouldContinue = unitQuantityPurchased < quantity;
                         currentPrice = GetPrice(player);
                     }
                 }
-                else if (quantityPurchased == 0)
+                else if (unitQuantityPurchased == 0)
                 {
-                    errorMessage = String.Format(NotEnoughPointsErrorMessage, currentPrice - player.Points, GetSpecificName(player));
+                    // Don't have enough to by even 1 unit.
+                    errorMessage = String.Format(NotEnoughPointsErrorMessage, currentPrice - player.Points, GetSpecificNameForNotEnoughToBuy(player));
+                    shouldContinue = false;
+                }
+                else
+                {
+                    // Requested more than can buy.
+                    // Return a successful purchase, just buying the maximum
+                    shouldContinue = false;
                 }
             }
             while (shouldContinue);
@@ -53,9 +64,23 @@ namespace Chubberino.Modules.CheeseGame.Items
                 : () => errorMessage;
         }
 
-        public abstract Option<String> TryBuySingle(Player player, Int32 price);
+        /// <summary>
+        /// Try buying a single unit
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="price"></param>
+        /// <returns>Left, the quantity purchased; or right, the error message.</returns>
+        public abstract Either<Int32, String> TryBuySingleUnit(Player player, Int32 price);
 
-        public abstract String GetSpecificName(Player player);
+        /// <summary>
+        /// When not able to buy due to lack of points, the error message
+        /// requires a name for the item. This is specific to the particular
+        /// item being purchased, usually in the base quantity.
+        /// unit
+        /// </summary>
+        /// <param name="player"></param>
+        /// <returns></returns>
+        public abstract String GetSpecificNameForNotEnoughToBuy(Player player);
 
         /// <summary>
         /// Get the current price based on the <paramref name="priceDeterminer"/>.
