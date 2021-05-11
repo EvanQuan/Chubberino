@@ -24,7 +24,7 @@ namespace Chubberino.Modules.CheeseGame.Items
 
         public override String GetSpecificNameForSuccessfulBuy(Player player, Int32 quantity)
         {
-            return "storage units";
+            return $"{quantity} storage units";
         }
 
         public override Either<Int32, String> TryBuySingleUnit(Player player, Int32 price)
