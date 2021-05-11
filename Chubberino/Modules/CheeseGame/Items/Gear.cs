@@ -24,7 +24,7 @@ namespace Chubberino.Modules.CheeseGame.Items
         {
             var newQuestSuccessChance = player.GetQuestSuccessChance();
             var oldQuestSuccessChance = newQuestSuccessChance - quantity * Constants.QuestGearSuccessPercent;
-            return $"{quantity} gear [{oldQuestSuccessChance * 100}% -> {newQuestSuccessChance * 100}% quest success chance]";
+            return $"{quantity} gear [{String.Format("{0:0.0}", oldQuestSuccessChance * 100)}% -> {String.Format("{0:0.0}", newQuestSuccessChance * 100)}% quest success chance]";
         }
 
         public override Either<Int32, String> TryBuySingleUnit(Player player, Int32 price)
@@ -38,7 +38,7 @@ namespace Chubberino.Modules.CheeseGame.Items
         public override String GetShopPrompt(Player player)
         {
             var questSuccessChance = player.GetQuestSuccessChance();
-            return $"{base.GetShopPrompt(player)} [+{questSuccessChance * 100}% -> +{(questSuccessChance + Constants.QuestGearSuccessPercent) * 100}% quest success chance] for {GetPrice(player)} cheese";
+            return $"{base.GetShopPrompt(player)} [+{String.Format("{0:0.0}", questSuccessChance * 100)}% -> +{String.Format("{0:0.0}", (questSuccessChance + Constants.QuestGearSuccessPercent) * 100)}% quest success chance] for {GetPrice(player)} cheese";
         }
     }
 }
