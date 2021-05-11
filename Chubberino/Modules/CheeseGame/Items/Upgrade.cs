@@ -42,14 +42,16 @@ namespace Chubberino.Modules.CheeseGame.Items
 
         public override Either<Int32, String> TryBuySingleUnit(Player player, Int32 price)
         {
-            if (!player.TryGetNextUpgradeToUnlock(out var nextQuestToUnlock))
+            if (!player.TryGetNextUpgradeToUnlock(out var nextUpgradeToLock))
             {
                 return () => UnexpectedErrorMessage;
             }
 
             player.QuestsUnlockedCount++;
 
-            player.Points -= nextQuestToUnlock.Price;
+            player.Points -= nextUpgradeToLock.Price;
+
+            nextUpgradeToLock.UpdatePlayer(player);
 
             return () => 1;
         }
