@@ -150,7 +150,7 @@ namespace Chubberino
             builder.RegisterType<ItemManager>().As<IItemManager>().SingleInstance();
 
             // Quests
-            builder.RegisterType<QuestRepository>().As<IRepository<Quest>>().SingleInstance();
+            builder.RegisterType<QuestRepository>().As<IRepository<Modules.CheeseGame.Quests.Quest>>().SingleInstance();
 
             IContainer container = builder.Build();
 

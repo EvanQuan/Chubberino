@@ -5,7 +5,6 @@ using Chubberino.Modules.CheeseGame.Items;
 using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.PlayerExtensions;
 using Chubberino.Modules.CheeseGame.Points;
-using Chubberino.Modules.CheeseGame.Quests;
 using Chubberino.Modules.CheeseGame.Upgrades;
 using Chubberino.Utility;
 using System;
@@ -16,7 +15,7 @@ namespace Chubberino.Modules.CheeseGame.Shops
     public class Shop : AbstractCommandStrategy, IShop
     {
         public IRepository<CheeseType> CheeseRepository { get; }
-        public IRepository<Quest> QuestRepository { get; }
+        public IRepository<Quests.Quest> QuestRepository { get; }
         public IUpgradeManager UpgradeManager { get; }
         public IItemManager ItemManager { get; }
 
@@ -24,7 +23,7 @@ namespace Chubberino.Modules.CheeseGame.Shops
             IApplicationContext context,
             ITwitchClientManager client,
             IRepository<CheeseType> cheeseRepository,
-            IRepository<Quest> questRepository,
+            IRepository<Quests.Quest> questRepository,
             Random random,
             IEmoteManager emoteManager,
             IUpgradeManager upgradeManager,
@@ -63,7 +62,7 @@ namespace Chubberino.Modules.CheeseGame.Shops
             }
 
             String questPrompt;
-            if (QuestRepository.TryGetNextToUnlock(player, out Quest nextQuestToUnlock))
+            if (QuestRepository.TryGetNextToUnlock(player, out Quests.Quest nextQuestToUnlock))
             {
                 if (nextQuestToUnlock.RankToUnlock > player.Rank)
                 {
@@ -81,7 +80,7 @@ namespace Chubberino.Modules.CheeseGame.Shops
             
 
             String upgradePrompt;
-            if (UpgradeManager.TryGetNextUpgradeToUnlock(player, out Upgrade upgrade))
+            if (UpgradeManager.TryGetNextUpgradeToUnlock(player, out Upgrades.Upgrade upgrade))
             {
                 if (upgrade.RankToUnlock > player.Rank)
                 {
@@ -106,6 +105,7 @@ namespace Chubberino.Modules.CheeseGame.Shops
                 $" | Upgrade [{upgradePrompt}" + 
                 $" | Worker [+1] for {prices.Worker} cheese" +
                 $" | Population [+5] for {prices.Population} cheese" +
+                $" | Gear [+{Constants.QuestGearSuccessPercent * 100}% Quest success chance] for {prices.Gear} " +
                 $" | Mousetrap [+1] for {prices.MouseTrap} " +
                 "|",
                 Priority.Low);
@@ -229,7 +229,7 @@ namespace Chubberino.Modules.CheeseGame.Shops
                 case "quests":
                 case "map":
                 case "maps":
-                    if (QuestRepository.TryGetNextToUnlock(player, out Quest nextQuestToUnlock))
+                    if (QuestRepository.TryGetNextToUnlock(player, out Quests.Quest nextQuestToUnlock))
                     {
                         if (nextQuestToUnlock.RankToUnlock > player.Rank)
                         {
@@ -257,7 +257,7 @@ namespace Chubberino.Modules.CheeseGame.Shops
                 case "up":
                 case "upgrade":
                 case "upgrades":
-                    if (UpgradeManager.TryGetNextUpgradeToUnlock(player, out Upgrade upgrade))
+                    if (UpgradeManager.TryGetNextUpgradeToUnlock(player, out Upgrades.Upgrade upgrade))
                     {
                         if (upgrade.RankToUnlock > player.Rank)
                         {
@@ -279,6 +279,31 @@ namespace Chubberino.Modules.CheeseGame.Shops
                     else
                     {
                         outputMessage = $"There is no upgrade for sale right now.";
+                    }
+                    break;
+                case "g":
+                case "gear":
+                    if (player.Points >= prices.Gear)
+                    {
+                        remainingArguments.GetNextWord(out String quantityString);
+
+                        Int32 quantityRequested = Int32.TryParse(quantityString, out Int32 result) && result > 0 ? result : 1;
+
+                        Int32 quantityCanAfford = (Int32)Math.Floor(player.Points / (Double)prices.MouseTrap);
+
+                        Int32 quantityToPurchase = Math.Min(quantityRequested, quantityCanAfford);
+
+                        Int32 totalPrice = prices.MouseTrap * quantityToPurchase; 
+
+                        player.MouseTrapCount += quantityToPurchase;
+                        player.Points -= totalPrice;
+                        Context.SaveChanges();
+                        outputMessage = $"You bought {quantityToPurchase} mousetrap{(quantityToPurchase == 1 ? "" : "s")}. (-{totalPrice} cheese)";
+                        priority = Priority.Medium;
+                    }
+                    else
+                    {
+                        outputMessage = $"You need {prices.MouseTrap - player.Points} more cheese to buy a mousetrap.";
                     }
                     break;
                 case "m":
@@ -346,12 +371,13 @@ namespace Chubberino.Modules.CheeseGame.Shops
             {
                 "s" or "storage" => $"Storage increases the maximum amount of cheese you can have.",
                 "p" or "population" => $"Population increases the maximum number of workers you can have.",
-                "w" or "worker" or "workers" => $"Workers increase the amount of cheese you get every time you gain cheese with \"!cheese\" and increase the success chance with you go on a quest with \"!cheese quest\".",
-                "q" or "quest" or "quests" => $"Go on a random quest to get rewards or risk punishment. The chance of success scales with how many workers you have.",
+                "w" or "worker" or "workers" => $"Workers increase the amount of cheese you get every time you gain cheese with \"!cheese\" and when you go on a quest with \"!cheese quest\". Initially they each give an additive {RankExtensions.BaseWorkerPointPercent * 100}% bonus to cheese gains.",
+                "q" or "quest" or "quests" => $"Go on a random quest to get rewards. The chance of success scales with how much gear you have.",
                 "recipe" or "recipes" => $"Recipes allow you to create new kinds of cheese with \"!cheese\".",
-                "r" or "rank" or "ranks" => $"Ranks unlock new items to buy at the shop. Eventually ranking will give you prestige, reseting your rank and everything you have to restart the climb. For every prestige you gain, you get a permanent {(Int32)(Constants.PrestigeBonus * 100)}% boost to your cheese gains, which can stack.",
+                "r" or "rank" or "ranks" or "bronze" or "silver" or "gold" or "diamond" or "platinum" or "master" or "grandmaster" or "legend" => $"Ranks unlock new items to buy at the shop. Eventually ranking will give you prestige, reseting your rank and everything you have to restart the climb. For every prestige you gain, you get a permanent {(Int32)(Constants.PrestigeBonus * 100)}% boost to your cheese gains, which can stack.",
                 "u" or "upgrade" or "upgrades" => $"Upgrades provide a permanent bonus to your cheese factory until you prestige.",
-                "m" or "mouse" or "mousetrap" or "mousetraps" => $"Mousetraps kills giant rats that infest your cheese factory.",
+                "g" or "gear" => $"Gear provides you with a {(Int32)(Constants.QuestGearSuccessPercent * 100)}% quest success chance for each you have.",
+                "m" or "mouse" or "mousetrap" or "mousetraps" => $"Mousetraps kills giant mice that infest your cheese factory, allow you to maintain or recover any worker bonuses you have.",
                 "c" or "cat" or "cats" => $"[CURRENTLY DO NOTHING] Cats help you fight against the giant evil mouse, Chubshan the Immortal. The more cats you have, the more you will be rewarded when Chubshan is defeated.",
                 _ => $"Invalid item \"{itemToBuy}\" name. Type \"!cheese shop\" to see the items available for purchase.",
             };
