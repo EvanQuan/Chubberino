@@ -19,7 +19,8 @@ namespace Chubberino.Modules.CheeseGame.Items
         public const String NeedToRankUpMessage = "You must rankup to {0} rank before you can buy the {1} recipe.";
 
         /// <summary>
-        /// There are no recipes available to buy right now. All recipes have already been purchased.
+        /// There are no recipes available to buy right now. All recipes have
+        /// already been purchased.
         /// </summary>
         public const String NoRecipeForSaleMessage = "There is no recipe for sale right now.";
 
@@ -37,12 +38,32 @@ namespace Chubberino.Modules.CheeseGame.Items
 
         public override String GetSpecificNameForNotEnoughToBuy(Player player)
         {
-            throw new NotImplementedException();
+            if (CheeseRepository.TryGetNextToUnlock(player, out var cheese))
+            {
+                return $"the {cheese.Name} recipe";
+            }
+
+            return UnexpectedErrorMessage;
         }
 
         public override String GetSpecificNameForSuccessfulBuy(Player player, Int32 quantity)
         {
-            throw new NotImplementedException();
+            var temporaryPlayer = new Player()
+            {
+                CheeseUnlocked = player.CheeseUnlocked - quantity
+            };
+
+            List<String> cheeseNamesPurchased = new List<String>();
+
+            for (Int32 i = 0; i < quantity; i++, temporaryPlayer.CheeseUnlocked++)
+            {
+                CheeseRepository.TryGetNextToUnlock(temporaryPlayer, out var cheese);
+
+                cheeseNamesPurchased.Add(cheese.Name);
+            }
+
+            return $"the {String.Join(", ", cheeseNamesPurchased)} recipe{(quantity == 1 ? String.Empty : "s")}";
+
         }
 
         public override Either<Int32, String> TryBuySingleUnit(Player player, Int32 price)
