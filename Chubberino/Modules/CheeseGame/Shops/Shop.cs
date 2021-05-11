@@ -147,7 +147,7 @@ namespace Chubberino.Modules.CheeseGame.Shops
                 "recipe" or "recipes" => $"Recipes allow you to create new kinds of cheese with \"!cheese\".",
                 "r" or "rank" or "ranks" or "bronze" or "silver" or "gold" or "diamond" or "platinum" or "master" or "grandmaster" or "legend" => $"Ranks unlock new items to buy at the shop. Eventually ranking will give you prestige, reseting your rank and everything you have to restart the climb. For every prestige you gain, you get a permanent {(Int32)(Constants.PrestigeBonus * 100)}% boost to your cheese gains, which can stack.",
                 "u" or "upgrade" or "upgrades" => $"Upgrades provide a permanent bonus to your cheese factory until you prestige.",
-                "g" or "gear" => $"Gear provides you with a {(Int32)(Constants.QuestGearSuccessPercent * 100)}% quest success chance for each you have.",
+                "g" or "gear" => $"Gear provides you with a {Constants.QuestGearSuccessPercent * 100}% quest success chance for each you have. There is no limit to the number of gear you can have.",
                 "m" or "mouse" or "mousetrap" or "mousetraps" => $"Mousetraps kills giant mice that infest your cheese factory, allow you to maintain or recover any worker bonuses you have.",
                 "c" or "cat" or "cats" => $"[CURRENTLY DO NOTHING] Cats help you fight against the giant evil mouse, Chubshan the Immortal. The more cats you have, the more you will be rewarded when Chubshan is defeated.",
                 _ => $"Invalid item \"{itemToBuy}\" name. Type \"!cheese shop\" to see the items available for purchase.",
