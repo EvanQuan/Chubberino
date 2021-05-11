@@ -10,16 +10,9 @@ namespace Chubberino.Modules.CheeseGame.Items
     {
         public override IEnumerable<String> Names => new String[] { "Upgrade", "u", "up", "upgrades" };
 
-        public IUpgradeManager UpgradeManager { get; }
-
-        public Upgrade(IUpgradeManager upgradeManager)
-        {
-            UpgradeManager = upgradeManager;
-        }
-
         public override Int32 GetPrice(Player player)
         {
-            if (UpgradeManager.TryGetNextUpgradeToUnlock(player, out var upgrade))
+            if (player.TryGetNextUpgradeToUnlock(out var upgrade))
             {
                 return upgrade.Price;
             }
@@ -29,7 +22,7 @@ namespace Chubberino.Modules.CheeseGame.Items
 
         public override String GetSpecificNameForNotEnoughToBuy(Player player)
         {
-            if (UpgradeManager.TryGetNextUpgradeToUnlock(player, out var upgrade))
+            if (player.TryGetNextUpgradeToUnlock(out var upgrade))
             {
                 return $"the {upgrade.Description}";
             }
@@ -39,26 +32,17 @@ namespace Chubberino.Modules.CheeseGame.Items
 
         public override String GetSpecificNameForSuccessfulBuy(Player player, Int32 quantity)
         {
-            var temporaryPlayer = new Player()
+            if (player.TryPreviousUpgradeUnlocked(out var upgrade))
             {
-                QuestsUnlockedCount = player.QuestsUnlockedCount - quantity
-            };
-
-            List<String> upgradeDescriptionsPurchased = new();
-
-            for (Int32 i = 0; i < quantity; i++, temporaryPlayer.QuestsUnlockedCount++)
-            {
-                UpgradeManager.TryGetNextUpgradeToUnlock(temporaryPlayer, out var upgrade);
-
-                upgradeDescriptionsPurchased.Add(upgrade.Description);
+                return $"the {upgrade.Description} upgrade{(quantity == 1 ? String.Empty : $" and {quantity - 1} other{(quantity - 1 == 1 ? String.Empty : "s")}")}";
             }
 
-            return $"the {String.Join(", ", upgradeDescriptionsPurchased)} upgrade{(quantity == 1 ? String.Empty : "s")}";
+            return UnexpectedErrorMessage;
         }
 
         public override Either<Int32, String> TryBuySingleUnit(Player player, Int32 price)
         {
-            if (!UpgradeManager.TryGetNextUpgradeToUnlock(player, out var nextQuestToUnlock))
+            if (!player.TryGetNextUpgradeToUnlock(out var nextQuestToUnlock))
             {
                 return () => UnexpectedErrorMessage;
             }

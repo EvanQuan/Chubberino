@@ -1,12 +1,11 @@
-﻿using Chubberino.Modules.CheeseGame.Models;
-using Chubberino.Modules.CheeseGame.Rankings;
-using Chubberino.Utility;
+﻿using Chubberino.Modules.CheeseGame.Rankings;
+using Chubberino.Modules.CheeseGame.Repositories;
 using System;
 using System.Collections.Generic;
 
 namespace Chubberino.Modules.CheeseGame.Quests
 {
-    public sealed class QuestRepository : IRepository<Quest>
+    public sealed class QuestRepository : Repository<Quest>
     {
         /// <summary>
         /// Chance that a quest from the rare quest pool will be chosen.
@@ -207,29 +206,6 @@ namespace Chubberino.Modules.CheeseGame.Quests
                 0)
         };
 
-        public Random Random { get; }
-
-        public QuestRepository(Random random)
-        {
-            Random = random;
-        }
-
-        public Quest GetRandom(Int32 unlocked)
-        {
-            return Quests[Random.Next((unlocked - 1).Min(Quests.Count - 1).Max(0))];
-        }
-
-        public Boolean TryGetNextToUnlock(Player player, out Quest nextUnlock)
-        {
-            Int32 nextQuest = player.QuestsUnlockedCount;
-            if (nextQuest >= Quests.Count)
-            {
-                nextUnlock = default;
-                return false;
-            }
-
-            nextUnlock = Quests[nextQuest];
-            return true;
-        }
+        public override IReadOnlyList<Quest> Values => Quests;
     }
 }

@@ -17,7 +17,7 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Upgrades
         [Fact]
         public void ShouldReturnNoneForNewPlayer()
         {
-            UpgradeType result = Player.GetLastUpgradeUnlocked();
+            UpgradeType result = Player.GetPreviousUpgradeUnlocked();
 
             Assert.Equal(UpgradeType.None, result);
         }
@@ -31,7 +31,7 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Upgrades
             Player.NextWorkerProductionUpgradeUnlock = Rank.Silver;
             Player.NextStorageUpgradeUnlock = Rank.Silver;
 
-            UpgradeType result = Player.GetLastUpgradeUnlocked();
+            UpgradeType result = Player.GetPreviousUpgradeUnlocked();
 
             Assert.Equal(UpgradeType.Storage, result);
         }
@@ -45,7 +45,7 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Upgrades
             Player.NextWorkerProductionUpgradeUnlock = Rank.Bronze;
             Player.NextStorageUpgradeUnlock = Rank.Bronze;
 
-            UpgradeType result = Player.GetLastUpgradeUnlocked();
+            UpgradeType result = Player.GetPreviousUpgradeUnlocked();
 
             Assert.Equal(UpgradeType.Quest, result);
         }
@@ -59,7 +59,7 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Upgrades
             Player.NextWorkerProductionUpgradeUnlock = Rank.None;
             Player.NextStorageUpgradeUnlock = Rank.None;
 
-            UpgradeType result = Player.GetLastUpgradeUnlocked();
+            UpgradeType result = Player.GetPreviousUpgradeUnlocked();
 
             Assert.Equal(UpgradeType.Storage, result);
         }

@@ -41,6 +41,54 @@ namespace Chubberino.Utility
         }
 
         /// <summary>
+        /// Get a random element from the specified <paramref name="list"/>.
+        /// </summary>
+        /// <typeparam name="TElement">The type of elements in the list.</typeparam>
+        /// <param name="random">Source.</param>
+        /// <param name="list">List to get an element from.</param>
+        /// <returns>A random element of the <paramref name="list"/>.</returns>
+        public static TElement NextElement<TElement>(this Random random, IReadOnlyList<TElement> list)
+        {
+            return list[random.Next(list.Count)];
+        }
+
+        /// <summary>
+        /// Get a random element from the specified <paramref name="list"/>,
+        /// with an upper bound on the <paramref name="maximumIndex"/> of that
+        /// list.
+        /// </summary>
+        /// <typeparam name="TElement">The type of elements in the list.</typeparam>
+        /// <param name="random">Source.</param>
+        /// <param name="list">List to get an element from.</param>
+        /// <param name="maximumIndex">Maximum index of the list, inclusive.</param>
+        /// <returns>A random element of the <paramref name="list"/>.</returns>
+        public static TElement NextElement<TElement>(this Random random, IList<TElement> list, Int32 maximumIndex)
+        {
+            var exclusiveMax = (maximumIndex + 1).Max(0).Min(list.Count);
+            var finalIndex = random.Next(0, exclusiveMax);
+            return list[finalIndex];
+            // return list[random.Next(0, maximumIndex.Max(0).Min(list.Count))];
+        }
+
+        /// <summary>
+        /// Get a random element from the specified <paramref name="list"/>,
+        /// with an upper bound on the <paramref name="maximumIndex"/> of that
+        /// list.
+        /// </summary>
+        /// <typeparam name="TElement">The type of elements in the list.</typeparam>
+        /// <param name="random">Source.</param>
+        /// <param name="list">List to get an element from.</param>
+        /// <param name="maximumIndex">Maximum index of the list, inclusive.</param>
+        /// <returns>A random element of the <paramref name="list"/>.</returns>
+        public static TElement NextElement<TElement>(this Random random, IReadOnlyList<TElement> list, Int32 maximumIndex)
+        {
+            var exclusiveMax = (maximumIndex + 1).Max(0).Min(list.Count);
+            var finalIndex = random.Next(0, exclusiveMax);
+            return list[finalIndex];
+            // return list[random.Next(0, (maximumIndex + 1).Max(0).Min(list.Count))];
+        }
+
+        /// <summary>
         /// Remove a random element from the specified <paramref name="list"/>.
         /// </summary>
         /// <typeparam name="TElement">The type of elements in the list.</typeparam>

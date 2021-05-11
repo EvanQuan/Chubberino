@@ -1,12 +1,10 @@
-﻿using Chubberino.Modules.CheeseGame.Models;
-using Chubberino.Modules.CheeseGame.Rankings;
-using Chubberino.Utility;
-using System;
+﻿using Chubberino.Modules.CheeseGame.Rankings;
+using Chubberino.Modules.CheeseGame.Repositories;
 using System.Collections.Generic;
 
 namespace Chubberino.Modules.CheeseGame.Points
 {
-    public sealed class CheeseRepository : IRepository<CheeseType>
+    public sealed class CheeseRepository : Repository<CheeseType>
     {
         public static IReadOnlyList<CheeseType> Cheeses { get; } = new List<CheeseType>()
         {
@@ -89,29 +87,6 @@ namespace Chubberino.Modules.CheeseGame.Points
             new CheeseType("Chubmeister", 250, Rank.Legend, 0.8),
         };
 
-        public Random Random { get; }
-
-        public CheeseRepository(Random random)
-        {
-            Random = random;
-        }
-
-        public CheeseType GetRandom(Int32 unlocked)
-        {
-            return Cheeses[Random.Next(unlocked.Min(Cheeses.Count - 1).Max(0))];
-        }
-
-        public Boolean TryGetNextToUnlock(Player player, out CheeseType nextUnlock)
-        {
-            Int32 nextCheese = player.CheeseUnlocked + 1;
-            if (nextCheese >= Cheeses.Count)
-            {
-                nextUnlock = default;
-                return false;
-            }
-
-            nextUnlock = Cheeses[nextCheese];
-            return true;
-        }
+        public override IReadOnlyList<CheeseType> Values => Cheeses;
     }
 }

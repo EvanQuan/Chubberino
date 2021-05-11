@@ -5,6 +5,7 @@ using Chubberino.Modules.CheeseGame.Items;
 using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.PlayerExtensions;
 using Chubberino.Modules.CheeseGame.Points;
+using Chubberino.Modules.CheeseGame.Repositories;
 using Chubberino.Modules.CheeseGame.Upgrades;
 using Chubberino.Utility;
 using System;
@@ -16,7 +17,6 @@ namespace Chubberino.Modules.CheeseGame.Shops
     {
         public IRepository<CheeseType> CheeseRepository { get; }
         public IRepository<Quests.Quest> QuestRepository { get; }
-        public IUpgradeManager UpgradeManager { get; }
         public IItemManager ItemManager { get; }
 
         public Shop(
@@ -26,13 +26,11 @@ namespace Chubberino.Modules.CheeseGame.Shops
             IRepository<Quests.Quest> questRepository,
             Random random,
             IEmoteManager emoteManager,
-            IUpgradeManager upgradeManager,
             IItemManager itemManager)
             : base(context, client, random, emoteManager)
         {
             CheeseRepository = cheeseRepository;
             QuestRepository = questRepository;
-            UpgradeManager = upgradeManager;
             ItemManager = itemManager;
         }
 
@@ -80,7 +78,7 @@ namespace Chubberino.Modules.CheeseGame.Shops
             
 
             String upgradePrompt;
-            if (UpgradeManager.TryGetNextUpgradeToUnlock(player, out Upgrades.Upgrade upgrade))
+            if (player.TryGetNextUpgradeToUnlock(out Upgrades.Upgrade upgrade))
             {
                 if (upgrade.RankToUnlock > player.Rank)
                 {
@@ -257,7 +255,7 @@ namespace Chubberino.Modules.CheeseGame.Shops
                 case "up":
                 case "upgrade":
                 case "upgrades":
-                    if (UpgradeManager.TryGetNextUpgradeToUnlock(player, out Upgrades.Upgrade upgrade))
+                    if (player.TryGetNextUpgradeToUnlock(out Upgrades.Upgrade upgrade))
                     {
                         if (upgrade.RankToUnlock > player.Rank)
                         {

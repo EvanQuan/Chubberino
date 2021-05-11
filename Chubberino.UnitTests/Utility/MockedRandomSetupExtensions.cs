@@ -19,9 +19,9 @@ namespace Chubberino.UnitTests.Utility
         public static Mock<Random> SetupReturnMaximum(this Mock<Random> random)
         {
             random.SetupThrowExceptionOnNegative();
-            random.Setup(x => x.Next(It.Is<Int32>(x => x >= 0), It.Is<Int32>(x => x >= 0))).Returns<Int32, Int32>((min, max) => max);
+            random.Setup(x => x.Next(It.Is<Int32>(x => x >= 0), It.Is<Int32>(x => x >= 0))).Returns<Int32, Int32>((min, max) => min == max ? min : max - 1);
             random.Setup(x => x.Next()).Returns(0);
-            random.Setup(x => x.Next(It.Is<Int32>(x => x >= 0))).Returns<Int32>(x => x);
+            random.Setup(x => x.Next(It.Is<Int32>(x => x >= 0))).Returns<Int32>(x => x == 0 ? x : x - 1);
             random.Setup(x => x.NextDouble()).Returns(1);
 
             return random;

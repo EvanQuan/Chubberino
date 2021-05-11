@@ -20,6 +20,7 @@ using Chubberino.Modules.CheeseGame.Items;
 using Chubberino.Modules.CheeseGame.Points;
 using Chubberino.Modules.CheeseGame.Quests;
 using Chubberino.Modules.CheeseGame.Rankings;
+using Chubberino.Modules.CheeseGame.Repositories;
 using Chubberino.Modules.CheeseGame.Shops;
 using Chubberino.Modules.CheeseGame.Upgrades;
 using Jering.Javascript.NodeJS;
@@ -143,9 +144,8 @@ namespace Chubberino
             builder.RegisterType<QuestManager>().As<IQuestManager>().SingleInstance();
             builder.RegisterType<HeistManager>().As<IHeistManager>().SingleInstance();
             builder.RegisterType<EmoteManager>().As<IEmoteManager>().SingleInstance();
-            builder.RegisterType<UpgradeManager>().As<IUpgradeManager>().SingleInstance();
             builder.RegisterType<CheeseRepository>().As<IRepository<CheeseType>>().SingleInstance();
-            builder.RegisterType<CheeseModifierManager>().As<ICheeseModifierManager>().SingleInstance();
+            builder.RegisterType<CheeseModifierRepository>().As<IRepository<CheeseModifier>>().SingleInstance();
             builder.RegisterType<HazardManager>().As<IHazardManager>().SingleInstance();
             builder.RegisterType<ItemManager>().As<IItemManager>().SingleInstance();
 
