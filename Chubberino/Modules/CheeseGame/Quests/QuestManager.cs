@@ -68,7 +68,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
 
                 TwitchClientManager.SpoolMessageAsMe(message.Channel, player,
                     $"[Quest {String.Format("{0:0.0}", player.GetQuestSuccessChance() * 100)}% success] " +
-                    $"You must wait {timeToWait} until you can go on your next quest.",
+                    $"You must wait {timeToWait} until you can go on your next quest. {EmoteManager.GetRandomNegativeEmote(message.Channel)}",
                     Priority.Low);
             }
         }
