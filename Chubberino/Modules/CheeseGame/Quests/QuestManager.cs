@@ -92,7 +92,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
 
         private static String GetPlayerWithWorkers(Player player)
         {
-            return (player.IsMouseInfested() ? 0 : player.WorkerCount) switch
+            return (player.IsInfested() ? 0 : player.WorkerCount) switch
             {
                 0 => "You",
                 1 => "You and your worker",
