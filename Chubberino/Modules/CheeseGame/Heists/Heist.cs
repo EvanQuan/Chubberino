@@ -120,7 +120,16 @@ namespace Chubberino.Modules.CheeseGame.Heists
                     Int32 oldWager = wager.WageredPoints;
                     wager.WageredPoints = updatedPoints;
                     player.AddPoints(-updatedPoints);
-                    updateMessage = String.Format(SucceedToUpdateHeistMessage, oldWager, updatedPoints);
+
+                    if (oldWager == updatedPoints)
+                    {
+                        silent = true;
+                        updateMessage = String.Empty;
+                    }
+                    else
+                    {
+                        updateMessage = String.Format(SucceedToUpdateHeistMessage, oldWager, updatedPoints);
+                    }
                 }
                 Context.SaveChanges();
 
