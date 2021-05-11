@@ -1,5 +1,6 @@
 ﻿using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.Repositories;
+using Chubberino.Utility;
 using Monad;
 using System;
 using System.Collections.Generic;
@@ -68,6 +69,28 @@ namespace Chubberino.Modules.CheeseGame.Items
             player.Points -= nextQuestToUnlock.Price;
 
             return () => 1;
+        }
+
+        public override String GetShopPrompt(Player player)
+        {
+            String questPrompt;
+            if (QuestRepository.TryGetNextToUnlock(player, out Quests.Quest nextQuestToUnlock))
+            {
+                if (nextQuestToUnlock.RankToUnlock > player.Rank)
+                {
+                    questPrompt = $"{nextQuestToUnlock.Location} ({nextQuestToUnlock.RewardDescription(player)})] unlocked at {player.Rank.Next()} rank"; 
+                }
+                else
+                {
+                    questPrompt = $"{nextQuestToUnlock.Location} ({nextQuestToUnlock.RewardDescription(player)})] for {nextQuestToUnlock.Price} cheese"; 
+                }
+            }
+            else
+            {
+                questPrompt = "OUT OF ORDER]";
+            }
+
+            return $"{base.GetShopPrompt(player)} [{questPrompt}";
         }
     }
 }

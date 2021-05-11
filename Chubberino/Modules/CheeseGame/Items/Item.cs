@@ -2,6 +2,7 @@
 using Monad;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Chubberino.Modules.CheeseGame.Items
 {
@@ -106,6 +107,11 @@ namespace Chubberino.Modules.CheeseGame.Items
         {
             reason = default;
             return true;
+        }
+
+        public virtual String GetShopPrompt(Player player)
+        {
+            return $"{Names.First()}";
         }
     }
 }

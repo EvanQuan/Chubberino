@@ -31,5 +31,10 @@ namespace Chubberino.Modules.CheeseGame.Items
 
             return () => 1;
         }
+
+        public override String GetShopPrompt(Player player)
+        {
+            return $"{base.GetShopPrompt(player)} [+{Constants.QuestGearSuccessPercent * 100}% Quest success chance] for {GetPrice(player)} cheese";
+        }
     }
 }

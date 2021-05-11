@@ -28,5 +28,12 @@ namespace Chubberino.Modules.CheeseGame.Items
         /// <param name="player">The specified player to check if the item is available.</param>
         /// <returns>true if the item is for sale; false otherwise.</returns>
         Boolean IsForSale(Player player, out String reason);
+
+        /// <summary>
+        /// Get the shop prompt description of the item for the specified <paramref name="player"/>.
+        /// </summary>
+        /// <param name="player">Player that the prompt is for.</param>
+        /// <returns>Shop prompt</returns>
+        String GetShopPrompt(Player player);
     }
 }

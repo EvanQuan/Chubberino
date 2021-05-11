@@ -33,5 +33,10 @@ namespace Chubberino.Modules.CheeseGame.Items
 
             return () => ShopUnitQuantity;
         }
+
+        public override String GetShopPrompt(Player player)
+        {
+            return $"{base.GetShopPrompt(player)} [+{ShopUnitQuantity}] for {GetPrice(player)}";
+        }
     }
 }

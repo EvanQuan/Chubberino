@@ -53,5 +53,27 @@ namespace Chubberino.Modules.CheeseGame.Items
 
             return () => 1;
         }
+
+        public override String GetShopPrompt(Player player)
+        {
+            String upgradePrompt;
+            if (player.TryGetNextUpgradeToUnlock(out var upgrade))
+            {
+                if (upgrade.RankToUnlock > player.Rank)
+                {
+                    upgradePrompt = $"{upgrade.Description}] unlocked at {upgrade.RankToUnlock} rank";
+                }
+                else
+                {
+                    upgradePrompt = $"{upgrade.Description}] for {upgrade.Price} cheese";
+                }
+            }
+            else
+            {
+                upgradePrompt = "OUT OF ORDER]";
+            }
+
+            return $"{base.GetShopPrompt(player)} [{upgradePrompt}";
+        }
     }
 }

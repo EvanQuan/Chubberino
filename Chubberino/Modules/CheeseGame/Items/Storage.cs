@@ -36,5 +36,12 @@ namespace Chubberino.Modules.CheeseGame.Items
 
             return () => storageGain;
         }
+
+        public override String GetShopPrompt(Player player)
+        {
+            Int32 storageGain = (Int32)(Constants.ShopStorageQuantity * player.GetStorageUpgradeMultiplier());
+
+            return $"{base.GetShopPrompt(player)} [+{storageGain}] for {GetPrice(player)} cheese";
+        }
     }
 }

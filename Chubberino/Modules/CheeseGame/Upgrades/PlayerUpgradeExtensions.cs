@@ -122,7 +122,7 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
         {
             upgrade = (type) switch
             {
-                UpgradeType.CheeseModifier => default,
+                UpgradeType.CheeseModifier => GetNextCheeseModifierUpgrade,
                 UpgradeType.CriticalCheese => GetNextCriticalCheeseUpgrade,
                 UpgradeType.Quest => GetNextQuestRewardUpgrade,
                 UpgradeType.WorkerProduction => GetNextWorkerProductionUpgrade,
@@ -137,7 +137,7 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
         {
             upgrade = (type) switch
             {
-                UpgradeType.CheeseModifier => default,
+                UpgradeType.CheeseModifier => GetPreviousCheeseModifierUpgrade,
                 UpgradeType.CriticalCheese => GetPreviousCriticalCheeseUpgrade,
                 UpgradeType.Quest => GetPreviousQuestRewardUpgrade,
                 UpgradeType.WorkerProduction => GetPreviousWorkerProductionUpgrade,

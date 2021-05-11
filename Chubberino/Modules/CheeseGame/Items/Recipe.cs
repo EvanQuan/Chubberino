@@ -1,6 +1,8 @@
 ﻿using Chubberino.Modules.CheeseGame.Models;
+using Chubberino.Modules.CheeseGame.PlayerExtensions;
 using Chubberino.Modules.CheeseGame.Points;
 using Chubberino.Modules.CheeseGame.Repositories;
+using Chubberino.Utility;
 using Monad;
 using System;
 using System.Collections.Generic;
@@ -109,6 +111,30 @@ namespace Chubberino.Modules.CheeseGame.Items
             }
 
             return Int32.MaxValue;
+        }
+
+        public override String GetShopPrompt(Player player)
+        {
+            String recipePrompt;
+            if (CheeseRepository.TryGetNextToUnlock(player, out CheeseType nextCheeseToUnlock))
+            {
+                var cheesePoints = player.GetModifiedPoints(nextCheeseToUnlock.Points);
+
+                if (nextCheeseToUnlock.RankToUnlock > player.Rank)
+                {
+                    recipePrompt = $"{nextCheeseToUnlock.Name} (+{cheesePoints})] unlocked at {player.Rank.Next()} rank"; 
+                }
+                else
+                {
+                    recipePrompt = $"{nextCheeseToUnlock.Name} (+{cheesePoints})] for {nextCheeseToUnlock.CostToUnlock} cheese"; 
+                }
+            }
+            else
+            {
+                recipePrompt = "OUT OF ORDER]";
+            }
+
+            return $"{base.GetShopPrompt(player)} [{recipePrompt}";
         }
     }
 }
