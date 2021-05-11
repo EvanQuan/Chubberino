@@ -10,9 +10,9 @@ namespace Chubberino.Modules.CheeseGame.Items
     {
         public override IEnumerable<String> Names { get; } = new String[] { "Storage", "s" };
 
-        public override Int32 GetPriceFunctionDeterminer(Player player)
+        public override Int32 GetPrice(Player player)
         {
-            return player.MaximumPointStorage;
+            return 25 + player.MaximumPointStorage / 2;
         }
 
         public override String GetSpecificNameForNotEnoughToBuy(Player player)
@@ -25,11 +25,6 @@ namespace Chubberino.Modules.CheeseGame.Items
         public override String GetSpecificNameForSuccessfulBuy(Player player, Int32 quantity)
         {
             return "storage units";
-        }
-
-        public override Int32 PriceFunction(Int32 priceDeterminer)
-        {
-            return 25 + priceDeterminer / 2;
         }
 
         public override Either<Int32, String> TryBuySingleUnit(Player player, Int32 price)

@@ -14,6 +14,15 @@ namespace Chubberino.Modules.CheeseGame.Items
 
         public Either<BuyResult, String> TryBuy(Int32 quantity, Player player)
         {
+            // Check if the item is for sale.
+            // Items that are not for sale are still visible in the shop, but
+            // have a special reason why they cannot be purchased when
+            // attempting to do so.
+            if (!IsForSale(player, out String reason))
+            {
+                return () => reason;
+            }
+
             Int32 quantityPurchased = 0;
             Int32 unitQuantityPurchased = 0;
             Int32 pointsSpent = 0;
@@ -83,24 +92,18 @@ namespace Chubberino.Modules.CheeseGame.Items
         public abstract String GetSpecificNameForNotEnoughToBuy(Player player);
 
         /// <summary>
-        /// Get the current price based on the <paramref name="priceDeterminer"/>.
+        /// Get the current price based on the specified <paramref name="player"/>.
         /// </summary>
-        /// <param name="priceDeterminer">Factor that influences the current price.</param>
+        /// <param name="player">Player to get the price for.</param>
         /// <returns>Current price</returns>
-        public abstract Int32 PriceFunction(Int32 priceDeterminer);
-
-        /// <summary>
-        /// Get the <see cref="PriceFunction(Int32)"/> determiner.
-        /// </summary>
-        /// <param name="player">Player to get determiner from.</param>
-        /// <returns>Price function determiner.</returns>
-        public abstract Int32 GetPriceFunctionDeterminer(Player player);
-
-        public Int32 GetPrice(Player player)
-        {
-            return PriceFunction(GetPriceFunctionDeterminer(player));
-        }
+        public abstract Int32 GetPrice(Player player);
 
         public abstract String GetSpecificNameForSuccessfulBuy(Player player, Int32 quantity);
+
+        public virtual Boolean IsForSale(Player player, out String reason)
+        {
+            reason = default;
+            return true;
+        }
     }
 }

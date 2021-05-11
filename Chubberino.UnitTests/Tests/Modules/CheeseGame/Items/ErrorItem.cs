@@ -12,7 +12,7 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Items
 
         public override IEnumerable<String> Names { get; } = new String[] { "ErrorItem", "e" };
 
-        public override Int32 GetPriceFunctionDeterminer(Player player)
+        public override Int32 GetPrice(Player player)
         {
             return 0;
         }
@@ -25,11 +25,6 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Items
         public override String GetSpecificNameForSuccessfulBuy(Player player, Int32 quantity)
         {
             return quantity == 1 ? "Error Item" : "Error Items";
-        }
-
-        public override Int32 PriceFunction(Int32 priceDeterminer)
-        {
-            return 0;
         }
 
         public override Either<Int32, String> TryBuySingleUnit(Player player, Int32 price)
