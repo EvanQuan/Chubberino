@@ -85,7 +85,7 @@ namespace Chubberino.Modules.CheeseGame.Heists
             foreach (Wager wager in winners)
             {
                 var player = Context.Players.FirstOrDefault(x => x.TwitchUserID == wager.PlayerTwitchID);
-                Int32 winnerPoints = (Int32)((1.0 / winnerPercent + 0.5) * wager.WageredPoints);
+                Int32 winnerPoints = (Int32)((1.0 / winnerPercent + 0.5) * wager.WageredPoints).Max(2);
                 player.AddPoints(winnerPoints);
                 Context.SaveChanges();
                 intro.Append($"{player.Name} (+{winnerPoints}) ");
