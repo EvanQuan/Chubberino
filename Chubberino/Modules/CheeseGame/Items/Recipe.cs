@@ -24,8 +24,6 @@ namespace Chubberino.Modules.CheeseGame.Items
         /// </summary>
         public const String NoRecipeForSaleMessage = "There is no recipe for sale right now.";
 
-        public const String UnexpectedErrorMessage = "This error message should never show up.";
-
         public override IEnumerable<String> Names => new String[] { "Recipe", "r", "recipes" };
 
         public IRepository<CheeseType> CheeseRepository { get; }
@@ -53,7 +51,7 @@ namespace Chubberino.Modules.CheeseGame.Items
                 CheeseUnlocked = player.CheeseUnlocked - quantity
             };
 
-            List<String> cheeseNamesPurchased = new List<String>();
+            List<String> cheeseNamesPurchased = new();
 
             for (Int32 i = 0; i < quantity; i++, temporaryPlayer.CheeseUnlocked++)
             {
@@ -63,7 +61,6 @@ namespace Chubberino.Modules.CheeseGame.Items
             }
 
             return $"the {String.Join(", ", cheeseNamesPurchased)} recipe{(quantity == 1 ? String.Empty : "s")}";
-
         }
 
         public override Either<Int32, String> TryBuySingleUnit(Player player, Int32 price)

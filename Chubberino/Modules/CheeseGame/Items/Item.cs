@@ -7,10 +7,12 @@ namespace Chubberino.Modules.CheeseGame.Items
 {
     public abstract class Item : IItem
     {
+        public const String NotEnoughPointsErrorMessage = "You need {0} more cheese to buy {1}.";
+
+        public const String UnexpectedErrorMessage = "This error message should never show up.";
+
         public abstract IEnumerable<String> Names { get; }
 
-
-        public const String NotEnoughPointsErrorMessage = "You need {0} more cheese to buy {1}.";
 
         public Either<BuyResult, String> TryBuy(Int32 quantity, Player player)
         {
