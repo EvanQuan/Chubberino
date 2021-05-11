@@ -121,7 +121,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
                 0.25),
             new GainCheeseQuest(
                 "Bad Axe Beach",
-                "While the view is beautful, there is nothing to be found.",
+                "While the view is beautiful, there is nothing to be found.",
                 "You uncover a treasure chest of cheese hidden under the sands.",
                 112,
                 Rank.Diamond,
