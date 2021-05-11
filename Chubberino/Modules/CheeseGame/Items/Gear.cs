@@ -1,4 +1,5 @@
 ﻿using Chubberino.Modules.CheeseGame.Models;
+using Chubberino.Modules.CheeseGame.PlayerExtensions;
 using Monad;
 using System;
 using System.Collections.Generic;
@@ -21,7 +22,9 @@ namespace Chubberino.Modules.CheeseGame.Items
 
         public override String GetSpecificNameForSuccessfulBuy(Player player, Int32 quantity)
         {
-            return $"{quantity} gear";
+            var newQuestSuccessChance = player.GetQuestSuccessChance();
+            var oldQuestSuccessChance = newQuestSuccessChance - quantity * Constants.QuestGearSuccessPercent;
+            return $"{quantity} gear [{oldQuestSuccessChance * 100}% -> {newQuestSuccessChance * 100}% quest success chance]";
         }
 
         public override Either<Int32, String> TryBuySingleUnit(Player player, Int32 price)
@@ -34,7 +37,8 @@ namespace Chubberino.Modules.CheeseGame.Items
 
         public override String GetShopPrompt(Player player)
         {
-            return $"{base.GetShopPrompt(player)} [+{Constants.QuestGearSuccessPercent * 100}% Quest success chance] for {GetPrice(player)} cheese";
+            var questSuccessChance = player.GetQuestSuccessChance();
+            return $"{base.GetShopPrompt(player)} [+{questSuccessChance * 100}% -> +{(questSuccessChance + Constants.QuestGearSuccessPercent) * 100}% quest success chance] for {GetPrice(player)} cheese";
         }
     }
 }
