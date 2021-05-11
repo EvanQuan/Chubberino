@@ -19,12 +19,12 @@ namespace Chubberino.Modules.CheeseGame.Items
         {
             Int32 storageGain = (Int32)(Constants.ShopStorageQuantity * player.GetStorageUpgradeMultiplier());
 
-            return $"{storageGain} storage";
+            return $"{storageGain} storage units";
         }
 
         public override String GetSpecificNameForSuccessfulBuy(Player player, Int32 quantity)
         {
-            return "storage";
+            return "storage units";
         }
 
         public override Int32 PriceFunction(Int32 priceDeterminer)
