@@ -134,7 +134,7 @@ namespace Chubberino.Modules.CheeseGame.Heists
                 Context.SaveChanges();
 
             }
-            else if (points(player) <= 0)
+            else if (points(player) <= 0 || player.Points == 0)
             {
                 // Trying to join the heist, but failing.
                 updateMessage = FailToJoinHeistMessage;
