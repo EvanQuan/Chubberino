@@ -134,6 +134,8 @@ namespace Chubberino.Modules.CheeseGame.Emotes
                 .Where(x => x.TwitchDisplayName == channelName && x.Category == category)
                 .Select(x => x.Name);
 
+            categoryList.Remove(category, out _);
+
             if (emotes.Any())
             {
                 databaseEmoteList = emotes.ToList();
@@ -147,7 +149,6 @@ namespace Chubberino.Modules.CheeseGame.Emotes
                 return true;
             }
 
-            categoryList.Remove(category, out _);
             databaseEmoteList = default;
             return false;
         }
