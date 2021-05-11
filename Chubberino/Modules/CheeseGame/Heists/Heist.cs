@@ -14,7 +14,9 @@ namespace Chubberino.Modules.CheeseGame.Heists
     public sealed class Heist : IHeist
     {
         public const String FailToJoinHeistMessage = "You must wager a positive number of cheese to join the heist.";
+        public const String FailToJoinHeistBecauseNoCheeseMessage = "You do not have any cheese to wager to join the heist.";
         public const String SucceedToUpdateHeistMessage = "You update your heist wager from {0} to {1} cheese.";
+        public const String WagerIsUnchangedMessage = "Your heist wager is unchanged, at {0} cheese.";
         public const String SucceedToJoinHeistMessage = "You join the heist, wagering {0} cheese.";
         public const String SucceedToLeaveHeistMessage = "You leave the heist, and are refunded your {0} cheese.";
 
@@ -100,6 +102,8 @@ namespace Chubberino.Modules.CheeseGame.Heists
         {
             String updateMessage;
 
+            Priority priority = Priority.Medium;
+
             if (Wagers.TryGetFirst(x => x.PlayerTwitchID == player.TwitchUserID, out var wager))
             {
                 // Already in the heist and updating.
@@ -123,8 +127,8 @@ namespace Chubberino.Modules.CheeseGame.Heists
 
                     if (oldWager == updatedPoints)
                     {
-                        silent = true;
-                        updateMessage = String.Empty;
+                        updateMessage = String.Format(WagerIsUnchangedMessage, oldWager);
+                        priority = Priority.Low;
                     }
                     else
                     {
@@ -134,10 +138,16 @@ namespace Chubberino.Modules.CheeseGame.Heists
                 Context.SaveChanges();
 
             }
-            else if (points(player) <= 0 || player.Points == 0)
+            else if (player.Points == 0)
+            {
+                updateMessage = FailToJoinHeistBecauseNoCheeseMessage;
+                priority = Priority.Low;
+            }
+            else if (points(player) <= 0)
             {
                 // Trying to join the heist, but failing.
                 updateMessage = FailToJoinHeistMessage;
+                priority = Priority.Low;
             }
             else
             {
@@ -151,7 +161,7 @@ namespace Chubberino.Modules.CheeseGame.Heists
 
             if (!silent)
             {
-                TwitchClient.SpoolMessageAsMe(InitiatorMessage.Channel, player, "[Heist] " + updateMessage);
+                TwitchClient.SpoolMessageAsMe(InitiatorMessage.Channel, player, "[Heist] " + updateMessage, priority);
             }
         }
     }
