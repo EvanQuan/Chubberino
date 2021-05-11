@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Chubberino.Modules.CheeseGame.Items;
 using TwitchLib.Client.Models;
 
 namespace Chubberino.Modules.CheeseGame.Shops
 {
     public interface IShop : ICommandStrategy
     {
-        public void ListInventory(ChatMessage message);
+        void ListInventory(ChatMessage message);
 
-        public void BuyItem(ChatMessage message);
+        void BuyItem(ChatMessage message);
 
-        public void HelpItem(ChatMessage message);
+        void HelpItem(ChatMessage message);
+
+        IShop AddItem(IItem item);
     }
 }

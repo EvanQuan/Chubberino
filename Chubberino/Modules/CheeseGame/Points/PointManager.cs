@@ -5,6 +5,7 @@ using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Hazards;
 using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.PlayerExtensions;
+using Chubberino.Modules.CheeseGame.Repositories;
 using Chubberino.Utility;
 using System;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace Chubberino.Modules.CheeseGame.Points
         public static TimeSpan PointGainCooldown { get; set; } = TimeSpan.FromMinutes(15);
 
         public IRepository<CheeseType> CheeseRepository { get; }
-        public ICheeseModifierManager CheeseModifierManager { get; }
+        public IRepository<CheeseModifier> CheeseModifierManager { get; }
         public IHazardManager HazardManager { get; }
         public IDateTimeService DateTime { get; }
         public IConsole Console { get; }
@@ -26,7 +27,7 @@ namespace Chubberino.Modules.CheeseGame.Points
             IApplicationContext context,
             ITwitchClientManager client,
             IRepository<CheeseType> cheeseRepository,
-            ICheeseModifierManager cheeseModifierManager,
+            IRepository<CheeseModifier> cheeseModifierRepository,
             Random random,
             IEmoteManager emoteManager,
             IHazardManager hazardManager,
@@ -35,7 +36,7 @@ namespace Chubberino.Modules.CheeseGame.Points
             : base(context, client, random, emoteManager)
         {
             CheeseRepository = cheeseRepository;
-            CheeseModifierManager = cheeseModifierManager;
+            CheeseModifierManager = cheeseModifierRepository;
             HazardManager = hazardManager;
             DateTime = dateTime;
             Console = console;
@@ -58,9 +59,9 @@ namespace Chubberino.Modules.CheeseGame.Points
                 }
                 else
                 {
-                    CheeseType initialCheese = CheeseRepository.GetRandom(player.CheeseUnlocked);
+                    CheeseType initialCheese = Random.NextElement(CheeseRepository.Values, player.CheeseUnlocked);
 
-                    CheeseModifier modifier = CheeseModifierManager.GetRandomModifier(player.NextCheeseModifierUpgradeUnlock);
+                    CheeseModifier modifier = Random.NextElement(CheeseModifierManager.Values, (Int32)player.NextCheeseModifierUpgradeUnlock);
 
                     CheeseType cheese = modifier.Modify(initialCheese);
 
@@ -108,7 +109,7 @@ namespace Chubberino.Modules.CheeseGame.Points
                 String timeToWait = timeUntilNextValidPointGain.Format();
 
                 TwitchClientManager.SpoolMessageAsMe(message.Channel, player,
-                    $"You must wait {timeToWait} until you can make more cheese.",
+                    $"You must wait {timeToWait} until you can make more cheese. {EmoteManager.GetRandomNegativeEmote(message.Channel)}",
                     Priority.Low);
             }
         }

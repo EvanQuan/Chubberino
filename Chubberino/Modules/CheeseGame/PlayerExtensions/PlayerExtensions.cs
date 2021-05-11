@@ -25,6 +25,7 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
             player.CatCount = 0;
             player.ContributedDamageToBoss = 0;
             player.QuestsUnlockedCount = 0;
+            player.GearCount = 0;
 
             return player;
         }
@@ -54,6 +55,13 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
             player.AddPoints((Int32) points);
         }
 
+        /// <summary>
+        /// Modify <paramref name="points"/> by the specified <paramref name="player"/>'s worker and prestige bonus.
+        /// </summary>
+        /// <param name="player">Player to get bonuses from.</param>
+        /// <param name="points">Initial points to modify.</param>
+        /// <param name="isCritical">Indicates if a critical bonus should be applied.</param>
+        /// <returns></returns>
         public static Int32 GetModifiedPoints(this Player player, Int32 points, Boolean isCritical = false)
         {
             // Cannot reach negative points.
@@ -100,7 +108,7 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
         {
             Double baseSuccessChance = Constants.QuestBaseSuccessChance;
 
-            Double workerSuccessChance = player.IsMouseInfested() ? 0 : player.WorkerCount * Constants.QuestWorkerSuccessPercent;
+            Double workerSuccessChance = player.IsMouseInfested() ? 0 : player.GearCount * Constants.QuestGearSuccessPercent;
 
             return baseSuccessChance + workerSuccessChance;
         }

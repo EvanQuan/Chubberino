@@ -1,5 +1,4 @@
 ﻿using Chubberino.Modules.CheeseGame.Models;
-using Chubberino.Modules.CheeseGame.Rankings;
 using System;
 
 namespace Chubberino.Modules.CheeseGame.Items
@@ -12,6 +11,7 @@ namespace Chubberino.Modules.CheeseGame.Items
                 storage: 25 + player.MaximumPointStorage / 2,
                 population: (Int32)(20 + Math.Pow(player.PopulationCount, 2)),
                 worker: (Int32)(100 + 10 * Math.Pow(player.WorkerCount, 1.4)),
+                gear: 5 + 5 * player.GearCount,
                 mousetrap: 25);
         }
     }

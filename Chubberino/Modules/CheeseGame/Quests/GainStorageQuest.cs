@@ -10,9 +10,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
             String location,
             String failureMessage,
             String successMessage,
-            Int32 rewardStorage,
-            Rank rankToUnlock,
-            Int32 price)
+            Int32 rewardStorage)
             : base(location, failureMessage,
                   (player, emote) =>
                   {
@@ -24,8 +22,8 @@ namespace Chubberino.Modules.CheeseGame.Quests
                       return $"{successMessage} {emote} (+{rewardStorageWithMultiplier} storage)";
                   },
                   player => $"+{(Int32)(rewardStorage * player.GetStorageUpgradeMultiplier())} storage",
-                  rankToUnlock,
-                  price)
+                  Rank.Bronze,
+                  0)
         {
         }
     }

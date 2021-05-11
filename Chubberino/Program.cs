@@ -12,7 +12,6 @@ using Chubberino.Client.Services;
 using Chubberino.Client.Threading;
 using Chubberino.Database.Contexts;
 using Chubberino.Database.Models;
-using Chubberino.Modules.CheeseGame;
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Hazards;
 using Chubberino.Modules.CheeseGame.Heists;
@@ -20,8 +19,8 @@ using Chubberino.Modules.CheeseGame.Items;
 using Chubberino.Modules.CheeseGame.Points;
 using Chubberino.Modules.CheeseGame.Quests;
 using Chubberino.Modules.CheeseGame.Rankings;
+using Chubberino.Modules.CheeseGame.Repositories;
 using Chubberino.Modules.CheeseGame.Shops;
-using Chubberino.Modules.CheeseGame.Upgrades;
 using Jering.Javascript.NodeJS;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -143,14 +142,23 @@ namespace Chubberino
             builder.RegisterType<QuestManager>().As<IQuestManager>().SingleInstance();
             builder.RegisterType<HeistManager>().As<IHeistManager>().SingleInstance();
             builder.RegisterType<EmoteManager>().As<IEmoteManager>().SingleInstance();
-            builder.RegisterType<UpgradeManager>().As<IUpgradeManager>().SingleInstance();
             builder.RegisterType<CheeseRepository>().As<IRepository<CheeseType>>().SingleInstance();
-            builder.RegisterType<CheeseModifierManager>().As<ICheeseModifierManager>().SingleInstance();
+            builder.RegisterType<CheeseModifierRepository>().As<IRepository<CheeseModifier>>().SingleInstance();
             builder.RegisterType<HazardManager>().As<IHazardManager>().SingleInstance();
             builder.RegisterType<ItemManager>().As<IItemManager>().SingleInstance();
 
+            // Items
+            builder.RegisterType<Gear>().AsSelf().SingleInstance();
+            builder.RegisterType<Mousetrap>().AsSelf().SingleInstance();
+            builder.RegisterType<Population>().AsSelf().SingleInstance();
+            builder.RegisterType<Modules.CheeseGame.Items.Quest>().AsSelf().SingleInstance();
+            builder.RegisterType<Recipe>().AsSelf().SingleInstance();
+            builder.RegisterType<Storage>().AsSelf().SingleInstance();
+            builder.RegisterType<Upgrade>().AsSelf().SingleInstance();
+            builder.RegisterType<Worker>().AsSelf().SingleInstance();
+
             // Quests
-            builder.RegisterType<QuestRepository>().As<IRepository<Quest>>().SingleInstance();
+            builder.RegisterType<QuestRepository>().As<IRepository<Modules.CheeseGame.Quests.Quest>>().SingleInstance();
 
             IContainer container = builder.Build();
 
@@ -168,8 +176,7 @@ namespace Chubberino
                 return;
             }
 
-            var commandRepository = scope.Resolve<ICommandRepository>();
-            commandRepository
+           scope.Resolve<ICommandRepository>()
                 .AddCommand(scope.Resolve<AtAll>())
                 .AddCommand(scope.Resolve<AutoChat>())
                 .AddCommand(scope.Resolve<AutoPogO>())
@@ -205,11 +212,21 @@ namespace Chubberino
                 .AddCommand(scope.Resolve<Wolfram>())
                 .AddCommand(scope.Resolve<YepKyle>());
 
-            var color = scope.Resolve<Color>();
+            scope.Resolve<Color>()
+                .AddColorSelector(scope.Resolve<RandomColorSelector>())
+                .AddColorSelector(scope.Resolve<PresetColorSelector>())
+                .AddColorSelector(scope.Resolve<RainbowColorSelector>());
 
-            color.AddColorSelector(scope.Resolve<RandomColorSelector>());
-            color.AddColorSelector(scope.Resolve<PresetColorSelector>());
-            color.AddColorSelector(scope.Resolve<RainbowColorSelector>());
+
+            scope.Resolve<IShop>()
+                .AddItem(scope.Resolve<Recipe>())
+                .AddItem(scope.Resolve<Storage>())
+                .AddItem(scope.Resolve<Modules.CheeseGame.Items.Quest>())
+                .AddItem(scope.Resolve<Upgrade>())
+                .AddItem(scope.Resolve<Worker>())
+                .AddItem(scope.Resolve<Population>())
+                .AddItem(scope.Resolve<Gear>())
+                .AddItem(scope.Resolve<Mousetrap>());
 
             Boolean shouldContinue = twitchClientManager.TryJoinInitialChannels();
 

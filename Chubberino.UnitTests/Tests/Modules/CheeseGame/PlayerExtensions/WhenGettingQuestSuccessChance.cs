@@ -25,21 +25,16 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.PlayerExtensions
         }
 
         [Theory]
-        [InlineData(0, Rank.Bronze, 1, Rank.Bronze)]
-        [InlineData(0, Rank.Bronze, 2, Rank.Silver)]
-        [InlineData(0, Rank.Silver, 2, Rank.Bronze)]
-        [InlineData(1, Rank.Silver, 2, Rank.Silver)]
-        [InlineData(1, Rank.Silver, 2, Rank.Gold)]
-        [InlineData(1, Rank.Gold, 2, Rank.Silver)]
-        public void ShouldAddWorkerBonus(Int32 lesserWorkerCount, Rank lesserWorkerUpgrade, Int32 greaterWorkerCount, Rank greaterWorkerUpgrade)
+        [InlineData(0, 1)]
+        [InlineData(0, 2)]
+        [InlineData(1, 2)]
+        public void ShouldAddGearBonus(Int32 lesserGearCount, Int32 greaterGearCount)
         {
-            Player.WorkerCount = lesserWorkerCount;
-            Player.NextQuestRewardUpgradeUnlock = lesserWorkerUpgrade;
+            Player.GearCount = lesserGearCount;
 
             Double lesserResult = Player.GetQuestSuccessChance();
 
-            Player.WorkerCount = greaterWorkerCount;
-            Player.NextQuestRewardUpgradeUnlock = greaterWorkerUpgrade;
+            Player.GearCount = greaterGearCount;
 
             Double greaterResult = Player.GetQuestSuccessChance();
 

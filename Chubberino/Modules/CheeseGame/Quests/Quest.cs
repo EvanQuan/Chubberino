@@ -43,14 +43,14 @@ namespace Chubberino.Modules.CheeseGame.Quests
             Func<Player, String, String> onSuccess,
             Func<Player, String> rewardDescription,
             Rank rankToUnlock,
-            Int32 price)
+            Double rankPricePercentPrice)
         {
             Location = location;
             FailureMessage = failureMessage;
             OnSuccess = onSuccess;
             RewardDescription = rewardDescription;
             RankToUnlock = rankToUnlock;
-            Price = price;
+            Price = (Int32) (RankManager.RanksToPoints[RankToUnlock] * rankPricePercentPrice);
         }
     }
 }

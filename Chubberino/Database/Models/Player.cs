@@ -56,5 +56,10 @@ namespace Chubberino.Modules.CheeseGame.Models
         /// Number of quests unlocked.
         /// </summary>
         public Int32 QuestsUnlockedCount { get; set; }
+
+        /// <summary>
+        /// Number of adventuring gear.
+        /// </summary>
+        public Int32 GearCount { get; set; }
     }
 }

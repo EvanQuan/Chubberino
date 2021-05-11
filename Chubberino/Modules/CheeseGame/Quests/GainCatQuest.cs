@@ -5,7 +5,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
 {
     public sealed class GainCatQuest : Quest
     {
-        public GainCatQuest(Rank rankToUnlock, Int32 price)
+        public GainCatQuest()
             : base("Gornoaltajski Grasslands",
                   "You search around the field, seeing nothing but the grass blowing in the wind.",
                   (player, emote) =>
@@ -15,8 +15,8 @@ namespace Chubberino.Modules.CheeseGame.Quests
                       $"{emote} (+1 cat)";
                   },
                   _ => "+1 cat",
-                  rankToUnlock,
-                  price)
+                  Rank.Bronze,
+                  0)
         {
         }
     }

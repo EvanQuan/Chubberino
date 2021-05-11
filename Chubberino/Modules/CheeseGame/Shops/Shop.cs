@@ -5,10 +5,13 @@ using Chubberino.Modules.CheeseGame.Items;
 using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.PlayerExtensions;
 using Chubberino.Modules.CheeseGame.Points;
-using Chubberino.Modules.CheeseGame.Quests;
+using Chubberino.Modules.CheeseGame.Repositories;
 using Chubberino.Modules.CheeseGame.Upgrades;
 using Chubberino.Utility;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using TwitchLib.Client.Models;
 
 namespace Chubberino.Modules.CheeseGame.Shops
@@ -16,99 +19,41 @@ namespace Chubberino.Modules.CheeseGame.Shops
     public class Shop : AbstractCommandStrategy, IShop
     {
         public IRepository<CheeseType> CheeseRepository { get; }
-        public IRepository<Quest> QuestRepository { get; }
-        public IUpgradeManager UpgradeManager { get; }
+        public IRepository<Quests.Quest> QuestRepository { get; }
         public IItemManager ItemManager { get; }
+
+        public IList<IItem> Items { get; }
 
         public Shop(
             IApplicationContext context,
             ITwitchClientManager client,
             IRepository<CheeseType> cheeseRepository,
-            IRepository<Quest> questRepository,
+            IRepository<Quests.Quest> questRepository,
             Random random,
             IEmoteManager emoteManager,
-            IUpgradeManager upgradeManager,
             IItemManager itemManager)
             : base(context, client, random, emoteManager)
         {
             CheeseRepository = cheeseRepository;
             QuestRepository = questRepository;
-            UpgradeManager = upgradeManager;
             ItemManager = itemManager;
+            Items = new List<IItem>();
         }
 
         public void ListInventory(ChatMessage message)
         {
             Player player = GetPlayer(message);
 
-            PriceList prices = ItemManager.GetPrices(player);
+            StringBuilder inventoryPrompt = new();
 
-            String recipePrompt;
-            if (CheeseRepository.TryGetNextToUnlock(player, out CheeseType nextCheeseToUnlock))
+            foreach (var item in Items)
             {
-                var cheesePoints = player.GetModifiedPoints(nextCheeseToUnlock.Points);
-
-                if (nextCheeseToUnlock.RankToUnlock > player.Rank)
-                {
-                    recipePrompt = $"{nextCheeseToUnlock.Name} (+{cheesePoints})] unlocked at {player.Rank.Next()} rank"; 
-                }
-                else
-                {
-                    recipePrompt = $"{nextCheeseToUnlock.Name} (+{cheesePoints})] for {nextCheeseToUnlock.CostToUnlock} cheese"; 
-                }
-            }
-            else
-            {
-                recipePrompt = "OUT OF ORDER]";
+                inventoryPrompt
+                    .Append(" | ")
+                    .Append(item.GetShopPrompt(player));
             }
 
-            String questPrompt;
-            if (QuestRepository.TryGetNextToUnlock(player, out Quest nextQuestToUnlock))
-            {
-                if (nextQuestToUnlock.RankToUnlock > player.Rank)
-                {
-                    questPrompt = $"{nextQuestToUnlock.Location} ({nextQuestToUnlock.RewardDescription(player)})] unlocked at {player.Rank.Next()} rank"; 
-                }
-                else
-                {
-                    questPrompt = $"{nextQuestToUnlock.Location} ({nextQuestToUnlock.RewardDescription(player)})] for {nextQuestToUnlock.Price} cheese"; 
-                }
-            }
-            else
-            {
-                questPrompt = "OUT OF ORDER]";
-            }
-            
-
-            String upgradePrompt;
-            if (UpgradeManager.TryGetNextUpgradeToUnlock(player, out Upgrade upgrade))
-            {
-                if (upgrade.RankToUnlock > player.Rank)
-                {
-                    upgradePrompt = $"{upgrade.Description}] unlocked at {upgrade.RankToUnlock} rank";
-                }
-                else
-                {
-                    upgradePrompt = $"{upgrade.Description}] for {upgrade.Price} cheese";
-                }
-            }
-            else
-            {
-                upgradePrompt = "OUT OF ORDER]";
-            }
-
-            Int32 storageGain = (Int32)(Constants.ShopStorageQuantity * player.GetStorageUpgradeMultiplier());
-
-            TwitchClientManager.SpoolMessageAsMe(message.Channel, player,
-                $" | Recipe [{recipePrompt}" +
-                $" | Storage [+{storageGain}] for {prices.Storage} cheese" +
-                $" | Quest [{questPrompt}" +
-                $" | Upgrade [{upgradePrompt}" + 
-                $" | Worker [+1] for {prices.Worker} cheese" +
-                $" | Population [+5] for {prices.Population} cheese" +
-                $" | Mousetrap [+1] for {prices.MouseTrap} " +
-                "|",
-                Priority.Low);
+            TwitchClientManager.SpoolMessageAsMe(message.Channel, player, inventoryPrompt.ToString(), Priority.Low);
         }
 
         public void BuyItem(ChatMessage message)
@@ -135,182 +80,33 @@ namespace Chubberino.Modules.CheeseGame.Shops
 
             Priority priority = Priority.Low;
 
-            switch (itemToBuy.ToLower())
+            if (Items.TryGetFirst(x => x.Names.Contains(itemToBuy, StringComparer.InvariantCultureIgnoreCase), out var item))
             {
-                case "s":
-                case "storage":
-                    Int32 storageGain = (Int32)(Constants.ShopStorageQuantity * player.GetStorageUpgradeMultiplier());
-                    if (player.Points >= prices.Storage)
-                    {
-                        player.MaximumPointStorage += Constants.ShopStorageQuantity;
-                        player.Points -= prices.Storage;
-                        Context.SaveChanges();
-                        outputMessage = $"You bought {storageGain} storage space. (-{prices.Storage} cheese)";
-                        priority = Priority.Medium;
-                    }
-                    else
-                    {
-                        outputMessage = $"You need {prices.Storage - player.Points} more cheese to buy {storageGain} storage.";
-                    }
-                    break;
-                case "p":
-                case "pop":
-                case "population":
-                    if (player.Points >= prices.Population)
-                    {
-                        player.PopulationCount += 5;
-                        player.Points -= prices.Population;
-                        Context.SaveChanges();
-                        outputMessage = $"You bought 5 population slots. (-{prices.Population} cheese)";
-                        priority = Priority.Medium;
-                    }
-                    else
-                    {
-                        outputMessage = $"You need {prices.Population - player.Points} more cheese to buy 5 population slots.";
-                    }
-                    break;
-                case "w":
-                case "worker":
-                case "workers":
-                    if (player.Points >= prices.Worker)
-                    {
-                        if (player.WorkerCount < player.PopulationCount)
-                        {
-                            player.WorkerCount += 1;
-                            player.Points -= prices.Worker;
-                            Context.SaveChanges();
-                            outputMessage = $"You bought 1 worker. (-{prices.Worker} cheese)";
-                            priority = Priority.Medium;
-                        }
-                        else
-                        {
-                            outputMessage = $"You do not have enough population slots for another worker. Consider buying more population slots.";
-                        }
-                    }
-                    else
-                    {
-                        outputMessage = $"You need {prices.Worker - player.Points} more cheese to buy 1 worker.";
-                    }
-                    break;
-                case "r":
-                case "recipe":
-                case "recipes":
-                    if (CheeseRepository.TryGetNextToUnlock(player, out CheeseType nextCheeseToUnlock))
-                    {
-                        if (nextCheeseToUnlock.RankToUnlock > player.Rank)
-                        {
-                            outputMessage = $"You must rankup to {nextCheeseToUnlock.RankToUnlock} rank before you can buy the {nextCheeseToUnlock.Name} recipe.";
-                        }
-                        else if (player.Points >= nextCheeseToUnlock.CostToUnlock)
-                        {
-                            player.CheeseUnlocked++;
-                            if (nextCheeseToUnlock.UnlocksNegativeCheese)
-                            {
-                                // Increment again so that the next cheese to unlock is not a negative one.
-                                player.CheeseUnlocked++;
-                            }
-                            player.Points -= nextCheeseToUnlock.CostToUnlock;
-                            Context.SaveChanges();
-                            outputMessage = $"You bought the {nextCheeseToUnlock.Name} recipe. (-{nextCheeseToUnlock.CostToUnlock} cheese)";
-                            priority = Priority.Medium;
-                        }
-                        else
-                        {
-                            outputMessage = $"You need {nextCheeseToUnlock.CostToUnlock - player.Points} more cheese to buy the {nextCheeseToUnlock.Name} recipe.";
-                        }
-                    }
-                    else
-                    {
-                        outputMessage = $"There is no recipe for sale right now.";
-                    }
-                    break;
-                case "q":
-                case "quest":
-                case "quests":
-                case "map":
-                case "maps":
-                    if (QuestRepository.TryGetNextToUnlock(player, out Quest nextQuestToUnlock))
-                    {
-                        if (nextQuestToUnlock.RankToUnlock > player.Rank)
-                        {
-                            outputMessage = $"You must rankup to {nextQuestToUnlock.RankToUnlock} rank before you can buy a map to {nextQuestToUnlock.Location}.";
-                        }
-                        else if (player.Points >= nextQuestToUnlock.Price)
-                        {
-                            player.QuestsUnlockedCount++;
-                            player.Points -= nextQuestToUnlock.Price;
-                            Context.SaveChanges();
-                            outputMessage = $"You bought a map to {nextQuestToUnlock.Location}. (-{nextQuestToUnlock.Price} cheese)";
-                            priority = Priority.Medium;
-                        }
-                        else
-                        {
-                            outputMessage = $"You need {nextQuestToUnlock.Price - player.Points} more cheese to buy a map to {nextQuestToUnlock.Location}.";
-                        }
-                    }
-                    else
-                    {
-                        outputMessage = $"There is no quest map for sale right now.";
-                    }
-                    break;
-                case "u":
-                case "up":
-                case "upgrade":
-                case "upgrades":
-                    if (UpgradeManager.TryGetNextUpgradeToUnlock(player, out Upgrade upgrade))
-                    {
-                        if (upgrade.RankToUnlock > player.Rank)
-                        {
-                            outputMessage = $"You must rankup to {upgrade.RankToUnlock} rank before you can buy the {upgrade.Description} upgrade.";
-                        }
-                        else if (player.Points >= upgrade.Price)
-                        {
-                            upgrade.UpdatePlayer(player);
-                            player.Points -= upgrade.Price;
-                            Context.SaveChanges();
-                            outputMessage = $"You bought the {upgrade.Description} upgrade. (-{upgrade.Price} cheese)";
-                            priority = Priority.Medium;
-                        }
-                        else
-                        {
-                            outputMessage = $"You need {upgrade.Price - player.Points} more cheese to buy the {upgrade.Description} upgrade.";
-                        }
-                    }
-                    else
-                    {
-                        outputMessage = $"There is no upgrade for sale right now.";
-                    }
-                    break;
-                case "m":
-                case "mouse":
-                case "mousetrap":
-                case "mousetraps":
-                    if (player.Points >= prices.MouseTrap)
-                    {
-                        remainingArguments.GetNextWord(out String quantityString);
+                remainingArguments.GetNextWord(out String quantityString);
 
-                        Int32 quantityRequested = Int32.TryParse(quantityString, out Int32 result) && result > 0 ? result : 1;
+                Int32 quantityRequested = Int32.TryParse(quantityString, out Int32 quantityParsed) && quantityParsed > 0
+                    ? quantityParsed
+                    : new String[] { "a", "all" }.Contains(quantityString, StringComparer.InvariantCultureIgnoreCase)
+                        ? Int32.MaxValue
+                        : 1;
 
-                        Int32 quantityCanAfford = (Int32)Math.Floor(player.Points / (Double)prices.MouseTrap);
+                var result = item.TryBuy(quantityRequested, player)();
 
-                        Int32 quantityToPurchase = Math.Min(quantityRequested, quantityCanAfford);
-
-                        Int32 totalPrice = prices.MouseTrap * quantityToPurchase; 
-
-                        player.MouseTrapCount += quantityToPurchase;
-                        player.Points -= totalPrice;
-                        Context.SaveChanges();
-                        outputMessage = $"You bought {quantityToPurchase} mousetrap{(quantityToPurchase == 1 ? "" : "s")}. (-{totalPrice} cheese)";
-                        priority = Priority.Medium;
-                    }
-                    else
-                    {
-                        outputMessage = $"You need {prices.MouseTrap - player.Points} more cheese to buy a mousetrap.";
-                    }
-                    break;
-                default:
-                    outputMessage = $"Invalid item \"{itemToBuy}\" to buy. Type \"!cheese shop\" to see the items available for purchase.";
-                    break;
+                if (result.IsLeft)
+                {
+                    var buyResult = result.Left;
+                    outputMessage = $"You bought {item.GetSpecificNameForSuccessfulBuy(player, buyResult.QuantityPurchased)}. {EmoteManager.GetRandomPositiveEmote(message.Channel)} (-{buyResult.PointsSpent} cheese)";
+                    Context.SaveChanges();
+                    priority = Priority.Medium;
+                }
+                else
+                {
+                    outputMessage = result.Right;
+                }
+            }
+            else
+            {
+                outputMessage = $"Invalid item \"{itemToBuy}\" to buy. Type \"!cheese shop\" to see the items available for purchase.";
             }
 
             TwitchClientManager.SpoolMessageAsMe(message.Channel, player, outputMessage, priority);
@@ -346,16 +142,24 @@ namespace Chubberino.Modules.CheeseGame.Shops
             {
                 "s" or "storage" => $"Storage increases the maximum amount of cheese you can have.",
                 "p" or "population" => $"Population increases the maximum number of workers you can have.",
-                "w" or "worker" or "workers" => $"Workers increase the amount of cheese you get every time you gain cheese with \"!cheese\" and increase the success chance with you go on a quest with \"!cheese quest\".",
-                "q" or "quest" or "quests" => $"Go on a random quest to get rewards or risk punishment. The chance of success scales with how many workers you have.",
+                "w" or "worker" or "workers" => $"Workers increase the amount of cheese you get every time you gain cheese with \"!cheese\" and when you go on a quest with \"!cheese quest\". Initially they each give an additive {RankExtensions.BaseWorkerPointPercent * 100}% bonus to cheese gains.",
+                "q" or "quest" or "quests" => $"Go on a random quest to get rewards. The chance of success scales with how much gear you have.",
                 "recipe" or "recipes" => $"Recipes allow you to create new kinds of cheese with \"!cheese\".",
-                "r" or "rank" or "ranks" => $"Ranks unlock new items to buy at the shop. Eventually ranking will give you prestige, reseting your rank and everything you have to restart the climb. For every prestige you gain, you get a permanent {(Int32)(Constants.PrestigeBonus * 100)}% boost to your cheese gains, which can stack.",
+                "r" or "rank" or "ranks" or "bronze" or "silver" or "gold" or "diamond" or "platinum" or "master" or "grandmaster" or "legend" => $"Ranks unlock new items to buy at the shop. Eventually ranking will give you prestige, reseting your rank and everything you have to restart the climb. For every prestige you gain, you get a permanent {(Int32)(Constants.PrestigeBonus * 100)}% boost to your cheese gains, which can stack.",
                 "u" or "upgrade" or "upgrades" => $"Upgrades provide a permanent bonus to your cheese factory until you prestige.",
-                "m" or "mouse" or "mousetrap" or "mousetraps" => $"Mousetraps kills giant rats that infest your cheese factory.",
+                "g" or "gear" => $"Gear provides you with a {(Int32)(Constants.QuestGearSuccessPercent * 100)}% quest success chance for each you have.",
+                "m" or "mouse" or "mousetrap" or "mousetraps" => $"Mousetraps kills giant mice that infest your cheese factory, allow you to maintain or recover any worker bonuses you have.",
                 "c" or "cat" or "cats" => $"[CURRENTLY DO NOTHING] Cats help you fight against the giant evil mouse, Chubshan the Immortal. The more cats you have, the more you will be rewarded when Chubshan is defeated.",
                 _ => $"Invalid item \"{itemToBuy}\" name. Type \"!cheese shop\" to see the items available for purchase.",
             };
             TwitchClientManager.SpoolMessageAsMe(message.Channel, player, outputMessage, Priority.Low);
+        }
+
+        public IShop AddItem(IItem item)
+        {
+            Items.Add(item);
+
+            return this;
         }
     }
 }

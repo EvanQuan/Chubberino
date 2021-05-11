@@ -6,11 +6,11 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
 {
     public class Upgrade
     {
-        public Upgrade(String description, Rank rankToUnlock, Int32 price, Action<Player> updatePlayer)
+        public Upgrade(String description, Rank rankToUnlock, Double rankPricePercentPrice, Action<Player> updatePlayer)
         {
             Description = description;
             RankToUnlock = rankToUnlock;
-            Price = price;
+            Price = (Int32)(RankManager.RanksToPoints[RankToUnlock] * rankPricePercentPrice);
             UpdatePlayer = updatePlayer;
         }
 

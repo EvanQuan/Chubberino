@@ -7,7 +7,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
 {
     public sealed class GainWorkerQuest : Quest
     {
-        public GainWorkerQuest(Rank rankToUnlock, Int32 price)
+        public GainWorkerQuest(Rank rankToUnlock, Double rankPricePercentPrice)
             : base("Panela Plains",
                    "You search around and don't find anything interesting. You return to your cheese factory empty-handed.",
                   (player, emote) =>
@@ -31,7 +31,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
                   },
                   _ => "+1 worker",
                   rankToUnlock,
-                  price)
+                  rankPricePercentPrice)
         {
         }
     }

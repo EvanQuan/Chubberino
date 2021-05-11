@@ -4,6 +4,7 @@ using Chubberino.Database.Contexts;
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.PlayerExtensions;
+using Chubberino.Modules.CheeseGame.Repositories;
 using Chubberino.Utility;
 using System;
 using TwitchLib.Client.Models;
@@ -49,7 +50,9 @@ namespace Chubberino.Modules.CheeseGame.Quests
 
             if (timeSinceLastQuestVentured >= QuestCooldown)
             {
-                var quest = QuestRepository.GetRandom(player.QuestsUnlockedCount);
+                player.LastQuestVentured = now;
+
+                var quest = Random.NextElement(QuestRepository.Values, player.QuestsUnlockedCount);
 
                 StartQuest(message, player, quest);
 
