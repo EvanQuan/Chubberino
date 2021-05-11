@@ -121,7 +121,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
                 0.25),
             new GainCheeseQuest(
                 "Bad Axe Beach",
-                "While the view is beautful, there is nothing to be found.",
+                "While the view is beautiful, there is nothing to be found.",
                 "You uncover a treasure chest of cheese hidden under the sands.",
                 112,
                 Rank.Diamond,
@@ -144,7 +144,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
             new GainCheeseAndStorageQuest(
                 "Caboc Cave",
                 "The place is dark and the ground slippery. You go back immediately.",
-                "Traversing through the winding tunnels, you find stalagmites of cheese, which you knock down with your pickaxe. Certain alcoves make good spots for storage.",
+                "Traversing through the winding tunnels, you find stalagtites of cheese, which you knock down with your pickaxe. Certain alcoves make good spots for storage.",
                 112,
                 (Int32)(Constants.ShopStorageQuantity * 0.1),
                 Rank.Master,

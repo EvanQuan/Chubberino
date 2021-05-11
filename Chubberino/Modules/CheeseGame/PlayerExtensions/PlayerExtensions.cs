@@ -30,7 +30,7 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
             return player;
         }
 
-        public static Boolean IsMouseInfested(this Player player)
+        public static Boolean IsInfested(this Player player)
         {
             return player.MouseCount > 0;
         }
@@ -69,7 +69,7 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
             // Prestige bonus is only applied to base cheese gained.
             // Workers will collectively add at least 1.
             Int32 workerPoints = 0;
-            if (!player.IsMouseInfested())
+            if (!player.IsInfested())
             {
                 Double workerPointMultipler = player.NextWorkerProductionUpgradeUnlock.GetWorkerPointMultiplier();
                 Int32 absoluteWorkerPoints = (Int32)(Math.Abs(points) * (player.WorkerCount * workerPointMultipler)).Max(player.WorkerCount == 0 ? 0 : 1);
@@ -108,7 +108,7 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
         {
             Double baseSuccessChance = Constants.QuestBaseSuccessChance;
 
-            Double workerSuccessChance = player.IsMouseInfested() ? 0 : player.GearCount * Constants.QuestGearSuccessPercent;
+            Double workerSuccessChance = player.IsInfested() ? 0 : player.GearCount * Constants.QuestGearSuccessPercent;
 
             return baseSuccessChance + workerSuccessChance;
         }

@@ -65,7 +65,7 @@ namespace Chubberino.Modules.CheeseGame.Points
 
                     CheeseType cheese = modifier.Modify(initialCheese);
 
-                    String outputMessage = HazardManager.UpdateMouseInfestationStatus(player);
+                    String outputMessage = HazardManager.UpdateInfestationStatus(player);
 
                     Boolean isCritical = Random.TryPercentChance((Int32)player.NextCriticalCheeseUpgradeUnlock * Constants.CriticalCheeseUpgradePercent);
 
