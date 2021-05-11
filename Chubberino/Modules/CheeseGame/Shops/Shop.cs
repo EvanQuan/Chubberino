@@ -96,6 +96,7 @@ namespace Chubberino.Modules.CheeseGame.Shops
                 {
                     var buyResult = result.Left;
                     outputMessage = $"You bought {item.GetSpecificNameForSuccessfulBuy(player, buyResult.QuantityPurchased)}. {EmoteManager.GetRandomPositiveEmote(message.Channel)} (-{buyResult.PointsSpent} cheese)";
+                    Context.SaveChanges();
                     priority = Priority.Medium;
                 }
                 else
