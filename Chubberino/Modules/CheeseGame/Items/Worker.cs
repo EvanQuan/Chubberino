@@ -35,7 +35,7 @@ namespace Chubberino.Modules.CheeseGame.Items
         {
             if (player.WorkerCount < player.PopulationCount)
             {
-                player.WorkerCount += 1;
+                player.WorkerCount++;
                 player.Points -= price;
                 return () => 1;
             }
