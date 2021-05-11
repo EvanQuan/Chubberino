@@ -47,11 +47,9 @@ namespace Chubberino.Modules.CheeseGame.Items
                 return () => UnexpectedErrorMessage;
             }
 
-            player.QuestsUnlockedCount++;
+            nextUpgradeToLock.UpdatePlayer(player);
 
             player.Points -= nextUpgradeToLock.Price;
-
-            nextUpgradeToLock.UpdatePlayer(player);
 
             return () => 1;
         }
