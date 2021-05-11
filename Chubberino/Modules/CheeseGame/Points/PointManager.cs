@@ -109,7 +109,7 @@ namespace Chubberino.Modules.CheeseGame.Points
                 String timeToWait = timeUntilNextValidPointGain.Format();
 
                 TwitchClientManager.SpoolMessageAsMe(message.Channel, player,
-                    $"You must wait {timeToWait} until you can make more cheese.",
+                    $"You must wait {timeToWait} until you can make more cheese. {EmoteManager.GetRandomNegativeEmote(message.Channel)}",
                     Priority.Low);
             }
         }
