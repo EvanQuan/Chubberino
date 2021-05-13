@@ -104,7 +104,18 @@ namespace Chubberino.Modules.CheeseGame.Emotes
                 {
                     "Mau5",
                 }
-            }
+            },
+            {
+                EmoteCategory.Cat,
+                new List<String>()
+                {
+                    "CoolCat",
+                    "DxCat",
+                    "GlitchCat",
+                    "Keepo",
+                    "Kippa",
+                }
+            },
         };
 
         public IApplicationContext Context { get; }

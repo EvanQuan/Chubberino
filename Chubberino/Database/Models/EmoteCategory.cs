@@ -7,5 +7,6 @@
         Negative = 2,
         Waiting = 3,
         Rat = 4,
+        Cat = 5,
     }
 }
