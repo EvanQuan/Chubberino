@@ -69,7 +69,15 @@ namespace Chubberino.Modules.CheeseGame.Points
 
                     StringBuilder outputMessage = new();
 
-                    outputMessage.Append(HazardManager.UpdateInfestationStatus(player));
+                    String infestationStatus = HazardManager.UpdateInfestationStatus(player);
+
+                    if (!String.IsNullOrWhiteSpace(infestationStatus))
+                    {
+                        outputMessage
+                            .Append(infestationStatus)
+                            .Append(Random.NextElement(EmoteManager.Get(message.Channel, EmoteCategory.Rat)))
+                            .Append(' ');
+                    }
 
                     Boolean isCritical = Random.TryPercentChance((Int32)player.NextCriticalCheeseUpgradeUnlock * Constants.CriticalCheeseUpgradePercent);
 
