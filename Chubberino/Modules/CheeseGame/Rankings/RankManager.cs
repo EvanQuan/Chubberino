@@ -1,5 +1,6 @@
 ﻿using Chubberino.Client;
 using Chubberino.Database.Contexts;
+using Chubberino.Database.Models;
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Heists;
 using Chubberino.Modules.CheeseGame.PlayerExtensions;
@@ -72,7 +73,7 @@ namespace Chubberino.Modules.CheeseGame.Rankings
                         player.Points -= pointsToRank;
                         player.Rank = nextRank;
                         Context.SaveChanges();
-                        outputMessage = $"You ranked up to {nextRank}. {EmoteManager.GetRandomPositiveEmote(message.Channel)} (-{pointsToRank} cheese)";
+                        outputMessage = $"You ranked up to {nextRank}. {Random.NextElement(EmoteManager.Get(message.Channel, EmoteCategory.Negative))} (-{pointsToRank} cheese)";
                         priority = Priority.Medium;
                     }
                 }

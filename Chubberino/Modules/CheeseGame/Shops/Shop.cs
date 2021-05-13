@@ -1,5 +1,6 @@
 ﻿using Chubberino.Client;
 using Chubberino.Database.Contexts;
+using Chubberino.Database.Models;
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Items;
 using Chubberino.Modules.CheeseGame.Models;
@@ -95,7 +96,7 @@ namespace Chubberino.Modules.CheeseGame.Shops
                 if (result.IsLeft)
                 {
                     var buyResult = result.Left;
-                    outputMessage = $"You bought {item.GetSpecificNameForSuccessfulBuy(player, buyResult.QuantityPurchased)}. {EmoteManager.GetRandomPositiveEmote(message.Channel)} (-{buyResult.PointsSpent} cheese)";
+                    outputMessage = $"You bought {item.GetSpecificNameForSuccessfulBuy(player, buyResult.QuantityPurchased)}. {Random.NextElement(EmoteManager.Get(message.Channel, EmoteCategory.Positive))} (-{buyResult.PointsSpent} cheese)";
                     Context.SaveChanges();
                     priority = Priority.Medium;
                 }
