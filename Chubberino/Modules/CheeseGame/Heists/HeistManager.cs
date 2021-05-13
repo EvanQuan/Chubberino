@@ -2,6 +2,7 @@
 using Chubberino.Client.Services;
 using Chubberino.Client.Threading;
 using Chubberino.Database.Contexts;
+using Chubberino.Database.Models;
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Utility;
@@ -98,7 +99,7 @@ namespace Chubberino.Modules.CheeseGame.Heists
                     var timeToWait = timeUntilNextHeistAvailable.Format();
 
                     TwitchClientManager.SpoolMessageAsMe(message.Channel, player,
-                        $"You must wait {timeToWait} until you can initiate another heist.");
+                        $"You must wait {timeToWait} until you can initiate another heist. {Random.NextElement(EmoteManager.Get(message.Channel, EmoteCategory.Waiting))}");
                 }
             }
         }

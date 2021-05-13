@@ -34,12 +34,6 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
 
             switch (keyword.ToLower())
             {
-                case "r":
-                case "reload":
-                case "refresh":
-                    EmoteManager.Refresh(e.ChatMessage.Channel);
-                    TwitchClientManager.SpoolMessage(e.ChatMessage.Channel, e.ChatMessage.DisplayName + ", refreshed emotes.");
-                    break;
                 case "a":
                 case "add":
                     {
@@ -59,7 +53,7 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
                                 builder
                                     .Append(" Added ")
                                     .Append(category)
-                                    .Append(" emote: ")
+                                    .Append(" emotes: ")
                                     .Append(String.Join(' ', results.Succeeded));
                             }
 
@@ -68,7 +62,7 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
                                 builder
                                     .Append(" Failed to add ")
                                     .Append(category)
-                                    .Append("emotes: ")
+                                    .Append(" emotes: ")
                                     .Append(String.Join(' ', results.Failed));
                             }
 

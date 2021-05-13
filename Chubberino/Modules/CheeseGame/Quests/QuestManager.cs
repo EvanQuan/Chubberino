@@ -1,6 +1,7 @@
 ﻿using Chubberino.Client;
 using Chubberino.Client.Services;
 using Chubberino.Database.Contexts;
+using Chubberino.Database.Models;
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.PlayerExtensions;
@@ -66,7 +67,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
 
                 TwitchClientManager.SpoolMessageAsMe(message.Channel, player,
                     $"[Quest {String.Format("{0:0.0}", player.GetQuestSuccessChance() * 100)}% success] " +
-                    $"You must wait {timeToWait} until you can go on your next quest. {EmoteManager.GetRandomNegativeEmote(message.Channel)}",
+                    $"You must wait {timeToWait} until you can go on your next quest. {Random.NextElement(EmoteManager.Get(message.Channel, EmoteCategory.Waiting))}",
                     Priority.Low);
             }
         }
@@ -78,8 +79,8 @@ namespace Chubberino.Modules.CheeseGame.Quests
             Boolean successful = Random.TryPercentChance(successChance);
 
             var resultMessage = successful
-                ? quest.OnSuccess(player, EmoteManager.GetRandomPositiveEmote(message.Channel))
-                : quest.FailureMessage + " " + EmoteManager.GetRandomNegativeEmote(message.Channel);
+                ? quest.OnSuccess(player, Random.NextElement(EmoteManager.Get(message.Channel, EmoteCategory.Positive)))
+                : quest.FailureMessage + " " + Random.NextElement(EmoteManager.Get(message.Channel, EmoteCategory.Negative));
 
             Context.SaveChanges();
 

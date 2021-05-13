@@ -1,6 +1,7 @@
 ﻿using Chubberino.Client;
 using Chubberino.Client.Services;
 using Chubberino.Database.Contexts;
+using Chubberino.Database.Models;
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Hazards;
 using Chubberino.Modules.CheeseGame.Models;
@@ -9,6 +10,7 @@ using Chubberino.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using TwitchLib.Client.Models;
 
 namespace Chubberino.Modules.CheeseGame.Points
@@ -65,21 +67,19 @@ namespace Chubberino.Modules.CheeseGame.Points
 
                     CheeseType cheese = modifier.Modify(initialCheese);
 
-                    String outputMessage = HazardManager.UpdateInfestationStatus(player);
+                    StringBuilder outputMessage = new();
+
+                    String infestationStatus = HazardManager.UpdateInfestationStatus(player);
+
+                    if (!String.IsNullOrWhiteSpace(infestationStatus))
+                    {
+                        outputMessage
+                            .Append(infestationStatus)
+                            .Append(Random.NextElement(EmoteManager.Get(message.Channel, EmoteCategory.Rat)))
+                            .Append(' ');
+                    }
 
                     Boolean isCritical = Random.TryPercentChance((Int32)player.NextCriticalCheeseUpgradeUnlock * Constants.CriticalCheeseUpgradePercent);
-
-                    if (isCritical)
-                    {
-                        if (cheese.Points > 0)
-                        {
-                            outputMessage += $"{EmoteManager.GetRandomPositiveEmote(message.Channel)} CRITICAL CHEESE!!! {EmoteManager.GetRandomPositiveEmote(message.Channel)} ";
-                        }
-                        else
-                        {
-                            outputMessage += $"{EmoteManager.GetRandomNegativeEmote(message.Channel)} NEGATIVE CRITICAL CHEESE!!! {EmoteManager.GetRandomNegativeEmote(message.Channel)} ";
-                        }
-                    }
 
                     var modifiedPoints = player.GetModifiedPoints(cheese.Points, isCritical);
 
@@ -91,15 +91,28 @@ namespace Chubberino.Modules.CheeseGame.Points
 
                     Boolean isPositive = cheese.Points > 0;
 
+                    var emoteCategory = isPositive ? EmoteCategory.Positive : EmoteCategory.Negative;
 
-                    String emote = isPositive
-                        ? EmoteManager.GetRandomPositiveEmote(message.Channel)
-                        : EmoteManager.GetRandomNegativeEmote(message.Channel);
+                    var emoteList = EmoteManager.Get(message.Channel, emoteCategory);
 
+                    if (isCritical)
+                    {
+                        outputMessage.Append(Random.NextElement(emoteList));
 
-                    outputMessage += $"You made some {cheese.Name}. {emote} ({(isPositive ? "+" : String.Empty)}{modifiedPoints} cheese)";
+                        if (!isPositive)
+                        {
+                            outputMessage.Append(" NEGATIVE ");
+                        }
 
-                    TwitchClientManager.SpoolMessageAsMe(message.Channel, player, outputMessage);
+                        outputMessage
+                            .Append(" CRITICAL CHEESE!!! ")
+                            .Append(Random.NextElement(emoteList))
+                            .Append(' ');
+                    }
+
+                    outputMessage.Append($"You made some {cheese.Name}. {Random.NextElement(emoteList)} ({(isPositive ? "+" : String.Empty)}{modifiedPoints} cheese)");
+
+                    TwitchClientManager.SpoolMessageAsMe(message.Channel, player, outputMessage.ToString());
                 }
             }
             else
@@ -109,7 +122,7 @@ namespace Chubberino.Modules.CheeseGame.Points
                 String timeToWait = timeUntilNextValidPointGain.Format();
 
                 TwitchClientManager.SpoolMessageAsMe(message.Channel, player,
-                    $"You must wait {timeToWait} until you can make more cheese. {EmoteManager.GetRandomNegativeEmote(message.Channel)}",
+                    $"You must wait {timeToWait} until you can make more cheese. {Random.NextElement(EmoteManager.Get(message.Channel, EmoteCategory.Waiting))}",
                     Priority.Low);
             }
         }
