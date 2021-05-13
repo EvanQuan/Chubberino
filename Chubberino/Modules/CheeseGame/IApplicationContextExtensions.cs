@@ -26,7 +26,12 @@ namespace Chubberino.Modules.CheeseGame
 
                 source.SaveChanges();
 
-                client.SpoolMessageAsMe(message.Channel, player, $"StinkyGlitch NEW CHEESE FACTORY StinkyGlitch You have just started building your own cheese factory where {player.ID - 1} others already reside. Begin producing cheese with \"!cheese\" and spend it at the shop with \"!cheese shop\". You can get help with \"!cheese help\" to see other commands. Good luck!");
+                client.SpoolMessageAsMe(message.Channel, player,
+                    $"StinkyGlitch NEW CHEESE FACTORY StinkyGlitch " +
+                    $"You have just started building your own cheese factory where {player.ID - 1} others already reside. " +
+                    $"Begin producing cheese with \"!cheese\" and spend it at the shop with \"!cheese shop\". " +
+                    $"You can get help with \"!cheese help\" to see other commands. " +
+                    $"Good luck!");
             }
 
             return player;
