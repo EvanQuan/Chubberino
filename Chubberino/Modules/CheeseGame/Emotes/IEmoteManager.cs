@@ -12,6 +12,6 @@ namespace Chubberino.Modules.CheeseGame.Emotes
 
         EmoteManagerResult RemoveAll(IEnumerable<String> emotes, EmoteCategory category, String channel);
 
-        IList<String> Get(String channel, EmoteCategory category);
+        IReadOnlyList<String> Get(String channel, EmoteCategory category);
     }
 }

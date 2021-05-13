@@ -97,6 +97,13 @@ namespace Chubberino.Modules.CheeseGame.Emotes
                     "CoolStoryBob",
                     "ResidentSleeper",
                 }
+            },
+            {
+                EmoteCategory.Rat,
+                new List<String>()
+                {
+                    "Mau5",
+                }
             }
         };
 

@@ -6,5 +6,6 @@
         Positive = 1,
         Negative = 2,
         Waiting = 3,
+        Rat = 4,
     }
 }
