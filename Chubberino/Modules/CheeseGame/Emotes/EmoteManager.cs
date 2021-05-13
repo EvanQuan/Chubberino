@@ -173,14 +173,6 @@ namespace Chubberino.Modules.CheeseGame.Emotes
             return false;
         }
 
-        public void Refresh(String channel)
-        {
-            foreach (EmoteCategory category in Enum.GetValues<EmoteCategory>().Skip(1))
-            {
-                TryGetAndCacheDatabaseEmoteList(channel, category, out _);
-            }
-        }
-
         public EmoteManagerResult AddAll(IEnumerable<String> emotes, EmoteCategory category, String channel)
         {
             IQueryable<String> databaseEmotes = Context.Emotes

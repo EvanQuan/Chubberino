@@ -34,12 +34,6 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
 
             switch (keyword.ToLower())
             {
-                case "r":
-                case "reload":
-                case "refresh":
-                    EmoteManager.Refresh(e.ChatMessage.Channel);
-                    TwitchClientManager.SpoolMessage(e.ChatMessage.Channel, e.ChatMessage.DisplayName + ", refreshed emotes.");
-                    break;
                 case "a":
                 case "add":
                     {

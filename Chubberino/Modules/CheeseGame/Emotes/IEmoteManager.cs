@@ -6,8 +6,6 @@ namespace Chubberino.Modules.CheeseGame.Emotes
 {
     public interface IEmoteManager
     {
-        void Refresh(String channel);
-
         EmoteManagerResult AddAll(IEnumerable<String> emotes, EmoteCategory category, String channel);
 
         EmoteManagerResult RemoveAll(IEnumerable<String> emotes, EmoteCategory category, String channel);
