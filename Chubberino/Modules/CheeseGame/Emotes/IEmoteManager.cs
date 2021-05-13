@@ -1,7 +1,6 @@
 ﻿using Chubberino.Database.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Chubberino.Modules.CheeseGame.Emotes
 {
@@ -17,6 +16,6 @@ namespace Chubberino.Modules.CheeseGame.Emotes
 
         EmoteManagerResult RemoveAll(IEnumerable<String> emotes, EmoteCategory category, String channel);
 
-        IQueryable<String> Get(String channel, EmoteCategory category);
+        IList<String> Get(String channel, EmoteCategory category);
     }
 }
