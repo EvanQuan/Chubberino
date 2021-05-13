@@ -53,7 +53,7 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
                                 builder
                                     .Append(" Added ")
                                     .Append(category)
-                                    .Append(" emote: ")
+                                    .Append(" emotes: ")
                                     .Append(String.Join(' ', results.Succeeded));
                             }
 
@@ -62,7 +62,7 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
                                 builder
                                     .Append(" Failed to add ")
                                     .Append(category)
-                                    .Append("emotes: ")
+                                    .Append(" emotes: ")
                                     .Append(String.Join(' ', results.Failed));
                             }
 
