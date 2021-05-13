@@ -4,9 +4,9 @@ using Chubberino.Database.Contexts;
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.PlayerExtensions;
-using Chubberino.Modules.CheeseGame.Repositories;
 using Chubberino.Utility;
 using System;
+using System.Collections.Generic;
 using TwitchLib.Client.Models;
 
 namespace Chubberino.Modules.CheeseGame.Quests
@@ -15,7 +15,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
     {
         public static TimeSpan QuestCooldown { get; set; } = TimeSpan.FromHours(2);
         public IDateTimeService DateTime { get; }
-        public IRepository<Quest> QuestRepository { get; }
+        public IReadOnlyList<Quest> QuestRepository { get; }
 
         public QuestManager(
             IApplicationContext context,
@@ -23,7 +23,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
             Random random,
             IEmoteManager emoteManager,
             IDateTimeService dateTime,
-            IRepository<Quest> questRepository)
+            IReadOnlyList<Quest> questRepository)
             : base(context, client, random, emoteManager)
         {
             DateTime = dateTime;
@@ -50,7 +50,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
 
             if (timeSinceLastQuestVentured >= QuestCooldown)
             {
-                var quest = Random.NextElement(QuestRepository.Values, player.QuestsUnlockedCount);
+                var quest = Random.NextElement(QuestRepository, player.QuestsUnlockedCount);
 
                 StartQuest(message, player, quest);
 

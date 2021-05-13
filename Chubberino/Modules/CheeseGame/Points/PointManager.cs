@@ -5,9 +5,9 @@ using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Hazards;
 using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.PlayerExtensions;
-using Chubberino.Modules.CheeseGame.Repositories;
 using Chubberino.Utility;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using TwitchLib.Client.Models;
 
@@ -17,8 +17,8 @@ namespace Chubberino.Modules.CheeseGame.Points
     {
         public static TimeSpan PointGainCooldown { get; set; } = TimeSpan.FromMinutes(15);
 
-        public IRepository<CheeseType> CheeseRepository { get; }
-        public IRepository<CheeseModifier> CheeseModifierManager { get; }
+        public IReadOnlyList<CheeseType> CheeseRepository { get; }
+        public IReadOnlyList<CheeseModifier> CheeseModifierManager { get; }
         public IHazardManager HazardManager { get; }
         public IDateTimeService DateTime { get; }
         public IConsole Console { get; }
@@ -26,8 +26,8 @@ namespace Chubberino.Modules.CheeseGame.Points
         public PointManager(
             IApplicationContext context,
             ITwitchClientManager client,
-            IRepository<CheeseType> cheeseRepository,
-            IRepository<CheeseModifier> cheeseModifierRepository,
+            IReadOnlyList<CheeseType> cheeseRepository,
+            IReadOnlyList<CheeseModifier> cheeseModifierRepository,
             Random random,
             IEmoteManager emoteManager,
             IHazardManager hazardManager,
@@ -59,9 +59,9 @@ namespace Chubberino.Modules.CheeseGame.Points
                 }
                 else
                 {
-                    CheeseType initialCheese = Random.NextElement(CheeseRepository.Values, player.CheeseUnlocked);
+                    CheeseType initialCheese = Random.NextElement(CheeseRepository, player.CheeseUnlocked);
 
-                    CheeseModifier modifier = Random.NextElement(CheeseModifierManager.Values, (Int32)player.NextCheeseModifierUpgradeUnlock);
+                    CheeseModifier modifier = Random.NextElement(CheeseModifierManager, (Int32)player.NextCheeseModifierUpgradeUnlock);
 
                     CheeseType cheese = modifier.Modify(initialCheese);
 

@@ -1,11 +1,10 @@
 ﻿using Chubberino.Modules.CheeseGame.Rankings;
-using Chubberino.Modules.CheeseGame.Repositories;
 using System;
 using System.Collections.Generic;
 
 namespace Chubberino.Modules.CheeseGame.Quests
 {
-    public sealed class QuestRepository : Repository<Quest>
+    public static class QuestRepository
     {
         /// <summary>
         /// Chance that a quest from the rare quest pool will be chosen.
@@ -205,7 +204,5 @@ namespace Chubberino.Modules.CheeseGame.Quests
                 Rank.Bronze,
                 0)
         };
-
-        public override IReadOnlyList<Quest> Values => Quests;
     }
 }

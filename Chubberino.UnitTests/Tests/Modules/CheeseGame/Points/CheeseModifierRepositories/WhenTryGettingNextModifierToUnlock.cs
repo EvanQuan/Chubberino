@@ -1,19 +1,22 @@
 ﻿using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.Points;
 using Chubberino.Modules.CheeseGame.Rankings;
-using Chubberino.Modules.CheeseGame.Repositories;
+using System.Collections.Generic;
 using Xunit;
 
 namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Points.CheeseModifierManagers
 {
-    public sealed class WhenTryGettingNextModifierToUnlock : UsingCheeseModifierManager
+    public sealed class WhenTryGettingNextModifierToUnlock
     {
+        public IReadOnlyList<CheeseModifier> Sut = CheeseModifierRepository.Modifiers;
+
         private Player Player { get; }
 
         public WhenTryGettingNextModifierToUnlock()
         {
             Player = new Player();
         }
+
         [Fact]
         public void ShouldReturnFirstModifier()
         {
