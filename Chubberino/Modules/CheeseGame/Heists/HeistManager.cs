@@ -57,10 +57,17 @@ namespace Chubberino.Modules.CheeseGame.Heists
                 // Trying to initiate new heist
                 var now  = DateTime.Now;
 
-                var timeSinceLastHeistInitiated = now - player.LastHeistInitiated;
+                var oldLastHeistInitiated = player.LastHeistInitiated;
+
+                var timeSinceLastHeistInitiated = now - oldLastHeistInitiated;
 
                 if (timeSinceLastHeistInitiated >= HeistCooldown)
                 {
+                    // Update last heist initiated to prevent initiating
+                    // multiple heists in multiple channels.
+                    player.LastHeistInitiated = now;
+                    Context.SaveChanges();
+
                     var heist = new Heist(message, Context, Random, TwitchClientManager);
                     OngoingHeists.TryAdd(message.Channel, heist);
 
@@ -75,10 +82,10 @@ namespace Chubberino.Modules.CheeseGame.Heists
                     // Since we are sleeping, this needs to be async.
                     SpinWait.Sleep(HeistWaitTime);
 
-                    if (heist.Start())
+                    if (!heist.Start())
                     {
-                        player.LastHeistInitiated = now;
-
+                        // No one joined the heist. Let the user initiate another heist.
+                        player.LastHeistInitiated = oldLastHeistInitiated;
                         Context.SaveChanges();
                     }
 
