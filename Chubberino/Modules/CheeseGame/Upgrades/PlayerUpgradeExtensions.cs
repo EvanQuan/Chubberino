@@ -90,7 +90,7 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
 
         public static Upgrade GetNextStorageUpgrade(this Player player)
         {
-            return (player.NextStorageUpgradeUnlock - 1).GetStorageUpgrade();
+            return player.NextStorageUpgradeUnlock.GetStorageUpgrade();
         }
 
         public static Upgrade GetPreviousCheeseModifierUpgrade(this Player player)
