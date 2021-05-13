@@ -82,21 +82,21 @@ namespace Chubberino.Modules.CheeseGame.Emotes
 
         public String GetRandomPositiveEmote(String channelName)
         {
-            var emoteList = GetEmoteList(channelName, EmoteCategory.Positive);
+            var emoteList = Get(channelName, EmoteCategory.Positive);
             return Random.NextElement(emoteList);
         }
 
         public String GetRandomNegativeEmote(String channelName)
         {
-            var emoteList = GetEmoteList(channelName, EmoteCategory.Negative);
+            var emoteList = Get(channelName, EmoteCategory.Negative);
             return Random.NextElement(emoteList);
         }
 
-        private IList<String> GetEmoteList(String channelName, EmoteCategory category)
+        public IList<String> Get(String channel, EmoteCategory category)
         {
-            return TryGetCachedEmoteList(channelName, category, out var cachedEmoteList)
+            return TryGetCachedEmoteList(channel, category, out var cachedEmoteList)
                 ? cachedEmoteList
-                : TryGetAndCacheDatabaseEmoteList(channelName, category, out var databaseEmoteList)
+                : TryGetAndCacheDatabaseEmoteList(channel, category, out var databaseEmoteList)
                     ? databaseEmoteList
                     : GetDefaultEmoteList(category);
         }
@@ -227,13 +227,6 @@ namespace Chubberino.Modules.CheeseGame.Emotes
             }
 
             return new EmoteManagerResult(succeeded, failed);
-        }
-
-        public IQueryable<String> Get(String channel, EmoteCategory category)
-        {
-            return Context.Emotes
-                .Where(x => x.TwitchDisplayName == channel && x.Category == category)
-                .Select(x => x.Name);
         }
     }
 }
