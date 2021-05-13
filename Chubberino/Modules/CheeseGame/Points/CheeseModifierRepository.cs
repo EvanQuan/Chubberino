@@ -1,9 +1,8 @@
-﻿using Chubberino.Modules.CheeseGame.Repositories;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Chubberino.Modules.CheeseGame.Points
 {
-    public sealed class CheeseModifierRepository : Repository<CheeseModifier>
+    public static class CheeseModifierRepository
     {
         public static IReadOnlyList<CheeseModifier> Modifiers { get; } = new List<CheeseModifier>()
         {
@@ -17,7 +16,5 @@ namespace Chubberino.Modules.CheeseGame.Points
             new CheeseModifier("extra-aged", 12),
             new CheeseModifier("perfect", 15),
         };
-
-        public override IReadOnlyList<CheeseModifier> Values => Modifiers;
     }
 }

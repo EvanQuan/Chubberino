@@ -1,14 +1,10 @@
 ﻿using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.PlayerExtensions;
 using Chubberino.Modules.CheeseGame.Points;
-using Chubberino.Modules.CheeseGame.Repositories;
 using Chubberino.Utility;
 using Monad;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Chubberino.Modules.CheeseGame.Items
 {
@@ -29,9 +25,9 @@ namespace Chubberino.Modules.CheeseGame.Items
 
         public override IEnumerable<String> Names => new String[] { "Recipe", "r", "recipes" };
 
-        public IRepository<CheeseType> CheeseRepository { get; }
+        public IReadOnlyList<CheeseType> CheeseRepository { get; }
 
-        public Recipe(IRepository<CheeseType> cheeseRepository)
+        public Recipe(IReadOnlyList<CheeseType> cheeseRepository)
         {
             CheeseRepository = cheeseRepository;
         }

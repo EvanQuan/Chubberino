@@ -4,7 +4,7 @@ using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Items;
 using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.Points;
-using Chubberino.Modules.CheeseGame.Repositories;
+using Chubberino.Modules.CheeseGame.Quests;
 using Chubberino.Utility;
 using System;
 using System.Collections.Generic;
@@ -16,9 +16,9 @@ namespace Chubberino.Modules.CheeseGame.Shops
 {
     public class Shop : AbstractCommandStrategy, IShop
     {
-        public IRepository<CheeseType> CheeseRepository { get; }
+        public IReadOnlyList<CheeseType> CheeseRepository { get; }
 
-        public IRepository<Quests.Quest> QuestRepository { get; }
+        public IReadOnlyList<Quest> QuestRepository { get; }
 
         public IItemManager ItemManager { get; }
 
@@ -27,8 +27,8 @@ namespace Chubberino.Modules.CheeseGame.Shops
         public Shop(
             IApplicationContext context,
             ITwitchClientManager client,
-            IRepository<CheeseType> cheeseRepository,
-            IRepository<Quests.Quest> questRepository,
+            IReadOnlyList<CheeseType> cheeseRepository,
+            IReadOnlyList<Quest> questRepository,
             Random random,
             IEmoteManager emoteManager,
             IItemManager itemManager)

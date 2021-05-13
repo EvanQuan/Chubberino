@@ -1,10 +1,9 @@
 ﻿using Chubberino.Modules.CheeseGame.Rankings;
-using Chubberino.Modules.CheeseGame.Repositories;
 using System.Collections.Generic;
 
 namespace Chubberino.Modules.CheeseGame.Points
 {
-    public sealed class CheeseRepository : Repository<CheeseType>
+    public static class CheeseRepository
     {
         public static IReadOnlyList<CheeseType> Cheeses { get; } = new List<CheeseType>()
         {
@@ -86,7 +85,5 @@ namespace Chubberino.Modules.CheeseGame.Points
             new CheeseType("Pule", 99, Rank.Legend, 0.75),
             new CheeseType("Chubmeister", 250, Rank.Legend, 0.8),
         };
-
-        public override IReadOnlyList<CheeseType> Values => Cheeses;
     }
 }

@@ -1,5 +1,5 @@
 ﻿using Chubberino.Modules.CheeseGame.Models;
-using Chubberino.Modules.CheeseGame.Repositories;
+using Chubberino.Modules.CheeseGame.Quests;
 using Chubberino.Utility;
 using Monad;
 using System;
@@ -7,13 +7,13 @@ using System.Collections.Generic;
 
 namespace Chubberino.Modules.CheeseGame.Items
 {
-    public sealed class Quest : Item
+    public sealed class QuestLocation : Item
     {
         public override IEnumerable<String> Names { get; } = new String[] { "Quest", "q", "quests" };
 
-        public IRepository<Quests.Quest> QuestRepository { get; }
+        public IReadOnlyList<Quest> QuestRepository { get; }
 
-        public Quest(IRepository<Quests.Quest> questRepository)
+        public QuestLocation(IReadOnlyList<Quest> questRepository)
         {
             QuestRepository = questRepository;
         }

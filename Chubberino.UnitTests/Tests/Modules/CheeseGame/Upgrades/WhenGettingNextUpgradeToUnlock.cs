@@ -56,6 +56,20 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Upgrades
         }
 
         [Fact]
+        public void ShouldReturnStorage()
+        {
+            Player.NextCheeseModifierUpgradeUnlock = Rank.Silver;
+            Player.NextCriticalCheeseUpgradeUnlock = Rank.Silver;
+            Player.NextQuestRewardUpgradeUnlock = Rank.Silver;
+            Player.NextWorkerProductionUpgradeUnlock = Rank.Silver;
+            Player.NextStorageUpgradeUnlock = Rank.Bronze;
+
+            UpgradeType result = Player.GetNextUpgradeToUnlock();
+
+            Assert.Equal(UpgradeType.Storage, result);
+        }
+
+        [Fact]
         public void ShouldReturnNone()
         {
             Player.NextCheeseModifierUpgradeUnlock = Rank.None;
