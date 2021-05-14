@@ -66,7 +66,7 @@ namespace Chubberino.Modules.CheeseGame.Hazards
 
             if (Random.TryPercentChance(InfestationChance[player.Rank]))
             {
-                Int32 ratCount = Random.Next(1, InfestationMaximum[player.Rank]);
+                Int32 ratCount = Random.Next(1, InfestationMaximum[player.Rank] + 1);
 
                 Boolean isSingle = ratCount == 1;
                 String rat = isSingle ? "rat" : "rats";
