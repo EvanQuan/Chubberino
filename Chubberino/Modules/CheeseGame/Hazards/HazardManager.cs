@@ -20,19 +20,30 @@ namespace Chubberino.Modules.CheeseGame.Hazards
 
         public const String KillNewRatMessage = "A giant rat sneaks into your factory, but is promptly killed by a mousetrap you have set up. ";
 
+        public static class InfestationMaximum
+        {
+            public const Int32 Silver = 3;
+            public const Int32 Gold = 7;
+            public const Int32 Platinum = 12;
+            public const Int32 Diamond = 18;
+            public const Int32 Master = 25;
+            public const Int32 Grandmaster = 33;
+            public const Int32 Legend = 42;
+        }
+
         /// <summary>
         /// Maximum number of rats per infestation at each rank.
         /// </summary>
-        public static IDictionary<Rank, Int32> InfestationMaximum { get; } = new Dictionary<Rank, Int32>()
+        public static IDictionary<Rank, Int32> InfestationMaximums { get; } = new Dictionary<Rank, Int32>()
         {
             { Rank.Bronze, 0 },
-            { Rank.Silver, 3 },
-            { Rank.Gold, 7 },
-            { Rank.Platinum, 12 },
-            { Rank.Diamond, 18 },
-            { Rank.Master, 25 },
-            { Rank.Grandmaster, 33 },
-            { Rank.Legend, 42 },
+            { Rank.Silver, InfestationMaximum.Silver },
+            { Rank.Gold, InfestationMaximum.Gold },
+            { Rank.Platinum, InfestationMaximum.Platinum },
+            { Rank.Diamond, InfestationMaximum.Diamond },
+            { Rank.Master, InfestationMaximum.Master },
+            { Rank.Grandmaster, InfestationMaximum.Grandmaster },
+            { Rank.Legend, InfestationMaximum.Legend },
         };
 
         /// <summary>
@@ -66,7 +77,7 @@ namespace Chubberino.Modules.CheeseGame.Hazards
 
             if (Random.TryPercentChance(InfestationChance[player.Rank]))
             {
-                Int32 ratCount = Random.Next(1, InfestationMaximum[player.Rank] + 1);
+                Int32 ratCount = Random.Next(1, InfestationMaximums[player.Rank] + 1);
 
                 Boolean isSingle = ratCount == 1;
                 String rat = isSingle ? "rat" : "rats";
