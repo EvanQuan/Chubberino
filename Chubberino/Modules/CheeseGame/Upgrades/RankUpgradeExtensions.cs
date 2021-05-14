@@ -15,7 +15,7 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
 
         private const String StorageDescription = "+{0}% -> +{1}% storage increase";
 
-        private const String QuestRewardDescription = "x{0} -> x{1} cheese quest rewards";
+        private const String QuestDescription = "x{0} -> x{1} rare quest chance";
 
         public static Upgrade GetCheeseModifierUpgrade(this Rank rank)
         {
@@ -43,10 +43,10 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
 
         public static Upgrade GetQuestUpgrade(this Rank rank)
         {
-            String currentUpgradePercent = String.Format("{0:0.0}", rank.GetQuestRewardMultiplier());
-            String nextUpgradePercent = String.Format("{0:0.0}", rank.Next().GetQuestRewardMultiplier());
+            String currentUpgradePercent = String.Format("{0:0.0}", rank.GetRareQuestChanceMultiplier());
+            String nextUpgradePercent = String.Format("{0:0.0}", rank.Next().GetRareQuestChanceMultiplier());
             return new Upgrade(
-                String.Format(QuestRewardDescription, currentUpgradePercent, nextUpgradePercent),
+                String.Format(QuestDescription, currentUpgradePercent, nextUpgradePercent),
                 rank,
                 0.55,
                 x => x.NextQuestUpgradeUnlock++);
