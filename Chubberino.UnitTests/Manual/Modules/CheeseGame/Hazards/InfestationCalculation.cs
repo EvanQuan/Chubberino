@@ -53,7 +53,7 @@ namespace Chubberino.UnitTests.Manual.Modules.CheeseGame.Hazards
         public static (Double Minimum, Double Average, Double Maximum) NewInfest(Rank rank)
         {
             Int32 minCount = rank > Rank.Bronze ? 1 : 0;
-            Int32 maxCount = HazardManager.InfestationMaximum[rank];
+            Int32 maxCount = HazardManager.InfestationMaximums[rank];
             Double averageCount = (maxCount + minCount) / 2.0;
 
             Double chance = HazardManager.InfestationChance[rank];

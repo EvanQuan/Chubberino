@@ -24,7 +24,7 @@ namespace Chubberino.Modules.CheeseGame.Items
         {
             if (player.TryGetNextUpgradeToUnlock(out var upgrade))
             {
-                return $"the {upgrade.Description}";
+                return $"the {upgrade.Description} upgrade";
             }
 
             return UnexpectedErrorMessage;

@@ -20,19 +20,30 @@ namespace Chubberino.Modules.CheeseGame.Hazards
 
         public const String KillNewRatMessage = "A giant rat sneaks into your factory, but is promptly killed by a mousetrap you have set up. ";
 
+        public static class InfestationMaximum
+        {
+            public const Int32 Silver = 3;
+            public const Int32 Gold = 7;
+            public const Int32 Platinum = 12;
+            public const Int32 Diamond = 18;
+            public const Int32 Master = 25;
+            public const Int32 Grandmaster = 33;
+            public const Int32 Legend = 42;
+        }
+
         /// <summary>
         /// Maximum number of rats per infestation at each rank.
         /// </summary>
-        public static IDictionary<Rank, Int32> InfestationMaximum { get; } = new Dictionary<Rank, Int32>()
+        public static IDictionary<Rank, Int32> InfestationMaximums { get; } = new Dictionary<Rank, Int32>()
         {
             { Rank.Bronze, 0 },
-            { Rank.Silver, 3 },
-            { Rank.Gold, 7 },
-            { Rank.Platinum, 12 },
-            { Rank.Diamond, 18 },
-            { Rank.Master, 25 },
-            { Rank.Grandmaster, 33 },
-            { Rank.Legend, 42 },
+            { Rank.Silver, InfestationMaximum.Silver },
+            { Rank.Gold, InfestationMaximum.Gold },
+            { Rank.Platinum, InfestationMaximum.Platinum },
+            { Rank.Diamond, InfestationMaximum.Diamond },
+            { Rank.Master, InfestationMaximum.Master },
+            { Rank.Grandmaster, InfestationMaximum.Grandmaster },
+            { Rank.Legend, InfestationMaximum.Legend },
         };
 
         /// <summary>
@@ -63,10 +74,46 @@ namespace Chubberino.Modules.CheeseGame.Hazards
         {
             String outputMessage = String.Empty;
 
-            if (player.IsInfested())
+
+            if (Random.TryPercentChance(InfestationChance[player.Rank]))
             {
-                // If already rat infested, player must deal with existing rats before infestation is over.
-                // New rats cannot be added.
+                Int32 ratCount = Random.Next(1, InfestationMaximums[player.Rank] + 1);
+
+                Boolean isSingle = ratCount == 1;
+                String rat = isSingle ? "rat" : "rats";
+
+                String sneak = isSingle ? "sneaks" : "sneak";
+
+                // New rat count after new infestation and removed from mousetraps.
+                Int32 newRatCount = 0.Max(ratCount + player.MouseCount - player.MouseTrapCount);
+
+                if (player.MouseTrapCount == 0)
+                {
+                    // New infestation, uncontested.
+                    outputMessage = $"{ratCount} giant {rat} {sneak} into your cheese factory, scaring away your workers. ";
+                    player.MouseCount += ratCount;
+                }
+                else if (newRatCount <= 0)
+                {
+                    // New infestation (and maybe old infestation) eliminated.
+                    outputMessage = $"{ratCount} giant {rat} {sneak} into your cheese factory, but {(isSingle ? "is": "are all")} promptly killed by {(isSingle ? "a mousetrap" : "mousetraps")} you have set up. ";
+                    player.MouseTrapCount -= (ratCount + player.MouseCount);
+                    player.MouseCount = 0;
+                }
+                else
+                {
+                    // New infestation, contested.
+                    Boolean isSingleNewRat = newRatCount == 1;
+                    Boolean isSingleMouseTrapUsed = player.MouseTrapCount == 1;
+                    outputMessage = $"{ratCount} giant {rat} {sneak} into your cheese factory. {newRatCount} {(isSingleNewRat ? "remains" : "remain")} after {player.MouseTrapCount} {(isSingleMouseTrapUsed ? "is" : "are")} killed by {(isSingleMouseTrapUsed ? "a mousetrap" : "mousetraps")} ";
+                    player.MouseCount = newRatCount;
+                    player.MouseTrapCount = 0;
+                }
+                Context.SaveChanges();
+            }
+            else if (player.IsInfested())
+            {
+                // Player is already infested, but not new rats were added.
                 Boolean isSingle = player.MouseCount == 1;
                 Boolean isSingleMouseTrapUsed = player.MouseTrapCount == 1;
 
@@ -94,39 +141,6 @@ namespace Chubberino.Modules.CheeseGame.Hazards
                     player.MouseCount = 0;
                     Context.SaveChanges();
                 }
-            }
-            else if (Random.TryPercentChance(InfestationChance[player.Rank]))
-            {
-                Int32 ratCount = Random.Next(1, InfestationMaximum[player.Rank]);
-
-                Boolean isSingle = ratCount == 1;
-                String rat = isSingle ? "rat" : "rats";
-
-                String sneak = isSingle ? "sneaks" : "sneak";
-
-                if (player.MouseTrapCount == 0)
-                {
-                    // New infestation, uncontested.
-                    outputMessage = $"{ratCount} giant {rat} {sneak} into your cheese factory, scaring away your workers. ";
-                    player.MouseCount = ratCount;
-                }
-                else if (ratCount <= player.MouseTrapCount)
-                {
-                    // No new infestation, prevented.
-                    outputMessage = $"{ratCount} giant {rat} {sneak} into your cheese factory, but {(isSingle ? "is": "are all")} promptly killed by {(isSingle ? "a mousetrap" : "mousetraps")} you have set up. ";
-                    player.MouseTrapCount -= ratCount;
-                }
-                else
-                {
-                    // New infestation, contested.
-                    Int32 newRatCount = ratCount - player.MouseTrapCount;
-                    Boolean isSingleNewRat = newRatCount == 1;
-                    Boolean isSingleMouseTrapUsed = player.MouseTrapCount == 1;
-                    outputMessage = $"{ratCount} giant {rat} {sneak} into your cheese factory. {newRatCount} {(isSingleNewRat ? "remains" : "remain")} after {player.MouseTrapCount} {(isSingleMouseTrapUsed ? "is" : "are")} killed by {(isSingleMouseTrapUsed ? "a mousetrap" : "mousetraps")} ";
-                    player.MouseTrapCount = 0;
-                    player.MouseCount = newRatCount;
-                }
-                Context.SaveChanges();
             }
 
             return outputMessage;
