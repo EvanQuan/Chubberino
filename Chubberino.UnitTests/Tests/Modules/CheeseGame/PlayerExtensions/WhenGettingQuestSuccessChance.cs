@@ -49,11 +49,11 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.PlayerExtensions
         public void ShouldNotBeImpactedByRank(Int32 workerCount, Rank lessRanker, Rank greaterRank)
         {
             Player.WorkerCount = workerCount;
-            Player.NextQuestRewardUpgradeUnlock = lessRanker;
+            Player.NextQuestUpgradeUnlock = lessRanker;
 
             Double lesserResult = Player.GetQuestSuccessChance();
 
-            Player.NextQuestRewardUpgradeUnlock = greaterRank;
+            Player.NextQuestUpgradeUnlock = greaterRank;
 
             Double greaterResult = Player.GetQuestSuccessChance();
 

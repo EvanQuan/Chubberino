@@ -23,7 +23,7 @@ namespace Chubberino.Modules.CheeseGame.Models
 
         public Rank NextWorkerProductionUpgradeUnlock { get; set; }
 
-        public Rank NextQuestRewardUpgradeUnlock { get; set; }
+        public Rank NextQuestUpgradeUnlock { get; set; }
 
         public Rank NextCheeseModifierUpgradeUnlock { get; set; }
 
@@ -40,9 +40,9 @@ namespace Chubberino.Modules.CheeseGame.Models
         public Int32 MouseTrapCount { get; set; }
 
         /// <summary>
-        /// Number of mice present in the factory.
+        /// Number of rats present in the factory.
         /// </summary>
-        public Int32 MouseCount { get; set; }
+        public Int32 RatCount { get; set; }
 
         public Rank NextStorageUpgradeUnlock { get; set; }
 

@@ -27,7 +27,7 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Upgrades
         {
             Player.NextCheeseModifierUpgradeUnlock = Rank.Silver;
             Player.NextCriticalCheeseUpgradeUnlock = Rank.Silver;
-            Player.NextQuestRewardUpgradeUnlock = Rank.Silver;
+            Player.NextQuestUpgradeUnlock = Rank.Silver;
             Player.NextWorkerProductionUpgradeUnlock = Rank.Silver;
             Player.NextStorageUpgradeUnlock = Rank.Silver;
 
@@ -41,7 +41,7 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Upgrades
         {
             Player.NextCheeseModifierUpgradeUnlock = Rank.Silver;
             Player.NextCriticalCheeseUpgradeUnlock = Rank.Silver;
-            Player.NextQuestRewardUpgradeUnlock = Rank.Silver;
+            Player.NextQuestUpgradeUnlock = Rank.Silver;
             Player.NextWorkerProductionUpgradeUnlock = Rank.Bronze;
             Player.NextStorageUpgradeUnlock = Rank.Bronze;
 
@@ -55,7 +55,7 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Upgrades
         {
             Player.NextCheeseModifierUpgradeUnlock = Rank.None;
             Player.NextCriticalCheeseUpgradeUnlock = Rank.None;
-            Player.NextQuestRewardUpgradeUnlock = Rank.None;
+            Player.NextQuestUpgradeUnlock = Rank.None;
             Player.NextWorkerProductionUpgradeUnlock = Rank.None;
             Player.NextStorageUpgradeUnlock = Rank.None;
 

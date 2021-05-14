@@ -56,7 +56,7 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Hazards.HazardManagers
 
             Assert.NotNull(outputMessage);
             Assert.Empty(outputMessage);
-            Assert.Equal(0, Player.MouseCount);
+            Assert.Equal(0, Player.RatCount);
             Assert.Equal(mouseTrapCount, Player.MouseTrapCount);
             MockedApplicationContext.Verify(x => x.SaveChanges(), Times.Never());
         }
@@ -73,14 +73,14 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Hazards.HazardManagers
             MockedRandom.SetupReturnMaximum();
             MockedRandom.Setup(x => x.NextDouble()).Returns(0);
             Player.Rank = rank;
-            Player.MouseCount = initialRatCount;
+            Player.RatCount = initialRatCount;
             var expectedRatCount = HazardManager.InfestationMaximums[rank] + initialRatCount;
 
             var outputMessage = Sut.UpdateInfestationStatus(Player);
 
             Assert.NotNull(outputMessage);
             Assert.NotEmpty(outputMessage);
-            Assert.Equal(expectedRatCount, Player.MouseCount);
+            Assert.Equal(expectedRatCount, Player.RatCount);
             Assert.Equal(0, Player.MouseTrapCount);
             MockedApplicationContext.Verify(x => x.SaveChanges(), Times.Once());
         }
@@ -98,14 +98,14 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Hazards.HazardManagers
             MockedRandom.SetupReturnMaximum();
             MockedRandom.Setup(x => x.NextDouble()).Returns(0);
             Player.Rank = rank;
-            Player.MouseCount = oldRatCount;
+            Player.RatCount = oldRatCount;
             Player.MouseTrapCount = initialMouseTrapCount;
 
             var outputMessage = Sut.UpdateInfestationStatus(Player);
 
             Assert.NotNull(outputMessage);
             Assert.NotEmpty(outputMessage);
-            Assert.Equal(0, Player.MouseCount);
+            Assert.Equal(0, Player.RatCount);
             Assert.Equal(expectedNewMouseTrapcount, Player.MouseTrapCount);
             MockedApplicationContext.Verify(x => x.SaveChanges(), Times.Once());
         }
@@ -125,14 +125,14 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Hazards.HazardManagers
             MockedRandom.SetupReturnMaximum();
             MockedRandom.Setup(x => x.NextDouble()).Returns(0);
             Player.Rank = rank;
-            Player.MouseCount = oldRatCount;
+            Player.RatCount = oldRatCount;
             Player.MouseTrapCount = initialMouseTrapCount;
 
             var outputMessage = Sut.UpdateInfestationStatus(Player);
 
             Assert.NotNull(outputMessage);
             Assert.NotEmpty(outputMessage);
-            Assert.Equal(expectedNewRatCount, Player.MouseCount);
+            Assert.Equal(expectedNewRatCount, Player.RatCount);
             Assert.Equal(0, Player.MouseTrapCount);
             MockedApplicationContext.Verify(x => x.SaveChanges(), Times.Once());
         }
@@ -148,13 +148,13 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Hazards.HazardManagers
         {
             MockedRandom.SetupReturnMaximum();
             Player.Rank = rank;
-            Player.MouseCount = expectedRatCount;
+            Player.RatCount = expectedRatCount;
 
             var outputMessage = Sut.UpdateInfestationStatus(Player);
 
             Assert.NotNull(outputMessage);
             Assert.NotEmpty(outputMessage);
-            Assert.Equal(expectedRatCount, Player.MouseCount);
+            Assert.Equal(expectedRatCount, Player.RatCount);
             Assert.Equal(0, Player.MouseTrapCount);
             MockedApplicationContext.Verify(x => x.SaveChanges(), Times.Never());
         }
@@ -172,14 +172,14 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Hazards.HazardManagers
         {
             MockedRandom.SetupReturnMaximum();
             Player.Rank = rank;
-            Player.MouseCount = oldRatCount;
+            Player.RatCount = oldRatCount;
             Player.MouseTrapCount = initialMouseTrapCount;
 
             var outputMessage = Sut.UpdateInfestationStatus(Player);
 
             Assert.NotNull(outputMessage);
             Assert.NotEmpty(outputMessage);
-            Assert.Equal(0, Player.MouseCount);
+            Assert.Equal(0, Player.RatCount);
             Assert.Equal(expectedNewMouseTrapcount, Player.MouseTrapCount);
             MockedApplicationContext.Verify(x => x.SaveChanges(), Times.Once());
         }
@@ -196,14 +196,14 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Hazards.HazardManagers
         {
             MockedRandom.SetupReturnMaximum();
             Player.Rank = rank;
-            Player.MouseCount = oldRatCount;
+            Player.RatCount = oldRatCount;
             Player.MouseTrapCount = initialMouseTrapCount;
 
             var outputMessage = Sut.UpdateInfestationStatus(Player);
 
             Assert.NotNull(outputMessage);
             Assert.NotEmpty(outputMessage);
-            Assert.Equal(expectedNewRatCount, Player.MouseCount);
+            Assert.Equal(expectedNewRatCount, Player.RatCount);
             Assert.Equal(0, Player.MouseTrapCount);
             MockedApplicationContext.Verify(x => x.SaveChanges(), Times.Once());
         }
@@ -225,7 +225,7 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Hazards.HazardManagers
 
             Assert.NotNull(outputMessage);
             Assert.Empty(outputMessage);
-            Assert.Equal(0, Player.MouseCount);
+            Assert.Equal(0, Player.RatCount);
             Assert.Equal(expectedMouseTrapCount, Player.MouseTrapCount);
             MockedApplicationContext.Verify(x => x.SaveChanges(), Times.Never());
         }

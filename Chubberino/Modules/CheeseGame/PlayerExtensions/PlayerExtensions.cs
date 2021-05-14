@@ -16,12 +16,12 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
             player.Rank = Rankings.Rank.Bronze;
             player.CheeseUnlocked = 0;
             player.NextWorkerProductionUpgradeUnlock = 0;
-            player.NextQuestRewardUpgradeUnlock = 0;
+            player.NextQuestUpgradeUnlock = 0;
             player.NextCheeseModifierUpgradeUnlock = 0;
             player.NextStorageUpgradeUnlock = 0;
             player.NextCriticalCheeseUpgradeUnlock = 0;
             player.MouseTrapCount = 0;
-            player.MouseCount = 0;
+            player.RatCount = 0;
             player.CatCount = 0;
             player.ContributedDamageToBoss = 0;
             player.QuestsUnlockedCount = 0;
@@ -32,7 +32,7 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
 
         public static Boolean IsInfested(this Player player)
         {
-            return player.MouseCount > 0;
+            return player.RatCount > 0;
         }
 
         public static String GetDisplayName(this Player player)

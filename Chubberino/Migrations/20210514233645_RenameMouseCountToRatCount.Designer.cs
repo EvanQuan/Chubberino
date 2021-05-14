@@ -4,14 +4,16 @@ using Chubberino.Database.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Chubberino.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20210514233645_RenameMouseCountToRatCount")]
+    partial class RenameMouseCountToRatCount
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -161,7 +163,7 @@ namespace Chubberino.Migrations
                     b.Property<int>("NextCriticalCheeseUpgradeUnlock")
                         .HasColumnType("int");
 
-                    b.Property<int>("NextQuestUpgradeUnlock")
+                    b.Property<int>("NextQuestRewardUpgradeUnlock")
                         .HasColumnType("int");
 
                     b.Property<int>("NextStorageUpgradeUnlock")
