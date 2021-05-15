@@ -54,8 +54,8 @@ namespace Chubberino.Utility
 
         /// <summary>
         /// Get a random element from the specified <paramref name="list"/>,
-        /// with an upper bound on the <paramref name="maximumIndex"/> of that
-        /// list.
+        /// with an inclusive upper bound on the <paramref name="maximumIndex"/>
+        /// of that list.
         /// </summary>
         /// <typeparam name="TElement">The type of elements in the list.</typeparam>
         /// <param name="random">Source.</param>
@@ -67,13 +67,12 @@ namespace Chubberino.Utility
             var exclusiveMax = (maximumIndex + 1).Max(0).Min(list.Count);
             var finalIndex = random.Next(0, exclusiveMax);
             return list[finalIndex];
-            // return list[random.Next(0, maximumIndex.Max(0).Min(list.Count))];
         }
 
         /// <summary>
         /// Get a random element from the specified <paramref name="list"/>,
-        /// with an upper bound on the <paramref name="maximumIndex"/> of that
-        /// list.
+        /// with an inclusive upper bound on the <paramref name="maximumIndex"/>
+        /// of that list.
         /// </summary>
         /// <typeparam name="TElement">The type of elements in the list.</typeparam>
         /// <param name="random">Source.</param>
@@ -85,7 +84,6 @@ namespace Chubberino.Utility
             var exclusiveMax = (maximumIndex + 1).Max(0).Min(list.Count);
             var finalIndex = random.Next(0, exclusiveMax);
             return list[finalIndex];
-            // return list[random.Next(0, (maximumIndex + 1).Max(0).Min(list.Count))];
         }
 
         /// <summary>

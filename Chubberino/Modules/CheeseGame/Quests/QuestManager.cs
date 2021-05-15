@@ -51,7 +51,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
 
             if (timeSinceLastQuestVentured >= QuestCooldown)
             {
-                var quest = Random.NextElement(QuestRepository, player.QuestsUnlockedCount);
+                var quest = Random.NextElement(QuestRepository, player.QuestsUnlockedCount - 1);
 
                 StartQuest(message, player, quest);
 
