@@ -11,7 +11,7 @@ namespace Chubberino.Modules.CheeseGame.Items
 
         public override Int32 GetPrice(Player player)
         {
-            return 25;
+            return player.GetMousetrapPrice();
         }
 
         public override String GetSpecificNameForNotEnoughToBuy(Player player)
