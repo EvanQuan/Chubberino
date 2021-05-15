@@ -49,7 +49,7 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
                 String.Format(QuestRewardDescription, currentUpgradePercent, nextUpgradePercent),
                 rank,
                 0.55,
-                x => x.NextQuestRewardUpgradeUnlock++);
+                x => x.NextQuestUpgradeUnlock++);
         }
 
         public static Upgrade GetWorkerProductionUpgrade(this Rank rank)

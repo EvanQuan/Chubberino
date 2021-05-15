@@ -12,11 +12,11 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
             {
                 return UpgradeType.WorkerProduction;
             }
-            else if (player.NextQuestRewardUpgradeUnlock > player.NextWorkerProductionUpgradeUnlock)
+            else if (player.NextQuestUpgradeUnlock > player.NextWorkerProductionUpgradeUnlock)
             {
                 return UpgradeType.Quest;
             }
-            else if (player.NextCriticalCheeseUpgradeUnlock > player.NextQuestRewardUpgradeUnlock)
+            else if (player.NextCriticalCheeseUpgradeUnlock > player.NextQuestUpgradeUnlock)
             {
                 return UpgradeType.CriticalCheese;
             }
@@ -46,11 +46,11 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
             {
                 return UpgradeType.Storage;
             }
-            else if (player.NextQuestRewardUpgradeUnlock > player.NextWorkerProductionUpgradeUnlock)
+            else if (player.NextQuestUpgradeUnlock > player.NextWorkerProductionUpgradeUnlock)
             {
                 return UpgradeType.WorkerProduction;
             }
-            else if (player.NextCriticalCheeseUpgradeUnlock > player.NextQuestRewardUpgradeUnlock)
+            else if (player.NextCriticalCheeseUpgradeUnlock > player.NextQuestUpgradeUnlock)
             {
                 return UpgradeType.Quest;
             }
@@ -80,7 +80,7 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
 
         public static Upgrade GetNextQuestRewardUpgrade(this Player player)
         {
-            return player.NextQuestRewardUpgradeUnlock.GetQuestUpgrade();
+            return player.NextQuestUpgradeUnlock.GetQuestUpgrade();
         }
 
         public static Upgrade GetNextWorkerProductionUpgrade(this Player player)
@@ -105,7 +105,7 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
 
         public static Upgrade GetPreviousQuestRewardUpgrade(this Player player)
         {
-            return (player.NextQuestRewardUpgradeUnlock - 1).GetQuestUpgrade();
+            return (player.NextQuestUpgradeUnlock - 1).GetQuestUpgrade();
         }
 
         public static Upgrade GetPreviousWorkerProductionUpgrade(this Player player)
