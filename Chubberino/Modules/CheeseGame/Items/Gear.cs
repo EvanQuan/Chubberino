@@ -12,7 +12,7 @@ namespace Chubberino.Modules.CheeseGame.Items
 
         public override Int32 GetPrice(Player player)
         {
-            return 1 + (player.GearCount / 10) * player.GearCount;
+            return player.GetGearPrice();
         }
 
         public override String GetSpecificNameForNotEnoughToBuy(Player player)

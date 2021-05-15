@@ -1,5 +1,5 @@
-﻿using Chubberino.Modules.CheeseGame.PlayerExtensions;
-using Chubberino.Modules.CheeseGame.Points;
+﻿using Chubberino.Modules.CheeseGame.Items;
+using Chubberino.Modules.CheeseGame.PlayerExtensions;
 using Chubberino.Modules.CheeseGame.Rankings;
 using System;
 
@@ -14,7 +14,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
                   {
                       if (player.WorkerCount + 1 > player.PopulationCount)
                       {
-                          Int32 rewardPoints = (Int32)(50 * player.Rank.GetQuestRewardMultiplier());
+                          Int32 rewardPoints = player.GetWorkerPrice();
                           player.AddPoints(rewardPoints);
 
                           return "You come across a lonely traveller looking for work. " +

@@ -78,7 +78,7 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
             return player.NextCriticalCheeseUpgradeUnlock.GetCriticalCheeseUpgrade();
         }
 
-        public static Upgrade GetNextQuestRewardUpgrade(this Player player)
+        public static Upgrade GetNextQuestUpgrade(this Player player)
         {
             return player.NextQuestUpgradeUnlock.GetQuestUpgrade();
         }
@@ -103,7 +103,7 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
             return (player.NextCriticalCheeseUpgradeUnlock - 1).GetCriticalCheeseUpgrade();
         }
 
-        public static Upgrade GetPreviousQuestRewardUpgrade(this Player player)
+        public static Upgrade GetPreviousQuestUpgrade(this Player player)
         {
             return (player.NextQuestUpgradeUnlock - 1).GetQuestUpgrade();
         }
@@ -124,7 +124,7 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
             {
                 UpgradeType.CheeseModifier => GetNextCheeseModifierUpgrade,
                 UpgradeType.CriticalCheese => GetNextCriticalCheeseUpgrade,
-                UpgradeType.Quest => GetNextQuestRewardUpgrade,
+                UpgradeType.Quest => GetNextQuestUpgrade,
                 UpgradeType.WorkerProduction => GetNextWorkerProductionUpgrade,
                 UpgradeType.Storage => GetNextStorageUpgrade,
                 _ => default,
@@ -139,7 +139,7 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
             {
                 UpgradeType.CheeseModifier => GetPreviousCheeseModifierUpgrade,
                 UpgradeType.CriticalCheese => GetPreviousCriticalCheeseUpgrade,
-                UpgradeType.Quest => GetPreviousQuestRewardUpgrade,
+                UpgradeType.Quest => GetPreviousQuestUpgrade,
                 UpgradeType.WorkerProduction => GetPreviousWorkerProductionUpgrade,
                 UpgradeType.Storage => GetPreviousStorageUpgrade,
                 _ => default,
