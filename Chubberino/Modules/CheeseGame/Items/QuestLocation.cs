@@ -74,7 +74,7 @@ namespace Chubberino.Modules.CheeseGame.Items
         public override String GetShopPrompt(Player player)
         {
             String questPrompt;
-            if (QuestRepository.TryGetNextToUnlock(player, out Quests.Quest nextQuestToUnlock))
+            if (QuestRepository.TryGetNextToUnlock(player, out var nextQuestToUnlock))
             {
                 if (nextQuestToUnlock.RankToUnlock > player.Rank)
                 {
