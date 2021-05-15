@@ -43,8 +43,8 @@ namespace Chubberino.Modules.CheeseGame.Upgrades
 
         public static Upgrade GetQuestUpgrade(this Rank rank)
         {
-            String currentUpgradePercent = String.Format("{0:0.0}", rank.GetRareQuestChanceMultiplier());
-            String nextUpgradePercent = String.Format("{0:0.0}", rank.Next().GetRareQuestChanceMultiplier());
+            String currentUpgradePercent = String.Format("{0:0.0}", rank.GetRareQuestChance());
+            String nextUpgradePercent = String.Format("{0:0.0}", rank.Next().GetRareQuestChance());
             return new Upgrade(
                 String.Format(QuestDescription, currentUpgradePercent, nextUpgradePercent),
                 rank,
