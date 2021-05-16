@@ -84,13 +84,11 @@ namespace Chubberino.Modules.CheeseGame.Items
                 {
                     questPrompt = $"{nextQuestToUnlock.Location} ({nextQuestToUnlock.RewardDescription(player)})] for {nextQuestToUnlock.Price} cheese"; 
                 }
-            }
-            else
-            {
-                questPrompt = "OUT OF ORDER]";
+
+                return $"{base.GetShopPrompt(player)} [{questPrompt}";
             }
 
-            return $"{base.GetShopPrompt(player)} [{questPrompt}";
+            return null;
         }
     }
 }

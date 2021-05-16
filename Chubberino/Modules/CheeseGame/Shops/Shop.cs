@@ -21,8 +21,6 @@ namespace Chubberino.Modules.CheeseGame.Shops
 
         public IReadOnlyList<Quest> QuestRepository { get; }
 
-        public IItemManager ItemManager { get; }
-
         public IList<IItem> Items { get; }
 
         public Shop(
@@ -31,13 +29,11 @@ namespace Chubberino.Modules.CheeseGame.Shops
             IReadOnlyList<CheeseType> cheeseRepository,
             IReadOnlyList<Quest> questRepository,
             Random random,
-            IEmoteManager emoteManager,
-            IItemManager itemManager)
+            IEmoteManager emoteManager)
             : base(context, client, random, emoteManager)
         {
             CheeseRepository = cheeseRepository;
             QuestRepository = questRepository;
-            ItemManager = itemManager;
             Items = new List<IItem>();
         }
 
@@ -49,9 +45,14 @@ namespace Chubberino.Modules.CheeseGame.Shops
 
             foreach (var item in Items)
             {
-                inventoryPrompt
-                    .Append(" | ")
-                    .Append(item.GetShopPrompt(player));
+                var prompt = item.GetShopPrompt(player);
+
+                if (prompt != null)
+                {
+                    inventoryPrompt
+                        .Append(" | ")
+                        .Append(prompt);
+                }
             }
 
             TwitchClientManager.SpoolMessageAsMe(message.Channel, player, inventoryPrompt.ToString(), Priority.Low);
@@ -74,8 +75,6 @@ namespace Chubberino.Modules.CheeseGame.Shops
 
             // Cut out space between buy and item
             String remainingArguments = arguments.GetNextWord(out String itemToBuy);
-
-            PriceList prices = ItemManager.GetPrices(player);
 
             String outputMessage;
 

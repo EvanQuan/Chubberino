@@ -8,6 +8,8 @@ namespace Chubberino.Modules.CheeseGame.Items
 {
     public sealed class Gear : Item
     {
+        public const Int32 MaximumCount = 150;
+
         public override IEnumerable<String> Names { get; } = new String[] { "Gear", "g", "gears" };
 
         public override Int32 GetPrice(Player player)
@@ -35,10 +37,28 @@ namespace Chubberino.Modules.CheeseGame.Items
             return () => 1;
         }
 
+
+        public override Boolean IsForSale(Player player, out String reason)
+        {
+            if (player.GearCount < 150)
+            {
+                reason = default;
+                return true;
+            }
+
+            reason = "You cannot buy any more gear.";
+            return false;
+        }
+
         public override String GetShopPrompt(Player player)
         {
-            var questSuccessChance = player.GetQuestSuccessChance();
-            return $"{base.GetShopPrompt(player)} [+{String.Format("{0:0.0}", questSuccessChance * 100)}% -> +{String.Format("{0:0.0}", (questSuccessChance + Constants.QuestGearSuccessPercent) * 100)}% quest success] for {GetPrice(player)} cheese";
+            if (IsForSale(player, out _))
+            {
+                var questSuccessChance = player.GetQuestSuccessChance();
+                return $"{base.GetShopPrompt(player)} [+{String.Format("{0:0.0}", questSuccessChance * 100)}% -> +{String.Format("{0:0.0}", (questSuccessChance + Constants.QuestGearSuccessPercent) * 100)}% quest success] for {GetPrice(player)} cheese";
+            }
+
+            return null;
         }
     }
 }
