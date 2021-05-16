@@ -49,9 +49,12 @@ namespace Chubberino.Modules.CheeseGame.Shops
 
             foreach (var item in Items)
             {
-                inventoryPrompt
-                    .Append(" | ")
-                    .Append(item.GetShopPrompt(player));
+                if (item.IsForSale(player, out _))
+                {
+                    inventoryPrompt
+                        .Append(" | ")
+                        .Append(item.GetShopPrompt(player));
+                }
             }
 
             TwitchClientManager.SpoolMessageAsMe(message.Channel, player, inventoryPrompt.ToString(), Priority.Low);
