@@ -31,14 +31,17 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Items
             Assert.Contains(Repository[0].Location, prompt);
         }
 
+        /// <summary>
+        /// When there are no more quests to unlock, the prompt should be null.
+        /// </summary>
         [Fact]
-        public void ShouldReturnOutOfOrder()
+        public void ShouldReturnNull()
         {
             Player.QuestsUnlockedCount = Repository.Count;
 
             var prompt = Sut.GetShopPrompt(Player);
 
-            Assert.Contains("OUT OF ORDER", prompt);
+            Assert.Null(prompt);
         }
 
     }
