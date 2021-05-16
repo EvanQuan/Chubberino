@@ -67,13 +67,11 @@ namespace Chubberino.Modules.CheeseGame.Items
                 {
                     upgradePrompt = $"{upgrade.Description}] for {upgrade.Price} cheese";
                 }
-            }
-            else
-            {
-                upgradePrompt = "OUT OF ORDER]";
+
+                return $"{base.GetShopPrompt(player)} [{upgradePrompt}";
             }
 
-            return $"{base.GetShopPrompt(player)} [{upgradePrompt}";
+            return null;
         }
     }
 }

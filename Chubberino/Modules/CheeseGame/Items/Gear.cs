@@ -52,8 +52,13 @@ namespace Chubberino.Modules.CheeseGame.Items
 
         public override String GetShopPrompt(Player player)
         {
-            var questSuccessChance = player.GetQuestSuccessChance();
-            return $"{base.GetShopPrompt(player)} [+{String.Format("{0:0.0}", questSuccessChance * 100)}% -> +{String.Format("{0:0.0}", (questSuccessChance + Constants.QuestGearSuccessPercent) * 100)}% quest success] for {GetPrice(player)} cheese";
+            if (IsForSale(player, out _))
+            {
+                var questSuccessChance = player.GetQuestSuccessChance();
+                return $"{base.GetShopPrompt(player)} [+{String.Format("{0:0.0}", questSuccessChance * 100)}% -> +{String.Format("{0:0.0}", (questSuccessChance + Constants.QuestGearSuccessPercent) * 100)}% quest success] for {GetPrice(player)} cheese";
+            }
+
+            return null;
         }
     }
 }

@@ -49,11 +49,13 @@ namespace Chubberino.Modules.CheeseGame.Shops
 
             foreach (var item in Items)
             {
-                if (item.IsForSale(player, out _))
+                var prompt = item.GetShopPrompt(player);
+
+                if (prompt != null)
                 {
                     inventoryPrompt
                         .Append(" | ")
-                        .Append(item.GetShopPrompt(player));
+                        .Append(prompt);
                 }
             }
 
