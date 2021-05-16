@@ -8,6 +8,8 @@ namespace Chubberino.Modules.CheeseGame.Items
 {
     public sealed class Gear : Item
     {
+        public const Int32 MaximumCount = 150;
+
         public override IEnumerable<String> Names { get; } = new String[] { "Gear", "g", "gears" };
 
         public override Int32 GetPrice(Player player)
@@ -33,6 +35,19 @@ namespace Chubberino.Modules.CheeseGame.Items
             player.Points -= price;
 
             return () => 1;
+        }
+
+
+        public override Boolean IsForSale(Player player, out String reason)
+        {
+            if (player.GearCount < 150)
+            {
+                reason = default;
+                return true;
+            }
+
+            reason = "You cannot buy any more gear.";
+            return false;
         }
 
         public override String GetShopPrompt(Player player)
