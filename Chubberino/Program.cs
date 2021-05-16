@@ -145,7 +145,6 @@ namespace Chubberino
             builder.Register(x => CheeseRepository.Cheeses).As<IReadOnlyList<CheeseType>>().SingleInstance();
             builder.Register(x => CheeseModifierRepository.Modifiers).As<IReadOnlyList<CheeseModifier>>().SingleInstance();
             builder.RegisterType<HazardManager>().As<IHazardManager>().SingleInstance();
-            builder.RegisterType<ItemManager>().As<IItemManager>().SingleInstance();
 
             // Items
             builder.RegisterType<Gear>().AsSelf().SingleInstance();
