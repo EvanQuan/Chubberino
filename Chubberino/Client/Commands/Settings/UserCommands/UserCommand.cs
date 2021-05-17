@@ -9,12 +9,13 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
     {
         public static IReadOnlyList<String> UserIdsToIgnore { get; } = new List<String>()
         {
-            // Nightbot
-            "19264788",
-            // SimonSaysBot,
-            "469718952",
-            // VJBotardo
-            "500670723",
+            TwitchUserIDs.MoTroBo,
+            TwitchUserIDs.ThePositiveBot,
+            TwitchUserIDs.SimonSaysBot,
+            TwitchUserIDs.VJBotardo,
+            TwitchUserIDs.Nightbot,
+            TwitchUserIDs.StreamElements,
+            TwitchUserIDs.AmazefulBot,
         };
 
         protected UserCommand(ITwitchClientManager client, IConsole console) : base(client, console)
