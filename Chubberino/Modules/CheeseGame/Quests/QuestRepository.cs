@@ -4,14 +4,14 @@ using System.Collections.Generic;
 
 namespace Chubberino.Modules.CheeseGame.Quests
 {
-    public static class QuestRepository
+    public sealed class QuestRepository : IQuestRepository
     {
         /// <summary>
         /// Chance that a quest from the rare quest pool will be chosen.
         /// </summary>
         public const Double RareQuestChance = 0.01;
 
-        public static IReadOnlyList<Quest> Quests { get; } = new List<Quest>()
+        public static IReadOnlyList<Quest> Common { get; } = new List<Quest>()
         {
             new GainCheeseQuest(
                 "Fontiago Forest",
@@ -192,7 +192,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
 
         };
 
-        public static IReadOnlyList<Quest> RareQuests { get; } = new List<Quest>()
+        public static IReadOnlyList<Quest> Rare { get; } = new List<Quest>()
         {
             new GainCatQuest(),
             new GainStorageQuest(
@@ -204,5 +204,9 @@ namespace Chubberino.Modules.CheeseGame.Quests
                 Rank.Bronze,
                 0)
         };
+
+        public IReadOnlyList<Quest> CommonQuests { get; } = Common;
+
+        public IReadOnlyList<Quest> RareQuests { get; } = Rare;
     }
 }
