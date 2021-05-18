@@ -9,6 +9,17 @@ namespace Chubberino.Modules.CheeseGame.Items.Upgrades
 {
     public static class RankUpgradeExtensions
     {
+        /// <summary>
+        /// Additive percent bonus for each storage upgrade.
+        /// </summary>
+        public const Double StorageUpgradePercent = 0.5;
+
+        /// <summary>
+        /// Additive percent bonus for critical cheese occurring for each
+        /// critical cheese upgrade.
+        /// </summary>
+        public const Double CriticalCheeseUpgradePercent = 0.005;
+
         private const String ModifierDescription = "Chance to make {0} cheese (+{1} to base cheese value)";
 
         private const String CriticalCheeseDescription = "{0}% -> {1}% critical cheese chance";
@@ -34,8 +45,8 @@ namespace Chubberino.Modules.CheeseGame.Items.Upgrades
 
         public static UpgradeInfo GetCriticalCheeseUpgrade(this Rank rank)
         {
-            Double currentUpgradePercent = (Int32)(rank) * Constants.CriticalCheeseUpgradePercent * 100;
-            Double nextUpgradePercent = (Int32)(rank + 1) * Constants.CriticalCheeseUpgradePercent * 100;
+            Double currentUpgradePercent = (Int32)(rank) * CriticalCheeseUpgradePercent * 100;
+            Double nextUpgradePercent = (Int32)(rank + 1) * CriticalCheeseUpgradePercent * 100;
             return new UpgradeInfo(
                 String.Format(CriticalCheeseDescription, String.Format("{0:0.0}", currentUpgradePercent), String.Format("{0:0.0}", nextUpgradePercent)),
                 rank,
@@ -67,8 +78,8 @@ namespace Chubberino.Modules.CheeseGame.Items.Upgrades
 
         public static UpgradeInfo GetStorageUpgrade(this Rank rank)
         {
-            Double currentUpgradePercent = (Int32)(rank) * Constants.StorageUpgradePercent * 100;
-            Double nextUpgradePercent = (Int32)(rank + 1) * Constants.StorageUpgradePercent * 100;
+            Double currentUpgradePercent = (Int32)(rank) * StorageUpgradePercent * 100;
+            Double nextUpgradePercent = (Int32)(rank + 1) * StorageUpgradePercent * 100;
             return new UpgradeInfo(
                 String.Format(StorageDescription, currentUpgradePercent, nextUpgradePercent),
                 rank,

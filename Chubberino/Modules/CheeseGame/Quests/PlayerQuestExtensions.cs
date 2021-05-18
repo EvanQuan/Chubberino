@@ -1,4 +1,5 @@
 ﻿using Chubberino.Modules.CheeseGame.Hazards;
+using Chubberino.Modules.CheeseGame.Items;
 using Chubberino.Modules.CheeseGame.Models;
 using System;
 
@@ -18,9 +19,9 @@ namespace Chubberino.Modules.CheeseGame.Quests
 
         public static Double GetQuestSuccessChance(this Player player)
         {
-            Double baseSuccessChance = Constants.QuestBaseSuccessChance;
+            Double baseSuccessChance = Quest.BaseSuccessChance;
 
-            Double workerSuccessChance = player.IsInfested() ? 0 : player.GearCount * Constants.QuestGearSuccessPercent;
+            Double workerSuccessChance = player.IsInfested() ? 0 : player.GearCount * Gear.QuestSuccessBonus;
 
             return baseSuccessChance + workerSuccessChance;
         }

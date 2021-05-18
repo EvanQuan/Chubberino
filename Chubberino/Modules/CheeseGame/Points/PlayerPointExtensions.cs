@@ -2,6 +2,7 @@
 using Chubberino.Modules.CheeseGame.Items;
 using Chubberino.Modules.CheeseGame.Items.Workers;
 using Chubberino.Modules.CheeseGame.Models;
+using Chubberino.Modules.CheeseGame.Rankings;
 using Chubberino.Utility;
 using System;
 
@@ -9,6 +10,12 @@ namespace Chubberino.Modules.CheeseGame.Points
 {
     public static class PlayerPointExtensions
     {
+
+        /// <summary>
+        /// Point multiplier for critical cheese.
+        /// </summary>
+        public const Int32 CriticalCheeseMultiplier = 5;
+
         /// <summary>
         /// Add or substract points from the player. Does not save the database.
         /// Ensures that points cannot exceed <see cref="PlayerExtensions.PlayerInformationExtensions.GetTotalStorage(Player)"/> or go below 0.
@@ -54,9 +61,9 @@ namespace Chubberino.Modules.CheeseGame.Points
                 workerPoints = Math.Sign(points) * absoluteWorkerPoints;
             }
 
-            Int32 pointsToAddRaw = (Int32)(points * (1 + Constants.PrestigeBonus * player.Prestige) + workerPoints);
+            Int32 pointsToAddRaw = (Int32)(points * (1 + RankManager.PrestigeBonus * player.Prestige) + workerPoints);
 
-            return pointsToAddRaw * (isCritical ? Constants.CriticalCheeseMultiplier : 1);
+            return pointsToAddRaw * (isCritical ? CriticalCheeseMultiplier : 1);
         }
     }
 }

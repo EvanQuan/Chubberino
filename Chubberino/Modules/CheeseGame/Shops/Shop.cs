@@ -6,6 +6,7 @@ using Chubberino.Modules.CheeseGame.Items;
 using Chubberino.Modules.CheeseGame.Items.Workers;
 using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.Quests;
+using Chubberino.Modules.CheeseGame.Rankings;
 using Chubberino.Utility;
 using System;
 using System.Collections.Generic;
@@ -137,9 +138,9 @@ namespace Chubberino.Modules.CheeseGame.Shops
                 "w" or "worker" or "workers" => $"Workers increase the amount of cheese you get every time you gain cheese with \"!cheese\" and when you go on a quest with \"!cheese quest\". Initially they each give an additive {RankWorkerUpgradeExtensions.BaseWorkerPointPercent * 100}% bonus to cheese gains, which can be further increased with certain upgrades. The number of workers you can have is limited by your population.",
                 "q" or "quest" or "quests" => $"Go on a random quest to get rewards with \"!cheese quest\". The chance of success increases with how much gear you have. You can buy gear with \"!cheese buy gear\".",
                 "recipe" or "recipes" => $"Recipes allow you to create new kinds of cheese with \"!cheese\". Every recipe you gain is added the pool of possible recipes you could create from \"!cheese\". Every recipe has an equal likihood of getting chosen.",
-                "r" or "rank" or "ranks" or "bronze" or "silver" or "gold" or "diamond" or "platinum" or "master" or "grandmaster" or "legend" => $"Ranks unlock new items to buy at the shop. Eventually ranking will give you prestige, reseting your rank and everything you have to restart the climb. For every prestige you gain, you get a permanent {(Int32)(Constants.PrestigeBonus * 100)}% boost to your cheese gains, which can stack. Be warned that with every rank up, you increase the chances of getting attacked by a rat infestation.",
+                "r" or "rank" or "ranks" or "bronze" or "silver" or "gold" or "diamond" or "platinum" or "master" or "grandmaster" or "legend" => $"Ranks unlock new items to buy at the shop. Eventually ranking will give you prestige, reseting your rank and everything you have to restart the climb. For every prestige you gain, you get a permanent {(Int32)(RankManager.PrestigeBonus * 100)}% boost to your cheese gains, which can stack. Be warned that with every rank up, you increase the chances of getting attacked by a rat infestation.",
                 "u" or "upgrade" or "upgrades" => $"Upgrades provide a permanent bonus to your cheese factory until you prestige. Each rank unlocks a new set of upgrades you can buy.",
-                "g" or "gear" => $"Gear provides you with a {Constants.QuestGearSuccessPercent * 100}% quest success chance for each you have. There is no limit to the number of gear you can have.",
+                "g" or "gear" => $"Gear provides you with a {Gear.QuestSuccessBonus * 100}% quest success chance for each you have. There is no limit to the number of gear you can have.",
                 "m" or "mouse" or "mousetrap" or "mousetraps" => $"Mousetraps kills giant rats that infest your cheese factory, allow you to maintain or recover any worker bonuses you have.",
                 "c" or "cat" or "cats" => $"[CURRENTLY DO NOTHING] Cats help you fight against the giant evil mouse, Chubshan the Immortal. The more cats you have, the more you will be rewarded when Chubshan is defeated.",
                 _ => $"Invalid item \"{itemToBuy}\" name. Type \"!cheese shop\" to see the items available for purchase.",

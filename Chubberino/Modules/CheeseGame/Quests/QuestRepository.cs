@@ -1,4 +1,5 @@
-﻿using Chubberino.Modules.CheeseGame.Rankings;
+﻿using Chubberino.Modules.CheeseGame.Items;
+using Chubberino.Modules.CheeseGame.Rankings;
 using System;
 using System.Collections.Generic;
 
@@ -49,7 +50,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
                 "The valley winds on forever, and you return without anything.",
                 "You find a small cave in the side of the valley, containing a treasure trove of cheese. You claim the cave to store cheese.",
                 27,
-                (Int32)(Constants.ShopStorageQuantity * 0.1),
+                (Int32)(Storage.BaseQuantity * 0.1),
                 Rank.Silver,
                 0.35),
 
@@ -95,7 +96,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
                 "You quickly tire and turn back.",
                 "An abandoned hut sits atop a hill with some cheese lying about, which you claim to for storage.",
                 57,
-                (Int32)(Constants.ShopStorageQuantity * 0.1),
+                (Int32)(Storage.BaseQuantity * 0.1),
                 Rank.Platinum,
                 0.35),
 
@@ -140,7 +141,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
                 "The place is dark and the ground slippery. You go back immediately.",
                 "Traversing through the winding tunnels, you find stalagtites of cheese, which you knock down with your pickaxe. Certain alcoves make good spots for storage.",
                 117,
-                (Int32)(Constants.ShopStorageQuantity * 0.1),
+                (Int32)(Storage.BaseQuantity * 0.1),
                 Rank.Master,
                 0.35),
 
@@ -178,7 +179,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
                 "The terrain is disorienting and the vegetation is too overgrown to let you travel very deep.",
                 "You find cheese all over the place and take the effort to store some of it on the island in hidden caches.",
                 195,
-                (Int32)(Constants.ShopStorageQuantity * 0.1),
+                (Int32)(Storage.BaseQuantity * 0.1),
                 Rank.Legend,
                 0.25),
             new GainCheeseQuest(
@@ -198,7 +199,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
                 "Cantal Chaparral",
                 "The land is vast, but the ground is rife with vegetation.",
                 "You find an open clearing perfect to setup a warehouse for cheese storage.",
-                (Int32)(Constants.ShopStorageQuantity * 1.5)),
+                (Int32)(Storage.BaseQuantity * 1.5)),
             new GainWorkerQuest(
                 Rank.Bronze,
                 0)
