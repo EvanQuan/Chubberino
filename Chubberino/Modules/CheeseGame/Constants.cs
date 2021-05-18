@@ -20,10 +20,5 @@ namespace Chubberino.Modules.CheeseGame
         /// Point multiplier for critical cheese.
         /// </summary>
         public const Int32 CriticalCheeseMultiplier = 5;
-
-        /// <summary>
-        /// Base storage quantity gained when buying from the shop.
-        /// </summary>
-        public const Int32 ShopStorageQuantity = 100;
     }
 }
