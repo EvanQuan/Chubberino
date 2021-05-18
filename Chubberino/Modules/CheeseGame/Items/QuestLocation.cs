@@ -11,16 +11,16 @@ namespace Chubberino.Modules.CheeseGame.Items
     {
         public override IEnumerable<String> Names { get; } = new String[] { "Quest", "q", "quests" };
 
-        public IReadOnlyList<Quest> QuestRepository { get; }
+        public IQuestRepository QuestRepository { get; }
 
-        public QuestLocation(IReadOnlyList<Quest> questRepository)
+        public QuestLocation(IQuestRepository questRepository)
         {
             QuestRepository = questRepository;
         }
 
         public override Int32 GetPrice(Player player)
         {
-            if (QuestRepository.TryGetNextToUnlock(player, out var quest))
+            if (QuestRepository.CommonQuests.TryGetNextToUnlock(player, out var quest))
             {
                 return quest.Price;
             }
@@ -30,7 +30,7 @@ namespace Chubberino.Modules.CheeseGame.Items
 
         public override String GetSpecificNameForNotEnoughToBuy(Player player)
         {
-            if (QuestRepository.TryGetNextToUnlock(player, out var quest))
+            if (QuestRepository.CommonQuests.TryGetNextToUnlock(player, out var quest))
             {
                 return $"a map to {quest.Location}";
             }
@@ -49,7 +49,7 @@ namespace Chubberino.Modules.CheeseGame.Items
 
             for (Int32 i = 0; i < quantity; i++, temporaryPlayer.QuestsUnlockedCount++)
             {
-                QuestRepository.TryGetNextToUnlock(temporaryPlayer, out var quest);
+                QuestRepository.CommonQuests.TryGetNextToUnlock(temporaryPlayer, out var quest);
 
                 questLocationsPurchased.Add(quest.Location);
             }
@@ -59,7 +59,7 @@ namespace Chubberino.Modules.CheeseGame.Items
 
         public override Either<Int32, String> TryBuySingleUnit(Player player, Int32 price)
         {
-            if (!QuestRepository.TryGetNextToUnlock(player, out var nextQuestToUnlock))
+            if (!QuestRepository.CommonQuests.TryGetNextToUnlock(player, out var nextQuestToUnlock))
             {
                 return () => UnexpectedErrorMessage;
             }
@@ -74,7 +74,7 @@ namespace Chubberino.Modules.CheeseGame.Items
         public override String GetShopPrompt(Player player)
         {
             String questPrompt;
-            if (QuestRepository.TryGetNextToUnlock(player, out var nextQuestToUnlock))
+            if (QuestRepository.CommonQuests.TryGetNextToUnlock(player, out var nextQuestToUnlock))
             {
                 if (nextQuestToUnlock.RankToUnlock > player.Rank)
                 {

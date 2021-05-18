@@ -157,7 +157,7 @@ namespace Chubberino
             builder.RegisterType<Worker>().AsSelf().SingleInstance();
 
             // Quests
-            builder.Register(x => QuestRepository.Quests).As<IReadOnlyList<Modules.CheeseGame.Quests.Quest>>().SingleInstance();
+            builder.RegisterType<QuestRepository>().As<IQuestRepository>().SingleInstance();
 
             IContainer container = builder.Build();
 

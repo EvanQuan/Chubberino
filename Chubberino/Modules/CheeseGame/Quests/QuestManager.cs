@@ -16,7 +16,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
     {
         public static TimeSpan QuestCooldown { get; set; } = TimeSpan.FromHours(2);
         public IDateTimeService DateTime { get; }
-        public IReadOnlyList<Quest> QuestRepository { get; }
+        public IQuestRepository QuestRepository { get; }
 
         public QuestManager(
             IApplicationContext context,
@@ -24,7 +24,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
             Random random,
             IEmoteManager emoteManager,
             IDateTimeService dateTime,
-            IReadOnlyList<Quest> questRepository)
+            IQuestRepository questRepository)
             : base(context, client, random, emoteManager)
         {
             DateTime = dateTime;
@@ -51,7 +51,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
 
             if (timeSinceLastQuestVentured >= QuestCooldown)
             {
-                var quest = Random.NextElement(QuestRepository, player.QuestsUnlockedCount - 1);
+                var quest = Random.NextElement(QuestRepository.CommonQuests, player.QuestsUnlockedCount - 1);
 
                 StartQuest(message, player, quest);
 

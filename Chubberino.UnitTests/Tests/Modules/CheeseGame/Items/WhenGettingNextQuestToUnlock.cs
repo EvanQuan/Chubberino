@@ -1,7 +1,6 @@
 ﻿using Chubberino.Modules.CheeseGame.Items;
 using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.Quests;
-using System.Collections.Generic;
 using Xunit;
 
 namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Items
@@ -10,13 +9,13 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Items
     {
         private QuestLocation Sut { get; }
 
-        private IReadOnlyList<Quest> Repository { get; }
+        private IQuestRepository Repository { get; }
 
         private Player Player { get; }
 
         public WhenGettingNextQuestToUnlock()
         {
-            Repository = QuestRepository.Quests;
+            Repository = new QuestRepository();
 
             Player = new Player();
 
@@ -28,7 +27,7 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Items
         {
             var prompt = Sut.GetShopPrompt(Player);
 
-            Assert.Contains(Repository[0].Location, prompt);
+            Assert.Contains(Repository.CommonQuests[0].Location, prompt);
         }
 
         /// <summary>
@@ -37,7 +36,7 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Items
         [Fact]
         public void ShouldReturnNull()
         {
-            Player.QuestsUnlockedCount = Repository.Count;
+            Player.QuestsUnlockedCount = Repository.CommonQuests.Count;
 
             var prompt = Sut.GetShopPrompt(Player);
 
