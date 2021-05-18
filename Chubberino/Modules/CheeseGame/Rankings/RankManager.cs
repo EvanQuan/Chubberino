@@ -66,7 +66,8 @@ namespace Chubberino.Modules.CheeseGame.Rankings
                         }
                         else
                         {
-                            outputMessage = $"You need to buy all cheese recipes in order to prestige back to {Rank.Bronze} rank. You will lose all your cheese and upgrades, but will gain a permanent {(Int32)(Constants.PrestigeBonus * 100)}% bonus on your cheese gains.";
+                            outputMessage = $"You need to buy all cheese recipes in order to prestige back to {Rank.Bronze} rank. " +
+                                $"You will lose all your cheese and upgrades, but will gain a permanent {(Int32)(Constants.PrestigeBonus * 100)}% bonus on your cheese gains.";
                         }
                     }
                     else
@@ -74,7 +75,7 @@ namespace Chubberino.Modules.CheeseGame.Rankings
                         player.Points -= pointsToRank;
                         player.Rank = nextRank;
                         Context.SaveChanges();
-                        outputMessage = $"You ranked up to {nextRank}. {Random.NextElement(EmoteManager.Get(message.Channel, EmoteCategory.Negative))} (-{pointsToRank} cheese)";
+                        outputMessage = $"You ranked up to {nextRank}. {Random.NextElement(EmoteManager.Get(message.Channel, EmoteCategory.Positive))} (-{pointsToRank} cheese)";
                         priority = Priority.Medium;
                     }
                 }
@@ -83,7 +84,8 @@ namespace Chubberino.Modules.CheeseGame.Rankings
                     var pointsNeededToRank = pointsToRank - player.Points;
                     if (nextRank == Rank.None)
                     {
-                        outputMessage = $"You need {pointsNeededToRank} more cheese in order to prestige back to {Rank.Bronze} rank. You will lose all your cheese and upgrades, but will gain a permanent {(Int32)(Constants.PrestigeBonus * 100)}% bonus on your cheese gains.";
+                        outputMessage = $"You need {pointsNeededToRank} more cheese in order to prestige back to {Rank.Bronze} rank. " +
+                            $"You will lose all your cheese and upgrades, but will gain a permanent {(Int32)(Constants.PrestigeBonus * 100)}% bonus on your cheese gains.";
                     }
                     else
                     {
