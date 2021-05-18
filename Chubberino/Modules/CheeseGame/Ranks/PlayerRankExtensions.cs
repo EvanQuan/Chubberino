@@ -1,6 +1,6 @@
 ﻿using Chubberino.Modules.CheeseGame.Models;
 
-namespace Chubberino.Modules.CheeseGame.Rankings
+namespace Chubberino.Modules.CheeseGame.Ranks
 {
     public static class PlayerRankExtensions
     {
@@ -10,7 +10,7 @@ namespace Chubberino.Modules.CheeseGame.Rankings
             player.Points = 0;
             player.PopulationCount = 0;
             player.WorkerCount = 0;
-            player.Rank = Rankings.Rank.Bronze;
+            player.Rank = Rank.Bronze;
             player.CheeseUnlocked = 0;
             player.NextWorkerProductionUpgradeUnlock = 0;
             player.NextQuestUpgradeUnlock = 0;

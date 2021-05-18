@@ -3,7 +3,7 @@ using Chubberino.Database.Contexts;
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Hazards;
 using Chubberino.Modules.CheeseGame.Models;
-using Chubberino.Modules.CheeseGame.Rankings;
+using Chubberino.Modules.CheeseGame.Ranks;
 using Chubberino.UnitTests.Utility;
 using Moq;
 using System;

@@ -1,5 +1,5 @@
 ﻿using Chubberino.Modules.CheeseGame.Hazards;
-using Chubberino.Modules.CheeseGame.Rankings;
+using Chubberino.Modules.CheeseGame.Ranks;
 using System;
 using Xunit.Abstractions;
 

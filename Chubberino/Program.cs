@@ -20,7 +20,7 @@ using Chubberino.Modules.CheeseGame.Items.Recipes;
 using Chubberino.Modules.CheeseGame.Items.Upgrades.RecipeModifiers;
 using Chubberino.Modules.CheeseGame.Points;
 using Chubberino.Modules.CheeseGame.Quests;
-using Chubberino.Modules.CheeseGame.Rankings;
+using Chubberino.Modules.CheeseGame.Ranks;
 using Chubberino.Modules.CheeseGame.Shops;
 using Jering.Javascript.NodeJS;
 using Microsoft.Extensions.DependencyInjection;

@@ -1,4 +1,4 @@
-﻿namespace Chubberino.Modules.CheeseGame.Rankings
+﻿namespace Chubberino.Modules.CheeseGame.Ranks
 {
     public enum Rank
     {

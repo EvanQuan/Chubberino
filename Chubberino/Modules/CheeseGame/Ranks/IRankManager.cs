@@ -1,6 +1,6 @@
 ﻿using TwitchLib.Client.Models;
 
-namespace Chubberino.Modules.CheeseGame.Rankings
+namespace Chubberino.Modules.CheeseGame.Ranks
 {
     public interface IRankManager : ICommandStrategy
     {
