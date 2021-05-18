@@ -2,7 +2,7 @@
 using Chubberino.Modules.CheeseGame.Rankings;
 using System;
 
-namespace Chubberino.Modules.CheeseGame.Upgrades
+namespace Chubberino.Modules.CheeseGame.Items.Upgrades
 {
     public static class PlayerUpgradeExtensions
     {

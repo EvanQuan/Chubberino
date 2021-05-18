@@ -1,14 +1,9 @@
-﻿using Chubberino.Modules.CheeseGame.Models;
+﻿using Chubberino.Modules.CheeseGame.Items.Upgrades;
+using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.Rankings;
-using Chubberino.Modules.CheeseGame.Upgrades;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
-namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Upgrades
+namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Items.Upgrades
 {
     public sealed class WhenGettingNextUpgradeToUnlock
     {
