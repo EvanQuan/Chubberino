@@ -1,4 +1,5 @@
-﻿using Chubberino.Modules.CheeseGame.Points;
+﻿using Chubberino.Modules.CheeseGame.Items.Upgrades.RecipeModifiers;
+using Chubberino.Modules.CheeseGame.Points;
 using Chubberino.Modules.CheeseGame.Quests;
 using Chubberino.Modules.CheeseGame.Rankings;
 using Chubberino.Utility;
@@ -20,7 +21,7 @@ namespace Chubberino.Modules.CheeseGame.Items.Upgrades
 
         public static UpgradeInfo GetCheeseModifierUpgrade(this Rank rank)
         {
-            if (CheeseModifierRepository.Modifiers.TryGet((Int32)(rank + 1), out var cheeseModifier))
+            if (RecipeModifierRepository.Modifiers.TryGet((Int32)(rank + 1), out var cheeseModifier))
             {
                 return new UpgradeInfo(
                     String.Format(ModifierDescription, cheeseModifier.Name, cheeseModifier.Points),

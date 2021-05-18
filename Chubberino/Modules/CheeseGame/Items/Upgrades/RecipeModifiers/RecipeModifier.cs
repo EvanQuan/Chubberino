@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace Chubberino.Modules.CheeseGame.Points
+namespace Chubberino.Modules.CheeseGame.Items.Upgrades.RecipeModifiers
 {
-    public sealed class CheeseModifier
+    public sealed class RecipeModifier
     {
-        public CheeseModifier(String name, Int32 points)
+        public RecipeModifier(String name, Int32 points)
         {
             Name = name;
             Points = points;

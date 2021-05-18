@@ -10,7 +10,7 @@ namespace Chubberino.Modules.CheeseGame.Points
     {
         /// <summary>
         /// Add or substract points from the player. Does not save the database.
-        /// Ensures that points cannot exceed <see cref="PlayerExtensions.PlayerExtensions.GetTotalStorage(Player)"/> or go below 0.
+        /// Ensures that points cannot exceed <see cref="PlayerExtensions.PlayerInformationExtensions.GetTotalStorage(Player)"/> or go below 0.
         /// </summary>
         /// <param name="player"></param>
         /// <param name="points"></param>
@@ -21,7 +21,7 @@ namespace Chubberino.Modules.CheeseGame.Points
 
         /// <summary>
         /// Add or substract points from the player. Does not save the database.
-        /// Ensures that points cannot exceed <see cref="PlayerExtensions.PlayerExtensions.GetTotalStorage(Player)"/> or go below 0.
+        /// Ensures that points cannot exceed <see cref="PlayerExtensions.PlayerInformationExtensions.GetTotalStorage(Player)"/> or go below 0.
         /// </summary>
         /// <param name="player"></param>
         /// <param name="points"></param>

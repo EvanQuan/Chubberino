@@ -17,23 +17,15 @@ namespace Chubberino.Modules.CheeseGame.Shops
 {
     public class Shop : AbstractCommandStrategy, IShop
     {
-        public IReadOnlyList<CheeseType> CheeseRepository { get; }
-
-        public IReadOnlyList<Quest> QuestRepository { get; }
-
         public IList<IItem> Items { get; }
 
         public Shop(
             IApplicationContext context,
             ITwitchClientManager client,
-            IReadOnlyList<CheeseType> cheeseRepository,
-            IReadOnlyList<Quest> questRepository,
             Random random,
             IEmoteManager emoteManager)
             : base(context, client, random, emoteManager)
         {
-            CheeseRepository = cheeseRepository;
-            QuestRepository = questRepository;
             Items = new List<IItem>();
         }
 

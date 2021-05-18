@@ -2,7 +2,6 @@
 using Chubberino.Database.Contexts;
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Models;
-using Chubberino.Modules.CheeseGame.PlayerExtensions;
 using Chubberino.Modules.CheeseGame.Rankings;
 using Chubberino.Utility;
 using System;

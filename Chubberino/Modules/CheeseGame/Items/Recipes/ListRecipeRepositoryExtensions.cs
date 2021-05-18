@@ -3,14 +3,14 @@ using Chubberino.Utility;
 using System;
 using System.Collections.Generic;
 
-namespace Chubberino.Modules.CheeseGame.Points
+namespace Chubberino.Modules.CheeseGame.Items.Recipes
 {
-    public static class ListCheeseRepositoryExtensions
+    public static class ListRecipeRepositoryExtensions
     {
         public static Boolean TryGetNextToUnlock(
-            this IReadOnlyList<CheeseType> repository,
+            this IReadOnlyList<RecipeInfo> repository,
             Player player,
-            out CheeseType cheeseType)
+            out RecipeInfo cheeseType)
         {
             // Since the player starts off with 1 cheese unlocked by default,
             // we always can return the 0th element of the repository.

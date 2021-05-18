@@ -3,7 +3,7 @@ using Chubberino.Database.Contexts;
 using Chubberino.Database.Models;
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Heists;
-using Chubberino.Modules.CheeseGame.PlayerExtensions;
+using Chubberino.Modules.CheeseGame.Items.Upgrades.Recipes;
 using Chubberino.Utility;
 using System;
 using System.Collections.Generic;
@@ -54,7 +54,7 @@ namespace Chubberino.Modules.CheeseGame.Rankings
                 {
                     if (nextRank == Rank.None)
                     {
-                        if (player.HasUnlockedAllCheeses())
+                        if (player.HasUnlockedAllRecipes())
                         {
                             HeistManager.LeaveAllHeists(player);
                             // Prestige instead of rank up

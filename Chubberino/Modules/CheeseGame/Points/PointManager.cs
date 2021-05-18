@@ -5,6 +5,8 @@ using Chubberino.Database.Models;
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Hazards;
 using Chubberino.Modules.CheeseGame.Items;
+using Chubberino.Modules.CheeseGame.Items.Recipes;
+using Chubberino.Modules.CheeseGame.Items.Upgrades.RecipeModifiers;
 using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Utility;
 using System;
@@ -19,8 +21,8 @@ namespace Chubberino.Modules.CheeseGame.Points
     {
         public static TimeSpan PointGainCooldown { get; set; } = TimeSpan.FromMinutes(15);
 
-        public IReadOnlyList<CheeseType> CheeseRepository { get; }
-        public IReadOnlyList<CheeseModifier> CheeseModifierManager { get; }
+        public IReadOnlyList<RecipeInfo> RecipeRepository { get; }
+        public IReadOnlyList<RecipeModifier> RecipeModifierManager { get; }
         public IHazardManager HazardManager { get; }
         public IDateTimeService DateTime { get; }
         public IConsole Console { get; }
@@ -28,8 +30,8 @@ namespace Chubberino.Modules.CheeseGame.Points
         public PointManager(
             IApplicationContext context,
             ITwitchClientManager client,
-            IReadOnlyList<CheeseType> cheeseRepository,
-            IReadOnlyList<CheeseModifier> cheeseModifierRepository,
+            IReadOnlyList<RecipeInfo> recipeRepository,
+            IReadOnlyList<RecipeModifier> recipeModifierRepository,
             Random random,
             IEmoteManager emoteManager,
             IHazardManager hazardManager,
@@ -37,8 +39,8 @@ namespace Chubberino.Modules.CheeseGame.Points
             IConsole console)
             : base(context, client, random, emoteManager)
         {
-            CheeseRepository = cheeseRepository;
-            CheeseModifierManager = cheeseModifierRepository;
+            RecipeRepository = recipeRepository;
+            RecipeModifierManager = recipeModifierRepository;
             HazardManager = hazardManager;
             DateTime = dateTime;
             Console = console;
@@ -61,11 +63,11 @@ namespace Chubberino.Modules.CheeseGame.Points
                 }
                 else
                 {
-                    CheeseType initialCheese = Random.NextElement(CheeseRepository, player.CheeseUnlocked);
+                    RecipeInfo initialCheese = Random.NextElement(RecipeRepository, player.CheeseUnlocked);
 
-                    CheeseModifier modifier = Random.NextElement(CheeseModifierManager, (Int32)player.NextCheeseModifierUpgradeUnlock);
+                    RecipeModifier modifier = Random.NextElement(RecipeModifierManager, (Int32)player.NextCheeseModifierUpgradeUnlock);
 
-                    CheeseType cheese = modifier.Modify(initialCheese);
+                    RecipeInfo cheese = modifier.Modify(initialCheese);
 
                     StringBuilder outputMessage = new();
 

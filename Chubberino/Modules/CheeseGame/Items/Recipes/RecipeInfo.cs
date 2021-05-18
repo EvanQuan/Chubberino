@@ -1,11 +1,11 @@
 ﻿using Chubberino.Modules.CheeseGame.Rankings;
 using System;
 
-namespace Chubberino.Modules.CheeseGame.Points
+namespace Chubberino.Modules.CheeseGame.Items.Recipes
 {
-    public sealed class CheeseType
+    public sealed class RecipeInfo
     {
-        public CheeseType(String name, Int32 pointValue)
+        public RecipeInfo(String name, Int32 pointValue)
         {
             Name = name;
             Points = pointValue;
@@ -13,7 +13,7 @@ namespace Chubberino.Modules.CheeseGame.Points
             RankToUnlock = Rank.Bronze;
             UnlocksNegativeCheese = false;
         }
-        public CheeseType(
+        public RecipeInfo(
             String name,
             Int32 pointValue,
             Rank rankToUnlock,
@@ -27,7 +27,7 @@ namespace Chubberino.Modules.CheeseGame.Points
             UnlocksNegativeCheese = unlocksNegativeCheese;
         }
 
-        public CheeseType(
+        public RecipeInfo(
             String name,
             Int32 pointValue,
             Rank rankToUnlock,

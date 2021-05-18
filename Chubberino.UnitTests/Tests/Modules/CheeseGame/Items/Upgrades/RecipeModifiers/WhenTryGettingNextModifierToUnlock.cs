@@ -1,14 +1,14 @@
-﻿using Chubberino.Modules.CheeseGame.Models;
-using Chubberino.Modules.CheeseGame.Points;
+﻿using Chubberino.Modules.CheeseGame.Items.Upgrades.RecipeModifiers;
+using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.Rankings;
 using System.Collections.Generic;
 using Xunit;
 
-namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Points.CheeseModifierManagers
+namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Items.Upgrades.RecipeModifiers
 {
     public sealed class WhenTryGettingNextModifierToUnlock
     {
-        public IReadOnlyList<CheeseModifier> Sut = CheeseModifierRepository.Modifiers;
+        public IReadOnlyList<RecipeModifier> Repository = RecipeModifierRepository.Modifiers;
 
         private Player Player { get; }
 
@@ -22,11 +22,11 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Points.CheeseModifierMan
         {
             Player.NextCheeseModifierUpgradeUnlock = Rank.Bronze;
 
-            var result = Sut.TryGetNextToUnlock(Player, out var cheeseModifier);
+            var result = Repository.TryGetNextToUnlock(Player, out var cheeseModifier);
 
             Assert.True(result);
             Assert.NotNull(cheeseModifier);
-            Assert.Equal(CheeseModifierRepository.Modifiers[1], cheeseModifier);
+            Assert.Equal(Repository[1], cheeseModifier);
         }
 
         [Fact]
@@ -34,11 +34,11 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Points.CheeseModifierMan
         {
             Player.NextCheeseModifierUpgradeUnlock = Rank.Legend;
 
-            var result = Sut.TryGetNextToUnlock(Player, out var cheeseModifier);
+            var result = Repository.TryGetNextToUnlock(Player, out var cheeseModifier);
 
             Assert.True(result);
             Assert.NotNull(cheeseModifier);
-            Assert.Equal(CheeseModifierRepository.Modifiers[CheeseModifierRepository.Modifiers.Count - 1], cheeseModifier);
+            Assert.Equal(Repository[Repository.Count - 1], cheeseModifier);
         }
 
         [Fact]
@@ -46,7 +46,7 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Points.CheeseModifierMan
         {
             Player.NextCheeseModifierUpgradeUnlock = Rank.None;
 
-            var result = Sut.TryGetNextToUnlock(Player, out var cheeseModifier);
+            var result = Repository.TryGetNextToUnlock(Player, out var cheeseModifier);
 
             Assert.False(result);
             Assert.Null(cheeseModifier);

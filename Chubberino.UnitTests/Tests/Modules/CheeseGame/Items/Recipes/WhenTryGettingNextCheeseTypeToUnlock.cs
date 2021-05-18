@@ -1,13 +1,13 @@
-﻿using Chubberino.Modules.CheeseGame.Models;
-using Chubberino.Modules.CheeseGame.Points;
+﻿using Chubberino.Modules.CheeseGame.Items.Recipes;
+using Chubberino.Modules.CheeseGame.Models;
 using System.Collections.Generic;
 using Xunit;
 
-namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Points.CheeseRepositories
+namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Items.Recipes
 {
     public sealed class WhenTryGettingNextCheeseTypeToUnlock
     {
-        public IReadOnlyList<CheeseType> Sut = CheeseRepository.Cheeses;
+        public IReadOnlyList<RecipeInfo> Sut = RecipeRepository.Recipes;
 
         private Player Player { get; }
 

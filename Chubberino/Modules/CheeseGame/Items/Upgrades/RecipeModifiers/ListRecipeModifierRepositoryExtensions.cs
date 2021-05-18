@@ -3,14 +3,14 @@ using Chubberino.Utility;
 using System;
 using System.Collections.Generic;
 
-namespace Chubberino.Modules.CheeseGame.Points
+namespace Chubberino.Modules.CheeseGame.Items.Upgrades.RecipeModifiers
 {
-    public static class ListCheeseModifierRepositoryExtensions
+    public static class ListRecipeModifierRepositoryExtensions
     {
         public static Boolean TryGetNextToUnlock(
-            this IReadOnlyList<CheeseModifier> repository,
+            this IReadOnlyList<RecipeModifier> repository,
             Player player,
-            out CheeseModifier cheeseModifier)
+            out RecipeModifier cheeseModifier)
         {
             // The default modifier is null, the 0th element of the repository,
             // which is always a possibility.

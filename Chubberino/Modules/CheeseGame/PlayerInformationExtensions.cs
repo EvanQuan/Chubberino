@@ -1,11 +1,10 @@
 ﻿using Chubberino.Modules.CheeseGame.Items;
 using Chubberino.Modules.CheeseGame.Models;
-using Chubberino.Modules.CheeseGame.Points;
 using System;
 
-namespace Chubberino.Modules.CheeseGame.PlayerExtensions
+namespace Chubberino.Modules.CheeseGame
 {
-    public static class PlayerExtensions
+    public static class PlayerInformationExtensions
     {
         public static String GetDisplayName(this Player player)
         {
@@ -14,12 +13,6 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
             String workers = $"{player.WorkerCount}/{player.PopulationCount} workers";
             String mousetraps = $"{player.MouseTrapCount} mousetrap{(player.MouseTrapCount != 1 ? "s" : String.Empty)}";
             return $"{player.Name} [{prestige}{player.Rank}, {cheese}, {workers}, {mousetraps}]";
-        }
-
-
-        public static Boolean HasUnlockedAllCheeses(this Player player)
-        {
-            return player.CheeseUnlocked + 1 >= CheeseRepository.Cheeses.Count;
         }
     }
 }
