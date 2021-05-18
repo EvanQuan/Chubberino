@@ -1,5 +1,5 @@
 ﻿using Chubberino.Modules.CheeseGame.Items.Upgrades.RecipeModifiers;
-using Chubberino.Modules.CheeseGame.Points;
+using Chubberino.Modules.CheeseGame.Items.Workers;
 using Chubberino.Modules.CheeseGame.Quests;
 using Chubberino.Modules.CheeseGame.Rankings;
 using Chubberino.Utility;

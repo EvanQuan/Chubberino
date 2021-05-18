@@ -1,7 +1,7 @@
 ﻿using Chubberino.Modules.CheeseGame.Models;
 using System;
 
-namespace Chubberino.Modules.CheeseGame.Points
+namespace Chubberino.Modules.CheeseGame.Items.Workers
 {
     public static class PlayerWorkerUpgradeExtensions
     {

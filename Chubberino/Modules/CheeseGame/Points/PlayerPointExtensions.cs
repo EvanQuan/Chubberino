@@ -1,5 +1,6 @@
 ﻿using Chubberino.Modules.CheeseGame.Hazards;
 using Chubberino.Modules.CheeseGame.Items;
+using Chubberino.Modules.CheeseGame.Items.Workers;
 using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Utility;
 using System;
