@@ -1,6 +1,6 @@
 ﻿using Chubberino.Modules.CheeseGame;
 using Chubberino.Modules.CheeseGame.Models;
-using Chubberino.Modules.CheeseGame.PlayerExtensions;
+using Chubberino.Modules.CheeseGame.Quests;
 using Chubberino.Modules.CheeseGame.Rankings;
 using System;
 using Xunit;

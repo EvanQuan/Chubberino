@@ -100,15 +100,6 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
             return (Int32)(player.MaximumPointStorage * player.GetStorageUpgradeMultiplier());
         }
 
-        public static Double GetQuestSuccessChance(this Player player)
-        {
-            Double baseSuccessChance = Constants.QuestBaseSuccessChance;
-
-            Double workerSuccessChance = player.IsInfested() ? 0 : player.GearCount * Constants.QuestGearSuccessPercent;
-
-            return baseSuccessChance + workerSuccessChance;
-        }
-
         public static Boolean HasUnlockedAllCheeses(this Player player)
         {
             return player.CheeseUnlocked + 1 >= CheeseRepository.Cheeses.Count;
