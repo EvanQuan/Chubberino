@@ -204,6 +204,8 @@ namespace Chubberino.Modules.CheeseGame.Quests
                 0)
         };
 
+        public Double RareQuestChance { get; } = 0.01;
+
         public IReadOnlyList<Quest> CommonQuests { get; } = Common;
 
         public IReadOnlyList<Quest> RareQuests { get; } = Rare;
