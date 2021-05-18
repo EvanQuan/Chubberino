@@ -18,11 +18,11 @@ namespace Chubberino.Modules.CheeseGame.Items.Upgrades
 
         private const String QuestDescription = "{0}% -> {1}% rare quest chance";
 
-        public static Upgrade GetCheeseModifierUpgrade(this Rank rank)
+        public static UpgradeInfo GetCheeseModifierUpgrade(this Rank rank)
         {
             if (CheeseModifierRepository.Modifiers.TryGet((Int32)(rank + 1), out var cheeseModifier))
             {
-                return new Upgrade(
+                return new UpgradeInfo(
                     String.Format(ModifierDescription, cheeseModifier.Name, cheeseModifier.Points),
                     rank,
                     0.25,
@@ -31,44 +31,44 @@ namespace Chubberino.Modules.CheeseGame.Items.Upgrades
             return null;
         }
 
-        public static Upgrade GetCriticalCheeseUpgrade(this Rank rank)
+        public static UpgradeInfo GetCriticalCheeseUpgrade(this Rank rank)
         {
             Double currentUpgradePercent = (Int32)(rank) * Constants.CriticalCheeseUpgradePercent * 100;
             Double nextUpgradePercent = (Int32)(rank + 1) * Constants.CriticalCheeseUpgradePercent * 100;
-            return new Upgrade(
+            return new UpgradeInfo(
                 String.Format(CriticalCheeseDescription, String.Format("{0:0.0}", currentUpgradePercent), String.Format("{0:0.0}", nextUpgradePercent)),
                 rank,
                 0.40,
                 x => x.NextCriticalCheeseUpgradeUnlock++);
         }
 
-        public static Upgrade GetQuestUpgrade(this Rank rank)
+        public static UpgradeInfo GetQuestUpgrade(this Rank rank)
         {
             String currentUpgradePercent = String.Format("{0:0.0}", rank.GetRareQuestChance() * 100);
             String nextUpgradePercent = String.Format("{0:0.0}", rank.Next().GetRareQuestChance() * 100);
-            return new Upgrade(
+            return new UpgradeInfo(
                 String.Format(QuestDescription, currentUpgradePercent, nextUpgradePercent),
                 rank,
                 0.55,
                 x => x.NextQuestUpgradeUnlock++);
         }
 
-        public static Upgrade GetWorkerProductionUpgrade(this Rank rank)
+        public static UpgradeInfo GetWorkerProductionUpgrade(this Rank rank)
         {
             Int32 currentUpgradePercent = (Int32)(rank.GetWorkerPointMultiplier() * 100);
             Int32 nextUpgradePercent = (Int32)(rank.Next().GetWorkerPointMultiplier() * 100);
-            return new Upgrade(
+            return new UpgradeInfo(
                 String.Format(ProductionDescription, currentUpgradePercent, nextUpgradePercent),
                 rank,
                 0.70,
                 x => x.NextWorkerProductionUpgradeUnlock++);
         }
 
-        public static Upgrade GetStorageUpgrade(this Rank rank)
+        public static UpgradeInfo GetStorageUpgrade(this Rank rank)
         {
             Double currentUpgradePercent = (Int32)(rank) * Constants.StorageUpgradePercent * 100;
             Double nextUpgradePercent = (Int32)(rank + 1) * Constants.StorageUpgradePercent * 100;
-            return new Upgrade(
+            return new UpgradeInfo(
                 String.Format(StorageDescription, currentUpgradePercent, nextUpgradePercent),
                 rank,
                 0.85,

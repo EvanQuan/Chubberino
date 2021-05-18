@@ -4,9 +4,9 @@ using System;
 
 namespace Chubberino.Modules.CheeseGame.Items.Upgrades
 {
-    public class Upgrade
+    public class UpgradeInfo
     {
-        public Upgrade(String description, Rank rankToUnlock, Double rankPricePercentPrice, Action<Player> updatePlayer)
+        public UpgradeInfo(String description, Rank rankToUnlock, Double rankPricePercentPrice, Action<Player> updatePlayer)
         {
             Description = description;
             RankToUnlock = rankToUnlock;

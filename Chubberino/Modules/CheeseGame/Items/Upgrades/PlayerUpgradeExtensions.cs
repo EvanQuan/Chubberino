@@ -68,57 +68,57 @@ namespace Chubberino.Modules.CheeseGame.Items.Upgrades
             }
         }
 
-        public static Upgrade GetNextCheeseModifierUpgrade(this Player player)
+        public static UpgradeInfo GetNextCheeseModifierUpgrade(this Player player)
         {
             return player.NextCheeseModifierUpgradeUnlock.GetCheeseModifierUpgrade();
         }
 
-        public static Upgrade GetNextCriticalCheeseUpgrade(this Player player)
+        public static UpgradeInfo GetNextCriticalCheeseUpgrade(this Player player)
         {
             return player.NextCriticalCheeseUpgradeUnlock.GetCriticalCheeseUpgrade();
         }
 
-        public static Upgrade GetNextQuestUpgrade(this Player player)
+        public static UpgradeInfo GetNextQuestUpgrade(this Player player)
         {
             return player.NextQuestUpgradeUnlock.GetQuestUpgrade();
         }
 
-        public static Upgrade GetNextWorkerProductionUpgrade(this Player player)
+        public static UpgradeInfo GetNextWorkerProductionUpgrade(this Player player)
         {
             return player.NextWorkerProductionUpgradeUnlock.GetWorkerProductionUpgrade();
         }
 
-        public static Upgrade GetNextStorageUpgrade(this Player player)
+        public static UpgradeInfo GetNextStorageUpgrade(this Player player)
         {
             return player.NextStorageUpgradeUnlock.GetStorageUpgrade();
         }
 
-        public static Upgrade GetPreviousCheeseModifierUpgrade(this Player player)
+        public static UpgradeInfo GetPreviousCheeseModifierUpgrade(this Player player)
         {
             return (player.NextCheeseModifierUpgradeUnlock - 1).GetCheeseModifierUpgrade();
         }
 
-        public static Upgrade GetPreviousCriticalCheeseUpgrade(this Player player)
+        public static UpgradeInfo GetPreviousCriticalCheeseUpgrade(this Player player)
         {
             return (player.NextCriticalCheeseUpgradeUnlock - 1).GetCriticalCheeseUpgrade();
         }
 
-        public static Upgrade GetPreviousQuestUpgrade(this Player player)
+        public static UpgradeInfo GetPreviousQuestUpgrade(this Player player)
         {
             return (player.NextQuestUpgradeUnlock - 1).GetQuestUpgrade();
         }
 
-        public static Upgrade GetPreviousWorkerProductionUpgrade(this Player player)
+        public static UpgradeInfo GetPreviousWorkerProductionUpgrade(this Player player)
         {
             return (player.NextWorkerProductionUpgradeUnlock - 1).GetWorkerProductionUpgrade();
         }
 
-        public static Upgrade GetPreviousStorageUpgrade(this Player player)
+        public static UpgradeInfo GetPreviousStorageUpgrade(this Player player)
         {
             return (player.NextStorageUpgradeUnlock - 1).GetStorageUpgrade();
         }
 
-        private static Boolean TryGetTypeToNextUpgrade(UpgradeType type, out Func<Player, Upgrade> upgrade)
+        private static Boolean TryGetTypeToNextUpgrade(UpgradeType type, out Func<Player, UpgradeInfo> upgrade)
         {
             upgrade = (type) switch
             {
@@ -133,7 +133,7 @@ namespace Chubberino.Modules.CheeseGame.Items.Upgrades
             return upgrade != default;
         }
         
-        private static Boolean TryGetTypeToPreviousUpgrade(UpgradeType type, out Func<Player, Upgrade> upgrade)
+        private static Boolean TryGetTypeToPreviousUpgrade(UpgradeType type, out Func<Player, UpgradeInfo> upgrade)
         {
             upgrade = (type) switch
             {
@@ -148,7 +148,7 @@ namespace Chubberino.Modules.CheeseGame.Items.Upgrades
             return upgrade != default;
         }
 
-        public static Boolean TryPreviousUpgradeUnlocked(this Player player, out Upgrade upgrade)
+        public static Boolean TryPreviousUpgradeUnlocked(this Player player, out UpgradeInfo upgrade)
         {
             if (TryGetTypeToPreviousUpgrade(player.GetPreviousUpgradeUnlocked(), out var playerToUpgrade))
             {
@@ -160,7 +160,7 @@ namespace Chubberino.Modules.CheeseGame.Items.Upgrades
         }
 
 
-        public static Boolean TryGetNextUpgradeToUnlock(this Player player, out Upgrade upgrade)
+        public static Boolean TryGetNextUpgradeToUnlock(this Player player, out UpgradeInfo upgrade)
         {
             if (TryGetTypeToNextUpgrade(player.GetNextUpgradeToUnlock(), out var playerToUpgrade))
             {
