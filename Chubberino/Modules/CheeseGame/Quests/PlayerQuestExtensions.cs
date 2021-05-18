@@ -3,7 +3,7 @@ using System;
 
 namespace Chubberino.Modules.CheeseGame.Quests
 {
-    public static class PlayerQuestChanceExtensions
+    public static class PlayerQuestExtensions
     {
         public static Double GetRareQuestChance(this Player player)
         {
