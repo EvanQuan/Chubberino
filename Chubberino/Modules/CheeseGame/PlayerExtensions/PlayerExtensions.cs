@@ -71,7 +71,7 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
             Int32 workerPoints = 0;
             if (!player.IsInfested())
             {
-                Double workerPointMultipler = player.NextWorkerProductionUpgradeUnlock.GetWorkerPointMultiplier();
+                Double workerPointMultipler = player.GetWorkerPointMultiplier();
                 Int32 absoluteWorkerPoints = (Int32)(Math.Abs(points) * (player.WorkerCount * workerPointMultipler)).Max(player.WorkerCount == 0 ? 0 : 1);
                 workerPoints = Math.Sign(points) * absoluteWorkerPoints;
             }

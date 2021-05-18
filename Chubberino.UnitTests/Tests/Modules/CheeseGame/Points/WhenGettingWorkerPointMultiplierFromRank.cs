@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Points
 {
-    public sealed class WhenGettingWorkerPointMultiplier
+    public sealed class WhenGettingWorkerPointMultiplierFromRank
     {
         [Fact]
         public void ShouldReturnBaseMultiplier()
