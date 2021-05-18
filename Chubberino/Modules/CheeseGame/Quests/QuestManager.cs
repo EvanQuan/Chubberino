@@ -3,6 +3,7 @@ using Chubberino.Client.Services;
 using Chubberino.Database.Contexts;
 using Chubberino.Database.Models;
 using Chubberino.Modules.CheeseGame.Emotes;
+using Chubberino.Modules.CheeseGame.Hazards;
 using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.PlayerExtensions;
 using Chubberino.Utility;

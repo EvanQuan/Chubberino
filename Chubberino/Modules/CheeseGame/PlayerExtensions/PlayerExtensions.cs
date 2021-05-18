@@ -1,4 +1,5 @@
-﻿using Chubberino.Modules.CheeseGame.Models;
+﻿using Chubberino.Modules.CheeseGame.Hazards;
+using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.Points;
 using Chubberino.Utility;
 using System;
@@ -28,11 +29,6 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
             player.GearCount = 0;
 
             return player;
-        }
-
-        public static Boolean IsInfested(this Player player)
-        {
-            return player.RatCount > 0;
         }
 
         public static String GetDisplayName(this Player player)
