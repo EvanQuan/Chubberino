@@ -7,6 +7,7 @@ using Chubberino.Modules.CheeseGame.PlayerExtensions;
 using Chubberino.Utility;
 using System;
 using System.Collections.Generic;
+using System.Text;
 using TwitchLib.Client.Models;
 
 namespace Chubberino.Modules.CheeseGame.Rankings
@@ -108,28 +109,27 @@ namespace Chubberino.Modules.CheeseGame.Rankings
 
             if (RanksToPoints.TryGetValue(player.Rank, out Int32 pointsToRank))
             {
-                String nextRankInformation;
+                StringBuilder nextRankInformation = new();
 
                 if (pointsToRank > player.Points)
                 {
-
-                    nextRankInformation = $"You need {pointsToRank - player.Points} more cheese to rankup to ";
+                    nextRankInformation.Append($"You need {pointsToRank - player.Points} more cheese to rankup to ");
                 }
                 else
                 {
-                    nextRankInformation = $"You have enough cheese ({pointsToRank}) to rankup right now to ";
+                    nextRankInformation.Append($"You have enough cheese ({pointsToRank}) to rankup right now to ");
                 }
 
                 if (nextRank == Rank.None)
                 {
-                    nextRankInformation += $"prestige back to {Rank.Bronze} rank. You will lose all your cheese and upgrades, but will gain a permanent {(Int32)(Constants.PrestigeBonus * 100)}% bonus on your cheese gains.";
+                    nextRankInformation.Append($"prestige back to {Rank.Bronze} rank. You will lose all your cheese and upgrades, but will gain a permanent {(Int32)(Constants.PrestigeBonus * 100)}% bonus on your cheese gains.");
                 }
                 else
                 {
-                    nextRankInformation += $"{nextRank} rank.";
+                    nextRankInformation.Append($"{nextRank} rank.");
                 }
 
-                outputMessage = $"You are currently in {player.Rank} rank. {nextRankInformation}";
+                outputMessage = $"You are currently in {player.Rank} rank. {nextRankInformation.ToString()}";
             }
             else
             {
