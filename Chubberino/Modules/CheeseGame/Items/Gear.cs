@@ -8,6 +8,11 @@ namespace Chubberino.Modules.CheeseGame.Items
 {
     public sealed class Gear : Item
     {
+        /// <summary>
+        /// The additive quest success percent bonus provided by each gear.
+        /// </summary>
+        public const Double QuestSuccessBonus = 0.005;
+
         public const Int32 MaximumCount = 150;
 
         public override IEnumerable<String> Names { get; } = new String[] { "Gear", "g", "gears" };
@@ -25,7 +30,7 @@ namespace Chubberino.Modules.CheeseGame.Items
         public override String GetSpecificNameForSuccessfulBuy(Player player, Int32 quantity)
         {
             var newQuestSuccessChance = player.GetQuestSuccessChance();
-            var oldQuestSuccessChance = newQuestSuccessChance - quantity * Constants.QuestGearSuccessPercent;
+            var oldQuestSuccessChance = newQuestSuccessChance - quantity * QuestSuccessBonus;
             return $"{quantity} gear [{String.Format("{0:0.0}", oldQuestSuccessChance * 100)}% -> {String.Format("{0:0.0}", newQuestSuccessChance * 100)}% quest success]";
         }
 
@@ -55,7 +60,7 @@ namespace Chubberino.Modules.CheeseGame.Items
             if (IsForSale(player, out _))
             {
                 var questSuccessChance = player.GetQuestSuccessChance();
-                return $"{base.GetShopPrompt(player)} [+{String.Format("{0:0.0}", questSuccessChance * 100)}% -> +{String.Format("{0:0.0}", (questSuccessChance + Constants.QuestGearSuccessPercent) * 100)}% quest success] for {GetPrice(player)} cheese";
+                return $"{base.GetShopPrompt(player)} [+{String.Format("{0:0.0}", questSuccessChance * 100)}% -> +{String.Format("{0:0.0}", (questSuccessChance + Gear.QuestSuccessBonus) * 100)}% quest success] for {GetPrice(player)} cheese";
             }
 
             return null;

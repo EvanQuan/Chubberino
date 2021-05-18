@@ -19,11 +19,6 @@ namespace Chubberino.Modules.CheeseGame
         /// </summary>
         public const Double QuestBaseSuccessChance = 0.25;
 
-        /// <summary>
-        /// The additive quest success percent bonus for each gear.
-        /// </summary>
-        public const Double QuestGearSuccessPercent = 0.005;
-
         public const Double CriticalCheeseUpgradePercent = 0.005;
 
         /// <summary>
