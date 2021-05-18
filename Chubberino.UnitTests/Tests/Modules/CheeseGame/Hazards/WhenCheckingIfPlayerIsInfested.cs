@@ -9,6 +9,11 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Hazards
     {
         private Player Player { get; }
 
+        public WhenCheckingIfPlayerIsInfested()
+        {
+            Player = new();
+        }
+
         [Theory]
         [InlineData(0)]
         [InlineData(-1)]

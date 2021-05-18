@@ -113,10 +113,5 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
         {
             return player.CheeseUnlocked + 1 >= CheeseRepository.Cheeses.Count;
         }
-
-        public static Boolean HasQuestingUnlocked(this Player player)
-        {
-            return player.QuestsUnlockedCount > 0;
-        }
     }
 }

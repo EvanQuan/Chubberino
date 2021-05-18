@@ -9,5 +9,10 @@ namespace Chubberino.Modules.CheeseGame.Quests
         {
             return player.NextQuestUpgradeUnlock.GetRareQuestChance();
         }
+
+        public static Boolean HasQuestingUnlocked(this Player player)
+        {
+            return player.QuestsUnlockedCount > 0;
+        }
     }
 }
