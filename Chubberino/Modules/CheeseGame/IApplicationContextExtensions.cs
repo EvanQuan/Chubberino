@@ -1,7 +1,7 @@
 ﻿using Chubberino.Client;
 using Chubberino.Database.Contexts;
 using Chubberino.Modules.CheeseGame.Models;
-using Chubberino.Modules.CheeseGame.PlayerExtensions;
+using Chubberino.Modules.CheeseGame.Rankings;
 using System.Linq;
 using TwitchLib.Client.Models;
 
