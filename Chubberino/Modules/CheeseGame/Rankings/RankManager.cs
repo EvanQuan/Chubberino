@@ -61,7 +61,8 @@ namespace Chubberino.Modules.CheeseGame.Rankings
                             player.ResetRank();
                             player.Prestige++;
                             Context.SaveChanges();
-                            outputMessage = $"You prestiged back to {Rank.Bronze} and have gained a permanent {(Int32)(Constants.PrestigeBonus * 100)}% cheese gain boost.";
+                            var positiveEmotes = EmoteManager.Get(message.Channel, EmoteCategory.Positive);
+                            outputMessage = $"{Random.NextElement(positiveEmotes)} You prestiged back to {Rank.Bronze} and have gained a permanent {(Int32)(Constants.PrestigeBonus * 100)}% cheese gain boost. {Random.NextElement(positiveEmotes)}";
                             priority = Priority.Medium;
                         }
                         else
@@ -131,7 +132,7 @@ namespace Chubberino.Modules.CheeseGame.Rankings
                     nextRankInformation.Append($"{nextRank} rank.");
                 }
 
-                outputMessage = $"You are currently in {player.Rank} rank. {nextRankInformation.ToString()}";
+                outputMessage = $"You are currently in {player.Rank} rank. {nextRankInformation}";
             }
             else
             {
