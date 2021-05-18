@@ -1,6 +1,6 @@
 ﻿using Chubberino.Modules.CheeseGame.Items.Upgrades.RecipeModifiers;
 using Chubberino.Modules.CheeseGame.Models;
-using Chubberino.Modules.CheeseGame.Rankings;
+using Chubberino.Modules.CheeseGame.Ranks;
 using System.Collections.Generic;
 using Xunit;
 

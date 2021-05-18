@@ -1,6 +1,6 @@
 ﻿using Chubberino.Modules.CheeseGame.Items;
 using Chubberino.Modules.CheeseGame.Points;
-using Chubberino.Modules.CheeseGame.Rankings;
+using Chubberino.Modules.CheeseGame.Ranks;
 using System;
 
 namespace Chubberino.Modules.CheeseGame.Quests

@@ -1,4 +1,4 @@
-﻿using Chubberino.Modules.CheeseGame.Rankings;
+﻿using Chubberino.Modules.CheeseGame.Ranks;
 using System.Collections.Generic;
 
 namespace Chubberino.Modules.CheeseGame.Items.Recipes

@@ -1,6 +1,6 @@
 ﻿using Chubberino.Modules.CheeseGame.Items.Upgrades;
 using Chubberino.Modules.CheeseGame.Models;
-using Chubberino.Modules.CheeseGame.Rankings;
+using Chubberino.Modules.CheeseGame.Ranks;
 using Xunit;
 
 namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Items.Upgrades

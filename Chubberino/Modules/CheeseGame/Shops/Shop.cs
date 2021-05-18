@@ -6,7 +6,7 @@ using Chubberino.Modules.CheeseGame.Items;
 using Chubberino.Modules.CheeseGame.Items.Workers;
 using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.Quests;
-using Chubberino.Modules.CheeseGame.Rankings;
+using Chubberino.Modules.CheeseGame.Ranks;
 using Chubberino.Utility;
 using System;
 using System.Collections.Generic;
