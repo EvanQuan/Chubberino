@@ -31,7 +31,8 @@ namespace Chubberino.Modules.CheeseGame.Quests
                   },
                   _ => "+1 worker",
                   rankToUnlock,
-                  rankPricePercentPrice)
+                  rankPricePercentPrice,
+                  isRare: true)
         {
         }
     }

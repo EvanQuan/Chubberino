@@ -23,7 +23,8 @@ namespace Chubberino.Modules.CheeseGame.Quests
                   },
                   player => $"+{(Int32)(rewardStorage * player.GetStorageUpgradeMultiplier())} storage",
                   Rank.Bronze,
-                  0)
+                  0,
+                  isRare: true)
         {
         }
     }
