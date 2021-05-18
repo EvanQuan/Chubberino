@@ -7,6 +7,11 @@ namespace Chubberino.Modules.CheeseGame.Quests
     public abstract class Quest
     {
         /// <summary>
+        /// Base quest success chance.
+        /// </summary>
+        public const Double BaseSuccessChance = 0.25;
+
+        /// <summary>
         /// Name of the quest location.
         /// </summary>
         public String Location { get; }

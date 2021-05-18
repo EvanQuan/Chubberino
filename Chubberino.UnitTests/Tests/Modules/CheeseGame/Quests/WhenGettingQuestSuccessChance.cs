@@ -1,5 +1,4 @@
-﻿using Chubberino.Modules.CheeseGame;
-using Chubberino.Modules.CheeseGame.Models;
+﻿using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.Quests;
 using Chubberino.Modules.CheeseGame.Rankings;
 using System;
@@ -21,7 +20,7 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Quests
         {
             Double result = Player.GetQuestSuccessChance();
 
-            Assert.Equal(Constants.QuestBaseSuccessChance, result);
+            Assert.Equal(Quest.BaseSuccessChance, result);
         }
 
         [Theory]
