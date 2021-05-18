@@ -208,7 +208,7 @@ namespace Chubberino.Client
         {
             if (message == PreviousMessage)
             {
-                message += " " + Data.InvisibleCharacter;
+                message += ' ' + Data.InvisibleCharacter;
             }
 
             Boolean messageSent = false;
