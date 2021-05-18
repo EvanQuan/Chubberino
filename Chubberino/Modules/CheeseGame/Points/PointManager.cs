@@ -6,6 +6,7 @@ using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Hazards;
 using Chubberino.Modules.CheeseGame.Items;
 using Chubberino.Modules.CheeseGame.Items.Recipes;
+using Chubberino.Modules.CheeseGame.Items.Upgrades;
 using Chubberino.Modules.CheeseGame.Items.Upgrades.RecipeModifiers;
 using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Utility;
@@ -81,7 +82,7 @@ namespace Chubberino.Modules.CheeseGame.Points
                             .Append(' ');
                     }
 
-                    Boolean isCritical = Random.TryPercentChance((Int32)player.NextCriticalCheeseUpgradeUnlock * Constants.CriticalCheeseUpgradePercent);
+                    Boolean isCritical = Random.TryPercentChance((Int32)player.NextCriticalCheeseUpgradeUnlock * RankUpgradeExtensions.CriticalCheeseUpgradePercent);
 
                     var modifiedPoints = player.GetModifiedPoints(cheese.Points, isCritical);
 
