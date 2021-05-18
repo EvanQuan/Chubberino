@@ -3,10 +3,11 @@ using Chubberino.Database.Contexts;
 using Chubberino.Database.Models;
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Heists;
-using Chubberino.Modules.CheeseGame.PlayerExtensions;
+using Chubberino.Modules.CheeseGame.Items.Upgrades.Recipes;
 using Chubberino.Utility;
 using System;
 using System.Collections.Generic;
+using System.Text;
 using TwitchLib.Client.Models;
 
 namespace Chubberino.Modules.CheeseGame.Rankings
@@ -53,19 +54,21 @@ namespace Chubberino.Modules.CheeseGame.Rankings
                 {
                     if (nextRank == Rank.None)
                     {
-                        if (player.HasUnlockedAllCheeses())
+                        if (player.HasUnlockedAllRecipes())
                         {
                             HeistManager.LeaveAllHeists(player);
                             // Prestige instead of rank up
                             player.ResetRank();
                             player.Prestige++;
                             Context.SaveChanges();
-                            outputMessage = $"You prestiged back to {Rank.Bronze} and have gained a permanent {(Int32)(Constants.PrestigeBonus * 100)}% cheese gain boost.";
+                            var positiveEmotes = EmoteManager.Get(message.Channel, EmoteCategory.Positive);
+                            outputMessage = $"{Random.NextElement(positiveEmotes)} You prestiged back to {Rank.Bronze} and have gained a permanent {(Int32)(Constants.PrestigeBonus * 100)}% cheese gain boost. {Random.NextElement(positiveEmotes)}";
                             priority = Priority.Medium;
                         }
                         else
                         {
-                            outputMessage = $"You need to buy all cheese recipes in order to prestige back to {Rank.Bronze} rank. You will lose all your cheese and upgrades, but will gain a permanent {(Int32)(Constants.PrestigeBonus * 100)}% bonus on your cheese gains.";
+                            outputMessage = $"You need to buy all cheese recipes in order to prestige back to {Rank.Bronze} rank. " +
+                                $"You will lose all your cheese and upgrades, but will gain a permanent {(Int32)(Constants.PrestigeBonus * 100)}% bonus on your cheese gains.";
                         }
                     }
                     else
@@ -73,7 +76,7 @@ namespace Chubberino.Modules.CheeseGame.Rankings
                         player.Points -= pointsToRank;
                         player.Rank = nextRank;
                         Context.SaveChanges();
-                        outputMessage = $"You ranked up to {nextRank}. {Random.NextElement(EmoteManager.Get(message.Channel, EmoteCategory.Negative))} (-{pointsToRank} cheese)";
+                        outputMessage = $"You ranked up to {nextRank}. {Random.NextElement(EmoteManager.Get(message.Channel, EmoteCategory.Positive))} (-{pointsToRank} cheese)";
                         priority = Priority.Medium;
                     }
                 }
@@ -82,7 +85,8 @@ namespace Chubberino.Modules.CheeseGame.Rankings
                     var pointsNeededToRank = pointsToRank - player.Points;
                     if (nextRank == Rank.None)
                     {
-                        outputMessage = $"You need {pointsNeededToRank} more cheese in order to prestige back to {Rank.Bronze} rank. You will lose all your cheese and upgrades, but will gain a permanent {(Int32)(Constants.PrestigeBonus * 100)}% bonus on your cheese gains.";
+                        outputMessage = $"You need {pointsNeededToRank} more cheese in order to prestige back to {Rank.Bronze} rank. " +
+                            $"You will lose all your cheese and upgrades, but will gain a permanent {(Int32)(Constants.PrestigeBonus * 100)}% bonus on your cheese gains.";
                     }
                     else
                     {
@@ -108,25 +112,24 @@ namespace Chubberino.Modules.CheeseGame.Rankings
 
             if (RanksToPoints.TryGetValue(player.Rank, out Int32 pointsToRank))
             {
-                String nextRankInformation;
+                StringBuilder nextRankInformation = new();
 
                 if (pointsToRank > player.Points)
                 {
-
-                    nextRankInformation = $"You need {pointsToRank - player.Points} more cheese to rankup to ";
+                    nextRankInformation.Append($"You need {pointsToRank - player.Points} more cheese to rankup to ");
                 }
                 else
                 {
-                    nextRankInformation = $"You have enough cheese ({pointsToRank}) to rankup right now to ";
+                    nextRankInformation.Append($"You have enough cheese ({pointsToRank}) to rankup right now to ");
                 }
 
                 if (nextRank == Rank.None)
                 {
-                    nextRankInformation += $"prestige back to {Rank.Bronze} rank. You will lose all your cheese and upgrades, but will gain a permanent {(Int32)(Constants.PrestigeBonus * 100)}% bonus on your cheese gains.";
+                    nextRankInformation.Append($"prestige back to {Rank.Bronze} rank. You will lose all your cheese and upgrades, but will gain a permanent {(Int32)(Constants.PrestigeBonus * 100)}% bonus on your cheese gains.");
                 }
                 else
                 {
-                    nextRankInformation += $"{nextRank} rank.";
+                    nextRankInformation.Append($"{nextRank} rank.");
                 }
 
                 outputMessage = $"You are currently in {player.Rank} rank. {nextRankInformation}";

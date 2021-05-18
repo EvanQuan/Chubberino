@@ -1,5 +1,5 @@
-﻿using Chubberino.Modules.CheeseGame.Models;
-using Chubberino.Modules.CheeseGame.PlayerExtensions;
+﻿using Chubberino.Modules.CheeseGame;
+using Chubberino.Modules.CheeseGame.Models;
 using System;
 
 namespace Chubberino.Client

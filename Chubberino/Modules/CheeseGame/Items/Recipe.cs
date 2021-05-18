@@ -1,5 +1,5 @@
-﻿using Chubberino.Modules.CheeseGame.Models;
-using Chubberino.Modules.CheeseGame.PlayerExtensions;
+﻿using Chubberino.Modules.CheeseGame.Items.Recipes;
+using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.Points;
 using Chubberino.Utility;
 using Monad;
@@ -25,17 +25,17 @@ namespace Chubberino.Modules.CheeseGame.Items
 
         public override IEnumerable<String> Names => new String[] { "Recipe", "r", "recipes" };
 
-        public IReadOnlyList<CheeseType> CheeseRepository { get; }
+        public IReadOnlyList<RecipeInfo> RecipeRepository { get; }
 
-        public Recipe(IReadOnlyList<CheeseType> cheeseRepository)
+        public Recipe(IReadOnlyList<RecipeInfo> recipeRepository)
         {
-            CheeseRepository = cheeseRepository;
+            RecipeRepository = recipeRepository;
         }
 
 
         public override String GetSpecificNameForNotEnoughToBuy(Player player)
         {
-            if (CheeseRepository.TryGetNextToUnlock(player, out var cheese))
+            if (RecipeRepository.TryGetNextToUnlock(player, out var cheese))
             {
                 return $"the {cheese.Name} recipe";
             }
@@ -54,7 +54,7 @@ namespace Chubberino.Modules.CheeseGame.Items
 
             for (Int32 i = 0; i < quantity; i++, temporaryPlayer.CheeseUnlocked++)
             {
-                CheeseRepository.TryGetNextToUnlock(temporaryPlayer, out var cheese);
+                RecipeRepository.TryGetNextToUnlock(temporaryPlayer, out var cheese);
 
                 cheeseNamesPurchased.Add(cheese.Name);
             }
@@ -64,7 +64,7 @@ namespace Chubberino.Modules.CheeseGame.Items
 
         public override Either<Int32, String> TryBuySingleUnit(Player player, Int32 price)
         {
-            if (!CheeseRepository.TryGetNextToUnlock(player, out var nextCheeseToUnlock))
+            if (!RecipeRepository.TryGetNextToUnlock(player, out var nextCheeseToUnlock))
             {
                 return () => UnexpectedErrorMessage;
             }
@@ -83,7 +83,7 @@ namespace Chubberino.Modules.CheeseGame.Items
 
         public override Boolean IsForSale(Player player, out String reason)
         {
-            if (CheeseRepository.TryGetNextToUnlock(player, out var cheese))
+            if (RecipeRepository.TryGetNextToUnlock(player, out var cheese))
             {
                 if (cheese.RankToUnlock > player.Rank)
                 {
@@ -101,7 +101,7 @@ namespace Chubberino.Modules.CheeseGame.Items
 
         public override Int32 GetPrice(Player player)
         {
-            if (CheeseRepository.TryGetNextToUnlock(player, out var cheese))
+            if (RecipeRepository.TryGetNextToUnlock(player, out var cheese))
             {
                 return cheese.CostToUnlock;
             }
@@ -112,7 +112,7 @@ namespace Chubberino.Modules.CheeseGame.Items
         public override String GetShopPrompt(Player player)
         {
             String recipePrompt;
-            if (CheeseRepository.TryGetNextToUnlock(player, out CheeseType nextCheeseToUnlock))
+            if (RecipeRepository.TryGetNextToUnlock(player, out RecipeInfo nextCheeseToUnlock))
             {
                 var cheesePoints = player.GetModifiedPoints(nextCheeseToUnlock.Points);
 

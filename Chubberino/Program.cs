@@ -16,6 +16,8 @@ using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Hazards;
 using Chubberino.Modules.CheeseGame.Heists;
 using Chubberino.Modules.CheeseGame.Items;
+using Chubberino.Modules.CheeseGame.Items.Recipes;
+using Chubberino.Modules.CheeseGame.Items.Upgrades.RecipeModifiers;
 using Chubberino.Modules.CheeseGame.Points;
 using Chubberino.Modules.CheeseGame.Quests;
 using Chubberino.Modules.CheeseGame.Rankings;
@@ -142,15 +144,15 @@ namespace Chubberino
             builder.RegisterType<QuestManager>().As<IQuestManager>().SingleInstance();
             builder.RegisterType<HeistManager>().As<IHeistManager>().SingleInstance();
             builder.RegisterType<EmoteManager>().As<IEmoteManager>().SingleInstance();
-            builder.Register(x => CheeseRepository.Cheeses).As<IReadOnlyList<CheeseType>>().SingleInstance();
-            builder.Register(x => CheeseModifierRepository.Modifiers).As<IReadOnlyList<CheeseModifier>>().SingleInstance();
+            builder.Register(x => RecipeRepository.Recipes).As<IReadOnlyList<RecipeInfo>>().SingleInstance();
+            builder.Register(x => RecipeModifierRepository.Modifiers).As<IReadOnlyList<RecipeModifier>>().SingleInstance();
             builder.RegisterType<HazardManager>().As<IHazardManager>().SingleInstance();
 
             // Items
             builder.RegisterType<Gear>().AsSelf().SingleInstance();
             builder.RegisterType<Mousetrap>().AsSelf().SingleInstance();
             builder.RegisterType<Population>().AsSelf().SingleInstance();
-            builder.RegisterType<Modules.CheeseGame.Items.QuestLocation>().AsSelf().SingleInstance();
+            builder.RegisterType<QuestLocation>().AsSelf().SingleInstance();
             builder.RegisterType<Recipe>().AsSelf().SingleInstance();
             builder.RegisterType<Storage>().AsSelf().SingleInstance();
             builder.RegisterType<Upgrade>().AsSelf().SingleInstance();

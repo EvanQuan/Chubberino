@@ -1,7 +1,7 @@
 ﻿using Chubberino.Client;
 using Chubberino.Database.Contexts;
 using Chubberino.Modules.CheeseGame.Models;
-using Chubberino.Modules.CheeseGame.PlayerExtensions;
+using Chubberino.Modules.CheeseGame.Points;
 using Chubberino.Utility;
 using System;
 using System.Collections.Generic;

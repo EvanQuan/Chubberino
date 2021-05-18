@@ -1,4 +1,4 @@
-﻿using Chubberino.Modules.CheeseGame.Points;
+﻿using Chubberino.Modules.CheeseGame.Items.Workers;
 using Chubberino.Modules.CheeseGame.Rankings;
 using System;
 using Xunit;

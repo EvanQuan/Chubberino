@@ -1,5 +1,5 @@
-﻿using Chubberino.Modules.CheeseGame.Models;
-using Chubberino.Modules.CheeseGame.Upgrades;
+﻿using Chubberino.Modules.CheeseGame.Items.Upgrades;
+using Chubberino.Modules.CheeseGame.Models;
 using Monad;
 using System;
 using System.Collections.Generic;
