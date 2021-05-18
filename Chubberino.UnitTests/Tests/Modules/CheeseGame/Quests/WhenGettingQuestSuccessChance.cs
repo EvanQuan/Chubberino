@@ -5,7 +5,7 @@ using Chubberino.Modules.CheeseGame.Rankings;
 using System;
 using Xunit;
 
-namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.PlayerExtensions
+namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Quests
 {
     public sealed class WhenGettingQuestSuccessChance
     {
