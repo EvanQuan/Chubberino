@@ -12,7 +12,7 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Points
         {
             Double multiplier = Rank.Bronze.GetWorkerPointMultiplier();
 
-            Assert.Equal(RankExtensions.BaseWorkerPointPercent, multiplier);
+            Assert.Equal(RankWorkerUpgradeExtensions.BaseWorkerPointPercent, multiplier);
         }
 
         [Fact]
@@ -20,7 +20,7 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Points
         {
             Double multiplier = Rank.Silver.GetWorkerPointMultiplier();
 
-            Double expectedMultiplier = RankExtensions.BaseWorkerPointPercent + RankExtensions.WorkerUpgradePercent;
+            Double expectedMultiplier = RankWorkerUpgradeExtensions.BaseWorkerPointPercent + RankWorkerUpgradeExtensions.WorkerUpgradePercent;
 
             Assert.Equal(expectedMultiplier, multiplier);
         }

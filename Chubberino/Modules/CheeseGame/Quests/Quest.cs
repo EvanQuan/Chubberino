@@ -37,13 +37,19 @@ namespace Chubberino.Modules.CheeseGame.Quests
         /// </summary>
         public Int32 Price { get; }
 
+        /// <summary>
+        /// Indicates this is a rare quest.
+        /// </summary>
+        public Boolean IsRare { get; }
+
         public Quest(
             String location,
             String failureMessage,
             Func<Player, String, String> onSuccess,
             Func<Player, String> rewardDescription,
             Rank rankToUnlock,
-            Double rankPricePercentPrice)
+            Double rankPricePercentPrice,
+            Boolean isRare = false)
         {
             Location = location;
             FailureMessage = failureMessage;
@@ -51,6 +57,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
             RewardDescription = rewardDescription;
             RankToUnlock = rankToUnlock;
             Price = (Int32) (RankManager.RanksToPoints[RankToUnlock] * rankPricePercentPrice);
+            IsRare = isRare;
         }
     }
 }

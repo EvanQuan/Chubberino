@@ -1,4 +1,5 @@
 ﻿using Chubberino.Modules.CheeseGame.Points;
+using Chubberino.Modules.CheeseGame.Quests;
 using Chubberino.Modules.CheeseGame.Rankings;
 using Chubberino.Utility;
 using System;

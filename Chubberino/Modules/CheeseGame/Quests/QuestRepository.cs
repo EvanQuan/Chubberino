@@ -6,11 +6,6 @@ namespace Chubberino.Modules.CheeseGame.Quests
 {
     public sealed class QuestRepository : IQuestRepository
     {
-        /// <summary>
-        /// Chance that a quest from the rare quest pool will be chosen.
-        /// </summary>
-        public const Double RareQuestChance = 0.01;
-
         public static IReadOnlyList<Quest> Common { get; } = new List<Quest>()
         {
             new GainCheeseQuest(
@@ -186,20 +181,24 @@ namespace Chubberino.Modules.CheeseGame.Quests
                 (Int32)(Constants.ShopStorageQuantity * 0.1),
                 Rank.Legend,
                 0.25),
-            new GainWorkerQuest(
+            new GainCheeseQuest(
+                "the Great Cheese Emporium",
+                "The place is too well-guarded and you fail to pass the outer gate.",
+                "You sneak into the facility and find a mountain of cheese, which you take through a secret underground exit.",
+                600,
                 Rank.Legend,
-                0.35)
+                0.35),
 
         };
 
         public static IReadOnlyList<Quest> Rare { get; } = new List<Quest>()
         {
-            new GainCatQuest(),
+            // new GainCatQuest(),
             new GainStorageQuest(
                 "Cantal Chaparral",
-                "",
-                "",
-                Constants.ShopStorageQuantity),
+                "The land is vast, but the ground is rife with vegetation.",
+                "You find an open clearing perfect to setup a warehouse for cheese storage.",
+                (Int32)(Constants.ShopStorageQuantity * 1.5)),
             new GainWorkerQuest(
                 Rank.Bronze,
                 0)

@@ -7,7 +7,7 @@ using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.PlayerExtensions;
 using Chubberino.Utility;
 using System;
-using System.Collections.Generic;
+using System.Text;
 using TwitchLib.Client.Models;
 
 namespace Chubberino.Modules.CheeseGame.Quests
@@ -51,7 +51,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
 
             if (timeSinceLastQuestVentured >= QuestCooldown)
             {
-                var quest = Random.NextElement(QuestRepository.CommonQuests, player.QuestsUnlockedCount - 1);
+                var quest = Random.NextElement(QuestRepository, player);
 
                 StartQuest(message, player, quest);
 
@@ -84,9 +84,26 @@ namespace Chubberino.Modules.CheeseGame.Quests
 
             Context.SaveChanges();
 
-            TwitchClientManager.SpoolMessageAsMe(message.Channel, player,
-                $"[Quest {String.Format("{0:0.0}", successChance * 100)}% success] " +
-                $"{GetPlayerWithWorkers(player)} travel to {quest.Location}. {resultMessage}");
+            StringBuilder questPrompt = new();
+
+            questPrompt
+                .Append($"[Quest {String.Format("{0:0.0}", successChance * 100)}% success] ");
+
+            if (quest.IsRare)
+            {
+                var positiveEmotes = EmoteManager.Get(message.Channel, EmoteCategory.Positive);
+
+                questPrompt
+                    .Append(Random.NextElement(positiveEmotes))
+                    .Append(" RARE QUEST !!! ")
+                    .Append(Random.NextElement(positiveEmotes))
+                    .Append(' ');
+            }
+
+            questPrompt
+                .Append($"{GetPlayerWithWorkers(player)} travel to {quest.Location}. {resultMessage}");
+
+            TwitchClientManager.SpoolMessageAsMe(message.Channel, player, questPrompt.ToString());
         }
 
         private static String GetPlayerWithWorkers(Player player)
