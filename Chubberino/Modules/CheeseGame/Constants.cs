@@ -4,10 +4,6 @@ namespace Chubberino.Modules.CheeseGame
 {
     public static class Constants
     {
-        /// <summary>
-        /// Bonus multiplier per every prestige level.
-        /// </summary>
-        public const Double PrestigeBonus = 0.1;
 
         /// <summary>
         /// Additive percent bonus for each storage upgrade.
@@ -16,9 +12,5 @@ namespace Chubberino.Modules.CheeseGame
 
         public const Double CriticalCheeseUpgradePercent = 0.005;
 
-        /// <summary>
-        /// Point multiplier for critical cheese.
-        /// </summary>
-        public const Int32 CriticalCheeseMultiplier = 5;
     }
 }
