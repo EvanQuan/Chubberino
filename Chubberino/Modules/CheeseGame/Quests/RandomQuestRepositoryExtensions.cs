@@ -1,15 +1,16 @@
-﻿using Chubberino.Utility;
+﻿using Chubberino.Modules.CheeseGame.Models;
+using Chubberino.Utility;
 using System;
 
 namespace Chubberino.Modules.CheeseGame.Quests
 {
     public static class RandomQuestRepositoryExtensions
     {
-        public static Quest NextElement(this Random random, IQuestRepository questRepository, Int32 unlockedCount)
+        public static Quest NextElement(this Random random, IQuestRepository questRepository, Player player)
         {
-            return random.TryPercentChance(questRepository.RareQuestChance)
+            return random.TryPercentChance(player.GetRareQuestChance())
                 ? random.NextElement(questRepository.RareQuests)
-                : random.NextElement(questRepository.CommonQuests, unlockedCount);
+                : random.NextElement(questRepository.CommonQuests, player.QuestsUnlockedCount - 1);
         }
     }
 }
