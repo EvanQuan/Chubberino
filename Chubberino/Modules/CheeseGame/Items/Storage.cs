@@ -1,5 +1,4 @@
 ﻿using Chubberino.Modules.CheeseGame.Models;
-using Chubberino.Modules.CheeseGame.PlayerExtensions;
 using Monad;
 using System;
 using System.Collections.Generic;

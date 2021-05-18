@@ -1,4 +1,5 @@
-﻿using Chubberino.Modules.CheeseGame.Models;
+﻿using Chubberino.Modules.CheeseGame.Items;
+using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.Points;
 using System;
 
@@ -38,17 +39,6 @@ namespace Chubberino.Modules.CheeseGame.PlayerExtensions
             return $"{player.Name} [{prestige}{player.Rank}, {cheese}, {workers}, {mousetraps}]";
         }
 
-
-
-        public static Double GetStorageUpgradeMultiplier(this Player player)
-        {
-            return 1 + (Int32)player.NextStorageUpgradeUnlock * Constants.StorageUpgradePercent;
-        }
-
-        public static Int32 GetTotalStorage(this Player player)
-        {
-            return (Int32)(player.MaximumPointStorage * player.GetStorageUpgradeMultiplier());
-        }
 
         public static Boolean HasUnlockedAllCheeses(this Player player)
         {
