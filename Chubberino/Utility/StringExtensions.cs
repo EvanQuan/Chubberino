@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Chubberino.Utility
 {
@@ -68,6 +72,38 @@ namespace Chubberino.Utility
 
             value = default;
             return false;
+        }
+
+        /// <summary>
+        /// Split the specified <paramref name="source"/> into segments of at
+        /// most length of <paramref name="segmentLength"/>, by word.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="segmentLength"></param>
+        /// <returns></returns>
+        public static IEnumerable<String> SplitByLengthOnWord(this String source, Int32 segmentLength)
+        {
+            if (source.Length < segmentLength)
+            {
+                return new String[] { source };
+            }
+
+            StringBuilder justifiedLine = new();
+            String[] words = source.Split(' ');
+
+            List<String> segments = new();
+
+            for (Int32 i = 0; i < words.Length; i++)
+            {
+                justifiedLine.Append(words[i]).Append(' ');
+                if (i + 1 == words.Length || justifiedLine.Length + words[i + 1].Length > segmentLength)
+                {
+                    justifiedLine.Remove(justifiedLine.Length - 1, 1);
+                    segments.Add(justifiedLine.ToString());
+                    justifiedLine = new StringBuilder();
+                }
+            }
+            return segments;
         }
     }
 }
