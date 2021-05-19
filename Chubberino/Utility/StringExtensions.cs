@@ -83,7 +83,7 @@ namespace Chubberino.Utility
         /// <returns></returns>
         public static IEnumerable<String> SplitByLengthOnWord(this String source, Int32 segmentLength)
         {
-            if (source.Length < segmentLength)
+            if (source.Length <= segmentLength)
             {
                 return new String[] { source };
             }
