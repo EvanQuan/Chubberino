@@ -3,6 +3,7 @@ using Chubberino.Client.Services;
 using Chubberino.Client.Threading;
 using Chubberino.Database.Contexts;
 using Chubberino.Database.Models;
+using Chubberino.Utility;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -17,6 +18,8 @@ namespace Chubberino.Client
 {
     public sealed class TwitchClientManager : ITwitchClientManager
     {
+        public const Int32 MaxMessageLength = 500;
+
         public String PrimaryChannelName { get; set; }
 
         private String PreviousMessage { get; set; }
@@ -172,17 +175,23 @@ namespace Chubberino.Client
 
         public void SpoolMessage(String channelName, String message, Priority priority = Priority.Medium)
         {
-            switch (priority)
+
+            var segments = message.SplitByLengthOnWord(MaxMessageLength);
+
+            foreach (var segment in segments)
             {
-                case Priority.Low:
-                    SendMessageConditionally(channelName, message);
-                    break;
-                case Priority.Medium:
-                    SendMessageDirectly(channelName, message);
-                    break;
-                case Priority.High:
-                    AddMessageToQueue(channelName, message);
-                    break;
+                switch (priority)
+                {
+                    case Priority.Low:
+                        SendMessageConditionally(channelName, segment);
+                        break;
+                    case Priority.Medium:
+                        SendMessageDirectly(channelName, segment);
+                        break;
+                    case Priority.High:
+                        AddMessageToQueue(channelName, segment);
+                        break;
+                }
             }
         }
 
