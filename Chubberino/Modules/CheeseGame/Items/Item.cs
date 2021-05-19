@@ -26,6 +26,8 @@ namespace Chubberino.Modules.CheeseGame.Items
                 return () => reason;
             }
 
+            OnBeforeBuy();
+
             Int32 quantityPurchased = 0;
             Int32 unitQuantityPurchased = 0;
             Int32 pointsSpent = 0;
@@ -71,8 +73,10 @@ namespace Chubberino.Modules.CheeseGame.Items
             }
             while (shouldContinue);
 
+            var extraMessage = OnAfterBuy(player, quantityPurchased, pointsSpent);
+
             return errorMessage == null
-                ? () => new BuyResult(quantityPurchased, pointsSpent)
+                ? () => new BuyResult(quantityPurchased, pointsSpent, extraMessage)
                 : () => errorMessage;
         }
 
@@ -83,6 +87,16 @@ namespace Chubberino.Modules.CheeseGame.Items
         /// <param name="price"></param>
         /// <returns>Left, the quantity purchased; or right, the error message.</returns>
         public abstract Either<Int32, String> TryBuySingleUnit(Player player, Int32 price);
+
+        /// <summary>
+        /// Do stuff before buying any of the item. This is called when buying is valid (after the is for sale check)
+        /// </summary>
+        public virtual void OnBeforeBuy() { }
+
+        /// <summary>
+        /// Do stuff after buying all quantities of the item.
+        /// </summary>
+        public virtual String OnAfterBuy(Player player, Int32 quantityPurchased, Int32 pointsSpent) { return String.Empty; }
 
         /// <summary>
         /// When not able to buy due to lack of points, the error message
