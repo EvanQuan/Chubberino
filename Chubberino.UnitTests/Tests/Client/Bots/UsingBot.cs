@@ -27,7 +27,7 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
 
         protected Mock<IConsole> MockedConsole { get; }
 
-        protected Credentials Credentials { get; }
+        protected LoginCredentials LoginCredentials { get; }
 
         protected String Username { get; }
 
@@ -99,9 +99,9 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
             JoinedChannels = new List<JoinedChannel>();
 
 
-            Credentials = new Credentials(new ConnectionCredentials(Username, TwitchOAuth, disableUsernameCheck: true), true);
+            LoginCredentials = new LoginCredentials(new ConnectionCredentials(Username, TwitchOAuth, disableUsernameCheck: true), true);
 
-            var credentials = Credentials;
+            var credentials = LoginCredentials;
 
             MockedCredentialsManager.Setup(x => x.TryGetCredentials(out credentials)).Returns(true);
 
@@ -109,7 +109,7 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
 
             MockedTwitchClientManager = new Mock<ITwitchClientManager>().SetupAllProperties();
 
-            MockedTwitchClientManager.Setup(x => x.TryInitialize(It.IsAny<IBot>(), It.IsAny<IClientOptions>(), It.IsAny<Boolean>())).Returns(true);
+            MockedTwitchClientManager.Setup(x => x.TryInitialize(It.IsAny<IBot>(), It.IsAny<IClientOptions>(), It.IsAny<LoginCredentials>())).Returns(LoginCredentials);
             MockedTwitchClientManager.Setup(x => x.TryJoinInitialChannels(It.IsAny<IReadOnlyList<JoinedChannel>>())).Returns(true);
 
             MockedClient = new Mock<ITwitchClient>();

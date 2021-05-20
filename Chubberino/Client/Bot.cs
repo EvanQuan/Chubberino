@@ -1,4 +1,5 @@
 ﻿using Chubberino.Client.Commands;
+using Chubberino.Client.Credentials;
 using Chubberino.Client.Threading;
 using System;
 using System.Collections.Generic;
@@ -40,6 +41,8 @@ namespace Chubberino.Client
 
         public ISpinWait SpinWait { get; }
 
+        public LoginCredentials LoginCredentials { get; set; }
+
         public Bot(
             IConsole console,
             ICommandRepository commands,
@@ -57,14 +60,19 @@ namespace Chubberino.Client
             IsModerator = true;
         }
 
-        public Boolean Start(
+        public LoginCredentials Start(
             IClientOptions clientOptions = null,
-            Boolean askForCredentials = true)
+            LoginCredentials credentials = null)
         {
             IReadOnlyList<JoinedChannel> previouslyJoinedChannels = TwitchClientManager.Client?.JoinedChannels;
 
-            return TwitchClientManager.TryInitialize(this, clientOptions, askForCredentials)
-                 && TwitchClientManager.TryJoinInitialChannels(previouslyJoinedChannels);
+            LoginCredentials = TwitchClientManager.TryInitialize(this, clientOptions, credentials);
+            if (LoginCredentials != null && TwitchClientManager.TryJoinInitialChannels(previouslyJoinedChannels))
+            {
+                return LoginCredentials;
+            }
+
+            return null;
         }
 
         public String GetPrompt()
@@ -75,41 +83,47 @@ namespace Chubberino.Client
 
 
 
-        public void Refresh(
-            IClientOptions clientOptions = null,
-            Boolean askForCredentials = true)
+        public void Refresh(IClientOptions clientOptions = null)
         {
-            Boolean successful = Start(clientOptions, askForCredentials);
+            LoginCredentials = Start(clientOptions, LoginCredentials);
 
+            Boolean successful = LoginCredentials != null;
             if (successful)
             {
                 Commands.RefreshAll();
-                Console.WriteLine("Refresh " + (successful ? "successful" : "failed"));
+                Console.WriteLine("Refresh successful");
             }
             else
             {
                 Console.WriteLine("Failed to refresh");
-                State = BotState.ShouldStop;
+                State = BotState.ShouldRestart;
             }
         }
 
         public void ReadCommand(String command)
         {
-            String[] arguments = command.Split(" ", StringSplitOptions.RemoveEmptyEntries);
-
-            if (arguments.Length == 0) { return; }
-
-            String commandName = arguments[0].ToLower();
-
-            switch (commandName)
+            try
             {
-                case "quit":
-                    State = BotState.ShouldStop;
-                    break;
+                String[] arguments = command.Split(" ", StringSplitOptions.RemoveEmptyEntries);
 
-                default:
-                    Commands.Execute(commandName, arguments.Skip(1));
-                    break;
+                if (arguments.Length == 0) { return; }
+
+                String commandName = arguments[0].ToLower();
+
+                switch (commandName)
+                {
+                    case "quit":
+                        State = BotState.ShouldStop;
+                        break;
+
+                    default:
+                        Commands.Execute(commandName, arguments.Skip(1));
+                        break;
+                }
+            }
+            catch
+            {
+                State = BotState.ShouldRestart;
             }
         }
 

@@ -8,7 +8,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using TwitchLib.Client.Events;
 using TwitchLib.Client.Exceptions;
 using TwitchLib.Client.Interfaces;
 using TwitchLib.Client.Models;
@@ -64,10 +63,10 @@ namespace Chubberino.Client
             LastLowPriorityMessageSent = new ConcurrentDictionary<String, DateTime>();
         }
 
-        public Boolean TryInitialize(
+        public LoginCredentials TryInitialize(
             IBot bot,
             IClientOptions clientOptions = null,
-            Boolean askForCredentials = true)
+            LoginCredentials credentials = null)
         {
             // We need to get all the channel that the old client was connected to,
             // so we can rejoin those channels on the new client.
@@ -80,19 +79,18 @@ namespace Chubberino.Client
                 CurrentClientOptions = clientOptions;
             }
 
-            if (askForCredentials)
+            if (credentials == null)
             {
-                if (CredentialsManager.TryGetCredentials(out var credentials))
+                if (!CredentialsManager.TryGetCredentials(out credentials))
                 {
-                    ConnectionCredentials = credentials.ConnectionCredentials;
-                    bot.Name = credentials.ConnectionCredentials.TwitchUsername;
-                    IsBot = credentials.IsBot;
-                }
-                else
-                {
-                    return false;
+                    return null;
                 }
             }
+
+            ConnectionCredentials = credentials.ConnectionCredentials;
+            bot.Name = credentials.ConnectionCredentials.TwitchUsername;
+            bot.LoginCredentials = credentials;
+            IsBot = credentials.IsBot;
 
             if (PrimaryChannelName == null)
             {
@@ -103,16 +101,16 @@ namespace Chubberino.Client
 
             Client.Initialize(ConnectionCredentials, PrimaryChannelName);
 
-            Client.OnConnectionError += Client_OnConnectionError;
             Client.OnConnected += (_, _) => { bot.State = BotState.ShouldContinue; };
+            Client.OnConnectionError += (_, e) =>
+            {
 
-            return true;
-        }
+                Console.WriteLine($"!! Connection Error!! {e.Error.Message}");
 
-        private void Client_OnConnectionError(Object sender, OnConnectionErrorArgs e)
-        {
-            Console.WriteLine($"!! Connection Error!! {e.Error.Message}");
-            Console.WriteLine("!! Refreshed");
+                bot.State = BotState.ShouldRestart;
+            };
+
+            return credentials;
         }
 
         public Boolean TryJoinInitialChannels(IReadOnlyList<JoinedChannel> previouslyJoinedChannels = null)

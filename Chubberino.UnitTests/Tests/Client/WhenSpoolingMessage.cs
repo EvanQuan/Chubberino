@@ -10,7 +10,7 @@ namespace Chubberino.UnitTests.Tests.Client
     {
         public WhenSpoolingMessage()
         {
-            Sut.TryInitialize(MockedBot.Object, askForCredentials: false);
+            Sut.TryInitialize(MockedBot.Object, credentials: LoginCredentials);
         }
 
         [Fact]

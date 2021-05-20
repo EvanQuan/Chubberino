@@ -1,4 +1,5 @@
-﻿using Chubberino.Modules.CheeseGame.Models;
+﻿using Chubberino.Modules.CheeseGame.Hazards;
+using Chubberino.Modules.CheeseGame.Models;
 using Monad;
 using System;
 using System.Collections.Generic;
@@ -35,6 +36,45 @@ namespace Chubberino.Modules.CheeseGame.Items
         public override String GetShopPrompt(Player player)
         {
             return $"{base.GetShopPrompt(player)} [+1] for {GetPrice(player)} cheese";
+        }
+
+        public override String OnAfterBuy(Player player, Int32 quantityPurchased, Int32 pointsSpent)
+        {
+            if (!player.IsInfested()) { return String.Empty; }
+
+            Boolean isSingleMousetrapUsed = player.RatCount == 1;
+
+            if (quantityPurchased >= player.RatCount)
+            {
+                // Eliminated all the rats.
+                var outputMessage = $"You set up {(isSingleMousetrapUsed ? "a mousetrap" : $"{player.RatCount} mousetraps")}, killing {(isSingleMousetrapUsed ? "the giant rat" : $"all the giant rats")} infesting your cheese factory. " +
+                    $"Your workers go back to work. ";
+
+                player.MouseTrapCount -= player.RatCount;
+                player.RatCount = 0;
+
+                return outputMessage;
+            }
+            else if (quantityPurchased > 0)
+            {
+
+                Int32 newRatCount = player.RatCount - player.MouseTrapCount;
+
+                var outputMessage = $"You set up {(isSingleMousetrapUsed ? "a mousetrap" : $"{player.RatCount} mousetraps")}, killing {(isSingleMousetrapUsed ? "a giant rat" : "some of the giant rats")} infesting your cheese factory. {newRatCount} {(newRatCount == 1 ? "remains" : "remain")}, scaring away your workers. ";
+
+                // Eliminated some of the the rats.
+                player.MouseTrapCount = 0;
+                player.RatCount = newRatCount;
+
+                return outputMessage;
+            }
+            else
+            {
+                String rat = isSingleMousetrapUsed ? "rat" : "rats";
+
+                // Eliminated no rats.
+                return $"{player.RatCount} giant {rat} {(isSingleMousetrapUsed ? "is" : "are")} still infesting your cheese factory, scaring away your workers. ";
+            }
         }
     }
 }

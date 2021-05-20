@@ -3,9 +3,9 @@ using TwitchLib.Client.Models;
 
 namespace Chubberino.Client.Credentials
 {
-    public class Credentials
+    public class LoginCredentials
     {
-        public Credentials(ConnectionCredentials connectionCredentials, Boolean isBot)
+        public LoginCredentials(ConnectionCredentials connectionCredentials, Boolean isBot)
         {
             ConnectionCredentials = connectionCredentials;
             IsBot = isBot;

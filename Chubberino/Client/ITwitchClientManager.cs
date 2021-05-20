@@ -1,4 +1,4 @@
-﻿using Chubberino.Client;
+﻿using Chubberino.Client.Credentials;
 using System;
 using System.Collections.Generic;
 using TwitchLib.Client.Interfaces;
@@ -15,7 +15,15 @@ namespace Chubberino.Client
 
         ITwitchClient Client { get; }
 
-        Boolean TryInitialize(IBot bot, IClientOptions clientOptions = null, Boolean askForCredentials = true);
+
+        /// <summary>
+        /// Try to log in as a user.
+        /// </summary>
+        /// <param name="bot"></param>
+        /// <param name="clientOptions"></param>
+        /// <param name="credentials">Supplied credentials; will prompt for credentials if null.</param>
+        /// <returns>the user credentials of the user successfully logged in; otherwise null.</returns>
+        LoginCredentials TryInitialize(IBot bot, IClientOptions clientOptions = null, LoginCredentials credentials = null);
 
         Boolean TryJoinInitialChannels(IReadOnlyList<JoinedChannel> previouslyJoinedChannels = null);
 

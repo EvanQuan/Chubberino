@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Chubberino.Client.Credentials;
+using System;
 using TwitchLib.Communication.Interfaces;
 
 namespace Chubberino.Client
@@ -17,11 +18,19 @@ namespace Chubberino.Client
         /// </summary>
         Boolean IsModerator { get; set; }
 
-        Boolean Start(IClientOptions clientOptions = null, Boolean askForCredentials = true);
+        LoginCredentials LoginCredentials { get; set; }
+
+        /// <summary>
+        /// Start the bot, logging in as the specified user.
+        /// </summary>
+        /// <param name="clientOptions"></param>
+        /// <param name="credentials">User to log in as. If null, will prompt for which user to log in as.</param>
+        /// <returns>The login credentials of the user that successfully logged in; null otherwise.</returns>
+        LoginCredentials Start(IClientOptions clientOptions = null, LoginCredentials credentials = null);
 
         String GetPrompt();
 
-        void Refresh(IClientOptions clientOptions = null, Boolean askForCredentials = true);
+        void Refresh(IClientOptions clientOptions = null);
 
         void ReadCommand(String command);
     }

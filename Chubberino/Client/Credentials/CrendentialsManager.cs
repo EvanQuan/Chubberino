@@ -1,5 +1,4 @@
 ﻿using Chubberino.Database.Contexts;
-using Chubberino.Database.Models;
 using System;
 using System.Linq;
 using TwitchLib.Client.Models;
@@ -17,11 +16,11 @@ namespace Chubberino.Client.Credentials
             Context = context;
         }
 
-        public Boolean TryGetCredentials(out Credentials credentials)
+        public Boolean TryGetCredentials(out LoginCredentials credentials)
         {
             credentials = null;
 
-            UserCredentials[] users = Context.UserCredentials.OrderBy(x => x.ID).ToArray();
+            var users = Context.UserCredentials.OrderBy(x => x.ID).ToArray();
 
             if (!users.Any())
             {
@@ -46,7 +45,7 @@ namespace Chubberino.Client.Credentials
                 if (resultIsValid)
                 {
                     var user = users[result];
-                    credentials = new Credentials(
+                    credentials = new LoginCredentials(
                         new ConnectionCredentials(user.TwitchUsername, user.AccessToken),
                         user.IsBot);
 
