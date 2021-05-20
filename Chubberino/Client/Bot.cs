@@ -41,7 +41,7 @@ namespace Chubberino.Client
 
         public ISpinWait SpinWait { get; }
 
-        public LoginCredentials LoginCredentials { get; private set; }
+        public LoginCredentials LoginCredentials { get; set; }
 
         public Bot(
             IConsole console,

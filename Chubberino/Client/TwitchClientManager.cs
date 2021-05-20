@@ -89,6 +89,7 @@ namespace Chubberino.Client
 
             ConnectionCredentials = credentials.ConnectionCredentials;
             bot.Name = credentials.ConnectionCredentials.TwitchUsername;
+            bot.LoginCredentials = credentials;
             IsBot = credentials.IsBot;
 
             if (PrimaryChannelName == null)

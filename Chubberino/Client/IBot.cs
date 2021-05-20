@@ -18,6 +18,8 @@ namespace Chubberino.Client
         /// </summary>
         Boolean IsModerator { get; set; }
 
+        LoginCredentials LoginCredentials { get; set; }
+
         /// <summary>
         /// Start the bot, logging in as the specified user.
         /// </summary>
