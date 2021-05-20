@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using Chubberino.Client.Credentials;
+using Moq;
 using System;
 using System.Collections.Generic;
 using TwitchLib.Client.Models;
@@ -10,17 +11,15 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
     public sealed class WhenRefreshing : UsingBot
     {
         [Theory]
-        [InlineData(false, false)]
-        [InlineData(true, false)]
-        [InlineData(false, true)]
-        [InlineData(true, true)]
-        public void ShouldRefreshComponentsWithOptions(Boolean regularClientOptions, Boolean askForCredentials)
+        [InlineData(false)]
+        [InlineData(true)]
+        public void ShouldRefreshComponentsWithOptions(Boolean regularClientOptions)
         {
             IClientOptions clientOptions = regularClientOptions ? RegularClientOptions : ModeratorClientOptions;
 
-            Sut.Refresh(clientOptions, askForCredentials);
+            Sut.Refresh(clientOptions);
 
-            MockedTwitchClientManager.Verify(x => x.TryInitialize(Sut, clientOptions, askForCredentials), Times.Once());
+            MockedTwitchClientManager.Verify(x => x.TryInitialize(Sut, clientOptions, It.IsAny<LoginCredentials>()), Times.Once());
             MockedTwitchClientManager.Verify(x => x.TryJoinInitialChannels(It.IsAny<IReadOnlyList<JoinedChannel>>()), Times.Once());
             MockedCommandRepository.Verify(x => x.RefreshAll(), Times.Once());
         }

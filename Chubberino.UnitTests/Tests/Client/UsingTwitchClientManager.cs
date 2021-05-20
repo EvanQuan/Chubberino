@@ -5,7 +5,9 @@ using Chubberino.Client.Threading;
 using Chubberino.Database.Contexts;
 using Chubberino.Database.Models;
 using Moq;
+using System;
 using TwitchLib.Client.Interfaces;
+using TwitchLib.Client.Models;
 using TwitchLib.Communication.Interfaces;
 
 namespace Chubberino.UnitTests.Tests.Client
@@ -30,12 +32,21 @@ namespace Chubberino.UnitTests.Tests.Client
 
         protected ApplicationCredentials ApplicationCredentials { get; }
 
-        protected Credentials Credentials { get; }
+        protected LoginCredentials LoginCredentials { get; }
+
+        protected ConnectionCredentials ConnectionCredentials { get; }
 
         protected Mock<IConsole> MockedConsole { get; }
 
+        protected String TwitchUsername { get; }
+
+        protected String TwitchOAuth { get; }
+
         protected UsingTwitchClientManager()
         {
+            TwitchUsername = Guid.NewGuid().ToString();
+            TwitchOAuth = Guid.NewGuid().ToString();
+
             MockedBot = new();
             MockedApplicationContext = new();
             MockedTwitchClientFactory = new();
@@ -44,7 +55,8 @@ namespace Chubberino.UnitTests.Tests.Client
             MockedSpinWait = new();
             MockedDateTimeService = new();
             ApplicationCredentials = new();
-            Credentials = new(null, true);
+            ConnectionCredentials = new(TwitchUsername, TwitchOAuth, disableUsernameCheck: true);
+            LoginCredentials = new(ConnectionCredentials, true);
             MockedConsole = new();
 
             Sut = new TwitchClientManager(
@@ -60,7 +72,7 @@ namespace Chubberino.UnitTests.Tests.Client
                 .Setup(x => x.GetClient(It.IsAny<IClientOptions>()))
                 .Returns(MockedTwitchClient.Object);
 
-            var credentials = Credentials;
+            var credentials = LoginCredentials;
             MockedCredentialsManager
                 .Setup(x => x.TryGetCredentials(out credentials))
                 .Returns(true);

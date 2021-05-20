@@ -38,10 +38,43 @@ namespace Chubberino
 {
     public class Program
     {
+        private static IConsole Console { get; set; }
+
+        private static IBot Bot { get; set; }
+
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>
         public static void Main()
+        {
+            var credentials = SetupIoC(null);
+
+            Boolean shouldContinue = credentials != null;
+
+            while (shouldContinue)
+            {
+                Console.Write(Bot.GetPrompt());
+                Bot.ReadCommand(Console.ReadLine());
+
+                switch (Bot.State)
+                {
+                    // Continue onto the next prompt
+                    default:
+                    case BotState.ShouldContinue:
+                        break;
+                    // End the program.
+                    case BotState.ShouldStop:
+                        shouldContinue = false;
+                        break;
+                    case BotState.ShouldRestart:
+                        credentials = SetupIoC(credentials);
+                        shouldContinue = credentials != null;
+                        break;
+                }
+            }
+        }
+
+        public static LoginCredentials SetupIoC(LoginCredentials credentials)
         {
             var services = new ServiceCollection();
 
@@ -165,16 +198,18 @@ namespace Chubberino
 
             using ILifetimeScope scope = container.BeginLifetimeScope();
 
-            var console = scope.Resolve<IConsole>();
+            Console = scope.Resolve<IConsole>();
 
-            var bot = scope.Resolve<IBot>();
+            Bot = scope.Resolve<IBot>();
 
             var twitchClientManager = scope.Resolve<ITwitchClientManager>();
 
-            if (!twitchClientManager.TryInitialize(bot))
+            credentials = twitchClientManager.TryInitialize(Bot, credentials: credentials);
+
+            if (credentials == null)
             {
-                console.WriteLine("Failed to start");
-                return;
+                Console.WriteLine("Failed to start");
+                return null;
             }
 
            scope.Resolve<ICommandRepository>()
@@ -222,35 +257,19 @@ namespace Chubberino
             scope.Resolve<IShop>()
                 .AddItem(scope.Resolve<Recipe>())
                 .AddItem(scope.Resolve<Storage>())
-                .AddItem(scope.Resolve<Modules.CheeseGame.Items.QuestLocation>())
+                .AddItem(scope.Resolve<QuestLocation>())
                 .AddItem(scope.Resolve<Upgrade>())
                 .AddItem(scope.Resolve<Worker>())
                 .AddItem(scope.Resolve<Population>())
                 .AddItem(scope.Resolve<Gear>())
                 .AddItem(scope.Resolve<Mousetrap>());
 
-            Boolean shouldContinue = twitchClientManager.TryJoinInitialChannels();
-
-            while (shouldContinue)
+            if (twitchClientManager.TryJoinInitialChannels())
             {
-                console.Write(bot.GetPrompt());
-                bot.ReadCommand(console.ReadLine());
-
-                switch (bot.State)
-                {
-                    // Continue onto the next prompt
-                    default:
-                    case BotState.ShouldContinue:
-                        break;
-                    // End the program.
-                    case BotState.ShouldStop:
-                        shouldContinue = false;
-                        break;
-                    // case BotState.ShouldRestart:
-                        // TODO
-                        // break;
-                }
+                return credentials;
             }
+
+            return null;
         }
     }
 }
