@@ -7,7 +7,7 @@ namespace Chubberino.Utility
     {
         public static String Format(this TimeSpan source)
         {
-            StringBuilder builder = new StringBuilder();
+            StringBuilder builder = new();
 
             if (source.Hours > 0)
             {
