@@ -29,7 +29,7 @@ namespace Chubberino.Modules.CheeseGame.Items
 
         public override String GetSpecificNameForSuccessfulBuy(Player player, Int32 quantity)
         {
-            var newQuestSuccessChance = player.GetQuestSuccessChance();
+            var newQuestSuccessChance = player.GetQuestSuccessChance(includeInfestation: false);
             var oldQuestSuccessChance = newQuestSuccessChance - quantity * QuestSuccessBonus;
             return $"{quantity} gear [{String.Format("{0:0.0}", oldQuestSuccessChance * 100)}% -> {String.Format("{0:0.0}", newQuestSuccessChance * 100)}% quest success]";
         }
@@ -59,7 +59,7 @@ namespace Chubberino.Modules.CheeseGame.Items
         {
             if (IsForSale(player, out _))
             {
-                var questSuccessChance = player.GetQuestSuccessChance();
+                var questSuccessChance = player.GetQuestSuccessChance(includeInfestation: false);
                 return $"{base.GetShopPrompt(player)} [+{String.Format("{0:0.0}", questSuccessChance * 100)}% -> +{String.Format("{0:0.0}", (questSuccessChance + Gear.QuestSuccessBonus) * 100)}% quest success] for {GetPrice(player)} cheese";
             }
 

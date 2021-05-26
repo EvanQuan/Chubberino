@@ -215,7 +215,7 @@ namespace Chubberino.Client
         {
             if (message == PreviousMessage)
             {
-                message += ' ' + Data.InvisibleCharacter;
+                message += Data.SpaceWithInvisibleCharacter;
             }
 
             Boolean messageSent = false;

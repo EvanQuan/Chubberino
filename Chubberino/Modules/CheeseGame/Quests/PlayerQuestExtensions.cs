@@ -17,11 +17,11 @@ namespace Chubberino.Modules.CheeseGame.Quests
             return player.QuestsUnlockedCount > 0;
         }
 
-        public static Double GetQuestSuccessChance(this Player player)
+        public static Double GetQuestSuccessChance(this Player player, Boolean includeInfestation = true)
         {
             Double baseSuccessChance = Quest.BaseSuccessChance;
 
-            Double workerSuccessChance = player.IsInfested() ? 0 : player.GearCount * Gear.QuestSuccessBonus;
+            Double workerSuccessChance = includeInfestation && player.IsInfested() ? 0 : player.GearCount * Gear.QuestSuccessBonus;
 
             return baseSuccessChance + workerSuccessChance;
         }
