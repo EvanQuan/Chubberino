@@ -33,7 +33,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Greets
         [Fact]
         public void Disable()
         {
-            Sut.Execute(new String[] { });
+            Sut.Execute(Array.Empty<String>());
 
             MockedConsole.Verify(x => x.WriteLine(It.IsAny<String>()), Times.Never());
 
