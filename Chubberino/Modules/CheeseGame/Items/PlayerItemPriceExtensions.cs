@@ -27,7 +27,9 @@ namespace Chubberino.Modules.CheeseGame.Items
             return price;
         }
 
+#pragma warning disable IDE0060 // Remove unused parameter
         public static Int32 GetMousetrapPrice(this Player player)
+#pragma warning restore IDE0060 // Remove unused parameter
         {
             return 25;
         }
