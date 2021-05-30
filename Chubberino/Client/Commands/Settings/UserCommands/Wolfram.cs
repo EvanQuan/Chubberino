@@ -43,7 +43,7 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
 
                 if (pod != null && pod.SubPods != null)
                 {
-                    StringBuilder messageBuilder = new StringBuilder();
+                    StringBuilder messageBuilder = new();
 
                     messageBuilder.Append(e.ChatMessage.DisplayName);
                     messageBuilder.Append(' ');
@@ -57,7 +57,7 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
                     }
                     else
                     {
-                        StringBuilder wikipediaEntryBuilder = new StringBuilder();
+                        StringBuilder wikipediaEntryBuilder = new();
                         foreach (var subpod in pod.SubPods)
                         {
                             wikipediaEntryBuilder.Append(subpod.Plaintext);

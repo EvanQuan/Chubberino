@@ -33,7 +33,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Copies
         [Fact]
         public void ShouldDisable()
         {
-            Sut.Execute(new String[] { });
+            Sut.Execute(Array.Empty<String>());
 
             MockedConsole.Verify(x => x.WriteLine("Copy disabled"));
             Assert.False(Sut.IsEnabled);

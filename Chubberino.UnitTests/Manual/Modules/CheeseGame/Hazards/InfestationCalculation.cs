@@ -16,7 +16,9 @@ namespace Chubberino.UnitTests.Manual.Modules.CheeseGame.Hazards
 
         // Only for comparing calculation models
         // [Fact]
+#pragma warning disable IDE0051 // Remove unused private members
         private void Test()
+#pragma warning restore IDE0051 // Remove unused private members
         {
             DisplayInfestValues();
         }
