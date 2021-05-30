@@ -51,27 +51,39 @@ namespace Chubberino
 
             Boolean shouldContinue = credentials != null;
 
-            while (shouldContinue)
+            try
             {
-                Console.Write(Bot.GetPrompt());
-                Bot.ReadCommand(Console.ReadLine());
-
-                switch (Bot.State)
+                while (shouldContinue)
                 {
-                    // Continue onto the next prompt
-                    default:
-                    case BotState.ShouldContinue:
-                        break;
-                    // End the program.
-                    case BotState.ShouldStop:
-                        shouldContinue = false;
-                        break;
-                    case BotState.ShouldRestart:
-                        credentials = SetupIoC(credentials);
-                        shouldContinue = credentials != null;
-                        break;
+                    Console.Write(Bot.GetPrompt());
+                    Bot.ReadCommand(Console.ReadLine());
+
+                    switch (Bot.State)
+                    {
+                        // Continue onto the next prompt
+                        default:
+                        case BotState.ShouldContinue:
+                            break;
+                        // End the program.
+                        case BotState.ShouldStop:
+                            shouldContinue = false;
+                            break;
+                        case BotState.ShouldRestart:
+                            credentials = SetupIoC(credentials);
+                            shouldContinue = credentials != null;
+                            break;
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        public static void Start()
+        {
+
         }
 
         public static LoginCredentials SetupIoC(LoginCredentials credentials)
@@ -169,7 +181,7 @@ namespace Chubberino
             builder.RegisterType<Wolfram>().AsSelf().SingleInstance();
 
             // Cheese game database context
-            builder.RegisterType<ApplicationContext>().As<IApplicationContext>().InstancePerLifetimeScope();
+            builder.RegisterType<ApplicationContext>().As<IApplicationContext>().SingleInstance();
 
             builder.RegisterType<Shop>().As<IShop>().SingleInstance();
             builder.RegisterType<PointManager>().As<IPointManager>().SingleInstance();
