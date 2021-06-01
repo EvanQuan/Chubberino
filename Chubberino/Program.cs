@@ -51,12 +51,17 @@ namespace Chubberino
 
             Boolean shouldContinue = credentials != null;
 
-            try
+            Boolean shouldGetPrompt = true;
+
+            while (shouldContinue)
             {
-                while (shouldContinue)
+                try
                 {
-                    Console.Write(Bot.GetPrompt());
-                    Bot.ReadCommand(Console.ReadLine());
+                    if (shouldGetPrompt)
+                    {
+                        Console.Write(Bot.GetPrompt());
+                        Bot.ReadCommand(Console.ReadLine());
+                    }
 
                     switch (Bot.State)
                     {
@@ -73,11 +78,15 @@ namespace Chubberino
                             shouldContinue = credentials != null;
                             break;
                     }
+
+                    shouldGetPrompt = true;
                 }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    Bot.State = BotState.ShouldRestart;
+                    shouldGetPrompt = false;
+                }
             }
         }
 
