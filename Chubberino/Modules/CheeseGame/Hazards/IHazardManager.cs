@@ -8,8 +8,8 @@ namespace Chubberino.Modules.CheeseGame.Hazards
         /// <summary>
         /// Update the infestation status of the <paramref name="player"/>.
         /// </summary>
-        /// <param name="player"></param>
-        /// <returns>The infestation message after update. </returns>
+        /// <param name="player">Player to potentially modify to reflect new infestation status.</param>
+        /// <returns>The infestation message after update.</returns>
         String UpdateInfestationStatus(Player player);
     }
 }

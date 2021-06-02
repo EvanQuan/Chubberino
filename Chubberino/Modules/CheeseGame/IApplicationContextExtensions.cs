@@ -13,7 +13,7 @@ namespace Chubberino.Modules.CheeseGame
         {
             var player = source.Players.FirstOrDefault(x => x.TwitchUserID == message.UserId);
 
-            if (player == null)
+            if (player is null)
             {
                 player = new Player()
                 {

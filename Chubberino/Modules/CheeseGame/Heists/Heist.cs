@@ -36,8 +36,11 @@ namespace Chubberino.Modules.CheeseGame.Heists
         }
 
         public ChatMessage InitiatorMessage { get; }
+
         public IApplicationContext Context { get; }
+
         public Random Random { get; }
+
         public ITwitchClientManager TwitchClient { get; }
 
         public Boolean Start()

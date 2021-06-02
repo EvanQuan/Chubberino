@@ -1,7 +1,4 @@
-﻿using Chubberino.Client;
-using Chubberino.Database.Contexts;
-using Chubberino.Modules.CheeseGame.Emotes;
-using Chubberino.Modules.CheeseGame.Hazards;
+﻿using Chubberino.Modules.CheeseGame.Hazards;
 using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.Ranks;
 using Chubberino.UnitTests.Utility;
@@ -15,28 +12,15 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Hazards.HazardManagers
     {
         private HazardManager Sut { get; }
 
-        private Mock<IApplicationContext> MockedApplicationContext { get; }
-
-        private Mock<ITwitchClientManager> MockedTwitchClientManager { get; }
-
         private Mock<Random> MockedRandom { get; }
-
-        private Mock<IEmoteManager> MockedEmoteManager { get; }
 
         private Player Player { get; }
 
         public WhenUpdatingInfestationStatus()
         {
-            MockedApplicationContext = new Mock<IApplicationContext>();
-            MockedTwitchClientManager = new Mock<ITwitchClientManager>();
             MockedRandom = new Mock<Random>();
-            MockedEmoteManager = new Mock<IEmoteManager>();
 
-            Sut = new HazardManager(
-                MockedApplicationContext.Object,
-                MockedTwitchClientManager.Object,
-                MockedRandom.Object,
-                MockedEmoteManager.Object);
+            Sut = new HazardManager(MockedRandom.Object);
 
             Player = new Player();
         }
@@ -58,7 +42,6 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Hazards.HazardManagers
             Assert.Empty(outputMessage);
             Assert.Equal(0, Player.RatCount);
             Assert.Equal(mouseTrapCount, Player.MouseTrapCount);
-            MockedApplicationContext.Verify(x => x.SaveChanges(), Times.Never());
         }
 
         [Theory]
@@ -82,7 +65,6 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Hazards.HazardManagers
             Assert.NotEmpty(outputMessage);
             Assert.Equal(expectedRatCount, Player.RatCount);
             Assert.Equal(0, Player.MouseTrapCount);
-            MockedApplicationContext.Verify(x => x.SaveChanges(), Times.Once());
         }
 
         [Theory]
@@ -107,7 +89,6 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Hazards.HazardManagers
             Assert.NotEmpty(outputMessage);
             Assert.Equal(0, Player.RatCount);
             Assert.Equal(expectedNewMouseTrapcount, Player.MouseTrapCount);
-            MockedApplicationContext.Verify(x => x.SaveChanges(), Times.Once());
         }
 
         [Theory]
@@ -134,7 +115,6 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Hazards.HazardManagers
             Assert.NotEmpty(outputMessage);
             Assert.Equal(expectedNewRatCount, Player.RatCount);
             Assert.Equal(0, Player.MouseTrapCount);
-            MockedApplicationContext.Verify(x => x.SaveChanges(), Times.Once());
         }
 
         [Theory]
@@ -156,7 +136,6 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Hazards.HazardManagers
             Assert.NotEmpty(outputMessage);
             Assert.Equal(expectedRatCount, Player.RatCount);
             Assert.Equal(0, Player.MouseTrapCount);
-            MockedApplicationContext.Verify(x => x.SaveChanges(), Times.Never());
         }
 
         [Theory]
@@ -181,7 +160,6 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Hazards.HazardManagers
             Assert.NotEmpty(outputMessage);
             Assert.Equal(0, Player.RatCount);
             Assert.Equal(expectedNewMouseTrapcount, Player.MouseTrapCount);
-            MockedApplicationContext.Verify(x => x.SaveChanges(), Times.Once());
         }
 
         [Theory]
@@ -205,7 +183,6 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Hazards.HazardManagers
             Assert.NotEmpty(outputMessage);
             Assert.Equal(expectedNewRatCount, Player.RatCount);
             Assert.Equal(0, Player.MouseTrapCount);
-            MockedApplicationContext.Verify(x => x.SaveChanges(), Times.Once());
         }
 
         [Theory]
@@ -227,7 +204,6 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Hazards.HazardManagers
             Assert.Empty(outputMessage);
             Assert.Equal(0, Player.RatCount);
             Assert.Equal(expectedMouseTrapCount, Player.MouseTrapCount);
-            MockedApplicationContext.Verify(x => x.SaveChanges(), Times.Never());
         }
     }
 }

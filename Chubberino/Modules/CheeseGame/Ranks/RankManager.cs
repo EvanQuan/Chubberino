@@ -4,6 +4,7 @@ using Chubberino.Database.Models;
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Heists;
 using Chubberino.Modules.CheeseGame.Items.Upgrades.Recipes;
+using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Utility;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ using TwitchLib.Client.Models;
 
 namespace Chubberino.Modules.CheeseGame.Ranks
 {
-    public class RankManager : AbstractCommandStrategy, IRankManager
+    public class RankManager : IRankManager
     {
         /// <summary>
         /// Bonus multiplier per every prestige level.
@@ -30,26 +31,42 @@ namespace Chubberino.Modules.CheeseGame.Ranks
             {  Rank.Grandmaster, 28800 },
             {  Rank.Legend, 57600 },
         };
+        public IApplicationContextFactory ContextFactory { get; }
+        public ITwitchClientManager Client { get; }
+        public Random Random { get; }
+        public IEmoteManager EmoteManager { get; }
         public IHeistManager HeistManager { get; }
 
         public RankManager(
-            IApplicationContext context,
+            IApplicationContextFactory contextFactory,
             ITwitchClientManager client,
             Random random,
             IEmoteManager emoteManager,
             IHeistManager heistManager)
-            : base(context, client, random, emoteManager)
         {
+            ContextFactory = contextFactory;
+            Client = client;
+            Random = random;
+            EmoteManager = emoteManager;
             HeistManager = heistManager;
         }
 
         public void RankUp(ChatMessage message)
         {
-            var player = GetPlayer(message);
+            using var context = ContextFactory.GetContext();
+
+            var player = context.GetPlayer(Client, message);
 
             String outputMessage;
 
-            Priority priority = Priority.Low;
+            outputMessage = GetRankUpMessage(message, player, context, out var priority);
+
+            Client.SpoolMessageAsMe(message.Channel, player, outputMessage, priority);
+        }
+
+        private String GetRankUpMessage(ChatMessage message, Models.Player player, IApplicationContext context, out Priority priority)
+        {
+            priority = Priority.Low;
 
             if (RanksToPoints.TryGetValue(player.Rank, out Int32 pointsToRank))
             {
@@ -65,55 +82,53 @@ namespace Chubberino.Modules.CheeseGame.Ranks
                             // Prestige instead of rank up
                             player.ResetRank();
                             player.Prestige++;
-                            Context.SaveChanges();
+                            context.SaveChanges();
                             var positiveEmotes = EmoteManager.Get(message.Channel, EmoteCategory.Positive);
-                            outputMessage = $"{Random.NextElement(positiveEmotes)} You prestiged back to {Rank.Bronze} and have gained a permanent {(Int32)(PrestigeBonus * 100)}% cheese gain boost. {Random.NextElement(positiveEmotes)}";
                             priority = Priority.Medium;
+                            return $"{Random.NextElement(positiveEmotes)} You prestiged back to {Rank.Bronze} and have gained a permanent {(Int32)(PrestigeBonus * 100)}% cheese gain boost. {Random.NextElement(positiveEmotes)}";
                         }
-                        else
-                        {
-                            outputMessage = $"You need to buy all cheese recipes in order to prestige back to {Rank.Bronze} rank. " +
-                                $"You will lose all your cheese and upgrades, but will gain a permanent {(Int32)(PrestigeBonus * 100)}% bonus on your cheese gains.";
-                        }
-                    }
-                    else
-                    {
-                        player.Points -= pointsToRank;
-                        player.Rank = nextRank;
-                        Context.SaveChanges();
-                        outputMessage = $"You ranked up to {nextRank}. {Random.NextElement(EmoteManager.Get(message.Channel, EmoteCategory.Positive))} (-{pointsToRank} cheese)";
-                        priority = Priority.Medium;
-                    }
-                }
-                else
-                {
-                    var pointsNeededToRank = pointsToRank - player.Points;
-                    if (nextRank == Rank.None)
-                    {
-                        outputMessage = $"You need {pointsNeededToRank} more cheese in order to prestige back to {Rank.Bronze} rank. " +
+
+                        return $"You need to buy all cheese recipes in order to prestige back to {Rank.Bronze} rank. " +
                             $"You will lose all your cheese and upgrades, but will gain a permanent {(Int32)(PrestigeBonus * 100)}% bonus on your cheese gains.";
                     }
-                    else
-                    {
-                        outputMessage = $"You need {pointsNeededToRank} more cheese in order to rank up to {nextRank}.";
-                    }
+
+                    player.Points -= pointsToRank;
+                    player.Rank = nextRank;
+                    context.SaveChanges();
+                    priority = Priority.Medium;
+
+                    return $"You ranked up to {nextRank}. {Random.NextElement(EmoteManager.Get(message.Channel, EmoteCategory.Positive))} (-{pointsToRank} cheese)";
+
                 }
-            }
-            else
-            {
-                outputMessage = $"Uh oh, you broke something. You have an invalid rank of {player.Rank}.";
+
+                var pointsNeededToRank = pointsToRank - player.Points;
+                if (nextRank == Rank.None)
+                {
+                    return $"You need {pointsNeededToRank} more cheese in order to prestige back to {Rank.Bronze} rank. " +
+                        $"You will lose all your cheese and upgrades, but will gain a permanent {(Int32)(PrestigeBonus * 100)}% bonus on your cheese gains.";
+                }
+
+                return $"You need {pointsNeededToRank} more cheese in order to rank up to {nextRank}.";
             }
 
-            TwitchClientManager.SpoolMessageAsMe(message.Channel, player, outputMessage, priority);
+            return $"Uh oh, you broke something. You have an invalid rank of {player.Rank}.";
         }
 
         public void ShowRank(ChatMessage message)
         {
-            var player = GetPlayer(message);
+            using var context = ContextFactory.GetContext();
 
+            var player = context.GetPlayer(Client, message);
+
+            String outputMessage = GetRankMessage(player);
+
+            Client.SpoolMessageAsMe(message.Channel, player, outputMessage, Priority.Low);
+
+        }
+
+        private static String GetRankMessage(Player player)
+        {
             var nextRank = player.Rank.Next();
-
-            String outputMessage;
 
             if (RanksToPoints.TryGetValue(player.Rank, out Int32 pointsToRank))
             {
@@ -137,15 +152,10 @@ namespace Chubberino.Modules.CheeseGame.Ranks
                     nextRankInformation.Append($"{nextRank} rank.");
                 }
 
-                outputMessage = $"You are currently in {player.Rank} rank. {nextRankInformation}";
-            }
-            else
-            {
-                outputMessage = $"Uh oh, you broke something. You have an invalid rank of {player.Rank}.";
+                return $"You are currently in {player.Rank} rank. {nextRankInformation}";
             }
 
-            TwitchClientManager.SpoolMessageAsMe(message.Channel, player, outputMessage, Priority.Low);
-
+            return $"Uh oh, you broke something. You have an invalid rank of {player.Rank}.";
         }
     }
 }

@@ -5,7 +5,6 @@ using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Items;
 using Chubberino.Modules.CheeseGame.Items.Workers;
 using Chubberino.Modules.CheeseGame.Models;
-using Chubberino.Modules.CheeseGame.Quests;
 using Chubberino.Modules.CheeseGame.Ranks;
 using Chubberino.Utility;
 using System;
@@ -16,23 +15,32 @@ using TwitchLib.Client.Models;
 
 namespace Chubberino.Modules.CheeseGame.Shops
 {
-    public class Shop : AbstractCommandStrategy, IShop
+    public class Shop : IShop
     {
         public IList<IItem> Items { get; }
+        public IApplicationContextFactory ContextFactory { get; }
+        public ITwitchClientManager Client { get; }
+        public Random Random { get; }
+        public IEmoteManager EmoteManager { get; }
 
         public Shop(
-            IApplicationContext context,
+            IApplicationContextFactory contextFactory,
             ITwitchClientManager client,
             Random random,
             IEmoteManager emoteManager)
-            : base(context, client, random, emoteManager)
         {
             Items = new List<IItem>();
+            ContextFactory = contextFactory;
+            Client = client;
+            Random = random;
+            EmoteManager = emoteManager;
         }
 
         public void ListInventory(ChatMessage message)
         {
-            Player player = GetPlayer(message);
+            using var context = ContextFactory.GetContext();
+
+            Player player = context.GetPlayer(Client, message);
 
             StringBuilder inventoryPrompt = new();
 
@@ -48,7 +56,7 @@ namespace Chubberino.Modules.CheeseGame.Shops
                 }
             }
 
-            TwitchClientManager.SpoolMessageAsMe(message.Channel, player, inventoryPrompt.ToString(), Priority.Low);
+            Client.SpoolMessageAsMe(message.Channel, player, inventoryPrompt.ToString(), Priority.Low);
         }
 
         public void BuyItem(ChatMessage message)
@@ -58,21 +66,27 @@ namespace Chubberino.Modules.CheeseGame.Shops
                 .GetNextWord(out _)
                 .GetNextWord(out _);
 
-            Player player = GetPlayer(message);
+            using var context = ContextFactory.GetContext();
+
+            Player player = context.GetPlayer(Client, message);
 
             if (String.IsNullOrWhiteSpace(arguments))
             {
-                TwitchClientManager.SpoolMessageAsMe(message.Channel, player, $"Please enter an item to buy with \"!cheese buy <name of item>\". Type \"!cheese shop\" to see the items available for purchase.", Priority.Low);
+                Client.SpoolMessageAsMe(message.Channel, player, $"Please enter an item to buy with \"!cheese buy <name of item>\". Type \"!cheese shop\" to see the items available for purchase.", Priority.Low);
                 return;
             }
 
             // Cut out space between buy and item
             String remainingArguments = arguments.GetNextWord(out String itemToBuy);
+            
+            String outputMessage = GetBuyItemMessage(message, context, player, remainingArguments, itemToBuy, out var priority);
 
-            String outputMessage;
+            Client.SpoolMessageAsMe(message.Channel, player, outputMessage, priority);
+        }
 
-            Priority priority = Priority.Low;
-
+        private String GetBuyItemMessage(ChatMessage message, IApplicationContext context, Player player, String remainingArguments, String itemToBuy, out Priority priority)
+        {
+            priority = Priority.Low;
             if (Items.TryGetFirst(x => x.Names.Contains(itemToBuy, StringComparer.InvariantCultureIgnoreCase), out var item))
             {
                 remainingArguments.GetNextWord(out String quantityString);
@@ -84,42 +98,43 @@ namespace Chubberino.Modules.CheeseGame.Shops
                         : 1;
 
                 var result = item.TryBuy(quantityRequested, player)();
-
-                if (result.IsLeft)
+                    
+                if (result.IsRight)
                 {
-                    var buyResult = result.Left;
-                    outputMessage = $"You bought {item.GetSpecificNameForSuccessfulBuy(player, buyResult.QuantityPurchased)}. " +
-                        $"{buyResult.ExtraMessage} " +
-                        $"{Random.NextElement(EmoteManager.Get(message.Channel, EmoteCategory.Positive))} " +
-                        $"(-{buyResult.PointsSpent} cheese)";
-                    Context.SaveChanges();
-                    priority = Priority.Medium;
+                    return result.Right;
                 }
-                else
-                {
-                    outputMessage = result.Right;
-                }
-            }
-            else
-            {
-                outputMessage = $"Invalid item \"{itemToBuy}\" to buy. Type \"!cheese shop\" to see the items available for purchase.";
+
+                var buyResult = result.Left;
+
+                var outputMessage = $"You bought {item.GetSpecificNameForSuccessfulBuy(player, buyResult.QuantityPurchased)}. " +
+                    $"{buyResult.ExtraMessage} " +
+                    $"{Random.NextElement(EmoteManager.Get(message.Channel, EmoteCategory.Positive))} " +
+                    $"(-{buyResult.PointsSpent} cheese)";
+
+                priority = Priority.Medium;
+
+                context.SaveChanges();
+
+                return outputMessage;
             }
 
-            TwitchClientManager.SpoolMessageAsMe(message.Channel, player, outputMessage, priority);
+            return $"Invalid item \"{itemToBuy}\" to buy. Type \"!cheese shop\" to see the items available for purchase.";
         }
 
         public void HelpItem(ChatMessage message)
         {
             // Cut out "!cheese help" start.
             String arguments = message.Message
-                .StripStart("!cheese h")
-                .StripStart("elp");
+                .GetNextWord(out _)
+                .GetNextWord(out _);
 
-            Player player = GetPlayer(message);
+            using var context = ContextFactory.GetContext();
+
+            Player player = context.GetPlayer(Client, message);
 
             if (String.IsNullOrWhiteSpace(arguments))
             {
-                TwitchClientManager.SpoolMessageAsMe(message.Channel, 
+                Client.SpoolMessageAsMe(message.Channel, 
                     $"{player.Name} Commands: !cheese <command> where command is " +
                     $"| shop - look at what is available to buy with cheese " +
                     $"| buy <item> - buy an item at the shop " +
@@ -148,7 +163,8 @@ namespace Chubberino.Modules.CheeseGame.Shops
                 "c" or "cat" or "cats" => $"[CURRENTLY DO NOTHING] Cats help you fight against the giant evil mouse, Chubshan the Immortal. The more cats you have, the more you will be rewarded when Chubshan is defeated.",
                 _ => $"Invalid item \"{itemToBuy}\" name. Type \"!cheese shop\" to see the items available for purchase.",
             };
-            TwitchClientManager.SpoolMessageAsMe(message.Channel, player, outputMessage, Priority.Low);
+
+            Client.SpoolMessageAsMe(message.Channel, player, outputMessage, Priority.Low);
         }
 
         public IShop AddItem(IItem item)

@@ -15,7 +15,7 @@ using TwitchLib.Client.Models;
 
 namespace Chubberino.Modules.CheeseGame.Heists
 {
-    public sealed class HeistManager : AbstractCommandStrategy, IHeistManager
+    public sealed class HeistManager : IHeistManager
     {
         private static TimeSpan HeistWaitTime { get; } = TimeSpan.FromSeconds(30);
 
@@ -26,89 +26,95 @@ namespace Chubberino.Modules.CheeseGame.Heists
         private ConcurrentDictionary<String, IHeist> OngoingHeists { get; }
 
         public static TimeSpan HeistCooldown { get; set; } = TimeSpan.FromHours(6);
-
+        public IApplicationContextFactory ContextFactory { get; }
+        public ITwitchClientManager Client { get; }
+        public Random Random { get; }
+        public IEmoteManager EmoteManager { get; }
         public ISpinWait SpinWait { get; }
         public IDateTimeService DateTime { get; }
 
         public HeistManager(
-            IApplicationContext context,
+            IApplicationContextFactory contextFactory,
             ITwitchClientManager client,
             Random random,
             IEmoteManager emoteManager,
             ISpinWait spinWait,
             IDateTimeService dateTime)
-            : base(context, client, random, emoteManager)
         {
             OngoingHeists = new ConcurrentDictionary<String, IHeist>();
+            ContextFactory = contextFactory;
+            Client = client;
+            Random = random;
+            EmoteManager = emoteManager;
             SpinWait = spinWait;
             DateTime = dateTime;
         }
 
         public void InitiateHeist(ChatMessage message)
         {
-            var player = GetPlayer(message);
+            using var context = ContextFactory.GetContext();
+
+            var player = context.GetPlayer(Client, message);
 
             // Find if there's another ongoing heist in this channel to join.
             if (OngoingHeists.TryGetValue(message.Channel, out IHeist currentHeist))
             {
                 JoinHeist(message, player);
+                return;
             }
-            else 
+
+            // Trying to initiate new heist
+            var now  = DateTime.Now;
+
+            var oldLastHeistInitiated = player.LastHeistInitiated;
+
+            var timeSinceLastHeistInitiated = now - oldLastHeistInitiated;
+
+            if (timeSinceLastHeistInitiated >= HeistCooldown)
             {
-                // Trying to initiate new heist
-                var now  = DateTime.Now;
+                // Update last heist initiated to prevent initiating
+                // multiple heists in multiple channels.
+                player.LastHeistInitiated = now;
+                context.SaveChanges();
 
-                var oldLastHeistInitiated = player.LastHeistInitiated;
+                var heist = new Heist(message, context, Random, Client);
+                OngoingHeists.TryAdd(message.Channel, heist);
 
-                var timeSinceLastHeistInitiated = now - oldLastHeistInitiated;
+                Client.SpoolMessageAsMe(message.Channel, player,
+                    $"A heist has been initiated. " +
+                    $"You and others can join with \"!cheese heist <cheese amount>\". " +
+                    $"The more cheese wagered, the greater the risk and reward! " +
+                    $"The heist will begin in {HeistWaitTime.Format()}.");
 
-                if (timeSinceLastHeistInitiated >= HeistCooldown)
+                Task.Run(() => JoinHeist(message, player));
+
+                // Since we are sleeping, this needs to be async.
+                SpinWait.Sleep(HeistWaitTime);
+
+                if (!heist.Start())
                 {
-                    // Update last heist initiated to prevent initiating
-                    // multiple heists in multiple channels.
-                    player.LastHeistInitiated = now;
-                    Context.SaveChanges();
-
-                    var heist = new Heist(message, Context, Random, TwitchClientManager);
-                    OngoingHeists.TryAdd(message.Channel, heist);
-
-                    TwitchClientManager.SpoolMessageAsMe(message.Channel, player,
-                        $"A heist has been initiated. " +
-                        $"You and others can join with \"!cheese heist <cheese amount>\". " +
-                        $"The more cheese wagered, the greater the risk and reward! " +
-                        $"The heist will begin in {HeistWaitTime.Format()}.");
-
-                    Task.Run(() => JoinHeist(message, player));
-
-                    // Since we are sleeping, this needs to be async.
-                    SpinWait.Sleep(HeistWaitTime);
-
-                    if (!heist.Start())
-                    {
-                        // No one joined the heist. Let the user initiate another heist.
-                        player.LastHeistInitiated = oldLastHeistInitiated;
-                        Context.SaveChanges();
-                    }
-
-                    OngoingHeists.TryRemove(message.Channel, out _);
+                    // No one joined the heist. Let the user initiate another heist.
+                    player.LastHeistInitiated = oldLastHeistInitiated;
+                    context.SaveChanges();
                 }
-                else
-                {
-                    var timeUntilNextHeistAvailable = HeistCooldown - timeSinceLastHeistInitiated;
 
-                    var timeToWait = timeUntilNextHeistAvailable.Format();
-
-                    TwitchClientManager.SpoolMessageAsMe(message.Channel, player,
-                        $"You must wait {timeToWait} until you can initiate another heist. {Random.NextElement(EmoteManager.Get(message.Channel, EmoteCategory.Waiting))}");
-                }
+                OngoingHeists.TryRemove(message.Channel, out _);
+                return;
             }
+
+            var timeUntilNextHeistAvailable = HeistCooldown - timeSinceLastHeistInitiated;
+
+            var timeToWait = timeUntilNextHeistAvailable.Format();
+
+            Client.SpoolMessageAsMe(message.Channel, player,
+                $"You must wait {timeToWait} until you can initiate another heist. {Random.NextElement(EmoteManager.Get(message.Channel, EmoteCategory.Waiting))}");
         }
 
         private void JoinHeist(ChatMessage message, Player player)
         {
             if (!OngoingHeists.TryGetValue(message.Channel, out IHeist heist))
             {
-                TwitchClientManager.SpoolMessageAsMe(message.Channel, player,
+                Client.SpoolMessageAsMe(message.Channel, player,
                     "There currently is no heist to join in this channel.");
                 return;
             }
@@ -117,7 +123,7 @@ namespace Chubberino.Modules.CheeseGame.Heists
 
             if (String.IsNullOrWhiteSpace(strippedCommand))
             {
-                TwitchClientManager.SpoolMessageAsMe(message.Channel, player,
+                Client.SpoolMessageAsMe(message.Channel, player,
                     "To join the heist, you must wager some amount of cheese \"!cheese heist <cheese to wager>\". " +
                     "The more you wager, the greater the risk and reward.");
                 return;
@@ -128,11 +134,10 @@ namespace Chubberino.Modules.CheeseGame.Heists
             if (proposedWager.TryGetWager(out var wager))
             {
                 heist.UpdateWager(player, wager);
+                return;
             }
-            else
-            {
-                TwitchClientManager.SpoolMessageAsMe(message.Channel, player, $"Cannot wager \"{proposedWager}\". You must wager a positive number of cheese to join the heist.");
-            }
+
+            Client.SpoolMessageAsMe(message.Channel, player, $"Cannot wager \"{proposedWager}\". You must wager a positive number of cheese to join the heist.");
         }
 
         public void LeaveAllHeists(Player player)
