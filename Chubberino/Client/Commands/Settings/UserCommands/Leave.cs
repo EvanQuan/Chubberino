@@ -3,6 +3,7 @@ using Chubberino.Database.Contexts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using TwitchLib.Client.Events;
 
 namespace Chubberino.Client.Commands
@@ -22,7 +23,7 @@ namespace Chubberino.Client.Commands
             IsEnabled = TwitchClientManager.IsBot;
         }
 
-        private void TwitchClient_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
+        private async void TwitchClient_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
         {
             if (!TryValidateCommand(e, out var words)) { return; }
 
@@ -35,15 +36,22 @@ namespace Chubberino.Client.Commands
             // Users can only leave their own channel.
             var channelFound = Context.StartupChannels.FirstOrDefault(x => x.UserID == e.ChatMessage.UserId);
 
-            if (channelFound != null)
+            Task<Int32> task = null;
+
+            if (channelFound is not null)
             {
                 Context.StartupChannels.Remove(channelFound);
-                Context.SaveChanges();
+                task = Context.SaveChangesAsync();
             }
 
             TwitchClientManager.Client.LeaveChannel(e.ChatMessage.Username);
 
             TwitchClientManager.SpoolMessageAsMe(e.ChatMessage.Channel, $"{e.ChatMessage.DisplayName} I have left your channel");
+
+            if (task is not null)
+            {
+                await task;
+            }
         }
 
         private void TwitchClient_OnLeftChannel(Object sender, OnLeftChannelArgs e)

@@ -51,25 +51,41 @@ namespace Chubberino
 
             Boolean shouldContinue = credentials != null;
 
+            Boolean shouldGetPrompt = true;
+
             while (shouldContinue)
             {
-                Console.Write(Bot.GetPrompt());
-                Bot.ReadCommand(Console.ReadLine());
-
-                switch (Bot.State)
+                try
                 {
-                    // Continue onto the next prompt
-                    default:
-                    case BotState.ShouldContinue:
-                        break;
-                    // End the program.
-                    case BotState.ShouldStop:
-                        shouldContinue = false;
-                        break;
-                    case BotState.ShouldRestart:
-                        credentials = SetupIoC(credentials);
-                        shouldContinue = credentials != null;
-                        break;
+                    if (shouldGetPrompt)
+                    {
+                        Console.Write(Bot.GetPrompt());
+                        Bot.ReadCommand(Console.ReadLine());
+                    }
+
+                    switch (Bot.State)
+                    {
+                        // Continue onto the next prompt
+                        default:
+                        case BotState.ShouldContinue:
+                            break;
+                        // End the program.
+                        case BotState.ShouldStop:
+                            shouldContinue = false;
+                            break;
+                        case BotState.ShouldRestart:
+                            credentials = SetupIoC(credentials);
+                            shouldContinue = credentials != null;
+                            break;
+                    }
+
+                    shouldGetPrompt = true;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    Bot.State = BotState.ShouldRestart;
+                    shouldGetPrompt = false;
                 }
             }
         }
@@ -169,7 +185,7 @@ namespace Chubberino
             builder.RegisterType<Wolfram>().AsSelf().SingleInstance();
 
             // Cheese game database context
-            builder.RegisterType<ApplicationContext>().As<IApplicationContext>().InstancePerLifetimeScope();
+            builder.RegisterType<ApplicationContext>().As<IApplicationContext>().SingleInstance();
 
             builder.RegisterType<Shop>().As<IShop>().SingleInstance();
             builder.RegisterType<PointManager>().As<IPointManager>().SingleInstance();

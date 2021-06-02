@@ -51,25 +51,35 @@ namespace Chubberino.Modules.CheeseGame.Quests
 
             if (timeSinceLastQuestVentured >= QuestCooldown)
             {
-                var quest = Random.NextElement(QuestRepository, player);
-
-                StartQuest(message, player, quest);
-
-                player.LastQuestVentured = now;
-
-                Context.SaveChanges();
+                StartQuest(message, player, now);
             }
             else
             {
-                var timeUntilNextQuestAvailable = QuestCooldown - timeSinceLastQuestVentured;
-
-                var timeToWait = timeUntilNextQuestAvailable.Format();
-
-                TwitchClientManager.SpoolMessageAsMe(message.Channel, player,
-                    $"[Quest {String.Format("{0:0.0}", player.GetQuestSuccessChance() * 100)}% success] " +
-                    $"You must wait {timeToWait} until you can go on your next quest. {Random.NextElement(EmoteManager.Get(message.Channel, EmoteCategory.Waiting))}",
-                    Priority.Low);
+                PromptStartQuestFailed(message, player, timeSinceLastQuestVentured);
             }
+        }
+
+        private void PromptStartQuestFailed(ChatMessage message, Player player, TimeSpan timeSinceLastQuestVentured)
+        {
+            var timeUntilNextQuestAvailable = QuestCooldown - timeSinceLastQuestVentured;
+
+            var timeToWait = timeUntilNextQuestAvailable.Format();
+
+            TwitchClientManager.SpoolMessageAsMe(message.Channel, player,
+                $"[Quest {String.Format("{0:0.0}", player.GetQuestSuccessChance() * 100)}% success] " +
+                $"You must wait {timeToWait} until you can go on your next quest. {Random.NextElement(EmoteManager.Get(message.Channel, EmoteCategory.Waiting))}",
+                Priority.Low);
+        }
+
+        private void StartQuest(ChatMessage message, Player player, DateTime now)
+        {
+            var quest = Random.NextElement(QuestRepository, player);
+
+            StartQuest(message, player, quest);
+
+            player.LastQuestVentured = now;
+
+            Context.SaveChanges();
         }
 
         private void StartQuest(ChatMessage message, Player player, Quest quest)
@@ -95,7 +105,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
 
                 questPrompt
                     .Append(Random.NextElement(positiveEmotes))
-                    .Append(" RARE QUEST !!! ")
+                    .Append(" RARE QUEST!!! ")
                     .Append(Random.NextElement(positiveEmotes))
                     .Append(' ');
             }
