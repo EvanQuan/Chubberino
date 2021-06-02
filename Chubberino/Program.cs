@@ -90,11 +90,6 @@ namespace Chubberino
             }
         }
 
-        public static void Start()
-        {
-
-        }
-
         public static LoginCredentials SetupIoC(LoginCredentials credentials)
         {
             var services = new ServiceCollection();
