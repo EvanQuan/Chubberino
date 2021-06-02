@@ -10,7 +10,6 @@ using Chubberino.Client.Commands.Strategies;
 using Chubberino.Client.Credentials;
 using Chubberino.Client.Services;
 using Chubberino.Client.Threading;
-using Chubberino.Database;
 using Chubberino.Database.Contexts;
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Hazards;
@@ -132,7 +131,7 @@ namespace Chubberino
             {
                 var api = new TwitchAPI();
 
-                var credentials = c.Resolve<ICredentials>();
+                var credentials = c.Resolve<ICredentialsManager>();
 
                 api.Settings.ClientId = credentials.ApplicationCredentials.TwitchAPIClientID;
                 // Doesn't matter which user credentials access token is used here.
@@ -141,7 +140,7 @@ namespace Chubberino
                 return api;
             }).As<ITwitchAPI>().SingleInstance();
 
-            builder.Register(c => new WolframAlpha(c.Resolve<Credentials>().ApplicationCredentials.WolframAlphaAppID)).AsSelf().SingleInstance();
+            builder.Register(c => new WolframAlpha(c.Resolve<ICredentialsManager>().ApplicationCredentials.WolframAlphaAppID)).AsSelf().SingleInstance();
 
             // Commands
             builder.RegisterType<AtAll>().AsSelf().SingleInstance();
@@ -180,7 +179,6 @@ namespace Chubberino
             builder.RegisterType<Wolfram>().AsSelf().SingleInstance();
 
             builder.RegisterType<ApplicationContextFactory>().As<IApplicationContextFactory>().SingleInstance();
-            builder.RegisterType<Credentials>().As<ICredentials>().SingleInstance();
 
             // Cheese game
             builder.RegisterType<Shop>().As<IShop>().SingleInstance();
