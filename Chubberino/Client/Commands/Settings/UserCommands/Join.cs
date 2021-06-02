@@ -30,7 +30,7 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
             Console.WriteLine($"Joined channel {e.Channel}");
         }
 
-        private void TwitchClient_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
+        private async void TwitchClient_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
         {
             if (!TryValidateCommand(e, out var words)) { return; }
 
@@ -81,11 +81,13 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
             }
 
 
-            Context.SaveChanges();
+            var task = Context.SaveChangesAsync();
 
             TwitchClientManager.Client.JoinChannel(e.ChatMessage.Username);
 
             TwitchClientManager.SpoolMessageAsMe(e.ChatMessage.Channel, outputMessage);
+
+            await task;
         }
 
         public override void Execute(IEnumerable<String> arguments)
