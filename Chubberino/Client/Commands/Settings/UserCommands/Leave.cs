@@ -10,12 +10,12 @@ namespace Chubberino.Client.Commands
 {
     public sealed class Leave : UserCommand
     {
-        public IApplicationContext Context { get; }
+        public IApplicationContextFactory ContextFactory { get; }
 
-        public Leave(IApplicationContext context, ITwitchClientManager client, IConsole console) : base(client, console)
+        public Leave(IApplicationContextFactory contextFactory, ITwitchClientManager client, IConsole console) : base(client, console)
         {
             TwitchClientManager.Client.OnLeftChannel += TwitchClient_OnLeftChannel;
-            Context = context;
+            ContextFactory = contextFactory;
 
             Enable = twitchClient => twitchClient.OnMessageReceived += TwitchClient_OnMessageReceived;
             Disable = TwitchClient => TwitchClient.OnMessageReceived -= TwitchClient_OnMessageReceived;
@@ -33,15 +33,17 @@ namespace Chubberino.Client.Commands
                 return;
             }
 
+            var context = ContextFactory.GetContext();
+
             // Users can only leave their own channel.
-            var channelFound = Context.StartupChannels.FirstOrDefault(x => x.UserID == e.ChatMessage.UserId);
+            var channelFound = context.StartupChannels.FirstOrDefault(x => x.UserID == e.ChatMessage.UserId);
 
             Task<Int32> task = null;
 
             if (channelFound is not null)
             {
-                Context.StartupChannels.Remove(channelFound);
-                task = Context.SaveChangesAsync();
+                context.StartupChannels.Remove(channelFound);
+                task = context.SaveChangesAsync();
             }
 
             TwitchClientManager.Client.LeaveChannel(e.ChatMessage.Username);
