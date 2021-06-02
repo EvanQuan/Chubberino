@@ -18,6 +18,8 @@ namespace Chubberino.UnitTests.Tests.Client
 
         protected Mock<IBot> MockedBot { get; }
 
+        protected Mock<IApplicationContextFactory> MockedApplicationContextFactory { get; }
+
         protected Mock<IApplicationContext> MockedApplicationContext { get; }
 
         protected Mock<ITwitchClientFactory> MockedTwitchClientFactory { get; }
@@ -48,6 +50,7 @@ namespace Chubberino.UnitTests.Tests.Client
             TwitchOAuth = Guid.NewGuid().ToString();
 
             MockedBot = new();
+            MockedApplicationContextFactory = new();
             MockedApplicationContext = new();
             MockedTwitchClientFactory = new();
             MockedTwitchClient = new();
@@ -60,12 +63,11 @@ namespace Chubberino.UnitTests.Tests.Client
             MockedConsole = new();
 
             Sut = new TwitchClientManager(
-                MockedApplicationContext.Object,
+                MockedApplicationContextFactory.Object,
                 MockedTwitchClientFactory.Object,
                 MockedCredentialsManager.Object,
                 MockedSpinWait.Object,
                 MockedDateTimeService.Object,
-                ApplicationCredentials,
                 MockedConsole.Object);
 
             MockedTwitchClientFactory
@@ -76,6 +78,14 @@ namespace Chubberino.UnitTests.Tests.Client
             MockedCredentialsManager
                 .Setup(x => x.TryGetCredentials(out credentials))
                 .Returns(true);
+
+            MockedCredentialsManager
+                .Setup(x => x.ApplicationCredentials)
+                .Returns(ApplicationCredentials);
+
+            MockedApplicationContextFactory
+                .Setup(x => x.GetContext())
+                .Returns(MockedApplicationContext.Object);
         }
     }
 }
