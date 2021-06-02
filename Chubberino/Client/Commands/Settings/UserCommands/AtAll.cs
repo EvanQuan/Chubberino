@@ -10,7 +10,10 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
     {
         private ITwitchAPI Api { get; }
 
-        public AtAll(ITwitchClientManager client, IConsole console, ITwitchAPI api) : base(client, console)
+        public AtAll(ITwitchClientManager client,
+            IConsole console,
+            ITwitchAPI api)
+            : base(client, console)
         {
             IsEnabled = true;
             Api = api;
@@ -33,7 +36,10 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
                 arguments = arguments.Skip(1);
             }
 
-            var chatters = Api.Undocumented.GetChattersAsync(TwitchClientManager.PrimaryChannelName).Result
+            var chatters = Api
+                .Undocumented
+                .GetChattersAsync(TwitchClientManager.PrimaryChannelName)
+                .Result
                 .Where(user => user.UserType >= userType);
 
             var message = " " + String.Join(' ', arguments);
