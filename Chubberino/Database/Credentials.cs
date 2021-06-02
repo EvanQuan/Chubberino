@@ -5,7 +5,10 @@ using System.Linq;
 
 namespace Chubberino.Database
 {
-    public sealed class Credentials
+    /// <summary>
+    /// Credentials.
+    /// </summary>
+    public sealed class Credentials : ICredentials
     {
         public Credentials(IApplicationContextFactory applicationContextFactory)
         {

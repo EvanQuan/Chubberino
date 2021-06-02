@@ -10,8 +10,8 @@ using Chubberino.Client.Commands.Strategies;
 using Chubberino.Client.Credentials;
 using Chubberino.Client.Services;
 using Chubberino.Client.Threading;
+using Chubberino.Database;
 using Chubberino.Database.Contexts;
-using Chubberino.Database.Models;
 using Chubberino.Modules.CheeseGame.Emotes;
 using Chubberino.Modules.CheeseGame.Hazards;
 using Chubberino.Modules.CheeseGame.Heists;
@@ -26,7 +26,6 @@ using Jering.Javascript.NodeJS;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using TwitchLib.Api;
 using TwitchLib.Api.Interfaces;
 using TwitchLib.Client.Enums;
@@ -94,8 +93,6 @@ namespace Chubberino
         {
             var services = new ServiceCollection();
 
-            // services.AddTransient<ISiteInterface, SiteRepo>
-
             var builder = new ContainerBuilder();
             builder.RegisterType<Bot>().As<IBot>().SingleInstance();
             builder.RegisterType<Client.Console>().As<IConsole>().SingleInstance();
@@ -135,18 +132,16 @@ namespace Chubberino
             {
                 var api = new TwitchAPI();
 
-                var applicationCredentials = c.Resolve<ApplicationCredentials>();
+                var credentials = c.Resolve<ICredentials>();
 
-                api.Settings.ClientId = applicationCredentials.TwitchAPIClientID;
+                api.Settings.ClientId = credentials.ApplicationCredentials.TwitchAPIClientID;
                 // Doesn't matter which user credentials access token is used here.
-                api.Settings.AccessToken = c.Resolve<IApplicationContext>().UserCredentials.First().AccessToken;
+                api.Settings.AccessToken = credentials.UserCredentials.AccessToken;
 
                 return api;
             }).As<ITwitchAPI>().SingleInstance();
 
-            builder.Register(c => new WolframAlpha(c.Resolve<ApplicationCredentials>().WolframAlphaAppID)).AsSelf().SingleInstance();
-
-            builder.Register(c => c.Resolve<IApplicationContext>().ApplicationCredentials.First()).AsSelf().SingleInstance();
+            builder.Register(c => new WolframAlpha(c.Resolve<Credentials>().ApplicationCredentials.WolframAlphaAppID)).AsSelf().SingleInstance();
 
             // Commands
             builder.RegisterType<AtAll>().AsSelf().SingleInstance();
@@ -184,9 +179,10 @@ namespace Chubberino
             builder.RegisterType<YepKyle>().AsSelf().SingleInstance();
             builder.RegisterType<Wolfram>().AsSelf().SingleInstance();
 
-            // Cheese game database context
-            builder.RegisterType<ApplicationContext>().As<IApplicationContext>().SingleInstance();
+            builder.RegisterType<ApplicationContextFactory>().As<IApplicationContextFactory>().SingleInstance();
+            builder.RegisterType<Credentials>().As<ICredentials>().SingleInstance();
 
+            // Cheese game
             builder.RegisterType<Shop>().As<IShop>().SingleInstance();
             builder.RegisterType<PointManager>().As<IPointManager>().SingleInstance();
             builder.RegisterType<RankManager>().As<IRankManager>().SingleInstance();
