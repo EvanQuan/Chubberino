@@ -11,11 +11,11 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
     {
         public const Int32 MaximumChannelsToJoin = 100;
 
-        public IApplicationContext Context { get; }
+        public IApplicationContextFactory ContextFactory { get; }
 
-        public Join(IApplicationContext context, ITwitchClientManager client, IConsole console) : base(client, console)
+        public Join(IApplicationContextFactory contextFactory, ITwitchClientManager client, IConsole console) : base(client, console)
         {
-            Context = context;
+            ContextFactory = contextFactory;
 
             TwitchClientManager.Client.OnJoinedChannel += TwitchClient_OnJoinedChannel;
 
@@ -40,20 +40,22 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
                 return;
             }
 
+            using var context = ContextFactory.GetContext();
+
             // Users can only add their own channel
-            var channelFound = Context.StartupChannels.FirstOrDefault(x => x.UserID == e.ChatMessage.UserId);
+            var channelFound = context.StartupChannels.FirstOrDefault(x => x.UserID == e.ChatMessage.UserId);
 
             String outputMessage;
             if (channelFound == null)
             {
-                if (Context.StartupChannels.Count() >= MaximumChannelsToJoin)
+                if (context.StartupChannels.Count() >= MaximumChannelsToJoin)
                 {
                     outputMessage = $"{e.ChatMessage.DisplayName} I have reached the maximum number of channels to join and could not join your channel.";
                 }
                 else
                 {
                     // Add new channel.
-                    Context.StartupChannels.Add(new StartupChannel()
+                    context.StartupChannels.Add(new StartupChannel()
                     {
                         UserID = e.ChatMessage.UserId,
                         DisplayName = e.ChatMessage.DisplayName
@@ -81,7 +83,7 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
             }
 
 
-            var task = Context.SaveChangesAsync();
+            var task = context.SaveChangesAsync();
 
             TwitchClientManager.Client.JoinChannel(e.ChatMessage.Username);
 
