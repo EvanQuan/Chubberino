@@ -17,7 +17,7 @@ namespace Chubberino.Modules.CheeseGame.Emotes
         ///     Key: Emote category
         ///     Value: List of emotes for that category and channel
         /// </summary>
-        private ConcurrentDictionary<String, ConcurrentDictionary<EmoteCategory, List<String>>> CachedEmotes { get; set; }
+        public ConcurrentDictionary<String, ConcurrentDictionary<EmoteCategory, List<String>>> CachedEmotes { get; set; }
 
         private static IReadOnlyDictionary<EmoteCategory, IReadOnlyList<String>> DefaultEmotes { get; } = new Dictionary<EmoteCategory, IReadOnlyList<String>>()
         {
@@ -136,12 +136,11 @@ namespace Chubberino.Modules.CheeseGame.Emotes
                                 Nothing: () => DefaultEmotes[category])
                             .Invoke())
                 .Invoke();
-
         }
 
-        private Option<IReadOnlyList<String>> TryGetCachedEmoteList(String channelName, EmoteCategory category)
+        public Option<IReadOnlyList<String>> TryGetCachedEmoteList(String channelName, EmoteCategory category)
         {
-            if (CachedEmotes.TryGetValue(channelName, out ConcurrentDictionary<EmoteCategory, List<String>> categoryList))
+            if (CachedEmotes.TryGetValue(channelName, out var categoryList))
             {
                 if (categoryList.TryGetValue(category, out List<String> emoteList))
                 {
@@ -149,10 +148,10 @@ namespace Chubberino.Modules.CheeseGame.Emotes
                 }
             }
 
-            return null;
+            return Option.Nothing<IReadOnlyList<String>>();
         }
 
-        private Option<IReadOnlyList<String>> TryGetAndCacheDatabaseEmoteList(String channelName, EmoteCategory category, IApplicationContext context = default)
+        public Option<IReadOnlyList<String>> TryGetAndCacheDatabaseEmoteList(String channelName, EmoteCategory category, IApplicationContext context = default)
         {
             if (context is null)
             {
@@ -181,7 +180,7 @@ namespace Chubberino.Modules.CheeseGame.Emotes
                 return () => databaseEmoteList;
             }
 
-            return null;
+            return Option.Nothing<IReadOnlyList<String>>();
         }
 
         public EmoteManagerResult AddAll(IEnumerable<String> emotes, EmoteCategory category, String channel)
