@@ -9,8 +9,6 @@ namespace Chubberino.Modules.CheeseGame.Shops
 
         void BuyItem(ChatMessage message);
 
-        void HelpItem(ChatMessage message);
-
         IShop AddItem(IItem item);
     }
 }

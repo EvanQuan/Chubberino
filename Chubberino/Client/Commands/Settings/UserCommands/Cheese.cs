@@ -1,4 +1,5 @@
 ﻿using Chubberino.Modules.CheeseGame.Heists;
+using Chubberino.Modules.CheeseGame.Helping;
 using Chubberino.Modules.CheeseGame.Points;
 using Chubberino.Modules.CheeseGame.Quests;
 using Chubberino.Modules.CheeseGame.Ranks;
@@ -16,6 +17,7 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
         public Cheese(
             ITwitchClientManager client,
             IConsole console,
+            IHelpManager help,
             IPointManager pointManager,
             IShop shop,
             IRankManager rankManager,
@@ -23,6 +25,7 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
             IHeistManager heistManager)
             : base(client, console)
         {
+            Help = help;
             PointManager = pointManager;
             Shop = shop;
             RankManager = rankManager;
@@ -76,7 +79,7 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
                     break;
                 case "h":
                 case "help":
-                    Shop.HelpItem(e.ChatMessage);
+                    Help.GetHelp(e.ChatMessage);
                     break;
                 case "r":
                 case "rank":
@@ -100,6 +103,7 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
             }
         }
 
+        public IHelpManager Help { get; }
         public IPointManager PointManager { get; }
         public IShop Shop { get; }
         public IRankManager RankManager { get; }

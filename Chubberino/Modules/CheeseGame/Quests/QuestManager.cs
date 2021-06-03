@@ -84,14 +84,14 @@ namespace Chubberino.Modules.CheeseGame.Quests
         {
             var quest = Random.NextElement(QuestRepository, player);
 
-            StartQuest(message, player, quest, context);
+            StartQuest(message, player, quest);
 
             player.LastQuestVentured = now;
 
             context.SaveChanges();
         }
 
-        private void StartQuest(ChatMessage message, Player player, Quest quest, IApplicationContext context)
+        private void StartQuest(ChatMessage message, Player player, Quest quest)
         {
             Double successChance = player.GetQuestSuccessChance();
 
