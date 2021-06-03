@@ -91,7 +91,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
             context.SaveChanges();
         }
 
-        private async void StartQuest(ChatMessage message, Player player, Quest quest, IApplicationContext context)
+        private void StartQuest(ChatMessage message, Player player, Quest quest, IApplicationContext context)
         {
             Double successChance = player.GetQuestSuccessChance();
 
@@ -100,8 +100,6 @@ namespace Chubberino.Modules.CheeseGame.Quests
             var resultMessage = successful
                 ? quest.OnSuccess(player, Random.NextElement(EmoteManager.Get(message.Channel, EmoteCategory.Positive)))
                 : quest.FailureMessage + " " + Random.NextElement(EmoteManager.Get(message.Channel, EmoteCategory.Negative));
-
-            var task = context.SaveChangesAsync();
 
             StringBuilder questPrompt = new();
 
@@ -123,8 +121,6 @@ namespace Chubberino.Modules.CheeseGame.Quests
                 .Append($"{GetPlayerWithWorkers(player)} travel to {quest.Location}. {resultMessage}");
 
             Client.SpoolMessageAsMe(message.Channel, player, questPrompt.ToString());
-
-            await task;
         }
 
         private static String GetPlayerWithWorkers(Player player)
