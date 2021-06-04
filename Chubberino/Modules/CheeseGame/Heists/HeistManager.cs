@@ -56,10 +56,18 @@ namespace Chubberino.Modules.CheeseGame.Heists
 
             var player = context.GetPlayer(Client, message);
 
+            Client.SpoolMessageAsMe(message.Channel, player,
+                "As you approach the great cheese dragon's lair, a mysterious voice begins echoing in your head. " +
+                "You can't understand what it is saying, but it fills you with terror. " +
+                $"You quiver in fear, and turn back immediately. {Random.NextElement(EmoteManager.Get(message.Channel, EmoteCategory.Negative))}",
+                Priority.Low);
+
+            return;
+
             // Find if there's another ongoing heist in this channel to join.
             if (OngoingHeists.TryGetValue(message.Channel, out IHeist currentHeist))
             {
-                JoinHeist(message, player);
+                JoinHeist(message, player, context);
                 return;
             }
 
@@ -77,7 +85,7 @@ namespace Chubberino.Modules.CheeseGame.Heists
                 player.LastHeistInitiated = now;
                 context.SaveChanges();
 
-                var heist = new Heist(message, context, Random, Client);
+                var heist = new Heist(message, Random, Client);
                 OngoingHeists.TryAdd(message.Channel, heist);
 
                 Client.SpoolMessageAsMe(message.Channel, player,
@@ -86,12 +94,12 @@ namespace Chubberino.Modules.CheeseGame.Heists
                     $"The more cheese wagered, the greater the risk and reward! " +
                     $"The heist will begin in {HeistWaitTime.Format()}.");
 
-                Task.Run(() => JoinHeist(message, player));
+                Task.Run(() => JoinHeist(message, player, context));
 
                 // Since we are sleeping, this needs to be async.
                 SpinWait.Sleep(HeistWaitTime);
 
-                if (!heist.Start())
+                if (!heist.Start(context))
                 {
                     // No one joined the heist. Let the user initiate another heist.
                     player.LastHeistInitiated = oldLastHeistInitiated;
@@ -110,7 +118,7 @@ namespace Chubberino.Modules.CheeseGame.Heists
                 $"You must wait {timeToWait} until you can initiate another heist. {Random.NextElement(EmoteManager.Get(message.Channel, EmoteCategory.Waiting))}");
         }
 
-        private void JoinHeist(ChatMessage message, Player player)
+        private void JoinHeist(ChatMessage message, Player player, IApplicationContext context)
         {
             if (!OngoingHeists.TryGetValue(message.Channel, out IHeist heist))
             {
@@ -133,14 +141,14 @@ namespace Chubberino.Modules.CheeseGame.Heists
 
             if (proposedWager.TryGetWager(out var wager))
             {
-                heist.UpdateWager(player, wager);
+                heist.UpdateWager(context, player, wager);
                 return;
             }
 
             Client.SpoolMessageAsMe(message.Channel, player, $"Cannot wager \"{proposedWager}\". You must wager a positive number of cheese to join the heist.");
         }
 
-        public void LeaveAllHeists(Player player)
+        public void LeaveAllHeists(IApplicationContext context, Player player)
         {
             IEnumerable<IHeist> heists = OngoingHeists
                 .Where(x => x.Value.Wagers.Any(x => x.PlayerTwitchID == player.TwitchUserID))
@@ -148,7 +156,7 @@ namespace Chubberino.Modules.CheeseGame.Heists
 
             foreach (var heist in heists)
             {
-                heist.UpdateWager(player, p => 0, silent: true);
+                heist.UpdateWager(context, player, p => 0, silent: true);
             }
         }
     }

@@ -64,7 +64,7 @@ namespace Chubberino.Modules.CheeseGame.Ranks
             Client.SpoolMessageAsMe(message.Channel, player, outputMessage, priority);
         }
 
-        private String GetRankUpMessage(ChatMessage message, Models.Player player, IApplicationContext context, out Priority priority)
+        private String GetRankUpMessage(ChatMessage message, Player player, IApplicationContext context, out Priority priority)
         {
             priority = Priority.Low;
 
@@ -78,7 +78,7 @@ namespace Chubberino.Modules.CheeseGame.Ranks
                     {
                         if (player.HasUnlockedAllRecipes())
                         {
-                            HeistManager.LeaveAllHeists(player);
+                            HeistManager.LeaveAllHeists(context, player);
                             // Prestige instead of rank up
                             player.ResetRank();
                             player.Prestige++;
