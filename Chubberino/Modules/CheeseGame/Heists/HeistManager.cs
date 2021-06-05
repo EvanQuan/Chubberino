@@ -69,14 +69,6 @@ namespace Chubberino.Modules.CheeseGame.Heists
 
             var player = context.GetPlayer(Client, message);
 
-            Client.SpoolMessageAsMe(message.Channel, player,
-                "As you approach the great cheese dragon's lair, a mysterious voice begins echoing in your head. " +
-                "You can't understand what it is saying, but it fills you with terror. " +
-                $"You quiver in fear, and turn back immediately. {Random.NextElement(EmoteManager.Get(message.Channel, EmoteCategory.Negative))}",
-                Priority.Low);
-
-            return;
-
             // Find if there's another ongoing heist in this channel to join.
             if (OngoingHeists.TryGetValue(message.Channel, out IHeist currentHeist))
             {
@@ -85,11 +77,15 @@ namespace Chubberino.Modules.CheeseGame.Heists
             }
 
             // Run in a separate thread as it involves sleeping to wait for joiners.
-            Task.Run(() => InitiateNewHeist(message, context, player));
+            Task.Run(() => InitiateNewHeist(message));
         }
 
-        private void InitiateNewHeist(ChatMessage message, IApplicationContext context, Player player)
+        private void InitiateNewHeist(ChatMessage message)
         {
+            using var context = ContextFactory.GetContext();
+
+            var player = context.GetPlayer(Client, message);
+
             // Trying to initiate new heist
             var now = DateTime.Now;
 
