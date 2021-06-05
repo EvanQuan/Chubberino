@@ -7,7 +7,7 @@ namespace Chubberino.Modules.CheeseGame.Heists
 {
     public interface IHeistManager
     {
-        void InitiateHeist(ChatMessage message);
+        void Heist(ChatMessage message);
 
         void LeaveAllHeists(IApplicationContext context, Player player);
     }

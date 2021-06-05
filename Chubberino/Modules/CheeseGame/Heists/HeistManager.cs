@@ -50,7 +50,7 @@ namespace Chubberino.Modules.CheeseGame.Heists
             DateTime = dateTime;
         }
 
-        public void InitiateHeist(ChatMessage message)
+        public void Heist(ChatMessage message)
         {
             using var context = ContextFactory.GetContext();
 
@@ -71,8 +71,14 @@ namespace Chubberino.Modules.CheeseGame.Heists
                 return;
             }
 
+            // Run in a separate thread as it involves sleeping to wait for joiners.
+            Task.Run(() => InitiateNewHeist(message, context, player));
+        }
+
+        private void InitiateNewHeist(ChatMessage message, IApplicationContext context, Player player)
+        {
             // Trying to initiate new heist
-            var now  = DateTime.Now;
+            var now = DateTime.Now;
 
             var oldLastHeistInitiated = player.LastHeistInitiated;
 
@@ -94,6 +100,11 @@ namespace Chubberino.Modules.CheeseGame.Heists
                     $"The more cheese wagered, the greater the risk and reward! " +
                     $"The heist will begin in {HeistWaitTime.Format()}.");
 
+
+                // Join the heist in a separate thread so that the heist
+                // countdown can start immediately as the join is being
+                // processed. This should only save around a second or so of
+                // time.
                 Task.Run(() => JoinHeist(message, player, context));
 
                 // Since we are sleeping, this needs to be async.
