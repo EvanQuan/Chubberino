@@ -6,6 +6,11 @@ namespace Chubberino.Utility
 {
     public static class StringExtensions
     {
+        public static String Format(this String source, params Object?[] args)
+        {
+            return String.Format(source, args);
+        }
+
         public static String StripStart(this String source, String prefix)
         {
             if (source.StartsWith(prefix))

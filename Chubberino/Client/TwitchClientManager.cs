@@ -27,14 +27,14 @@ namespace Chubberino.Client
 
         public ITwitchClient Client { get; private set; }
 
-        public IApplicationContext Context { get; }
+        public IApplicationContextFactory ContextFactory { get; }
 
         private ITwitchClientFactory Factory { get; }
 
         private ICredentialsManager CredentialsManager { get; }
         private ISpinWait SpinWait { get; }
+
         public IDateTimeService DateTime { get; }
-        private ApplicationCredentials ApplicationCredentials { get; }
 
         public IConsole Console { get; }
 
@@ -45,20 +45,18 @@ namespace Chubberino.Client
         private ConcurrentDictionary<String, DateTime> LastLowPriorityMessageSent { get; }
 
         public TwitchClientManager(
-            IApplicationContext context,
+            IApplicationContextFactory contextFactory,
             ITwitchClientFactory factory,
             ICredentialsManager credentialsManager,
             ISpinWait spinWait,
             IDateTimeService dateTime,
-            ApplicationCredentials applicationCredentials,
             IConsole console)
         {
-            Context = context;
+            ContextFactory = contextFactory;
             Factory = factory;
             CredentialsManager = credentialsManager;
             SpinWait = spinWait;
             DateTime = dateTime;
-            ApplicationCredentials = applicationCredentials;
             Console = console;
             LastLowPriorityMessageSent = new ConcurrentDictionary<String, DateTime>();
         }
@@ -94,7 +92,7 @@ namespace Chubberino.Client
 
             if (PrimaryChannelName == null)
             {
-                PrimaryChannelName = ApplicationCredentials.InitialTwitchPrimaryChannelName;
+                PrimaryChannelName = CredentialsManager.ApplicationCredentials.InitialTwitchPrimaryChannelName;
             }
 
             Client = Factory.GetClient(CurrentClientOptions);
@@ -119,9 +117,11 @@ namespace Chubberino.Client
 
             if (!channelJoined) { return false; }
 
+            using var context = ContextFactory.GetContext();
+
             if (IsBot)
             {
-                foreach (var channel in Context.StartupChannels)
+                foreach (var channel in context.StartupChannels)
                 {
                     Client.JoinChannel(channel.DisplayName);
                 }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Chubberino.Database.Contexts
 {
-    public interface IApplicationContext
+    public interface IApplicationContext : IDisposable
     {
         DbSet<Player> Players { get; set; }
 

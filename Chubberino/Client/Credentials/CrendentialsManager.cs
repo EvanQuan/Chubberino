@@ -1,4 +1,6 @@
 ﻿using Chubberino.Database.Contexts;
+using Chubberino.Database.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using TwitchLib.Client.Models;
@@ -8,19 +10,44 @@ namespace Chubberino.Client.Credentials
     public sealed class CrendentialsManager : ICredentialsManager
     {
         public IConsole Console { get; }
-        public IApplicationContext Context { get; }
 
-        public CrendentialsManager(IConsole console, IApplicationContext context)
+        public IApplicationContextFactory ContextFactory { get; }
+
+        public UserCredentials UserCredentials => LazyUserCredentials.Value;
+
+        public ApplicationCredentials ApplicationCredentials => LazyApplicationCredentials.Value;
+
+        private Lazy<ApplicationCredentials> LazyApplicationCredentials { get; }
+
+        private Lazy<UserCredentials> LazyUserCredentials { get; }
+
+        public CrendentialsManager(IConsole console, IApplicationContextFactory contextFactory)
         {
             Console = console;
-            Context = context;
+            ContextFactory = contextFactory;
+
+
+            LazyUserCredentials = new Lazy<UserCredentials>(() =>
+            {
+                using var context = ContextFactory.GetContext();
+                return context.UserCredentials.AsNoTracking().First();
+            });
+
+
+            LazyApplicationCredentials = new Lazy<ApplicationCredentials>(() =>
+            {
+                using var context = contextFactory.GetContext();
+                return context.ApplicationCredentials.AsNoTracking().First();
+            });
         }
 
         public Boolean TryGetCredentials(out LoginCredentials credentials)
         {
             credentials = null;
 
-            var users = Context.UserCredentials.OrderBy(x => x.ID).ToArray();
+            using var context = ContextFactory.GetContext();
+
+            var users = context.UserCredentials.OrderBy(x => x.ID).ToArray();
 
             if (!users.Any())
             {

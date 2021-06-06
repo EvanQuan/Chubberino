@@ -47,7 +47,7 @@ namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Heists
                 TwitchUserID = Guid.NewGuid().ToString()
             };
 
-            Sut = new Heist(ChatMessage, MockedContext.Object, MockedRandom.Object, MockedTwitchClientManager.Object);
+            Sut = new Heist(ChatMessage, MockedRandom.Object, MockedTwitchClientManager.Object);
         }
     }
 }

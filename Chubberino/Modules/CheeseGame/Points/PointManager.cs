@@ -18,18 +18,21 @@ using TwitchLib.Client.Models;
 
 namespace Chubberino.Modules.CheeseGame.Points
 {
-    public sealed class PointManager : AbstractCommandStrategy, IPointManager
+    public sealed class PointManager : IPointManager
     {
         public static TimeSpan PointGainCooldown { get; set; } = TimeSpan.FromMinutes(15);
-
+        public IApplicationContextFactory ContextFactory { get; }
+        public ITwitchClientManager Client { get; }
         public IReadOnlyList<RecipeInfo> RecipeRepository { get; }
         public IReadOnlyList<RecipeModifier> RecipeModifierManager { get; }
+        public Random Random { get; }
+        public IEmoteManager EmoteManager { get; }
         public IHazardManager HazardManager { get; }
         public IDateTimeService DateTime { get; }
         public IConsole Console { get; }
 
         public PointManager(
-            IApplicationContext context,
+            IApplicationContextFactory contextFactory,
             ITwitchClientManager client,
             IReadOnlyList<RecipeInfo> recipeRepository,
             IReadOnlyList<RecipeModifier> recipeModifierRepository,
@@ -38,19 +41,25 @@ namespace Chubberino.Modules.CheeseGame.Points
             IHazardManager hazardManager,
             IDateTimeService dateTime,
             IConsole console)
-            : base(context, client, random, emoteManager)
         {
+            ContextFactory = contextFactory;
+            Client = client;
             RecipeRepository = recipeRepository;
             RecipeModifierManager = recipeModifierRepository;
+            Random = random;
+            EmoteManager = emoteManager;
             HazardManager = hazardManager;
             DateTime = dateTime;
             Console = console;
         }
 
-        public void AddPoints(ChatMessage message)
+        public async void AddPoints(ChatMessage message)
         {
             DateTime now = DateTime.Now;
-            Player player = GetPlayer(message);
+
+            using var context = ContextFactory.GetContext();
+
+            Player player = context.GetPlayer(Client, message);
 
             TimeSpan timeSinceLastPointGain = now - player.LastPointsGained;
 
@@ -60,81 +69,87 @@ namespace Chubberino.Modules.CheeseGame.Points
             {
                 if (player.Points >= playerStorage)
                 {
-                    TwitchClientManager.SpoolMessageAsMe(message.Channel, player, $" You have {player.Points}/{playerStorage} cheese and cannot store any more. Consider buying more cheese storage with \"!cheese buy storage\".");
+                    Client.SpoolMessageAsMe(message.Channel, player, $" You have {player.Points}/{playerStorage} cheese and cannot store any more. Consider buying more cheese storage with \"!cheese buy storage\".");
+                    return;
                 }
-                else
+
+                RecipeInfo initialCheese = Random.NextElement(RecipeRepository, player.CheeseUnlocked);
+
+                RecipeModifier modifier = Random.NextElement(RecipeModifierManager, (Int32)player.NextCheeseModifierUpgradeUnlock);
+
+                RecipeInfo cheese = modifier.Modify(initialCheese);
+
+                StringBuilder outputMessage = new();
+
+                String infestationStatus = HazardManager.UpdateInfestationStatus(player);
+
+                var infestationTask = context.SaveChangesAsync();
+
+                if (!String.IsNullOrWhiteSpace(infestationStatus))
                 {
-                    RecipeInfo initialCheese = Random.NextElement(RecipeRepository, player.CheeseUnlocked);
-
-                    RecipeModifier modifier = Random.NextElement(RecipeModifierManager, (Int32)player.NextCheeseModifierUpgradeUnlock);
-
-                    RecipeInfo cheese = modifier.Modify(initialCheese);
-
-                    StringBuilder outputMessage = new();
-
-                    String infestationStatus = HazardManager.UpdateInfestationStatus(player);
-
-                    if (!String.IsNullOrWhiteSpace(infestationStatus))
-                    {
-                        outputMessage
-                            .Append(infestationStatus)
-                            .Append(Random.NextElement(EmoteManager.Get(message.Channel, EmoteCategory.Rat)))
-                            .Append(' ');
-                    }
-
-                    Boolean isCritical = Random.TryPercentChance((Int32)player.NextCriticalCheeseUpgradeUnlock * RankUpgradeExtensions.CriticalCheeseUpgradePercent);
-
-                    var modifiedPoints = player.GetModifiedPoints(cheese.Points, isCritical);
-
-                    player.AddPoints(modifiedPoints);
-
-                    player.LastPointsGained = now;
-
-                    Context.SaveChanges();
-
-                    Boolean isPositive = cheese.Points > 0;
-
-                    var emoteCategory = isPositive ? EmoteCategory.Positive : EmoteCategory.Negative;
-
-                    var emoteList = EmoteManager.Get(message.Channel, emoteCategory);
-
-                    if (isCritical)
-                    {
-                        outputMessage.Append(Random.NextElement(emoteList));
-
-                        if (!isPositive)
-                        {
-                            outputMessage.Append(" NEGATIVE ");
-                        }
-
-                        outputMessage
-                            .Append(" CRITICAL CHEESE!!! ")
-                            .Append(Random.NextElement(emoteList))
-                            .Append(' ');
-                    }
-
-                    outputMessage.Append($"You made some {cheese.Name}. {Random.NextElement(emoteList)} ({(isPositive ? "+" : String.Empty)}{modifiedPoints} cheese)");
-
-                    TwitchClientManager.SpoolMessageAsMe(message.Channel, player, outputMessage.ToString());
+                    outputMessage
+                        .Append(infestationStatus)
+                        .Append(Random.NextElement(EmoteManager.Get(message.Channel, EmoteCategory.Rat)))
+                        .Append(' ');
                 }
-            }
-            else
-            {
-                TimeSpan timeUntilNextValidPointGain = PointGainCooldown - timeSinceLastPointGain;
 
-                String timeToWait = timeUntilNextValidPointGain.Format();
+                Boolean isCritical = Random.TryPercentChance((Int32)player.NextCriticalCheeseUpgradeUnlock * RankUpgradeExtensions.CriticalCheeseUpgradePercent);
 
-                TwitchClientManager.SpoolMessageAsMe(message.Channel, player,
-                    $"You must wait {timeToWait} until you can make more cheese. {Random.NextElement(EmoteManager.Get(message.Channel, EmoteCategory.Waiting))}",
-                    Priority.Low);
+                await infestationTask;
+
+                var modifiedPoints = player.GetModifiedPoints(cheese.Points, isCritical);
+
+                player.AddPoints(modifiedPoints);
+
+                player.LastPointsGained = now;
+
+                var addPointsTask = context.SaveChangesAsync();
+
+                Boolean isPositive = cheese.Points > 0;
+
+                var emoteCategory = isPositive ? EmoteCategory.Positive : EmoteCategory.Negative;
+
+                var emoteList = EmoteManager.Get(message.Channel, emoteCategory);
+
+                if (isCritical)
+                {
+                    outputMessage.Append(Random.NextElement(emoteList));
+
+                    if (!isPositive)
+                    {
+                        outputMessage.Append(" NEGATIVE ");
+                    }
+
+                    outputMessage
+                        .Append(" CRITICAL CHEESE!!! ")
+                        .Append(Random.NextElement(emoteList))
+                        .Append(' ');
+                }
+
+                outputMessage.Append($"You made some {cheese.Name}. {Random.NextElement(emoteList)} ({(isPositive ? "+" : String.Empty)}{modifiedPoints} cheese)");
+
+                Client.SpoolMessageAsMe(message.Channel, player, outputMessage.ToString());
+
+                await addPointsTask;
+                return;
             }
+
+            TimeSpan timeUntilNextValidPointGain = PointGainCooldown - timeSinceLastPointGain;
+
+            String timeToWait = timeUntilNextValidPointGain.Format();
+
+            Client.SpoolMessageAsMe(message.Channel, player,
+                $"You must wait {timeToWait} until you can make more cheese. {Random.NextElement(EmoteManager.Get(message.Channel, EmoteCategory.Waiting))}",
+                Priority.Low);
         }
 
-        public void AddPoints(String channel, String username, Int32 points)
+        public async void AddPoints(String channel, String username, Int32 points)
         {
-            var player = Context.Players.FirstOrDefault(x => x.Name.Equals(username));
+            using var context = ContextFactory.GetContext();
 
-            if (player == default)
+            var player = context.Players.FirstOrDefault(x => x.Name.Equals(username));
+
+            if (player is null)
             {
                 Console.WriteLine($"Cannot find player {username} to add points.");
                 return;
@@ -143,7 +158,7 @@ namespace Chubberino.Modules.CheeseGame.Points
             Int32 oldPoints = player.Points;
 
             player.AddPoints(points);
-            Context.SaveChanges();
+            var task = context.SaveChangesAsync();
 
             Int32 newPoints = player.Points;
 
@@ -151,12 +166,14 @@ namespace Chubberino.Modules.CheeseGame.Points
 
             if (pointGain > 0)
             {
-                TwitchClientManager.SpoolMessageAsMe(channel, player, $"The Magical Cheese Fairy descends from the heavens and hands you a gift. (+{pointGain} cheese)");
+                Client.SpoolMessageAsMe(channel, player, $"The Magical Cheese Fairy descends from the heavens and hands you a gift. (+{pointGain} cheese)");
             }
             else if (pointGain < 0)
             {
-                TwitchClientManager.SpoolMessageAsMe(channel, player, $"The Mischievious Cheese Goblin sneaks up on you and pickpockets some cheese. ({pointGain} cheese)");
+                Client.SpoolMessageAsMe(channel, player, $"The Mischievious Cheese Goblin sneaks up on you and pickpockets some cheese. ({pointGain} cheese)");
             }
+
+            await task;
         }
     }
 }

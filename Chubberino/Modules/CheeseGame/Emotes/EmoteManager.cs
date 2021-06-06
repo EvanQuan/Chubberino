@@ -1,6 +1,7 @@
 ﻿using Chubberino.Database.Contexts;
 using Chubberino.Database.Models;
 using Chubberino.Utility;
+using Monad;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -10,20 +11,13 @@ namespace Chubberino.Modules.CheeseGame.Emotes
 {
     public sealed class EmoteManager : IEmoteManager
     {
-        public EmoteManager(IApplicationContext context, Random random)
-        {
-            Context = context;
-            Random = random;
-            CachedEmotes = new ConcurrentDictionary<String, ConcurrentDictionary<EmoteCategory, List<String>>>();
-        }
-
         /// <summary>
         /// Key: channel display name
         /// Value:
         ///     Key: Emote category
         ///     Value: List of emotes for that category and channel
         /// </summary>
-        private ConcurrentDictionary<String, ConcurrentDictionary<EmoteCategory, List<String>>> CachedEmotes { get; set; }
+        public ConcurrentDictionary<String, ConcurrentDictionary<EmoteCategory, List<String>>> CachedEmotes { get; set; }
 
         private static IReadOnlyDictionary<EmoteCategory, IReadOnlyList<String>> DefaultEmotes { get; } = new Dictionary<EmoteCategory, IReadOnlyList<String>>()
         {
@@ -118,39 +112,56 @@ namespace Chubberino.Modules.CheeseGame.Emotes
             },
         };
 
-        public IApplicationContext Context { get; }
+        public IApplicationContextFactory ContextFactory { get; }
 
         public Random Random { get; }
 
-        public IReadOnlyList<String> Get(String channel, EmoteCategory category)
+        public EmoteManager(IApplicationContextFactory contextFactory, Random random)
         {
-            return TryGetCachedEmoteList(channel, category, out var cachedEmoteList)
-                ? cachedEmoteList
-                : TryGetAndCacheDatabaseEmoteList(channel, category, out var databaseEmoteList)
-                    ? databaseEmoteList
-                    : DefaultEmotes[category];
+            ContextFactory = contextFactory;
+            Random = random;
+            CachedEmotes = new ConcurrentDictionary<String, ConcurrentDictionary<EmoteCategory, List<String>>>();
         }
 
-        private Boolean TryGetCachedEmoteList(String channelName, EmoteCategory category, out IReadOnlyList<String> cachedEmoteList)
+
+        public IReadOnlyList<String> Get(String channel, EmoteCategory category)
         {
-            if (CachedEmotes.TryGetValue(channelName, out ConcurrentDictionary<EmoteCategory, List<String>> categoryList))
+            return TryGetCachedEmoteList(channel, category)
+                .Match(
+                    Just: cachedEmoteList => cachedEmoteList,
+                    Nothing: () =>
+                        TryGetAndCacheDatabaseEmoteList(channel, category)
+                            .Match(
+                                Just: databaseEmoteList => databaseEmoteList,
+                                Nothing: () => DefaultEmotes[category])
+                            .Invoke())
+                .Invoke();
+        }
+
+        public Option<IReadOnlyList<String>> TryGetCachedEmoteList(String channelName, EmoteCategory category)
+        {
+            if (CachedEmotes.TryGetValue(channelName, out var categoryList))
             {
                 if (categoryList.TryGetValue(category, out List<String> emoteList))
                 {
-                    cachedEmoteList = emoteList.AsReadOnly();
-                    return true;
+                    return () => emoteList.AsReadOnly();
                 }
             }
 
-            cachedEmoteList = default;
-            return false;
+            return Option.Nothing<IReadOnlyList<String>>();
         }
 
-        private Boolean TryGetAndCacheDatabaseEmoteList(String channelName, EmoteCategory category, out IReadOnlyList<String> databaseEmoteList)
+        public Option<IReadOnlyList<String>> TryGetAndCacheDatabaseEmoteList(String channelName, EmoteCategory category, IApplicationContext context = default)
         {
+            if (context is null)
+            {
+                context = ContextFactory.GetContext();
+            }
+
             var categoryList = CachedEmotes.GetOrAdd(channelName, _ => new ConcurrentDictionary<EmoteCategory, List<String>>());
 
-            IQueryable<String> emotes = Context.Emotes
+            IQueryable<String> emotes = context
+                .Emotes
                 .Where(x => x.TwitchDisplayName == channelName && x.Category == category)
                 .Select(x => x.Name);
 
@@ -158,7 +169,7 @@ namespace Chubberino.Modules.CheeseGame.Emotes
 
             if (emotes.Any())
             {
-                databaseEmoteList = emotes.ToList().AsReadOnly();
+                var databaseEmoteList = emotes.ToList().AsReadOnly();
                 var categoryEmotes = categoryList.GetOrAdd(category, _ => new List<String>());
 
                 foreach (var emote in databaseEmoteList)
@@ -166,16 +177,17 @@ namespace Chubberino.Modules.CheeseGame.Emotes
                     categoryEmotes.Add(emote);
                 }
 
-                return true;
+                return () => databaseEmoteList;
             }
 
-            databaseEmoteList = default;
-            return false;
+            return Option.Nothing<IReadOnlyList<String>>();
         }
 
         public EmoteManagerResult AddAll(IEnumerable<String> emotes, EmoteCategory category, String channel)
         {
-            IQueryable<String> databaseEmotes = Context.Emotes
+            using var context = ContextFactory.GetContext();
+
+            IQueryable<String> databaseEmotes = context.Emotes
                 .Where(x => x.TwitchDisplayName == channel && x.Category == category)
                 .Select(x => x.Name);
 
@@ -190,7 +202,7 @@ namespace Chubberino.Modules.CheeseGame.Emotes
                 }
                 else
                 {
-                    Context.Emotes.Add(new Emote()
+                    context.Emotes.Add(new Emote()
                     {
                         Name = emote,
                         TwitchDisplayName = channel,
@@ -203,8 +215,8 @@ namespace Chubberino.Modules.CheeseGame.Emotes
 
             if (succeeded.Any())
             {
-                Context.SaveChanges();
-                TryGetAndCacheDatabaseEmoteList(channel, category, out _);
+                context.SaveChanges();
+                TryGetAndCacheDatabaseEmoteList(channel, category, context);
             }
 
             return new EmoteManagerResult(succeeded, failed);
@@ -212,7 +224,10 @@ namespace Chubberino.Modules.CheeseGame.Emotes
 
         public EmoteManagerResult RemoveAll(IEnumerable<String> emotes, EmoteCategory category, String channel)
         {
-            IQueryable<String> databaseEmotes = Context.Emotes
+            using var context = ContextFactory.GetContext();
+
+            IQueryable<String> databaseEmotes = context
+                .Emotes
                 .Where(x => x.TwitchDisplayName == channel && x.Category == category)
                 .Select(x => x.Name);
 
@@ -221,9 +236,9 @@ namespace Chubberino.Modules.CheeseGame.Emotes
 
             foreach (String emote in emotes)
             {
-                if (Context.Emotes.TryGetFirst(x => x.Name == emote && x.Category == category, out Emote found))
+                if (context.Emotes.TryGetFirst(x => x.Name == emote && x.Category == category, out Emote found))
                 {
-                    Context.Emotes.Remove(found);
+                    context.Emotes.Remove(found);
                     succeeded.Add(emote);
                 }
                 else
@@ -234,8 +249,8 @@ namespace Chubberino.Modules.CheeseGame.Emotes
 
             if (succeeded.Any())
             {
-                Context.SaveChanges();
-                TryGetAndCacheDatabaseEmoteList(channel, category, out _);
+                context.SaveChanges();
+                TryGetAndCacheDatabaseEmoteList(channel, category, context);
             }
 
             return new EmoteManagerResult(succeeded, failed);

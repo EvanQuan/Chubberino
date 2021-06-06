@@ -10,6 +10,8 @@ namespace Chubberino.UnitTests.Tests.Client.Commands
 {
     public abstract class UsingCommand
     {
+        protected Mock<IApplicationContextFactory> MockedContextFactory { get; }
+
         protected Mock<IApplicationContext> MockedContext { get; }
 
         protected Mock<ITwitchClientManager> MockedTwitchClientManager { get; }
@@ -37,7 +39,11 @@ namespace Chubberino.UnitTests.Tests.Client.Commands
 
             MockedConsole = new Mock<IConsole>();
 
+            MockedContextFactory = new();
+
             MockedContext = new Mock<IApplicationContext>();
+
+            MockedContextFactory.Setup(x => x.GetContext()).Returns(MockedContext.Object);
 
             MockedTwitchClient = new Mock<ITwitchClient>();
 

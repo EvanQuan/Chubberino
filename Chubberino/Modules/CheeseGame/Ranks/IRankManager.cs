@@ -2,7 +2,7 @@
 
 namespace Chubberino.Modules.CheeseGame.Ranks
 {
-    public interface IRankManager : ICommandStrategy
+    public interface IRankManager
     {
         void ShowRank(ChatMessage message);
 

@@ -12,32 +12,41 @@ using TwitchLib.Client.Models;
 
 namespace Chubberino.Modules.CheeseGame.Quests
 {
-    public sealed class QuestManager : AbstractCommandStrategy, IQuestManager
+    public sealed class QuestManager : IQuestManager
     {
         public static TimeSpan QuestCooldown { get; set; } = TimeSpan.FromHours(2);
+        public IApplicationContextFactory ContextFactory { get; }
+        public ITwitchClientManager Client { get; }
+        public Random Random { get; }
+        public IEmoteManager EmoteManager { get; }
         public IDateTimeService DateTime { get; }
         public IQuestRepository QuestRepository { get; }
 
         public QuestManager(
-            IApplicationContext context,
+            IApplicationContextFactory contextFactory,
             ITwitchClientManager client,
             Random random,
             IEmoteManager emoteManager,
             IDateTimeService dateTime,
             IQuestRepository questRepository)
-            : base(context, client, random, emoteManager)
         {
+            ContextFactory = contextFactory;
+            Client = client;
+            Random = random;
+            EmoteManager = emoteManager;
             DateTime = dateTime;
             QuestRepository = questRepository;
         }
 
         public void TryStartQuest(ChatMessage message)
         {
-            var player = GetPlayer(message);
+            using var context = ContextFactory.GetContext();
+
+            var player = context.GetPlayer(Client, message);
 
             if (!player.HasQuestingUnlocked())
             {
-                TwitchClientManager.SpoolMessageAsMe(message.Channel, player,
+                Client.SpoolMessageAsMe(message.Channel, player,
                     "[Quest 0% success] " +
                     "You are unfamiliar with the lands around you and quickly get lost. " +
                     "You must buy a quest map from the shop with \"!cheese buy quest\" before you can start questing.",
@@ -51,7 +60,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
 
             if (timeSinceLastQuestVentured >= QuestCooldown)
             {
-                StartQuest(message, player, now);
+                StartQuestAtTime(message, player, now, context);
             }
             else
             {
@@ -65,13 +74,13 @@ namespace Chubberino.Modules.CheeseGame.Quests
 
             var timeToWait = timeUntilNextQuestAvailable.Format();
 
-            TwitchClientManager.SpoolMessageAsMe(message.Channel, player,
+            Client.SpoolMessageAsMe(message.Channel, player,
                 $"[Quest {String.Format("{0:0.0}", player.GetQuestSuccessChance() * 100)}% success] " +
                 $"You must wait {timeToWait} until you can go on your next quest. {Random.NextElement(EmoteManager.Get(message.Channel, EmoteCategory.Waiting))}",
                 Priority.Low);
         }
 
-        private void StartQuest(ChatMessage message, Player player, DateTime now)
+        private void StartQuestAtTime(ChatMessage message, Player player, DateTime now, IApplicationContext context)
         {
             var quest = Random.NextElement(QuestRepository, player);
 
@@ -79,7 +88,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
 
             player.LastQuestVentured = now;
 
-            Context.SaveChanges();
+            context.SaveChanges();
         }
 
         private void StartQuest(ChatMessage message, Player player, Quest quest)
@@ -91,8 +100,6 @@ namespace Chubberino.Modules.CheeseGame.Quests
             var resultMessage = successful
                 ? quest.OnSuccess(player, Random.NextElement(EmoteManager.Get(message.Channel, EmoteCategory.Positive)))
                 : quest.FailureMessage + " " + Random.NextElement(EmoteManager.Get(message.Channel, EmoteCategory.Negative));
-
-            Context.SaveChanges();
 
             StringBuilder questPrompt = new();
 
@@ -113,7 +120,7 @@ namespace Chubberino.Modules.CheeseGame.Quests
             questPrompt
                 .Append($"{GetPlayerWithWorkers(player)} travel to {quest.Location}. {resultMessage}");
 
-            TwitchClientManager.SpoolMessageAsMe(message.Channel, player, questPrompt.ToString());
+            Client.SpoolMessageAsMe(message.Channel, player, questPrompt.ToString());
         }
 
         private static String GetPlayerWithWorkers(Player player)

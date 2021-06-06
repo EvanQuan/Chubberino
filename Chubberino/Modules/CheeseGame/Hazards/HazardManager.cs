@@ -1,7 +1,4 @@
-﻿using Chubberino.Client;
-using Chubberino.Database.Contexts;
-using Chubberino.Modules.CheeseGame.Emotes;
-using Chubberino.Modules.CheeseGame.Models;
+﻿using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.Ranks;
 using Chubberino.Utility;
 using System;
@@ -9,18 +6,11 @@ using System.Collections.Generic;
 
 namespace Chubberino.Modules.CheeseGame.Hazards
 {
-    public sealed class HazardManager : AbstractCommandStrategy, IHazardManager
+    public sealed class HazardManager : IHazardManager
     {
-        public const String NewInfestationMessage = "A giant rat sneaks into your factory, scaring away your workers. ";
-
-        public const String OldInfestationMessage = "A giant rat is still infesting your cheese factory, scaring away your workers. ";
-
-        public const String KillOldRatMessage = "You set up a mousetrap, killing the giant rat infesting your cheese factory. Your workers go back to the work. ";
-
-        public const String KillNewRatMessage = "A giant rat sneaks into your factory, but is promptly killed by a mousetrap you have set up. ";
-
         public static class InfestationMaximum
         {
+            public const Int32 Bronze = 0;
             public const Int32 Silver = 3;
             public const Int32 Gold = 7;
             public const Int32 Platinum = 12;
@@ -35,7 +25,7 @@ namespace Chubberino.Modules.CheeseGame.Hazards
         /// </summary>
         public static IDictionary<Rank, Int32> InfestationMaximums { get; } = new Dictionary<Rank, Int32>()
         {
-            { Rank.Bronze, 0 },
+            { Rank.Bronze, InfestationMaximum.Bronze },
             { Rank.Silver, InfestationMaximum.Silver },
             { Rank.Gold, InfestationMaximum.Gold },
             { Rank.Platinum, InfestationMaximum.Platinum },
@@ -60,19 +50,16 @@ namespace Chubberino.Modules.CheeseGame.Hazards
             { Rank.Legend, 0.022 },
         };
 
-        public HazardManager(
-            IApplicationContext context,
-            ITwitchClientManager client,
-            Random random,
-            IEmoteManager emoteManager)
-            : base(context, client, random, emoteManager)
+        public Random Random { get; }
+
+        public HazardManager(Random random)
         {
+            Random = random;
         }
 
         public String UpdateInfestationStatus(Player player)
         {
             String outputMessage = String.Empty;
-
 
             if (Random.TryPercentChance(InfestationChance[player.Rank]))
             {
@@ -104,11 +91,11 @@ namespace Chubberino.Modules.CheeseGame.Hazards
                     // New infestation, contested.
                     Boolean isSingleNewRat = newRatCount == 1;
                     Boolean isSingleMouseTrapUsed = player.MouseTrapCount == 1;
-                    outputMessage = $"{ratCount} giant {rat} {sneak} into your cheese factory. {newRatCount} {(isSingleNewRat ? "remains" : "remain")} after {player.MouseTrapCount} {(isSingleMouseTrapUsed ? "is" : "are")} killed by {(isSingleMouseTrapUsed ? "a mousetrap" : "mousetraps")} ";
+                    outputMessage = $"{ratCount} giant {rat} {sneak} into your cheese factory. " +
+                        $"{newRatCount} {(isSingleNewRat ? "remains" : "remain")} after {player.MouseTrapCount} {(isSingleMouseTrapUsed ? "is" : "are")} killed by {(isSingleMouseTrapUsed ? "a mousetrap" : "mousetraps")} ";
                     player.RatCount = newRatCount;
                     player.MouseTrapCount = 0;
                 }
-                Context.SaveChanges();
             }
             else if (player.IsInfested())
             {
@@ -127,18 +114,18 @@ namespace Chubberino.Modules.CheeseGame.Hazards
                 {
                     // Old infestation remains, contested.
                     Int32 newRatCount = player.RatCount - player.MouseTrapCount;
-                    outputMessage = $"You set up {(isSingleMouseTrapUsed ? "a mousetrap" : $"{player.RatCount} mousetraps")}, killing {(isSingle ? "a giant rat" : "some of the giant rats")} infesting your cheese factory. {newRatCount} {(newRatCount == 1 ? "remains" : "remain")}, scaring away your workers. ";
+                    outputMessage = $"You set up {(isSingleMouseTrapUsed ? "a mousetrap" : $"{player.RatCount} mousetraps")}, killing {(isSingle ? "a giant rat" : "some of the giant rats")} infesting your cheese factory. " +
+                        $"{newRatCount} {(newRatCount == 1 ? "remains" : "remain")}, scaring away your workers. ";
                     player.RatCount = newRatCount;
                     player.MouseTrapCount = 0;
-                    Context.SaveChanges();
                 }
                 else
                 {
                     // Old infestation ends.
-                    outputMessage = $"You set up {(isSingleMouseTrapUsed ? "a mousetrap" : $"{player.RatCount} mousetraps")}, killing {(isSingle ? "the giant rat" : $"all the giant rats")} infesting your cheese factory. Your workers go back to work. ";
+                    outputMessage = $"You set up {(isSingleMouseTrapUsed ? "a mousetrap" : $"{player.RatCount} mousetraps")}, killing {(isSingle ? "the giant rat" : $"all the giant rats")} infesting your cheese factory. " +
+                        $"Your workers go back to work. ";
                     player.MouseTrapCount -= player.RatCount;
                     player.RatCount = 0;
-                    Context.SaveChanges();
                 }
             }
 
