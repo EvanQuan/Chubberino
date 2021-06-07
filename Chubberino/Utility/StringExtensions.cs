@@ -6,7 +6,7 @@ namespace Chubberino.Utility
 {
     public static class StringExtensions
     {
-        public static String Format(this String source, params Object?[] args)
+        public static String Format(this String source, params Object[] args)
         {
             return String.Format(source, args);
         }
