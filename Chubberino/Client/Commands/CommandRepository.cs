@@ -9,9 +9,7 @@ namespace Chubberino.Client.Commands
 {
     public sealed class CommandRepository : ICommandRepository
     {
-        public IReadOnlyList<ICommand> Commands => CommandList;
-
-        private List<ICommand> CommandList { get; }
+        private Dictionary<String, ICommand> Commands { get; }
 
         private IConsole Console { get; }
 
@@ -22,17 +20,14 @@ namespace Chubberino.Client.Commands
         public CommandRepository(IConsole console)
         {
             Console = console;
-            CommandList = new List<ICommand>();
+            Commands = new();
             LazySettings = new Lazy<IEnumerable<ISetting>>(() =>
             {
                 var settingList = new List<ISetting>();
 
-                foreach (ICommand command in CommandList)
+                foreach (ISetting setting in Commands.Values.Where(x => x is ISetting))
                 {
-                    if (command is ISetting setting)
-                    {
-                        settingList.Add(setting);
-                    }
+                    settingList.Add(setting);
                 }
 
                 return settingList;
@@ -42,12 +37,9 @@ namespace Chubberino.Client.Commands
             {
                 var userCommandList = new List<IUserCommand>();
 
-                foreach (ISetting setting in Settings)
+                foreach (IUserCommand userCommand in Settings.Where(x => x is IUserCommand))
                 {
-                    if (setting is IUserCommand userCommand)
-                    {
-                        userCommandList.Add(userCommand);
-                    }
+                    userCommandList.Add(userCommand);
                 }
 
                 return userCommandList;
@@ -56,7 +48,7 @@ namespace Chubberino.Client.Commands
 
         public ICommandRepository AddCommand(ICommand command)
         {
-            CommandList.Add(command);
+            Commands.Add(command.Name, command);
             return this;
         }
 
@@ -126,15 +118,15 @@ namespace Chubberino.Client.Commands
         }
 
         /// <summary>
-        /// Get all the <see cref="ISetting"/>s contained within <see cref="CommandList"/>.
+        /// Get all the <see cref="ISetting"/>s contained within <see cref="Commands"/>.
         /// </summary>
-        /// <returns>all the <see cref="ISetting"/>s contained within <see cref="CommandList"/>.</returns>
+        /// <returns>all the <see cref="ISetting"/>s contained within <see cref="Commands"/>.</returns>
         public IEnumerable<ISetting> Settings => LazySettings.Value;
 
         /// <summary>
-        /// Get all the <see cref="IUserCommand"/>s contained within <see cref="CommandList"/>.
+        /// Get all the <see cref="IUserCommand"/>s contained within <see cref="Commands"/>.
         /// </summary>
-        /// <returns>all the <see cref="IUserCommand"/>s contained within <see cref="CommandList"/>.</returns>
+        /// <returns>all the <see cref="IUserCommand"/>s contained within <see cref="Commands"/>.</returns>
         public IEnumerable<IUserCommand> UserCommands => LazyUserCommands.Value;
 
         public void Execute(String commandName, IEnumerable<String> arguments)
@@ -282,8 +274,6 @@ namespace Chubberino.Client.Commands
             }
         }
 
-        private ICommand GetCommand(String commandName) => CommandList
-                .Where(command => command.Name.Equals(commandName, StringComparison.OrdinalIgnoreCase))
-                .FirstOrDefault();
+        private ICommand GetCommand(String commandName) => Commands.GetValueOrDefault(commandName.ToLower());
     }
 }

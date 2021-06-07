@@ -7,8 +7,6 @@ namespace Chubberino.Client.Commands
 {
     public interface ICommandRepository
     {
-        IReadOnlyList<ICommand> Commands { get; }
-
         void RefreshAll();
 
         String GetStatus();
