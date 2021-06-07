@@ -13,13 +13,16 @@ namespace Chubberino.Client.Commands
 
         private IConsole Console { get; }
 
+        private ITwitchClientManager TwitchClientManager { get; }
+
         private Lazy<IEnumerable<ISetting>> LazySettings { get; }
 
         private Lazy<IEnumerable<IUserCommand>> LazyUserCommands { get; }
 
-        public CommandRepository(IConsole console)
+        public CommandRepository(IConsole console, ITwitchClientManager twitchClientManager)
         {
             Console = console;
+            TwitchClientManager = twitchClientManager;
             Commands = new();
             LazySettings = new Lazy<IEnumerable<ISetting>>(() =>
             {
@@ -39,6 +42,7 @@ namespace Chubberino.Client.Commands
 
                 foreach (IUserCommand userCommand in Settings.Where(x => x is IUserCommand))
                 {
+                    userCommand.IsEnabled = twitchClientManager.IsBot;
                     userCommandList.Add(userCommand);
                 }
 

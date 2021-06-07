@@ -99,6 +99,7 @@ namespace Chubberino.Client
 
             Client.Initialize(ConnectionCredentials, PrimaryChannelName);
 
+            Client.OnJoinedChannel += (_, e) => { Console.WriteLine($"Joined channel {e.Channel}"); };
             Client.OnConnected += (_, _) => { bot.State = BotState.ShouldContinue; };
             Client.OnConnectionError += (_, e) =>
             {

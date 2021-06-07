@@ -17,17 +17,8 @@ namespace Chubberino.Client.Commands.Settings.UserCommands
         {
             ContextFactory = contextFactory;
 
-            TwitchClientManager.Client.OnJoinedChannel += TwitchClient_OnJoinedChannel;
-
             Enable = twitchClient => twitchClient.OnMessageReceived += TwitchClient_OnMessageReceived;
             Disable = twitchClient => twitchClient.OnMessageReceived -= TwitchClient_OnMessageReceived;
-
-            IsEnabled = TwitchClientManager.IsBot;
-        }
-
-        public void TwitchClient_OnJoinedChannel(Object sender, OnJoinedChannelArgs e)
-        {
-            Console.WriteLine($"Joined channel {e.Channel}");
         }
 
         private async void TwitchClient_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
