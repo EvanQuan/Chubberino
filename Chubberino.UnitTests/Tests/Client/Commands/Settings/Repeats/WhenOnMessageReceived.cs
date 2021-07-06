@@ -34,7 +34,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Repeats
 
             Sut.TwitchClient_OnMessageReceived(null, new OnMessageReceivedArgs { ChatMessage = chatMessage });
 
-            MockedConsole.Verify(x => x.WriteLine($"Received repeat message: \"{ExpectedMessage}\""), Times.Once());
+            MockedWriter.Verify(x => x.WriteLine($"Received repeat message: \"{ExpectedMessage}\""), Times.Once());
             Assert.False(Sut.WaitingForRepeatMessage);
             Assert.Equal(ExpectedMessage, Sut.RepeatMessage);
         }
@@ -54,7 +54,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Repeats
 
             Sut.TwitchClient_OnMessageReceived(null, new OnMessageReceivedArgs { ChatMessage = chatMessage });
 
-            MockedConsole.Verify(x => x.WriteLine(It.IsAny<String>()), Times.Never());
+            MockedWriter.Verify(x => x.WriteLine(It.IsAny<String>()), Times.Never());
             Assert.True(Sut.WaitingForRepeatMessage);
             Assert.Equal(default, Sut.RepeatMessage);
         }

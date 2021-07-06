@@ -1,8 +1,8 @@
-﻿using Chubberino.Client.Commands.Settings;
-using Moq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Chubberino.Infrastructure.Commands.Settings;
+using Moq;
 using Xunit;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
@@ -37,7 +37,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
 
             Sut.Execute("get", commandWithArguments);
 
-            MockedConsole.Verify(x => x.WriteLine($"Command \"{invalidCommandName}\" not found to get."), Times.Once());
+            MockedWriter.Verify(x => x.WriteLine($"Command \"{invalidCommandName}\" not found to get."), Times.Once());
         }
 
         [Theory]
@@ -57,7 +57,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
 
             Sut.Execute("get", commandWithArguments);
 
-            MockedConsole.Verify(x => x.WriteLine($"Command \"{validCommandName}\" value \"{String.Join(" ", arguments)}\" is \"valid\"."), Times.Once());
+            MockedWriter.Verify(x => x.WriteLine($"Command \"{validCommandName}\" value \"{String.Join(" ", arguments)}\" is \"valid\"."), Times.Once());
         }
     }
 }

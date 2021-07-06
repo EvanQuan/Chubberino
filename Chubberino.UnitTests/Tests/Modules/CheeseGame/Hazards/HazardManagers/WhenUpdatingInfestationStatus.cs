@@ -1,9 +1,9 @@
-﻿using Chubberino.Modules.CheeseGame.Hazards;
+﻿using System;
+using Chubberino.Modules.CheeseGame.Hazards;
 using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.Ranks;
-using Chubberino.UnitTests.Utility;
+using Chubberino.UnitTestQualityTools.Extensions;
 using Moq;
-using System;
 using Xunit;
 
 namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Hazards.HazardManagers

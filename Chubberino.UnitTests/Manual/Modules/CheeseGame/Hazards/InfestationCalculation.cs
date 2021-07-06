@@ -1,6 +1,6 @@
-﻿using Chubberino.Modules.CheeseGame.Hazards;
+﻿using System;
+using Chubberino.Modules.CheeseGame.Hazards;
 using Chubberino.Modules.CheeseGame.Ranks;
-using System;
 using Xunit.Abstractions;
 
 namespace Chubberino.UnitTests.Manual.Modules.CheeseGame.Hazards

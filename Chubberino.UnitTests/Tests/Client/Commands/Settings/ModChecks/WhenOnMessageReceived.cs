@@ -33,14 +33,14 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.ModChecks
                 .Setup(x => x.ShouldStop(It.IsAny<ChatMessage>()))
                 .Returns(true);
 
-            Sut.TwitchClient_OnMessageReceived(null, new OnMessageReceivedArgs() { ChatMessage = ChatMessage });
+            Sut.Client_OnMessageReceived(null, new OnMessageReceivedArgs() { ChatMessage = ChatMessage });
 
             MockedStopSettingStrategy.Verify(x => x.ShouldStop(ChatMessage), Times.Once());
 
             MockedCommandRepository.Verify(x => x.DisableAllSettings(), Times.Once());
 
-            MockedConsole.Verify(x => x.WriteLine("! ! ! DISABLED ALL SETTINGS ! ! !"), Times.Once());
-            MockedConsole.Verify(x => x.WriteLine($"Moderator {ExpectedDisplayName} said: \"{ExpectedMessage}\""), Times.Once());
+            MockedWriter.Verify(x => x.WriteLine("! ! ! DISABLED ALL SETTINGS ! ! !"), Times.Once());
+            MockedWriter.Verify(x => x.WriteLine($"Moderator {ExpectedDisplayName} said: \"{ExpectedMessage}\""), Times.Once());
         }
 
         [Fact]
@@ -50,13 +50,13 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.ModChecks
                 .Setup(x => x.ShouldStop(It.IsAny<ChatMessage>()))
                 .Returns(false);
 
-            Sut.TwitchClient_OnMessageReceived(null, new OnMessageReceivedArgs() { ChatMessage = ChatMessage });
+            Sut.Client_OnMessageReceived(null, new OnMessageReceivedArgs() { ChatMessage = ChatMessage });
 
             MockedStopSettingStrategy.Verify(x => x.ShouldStop(ChatMessage), Times.Once());
 
             MockedCommandRepository.Verify(x => x.DisableAllSettings(), Times.Never());
 
-            MockedConsole.Verify(x => x.WriteLine(It.IsAny<String>()), Times.Never());
+            MockedWriter.Verify(x => x.WriteLine(It.IsAny<String>()), Times.Never());
         }
     }
 }

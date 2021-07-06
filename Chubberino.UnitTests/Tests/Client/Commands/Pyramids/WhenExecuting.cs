@@ -1,21 +1,12 @@
-﻿using Chubberino.Client;
+﻿using System;
+using Chubberino.Infrastructure.Client;
 using Moq;
-using System;
 using Xunit;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands.Pyramids
 {
-    public sealed class WhenExecuting : UsingPyramidBuild
+    public sealed class WhenExecuting : UsingPyramid
     {
-        [Fact]
-        public void ShouldOutputHelpMessage()
-        {
-            Sut.Execute(Array.Empty<String>());
-
-            MockedConsole.Verify(x => x.WriteLine(Sut.GetHelp()), Times.Once());
-            MockedTwitchClientManager.Verify(x => x.SpoolMessage(PrimaryChannelName, It.IsAny<String>(), It.IsAny<Priority>()), Times.Never());
-        }
-
         [Theory]
         [InlineData("a")]
         [InlineData("1.0")]
@@ -23,7 +14,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Pyramids
         {
             Sut.Execute(new String[] { height });
 
-            MockedConsole.Verify(x => x.WriteLine($"Pyramid height of \"{height}\" must be an integer"));
+            MockedWriter.Verify(x => x.WriteLine($"Pyramid height of \"{height}\" must be an integer"));
             MockedTwitchClientManager.Verify(x => x.SpoolMessage(PrimaryChannelName, It.IsAny<String>(), It.IsAny<Priority>()), Times.Never());
         }
 
@@ -35,7 +26,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Pyramids
         {
             Sut.Execute(new String[] { height });
 
-            MockedConsole.Verify(x => x.WriteLine($"Pyramid block not supplied."));
+            MockedWriter.Verify(x => x.WriteLine($"Pyramid block not supplied."));
             MockedTwitchClientManager.Verify(x => x.SpoolMessage(PrimaryChannelName, It.IsAny<String>(), It.IsAny<Priority>()), Times.Never());
         }
     }

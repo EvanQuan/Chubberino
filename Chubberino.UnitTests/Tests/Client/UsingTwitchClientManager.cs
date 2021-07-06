@@ -1,11 +1,13 @@
-﻿using Chubberino.Client;
-using Chubberino.Client.Credentials;
-using Chubberino.Client.Services;
-using Chubberino.Client.Threading;
+﻿using System;
+using System.IO;
+using Chubberino.Common.Services;
+using Chubberino.Common.ValueObjects;
 using Chubberino.Database.Contexts;
 using Chubberino.Database.Models;
+using Chubberino.Infrastructure.Client;
+using Chubberino.Infrastructure.Client.TwitchClients;
+using Chubberino.Infrastructure.Credentials;
 using Moq;
-using System;
 using TwitchLib.Client.Interfaces;
 using TwitchLib.Client.Models;
 using TwitchLib.Communication.Interfaces;
@@ -28,7 +30,9 @@ namespace Chubberino.UnitTests.Tests.Client
 
         protected Mock<ICredentialsManager> MockedCredentialsManager { get; }
 
-        protected Mock<ISpinWait> MockedSpinWait { get; }
+        protected Mock<ISpinWaitService> MockedSpinWait { get; }
+
+        protected Mock<IThreadService> MockedThreadService { get; }
 
         protected Mock<IDateTimeService> MockedDateTimeService { get; }
 
@@ -38,16 +42,20 @@ namespace Chubberino.UnitTests.Tests.Client
 
         protected ConnectionCredentials ConnectionCredentials { get; }
 
-        protected Mock<IConsole> MockedConsole { get; }
+        protected Mock<TextWriter> MockedWriter { get; }
 
         protected String TwitchUsername { get; }
 
         protected String TwitchOAuth { get; }
 
+        protected LowercaseString PrimaryChannelName { get; }
+
         protected UsingTwitchClientManager()
         {
             TwitchUsername = Guid.NewGuid().ToString();
             TwitchOAuth = Guid.NewGuid().ToString();
+
+            PrimaryChannelName = LowercaseString.From("p");
 
             MockedBot = new();
             MockedApplicationContextFactory = new();
@@ -56,27 +64,29 @@ namespace Chubberino.UnitTests.Tests.Client
             MockedTwitchClient = new();
             MockedCredentialsManager = new();
             MockedSpinWait = new();
+            MockedThreadService = new();
             MockedDateTimeService = new();
             ApplicationCredentials = new();
             ConnectionCredentials = new(TwitchUsername, TwitchOAuth, disableUsernameCheck: true);
-            LoginCredentials = new(ConnectionCredentials, true);
-            MockedConsole = new();
+            LoginCredentials = new(ConnectionCredentials, true, PrimaryChannelName);
+            MockedWriter = new();
 
             Sut = new TwitchClientManager(
                 MockedApplicationContextFactory.Object,
                 MockedTwitchClientFactory.Object,
                 MockedCredentialsManager.Object,
                 MockedSpinWait.Object,
+                MockedThreadService.Object,
                 MockedDateTimeService.Object,
-                MockedConsole.Object);
+                MockedWriter.Object);
 
             MockedTwitchClientFactory
-                .Setup(x => x.GetClient(It.IsAny<IClientOptions>()))
+                .Setup(x => x.CreateClient(It.IsAny<IClientOptions>()))
                 .Returns(MockedTwitchClient.Object);
 
             var credentials = LoginCredentials;
             MockedCredentialsManager
-                .Setup(x => x.TryGetCredentials(out credentials))
+                .Setup(x => x.TryLoginAsNewUser())
                 .Returns(true);
 
             MockedCredentialsManager

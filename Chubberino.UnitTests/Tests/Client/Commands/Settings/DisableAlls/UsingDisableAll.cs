@@ -1,4 +1,4 @@
-﻿using Chubberino.Client.Commands;
+﻿using Chubberino.Bots.Common.Commands;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.DisableAlls
 {
@@ -11,7 +11,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.DisableAlls
 
         public UsingDisableAll()
         {
-            Sut = new DisableAll(MockedTwitchClientManager.Object, MockedCommandRepository.Object, MockedConsole.Object);
+            Sut = new DisableAll(MockedTwitchClientManager.Object, MockedCommandRepository.Object, MockedWriter.Object);
         }
     }
 }

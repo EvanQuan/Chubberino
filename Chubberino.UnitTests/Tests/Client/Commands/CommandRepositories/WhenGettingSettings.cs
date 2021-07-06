@@ -1,8 +1,4 @@
-﻿using Chubberino.Client.Commands;
-using Chubberino.Client.Commands.Settings;
-using Moq;
-using System.Collections.Generic;
-using Xunit;
+﻿using Xunit;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
 {
@@ -11,24 +7,18 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
         [Fact]
         public void ShouldReturnNothing()
         {
-            IEnumerable<ISetting> settings = Sut.Settings;
-
-            Assert.Empty(settings);
+            Assert.Empty(Sut.Settings.Disabled);
+            Assert.Empty(Sut.Settings.Enabled);
         }
 
         [Fact]
         public void ShouldReturnSetting()
         {
-            var mockedSetting = new Mock<ISetting>().SetupAllProperties();
-            var mockedCommand = new Mock<ICommand>().SetupAllProperties();
+            Sut.AddCommand(MockedSetting1.Object);
+            Sut.AddCommand(MockedCommand.Object);
 
-            Sut.AddCommand(mockedSetting.Object);
-            Sut.AddCommand(mockedCommand.Object);
-
-            IEnumerable<ISetting> settings = Sut.Settings;
-
-            Assert.Contains(mockedSetting.Object, settings);
-            Assert.Single(settings);
+            Assert.Contains(MockedSetting1.Object, Sut.Settings.Disabled);
+            Assert.Single(Sut.Settings.Disabled);
         }
     }
 }

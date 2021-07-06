@@ -1,6 +1,6 @@
-﻿using Chubberino.Modules.CheeseGame.Models;
+﻿using System;
+using Chubberino.Modules.CheeseGame.Models;
 using Chubberino.Modules.CheeseGame.Quests;
-using System;
 using Xunit;
 
 namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Quests

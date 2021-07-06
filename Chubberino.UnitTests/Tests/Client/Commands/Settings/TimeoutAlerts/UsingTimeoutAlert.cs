@@ -1,7 +1,4 @@
-﻿using Chubberino.Client.Commands.Settings;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Chubberino.Bots.Common.Commands.Settings;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.TimeoutAlerts
 {
@@ -11,7 +8,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.TimeoutAlerts
 
         public UsingTimeoutAlert()
         {
-            Sut = new TimeoutAlert(MockedTwitchClientManager.Object, MockedConsole.Object);
+            Sut = new TimeoutAlert(MockedTwitchClientManager.Object, MockedWriter.Object);
         }
     }
 }

@@ -1,6 +1,5 @@
-﻿using Chubberino.Client.Commands.Settings;
-using System;
-using System.Collections.Generic;
+﻿using System;
+using Chubberino.Infrastructure.Commands.Settings;
 using Xunit;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Copies
@@ -24,7 +23,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Copies
 
             Sut.Execute(arguments);
 
-            MockedConsole.Verify(x => x.WriteLine($"Copying user \"{userToCopy}\" Mode: \"{mode}\" Prefix: \"{prefix}\""));
+            MockedWriter.Verify(x => x.WriteLine($"Copying user \"{userToCopy}\" Mode: \"{mode}\" Prefix: \"{prefix}\""));
         }
 
         /// <summary>
@@ -33,10 +32,15 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Copies
         [Fact]
         public void ShouldDisable()
         {
-            Sut.Execute(Array.Empty<String>());
+            Assert.Raises<OnSettingStateChangeArgs>(
+                x => Sut.OnSettingStateChange += x,
+                x => Sut.OnSettingStateChange -= x,
+                () =>
+                {
+                    Sut.Execute(Array.Empty<String>());
+                });
 
-            MockedConsole.Verify(x => x.WriteLine("Copy disabled"));
-            Assert.False(Sut.IsEnabled);
+            MockedWriter.Verify(x => x.WriteLine("Copy disabled"));
         }
     }
 }

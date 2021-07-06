@@ -1,5 +1,5 @@
-﻿using Chubberino.Client.Commands.Settings;
-using System;
+﻿using System;
+using Chubberino.Bots.Common.Commands.Settings;
 using Xunit;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Replies
@@ -10,7 +10,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Replies
 
         public WhenSetting()
         {
-            Sut = new Repeat(MockedTwitchClientManager.Object, MockedRepeater.Object, MockedConsole.Object);
+            Sut = new Repeat(MockedTwitchClientManager.Object, MockedRepeater.Object, MockedWriter.Object);
         }
 
         [Theory]

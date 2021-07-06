@@ -1,4 +1,4 @@
-﻿using Chubberino.Client.Commands.Settings;
+﻿using Chubberino.Bots.Common.Commands.Settings;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Copies
 {
@@ -8,7 +8,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Copies
 
         public UsingCopy()
         {
-            Sut = new Copy(MockedTwitchClientManager.Object, MockedConsole.Object);
+            Sut = new Copy(MockedTwitchClientManager.Object, MockedWriter.Object);
         }
     }
 }

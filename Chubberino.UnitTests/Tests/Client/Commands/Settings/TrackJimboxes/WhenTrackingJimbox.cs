@@ -1,8 +1,8 @@
-﻿using Chubberino.Client;
-using Chubberino.Client.Commands.Settings;
-using Moq;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Chubberino.Bots.Common.Commands.Settings;
+using Chubberino.Infrastructure.Client;
+using Moq;
 using TwitchLib.Client.Events;
 using TwitchLib.Client.Models.Builders;
 using Xunit;
@@ -15,7 +15,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.TrackJimboxes
 
         public WhenTrackingJimbox()
         {
-            Sut = new TrackJimbox(MockedTwitchClientManager.Object, MockedConsole.Object);
+            Sut = new TrackJimbox(MockedTwitchClientManager.Object, MockedWriter.Object);
         }
 
         [Theory]

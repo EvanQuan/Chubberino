@@ -1,7 +1,8 @@
-﻿using Chubberino.Client;
-using Moq;
-using System;
+﻿using System;
 using System.Linq;
+using Chubberino.Infrastructure.Client;
+using Chubberino.Infrastructure.Client.TwitchClients;
+using Moq;
 using Xunit;
 
 namespace Chubberino.UnitTests.Tests.Client
@@ -10,7 +11,7 @@ namespace Chubberino.UnitTests.Tests.Client
     {
         public WhenSpoolingMessage()
         {
-            Sut.TryInitialize(MockedBot.Object, credentials: LoginCredentials);
+            Sut.TryInitializeTwitchClient(MockedBot.Object, credentials: LoginCredentials);
         }
 
         [Fact]

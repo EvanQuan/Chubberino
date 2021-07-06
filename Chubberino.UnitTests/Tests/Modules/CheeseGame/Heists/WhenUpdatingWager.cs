@@ -1,4 +1,5 @@
 ﻿using Chubberino.Client;
+using Chubberino.Infrastructure.Client;
 using Chubberino.Modules.CheeseGame.Heists;
 using Moq;
 using System;

@@ -1,8 +1,11 @@
-﻿using Chubberino.Client;
-using Chubberino.Client.Commands;
+﻿using System;
+using System.IO;
+using Chubberino.Bots.Common.Commands;
 using Chubberino.Database.Contexts;
+using Chubberino.Infrastructure.Client;
+using Chubberino.Infrastructure.Client.TwitchClients;
+using Chubberino.Infrastructure.Commands;
 using Moq;
-using System;
 using TwitchLib.Client.Interfaces;
 using TwitchLib.Communication.Models;
 
@@ -20,7 +23,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands
 
         protected Mock<IRepeater> MockedRepeater { get; }
 
-        protected Mock<IConsole> MockedConsole { get; }
+        protected Mock<TextWriter> MockedWriter { get; }
 
         protected Mock<ICommandRepository> MockedCommandRepository { get; }
 
@@ -37,7 +40,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands
             var moderatorOptions =  new ClientOptions();
             var regularOptions = new ClientOptions();
 
-            MockedConsole = new Mock<IConsole>();
+            MockedWriter = new();
 
             MockedContextFactory = new();
 

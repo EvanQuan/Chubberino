@@ -1,9 +1,9 @@
-﻿using Chubberino.Client;
+﻿using System;
 using Chubberino.Database.Contexts;
+using Chubberino.Infrastructure.Client.TwitchClients;
 using Chubberino.Modules.CheeseGame.Heists;
 using Chubberino.Modules.CheeseGame.Models;
 using Moq;
-using System;
 using TwitchLib.Client.Interfaces;
 using TwitchLib.Client.Models;
 using TwitchLib.Client.Models.Builders;

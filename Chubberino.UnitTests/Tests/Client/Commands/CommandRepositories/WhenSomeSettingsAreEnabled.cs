@@ -1,9 +1,4 @@
-﻿using Chubberino.Client.Commands;
-using Chubberino.Client.Commands.Settings;
-using Moq;
-using System.Collections.Generic;
-using System.Linq;
-using Xunit;
+﻿using Xunit;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
 {
@@ -16,23 +11,17 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
         [Fact]
         public void ShouldDisableAllSettings()
         {
-            var setting1 = new Mock<ISetting>().SetupAllProperties();
-            var setting2 = new Mock<ISetting>().SetupAllProperties();
-            var command = new Mock<ICommand>().SetupAllProperties();
+            Sut.AddCommand(MockedSetting1.Object);
+            Sut.AddCommand(MockedCommand.Object);
+            Sut.AddCommand(MockedSetting2.Object);
 
-            Sut.AddCommand(setting1.Object);
-            Sut.AddCommand(command.Object);
-            Sut.AddCommand(setting2.Object);
-
-            IEnumerable<ISetting> settings = Sut.Settings;
-
-            settings.First().IsEnabled = true;
-
-            Assert.Contains(settings, x => x.IsEnabled);
+            Sut.Settings.Enable(MockedSetting1.Object.Name);
 
             Sut.DisableAllSettings();
 
-            Assert.All(settings, setting => Assert.False(setting.IsEnabled));
+            Assert.Empty(Sut.Settings.Enabled);
+            Assert.Contains(MockedSetting1.Object, Sut.Settings.Disabled);
+            Assert.Contains(MockedSetting2.Object, Sut.Settings.Disabled);
         }
     }
 }
