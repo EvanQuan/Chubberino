@@ -45,7 +45,7 @@ namespace Chubberino.Bots.Channel
 {
     public class Program
     {
-        private static TextWriter Writer { get; set; }
+        private static TextWriter Writer { get; set; } = Console.Out;
 
         private static IBot Bot { get; set; }
 
