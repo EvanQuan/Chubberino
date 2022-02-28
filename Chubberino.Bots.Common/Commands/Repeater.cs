@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Chubberino.Bots.Common.Commands;
+using Chubberino.Bots.Common.Commands.Settings.UserCommands;
 using Chubberino.Common.Services;
+using RandomSource = System.Random;
 
 namespace Chubberino.Client.Commands
 {
@@ -10,7 +12,7 @@ namespace Chubberino.Client.Commands
     /// </summary>
     public sealed class Repeater : IRepeater
     {
-        private Random Random { get; set; }
+        private RandomSource Random { get; set; }
         public IThreadService ThreadService { get; }
 
         private Boolean isRunning = false;
@@ -48,7 +50,7 @@ namespace Chubberino.Client.Commands
 
         public TimeSpan Variance { get; set; } = TimeSpan.FromSeconds(0.0);
 
-        public Repeater(Random random, IThreadService threadService)
+        public Repeater(RandomSource random, IThreadService threadService)
         {
             Random = random;
             ThreadService = threadService;

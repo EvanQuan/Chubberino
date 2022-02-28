@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Chubberino.Bots.Common.Commands.Settings.UserCommands;
+using RandomSource = System.Random;
 
 namespace Chubberino.Bots.Common.Commands
 {
@@ -72,9 +74,9 @@ namespace Chubberino.Bots.Common.Commands
             "yyjYou",
         };
 
-        private Random Random { get; }
+        private RandomSource Random { get; }
 
-        public ComplimentGenerator(Random random)
+        public ComplimentGenerator(RandomSource random)
         {
             Random = random;
         }

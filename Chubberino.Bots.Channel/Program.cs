@@ -8,6 +8,7 @@ using Chubberino.Bots.Common.Commands.Settings;
 using Chubberino.Bots.Common.Commands.Settings.Pyramids;
 using Chubberino.Bots.Common.Commands.Settings.Replies;
 using Chubberino.Bots.Common.Commands.Settings.Strategies;
+using Chubberino.Bots.Common.Commands.Settings.UserCommands;
 using Chubberino.Client.Commands;
 using Chubberino.Client.Commands.Settings;
 using Chubberino.Client.Commands.Settings.ColorSelectors;
@@ -146,8 +147,9 @@ namespace Chubberino.Bots.Channel
                 .AddCommand(scope.Resolve<Emotes>())
                 // .AddCommand(scope.Resolve<Greet>())
                 .AddCommand(scope.Resolve<Jimbox>())
-                .AddCommand(scope.Resolve<Join>())
-                .AddCommand(scope.Resolve<Leave>())
+                //.AddCommand(scope.Resolve<Join>())
+                //.AddCommand(scope.Resolve<Leave>())
+                .AddCommand(scope.Resolve<Common.Commands.Settings.UserCommands.Random>())
                 .AddCommand(scope.Resolve<Log>())
                 .AddCommand(scope.Resolve<MockStreamElements>())
                 .AddCommand(scope.Resolve<ModCheck>())
@@ -210,7 +212,7 @@ namespace Chubberino.Bots.Channel
             builder.RegisterType<Repeater>().As<IRepeater>();
             builder.RegisterType<ContainsComparator>().As<IContainsComparator>().SingleInstance();
             builder.RegisterType<EqualsComparator>().As<IEqualsComparator>().SingleInstance();
-            builder.RegisterType<Random>().AsSelf().SingleInstance();
+            builder.RegisterType<System.Random>().AsSelf().SingleInstance();
             builder.RegisterType<ComplimentGenerator>().As<IComplimentGenerator>().SingleInstance();
             builder.RegisterType<ComplimentGenerator>().As<IComplimentGenerator>().SingleInstance();
             builder.RegisterType<RainbowColorSelector>().AsSelf().SingleInstance();
@@ -271,6 +273,7 @@ namespace Chubberino.Bots.Channel
             builder.RegisterType<Jimbox>().AsSelf().SingleInstance();
             builder.RegisterType<Join>().AsSelf().SingleInstance();
             builder.RegisterType<Leave>().AsSelf().SingleInstance();
+            builder.RegisterType<Common.Commands.Settings.UserCommands.Random>().AsSelf().SingleInstance();
             builder.RegisterType<Log>().AsSelf().SingleInstance();
             builder.RegisterType<MockStreamElements>().AsSelf().SingleInstance();
             builder.RegisterType<ModCheck>().AsSelf().SingleInstance();
