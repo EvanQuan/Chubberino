@@ -96,128 +96,16 @@ namespace Chubberino.Bots.Channel
             }
         }
 
-        public static LoginCredentials SetupIoC(LoginCredentials credentials)
+        /// <summary>
+        /// Set up Inversion of Control.
+        /// </summary>
+        /// <param name="credentials">Previous <see cref="LoginCredentials"/> if they exist; otherwise <see langword="null"/>.</param>
+        /// <returns>The current <see cref="LoginCredentials"/>; <see langword="null"/> if failed to set up.</returns>
+        public static LoginCredentials SetupIoC(LoginCredentials? credentials)
         {
-            var services = new ServiceCollection();
-
-            var builder = new ContainerBuilder();
-            builder.RegisterType<Bot>().As<IBot>().SingleInstance();
-            builder.Register(x => Console.Out).As<TextWriter>().SingleInstance();
-            builder.Register(x => Console.In).As<TextReader>().SingleInstance();
-            builder.RegisterType<TwitchClientManager>().As<ITwitchClientManager>().SingleInstance();
-            builder.RegisterType<CrendentialsManager>().As<ICredentialsManager>().SingleInstance();
-            builder.RegisterType<UserCommandValidator>().As<IUserCommandValidator>().SingleInstance();
-            builder.RegisterType<CommandRepository>().As<ICommandRepository>().SingleInstance();
-            builder.Register(c => new TwitchClientFactory(
-                (options) => new WebSocketClient(options),
-                ClientProtocol.WebSocket,
-                null)).As<ITwitchClientFactory>().SingleInstance();
-
-            builder.RegisterType<DateTimeService>().As<IDateTimeService>().SingleInstance();
-
-            builder.RegisterType<StopSettingStrategy>().As<IStopSettingStrategy>().SingleInstance();
-            builder.RegisterType<Repeater>().As<IRepeater>();
-            builder.RegisterType<ContainsComparator>().As<IContainsComparator>().SingleInstance();
-            builder.RegisterType<EqualsComparator>().As<IEqualsComparator>().SingleInstance();
-            builder.RegisterType<Random>().AsSelf().SingleInstance();
-            builder.RegisterType<ComplimentGenerator>().As<IComplimentGenerator>().SingleInstance();
-            builder.RegisterType<ComplimentGenerator>().As<IComplimentGenerator>().SingleInstance();
-            builder.RegisterType<RainbowColorSelector>().AsSelf().SingleInstance();
-            builder.RegisterType<RandomColorSelector>().AsSelf().SingleInstance();
-            builder.RegisterType<PresetColorSelector>().AsSelf().SingleInstance();
-            builder.Register(c =>
-            {
-                var services = new ServiceCollection().AddNodeJS();
-
-                var serviceProvider = services.BuildServiceProvider();
-                return serviceProvider.GetRequiredService<INodeJSService>();
-            }).As<INodeJSService>().SingleInstance();
-            builder.RegisterType<SpinWaitService>().As<ISpinWaitService>().SingleInstance();
-            builder.RegisterType<ModeratorClientOptions>().As<IModeratorClientOptions>().SingleInstance();
-            builder.RegisterType<RegularClientOptions>().As<IRegularClientOptions>().SingleInstance();
-            builder.RegisterType<PyramidBuilder>().AsSelf().SingleInstance();
-
-            builder.Register(c =>
-            {
-                var api = new TwitchAPI();
-
-                var credentials = c.Resolve<ICredentialsManager>();
-
-                api.Settings.ClientId = credentials.ApplicationCredentials.TwitchAPIClientID;
-                // Doesn't matter which user credentials access token is used here.
-                api.Settings.AccessToken = credentials.UserCredentials.AccessToken;
-
-                return api;
-            }).As<ITwitchAPI>().SingleInstance();
-
-            builder.Register(c => new WolframAlpha(c.Resolve<ICredentialsManager>().ApplicationCredentials.WolframAlphaAppID)).AsSelf().SingleInstance();
-
-            // Commands
-            builder.RegisterType<AtAll>().AsSelf().SingleInstance();
-            builder.RegisterType<AutoChat>().AsSelf().SingleInstance();
-            builder.RegisterType<AutoPogO>().AsSelf().SingleInstance();
-            builder.RegisterType<ChannelCommand>().AsSelf().SingleInstance();
-            builder.RegisterType<Cheese>().AsSelf().SingleInstance();
-            builder.RegisterType<Color>().AsSelf().SingleInstance();
-            builder.RegisterType<Cookie>().AsSelf().SingleInstance();
-            builder.RegisterType<Copy>().AsSelf().SingleInstance();
-            builder.RegisterType<Count>().AsSelf().SingleInstance();
-            builder.RegisterType<DisableAll>().AsSelf().SingleInstance();
-            builder.RegisterType<Emotes>().AsSelf().SingleInstance();
-            // builder.RegisterType<Greet>().AsSelf().SingleInstance();
-            builder.RegisterType<Jimbox>().AsSelf().SingleInstance();
-            builder.RegisterType<Join>().AsSelf().SingleInstance();
-            builder.RegisterType<Leave>().AsSelf().SingleInstance();
-            builder.RegisterType<Log>().AsSelf().SingleInstance();
-            builder.RegisterType<MockStreamElements>().AsSelf().SingleInstance();
-            builder.RegisterType<ModCheck>().AsSelf().SingleInstance();
-            builder.RegisterType<Mode>().AsSelf().SingleInstance();
-            builder.RegisterType<Moya>().AsSelf().SingleInstance();
-            builder.RegisterType<Permutations>().AsSelf().SingleInstance();
-            builder.RegisterType<Pyramid>().AsSelf().SingleInstance();
-            builder.RegisterType<Refresh>().AsSelf().SingleInstance();
-            builder.RegisterType<Repeat>().AsSelf().SingleInstance();
-            builder.RegisterType<Reply>().AsSelf().SingleInstance();
-            builder.RegisterType<Say>().AsSelf().SingleInstance();
-            builder.RegisterType<Switch>().AsSelf().SingleInstance();
-            builder.RegisterType<TimeoutAlert>().AsSelf().SingleInstance();
-            builder.RegisterType<TrackJimbox>().AsSelf().SingleInstance();
-            builder.RegisterType<TrackPyramids>().AsSelf().SingleInstance();
-            builder.RegisterType<Translate>().AsSelf().SingleInstance();
-            builder.RegisterType<Wolfram>().AsSelf().SingleInstance();
-
-            builder.RegisterType<ApplicationContextFactory>().As<IApplicationContextFactory>().SingleInstance();
-
-            // Cheese game
-            builder.RegisterType<HelpManager>().As<IHelpManager>().SingleInstance();
-            builder.RegisterType<Shop>().As<IShop>().SingleInstance();
-            builder.RegisterType<PointManager>().As<IPointManager>().SingleInstance();
-            builder.RegisterType<RankManager>().As<IRankManager>().SingleInstance();
-            builder.RegisterType<QuestManager>().As<IQuestManager>().SingleInstance();
-            builder.RegisterType<HeistManager>().As<IHeistManager>().SingleInstance();
-            builder.RegisterType<EmoteManager>().As<IEmoteManager>().SingleInstance();
-            builder.Register(x => RecipeRepository.Recipes).As<IReadOnlyList<RecipeInfo>>().SingleInstance();
-            builder.Register(x => RecipeModifierRepository.Modifiers).As<IReadOnlyList<RecipeModifier>>().SingleInstance();
-            builder.RegisterType<HazardManager>().As<IHazardManager>().SingleInstance();
-
-            // Items
-            builder.RegisterType<Gear>().AsSelf().SingleInstance();
-            builder.RegisterType<Mousetrap>().AsSelf().SingleInstance();
-            builder.RegisterType<Population>().AsSelf().SingleInstance();
-            builder.RegisterType<QuestLocation>().AsSelf().SingleInstance();
-            builder.RegisterType<Recipe>().AsSelf().SingleInstance();
-            builder.RegisterType<Storage>().AsSelf().SingleInstance();
-            builder.RegisterType<Upgrade>().AsSelf().SingleInstance();
-            builder.RegisterType<Worker>().AsSelf().SingleInstance();
-
-            // Quests
-            builder.RegisterType<QuestRepository>().As<IQuestRepository>().SingleInstance();
-
-            IContainer container = builder.Build();
+            IContainer container = RegisterTypes();
 
             using ILifetimeScope scope = container.BeginLifetimeScope();
-
-            Writer = scope.Resolve<TextWriter>();
 
             Bot = scope.Resolve<IBot>();
 
@@ -227,7 +115,6 @@ namespace Chubberino.Bots.Channel
 
             if (credentials == null)
             {
-                Writer.WriteLine("Failed to start");
                 return null;
             }
 
@@ -236,6 +123,14 @@ namespace Chubberino.Bots.Channel
                 return null;
             }
 
+            ResolveCommandDependencies(scope);
+
+            return credentials;
+
+        }
+
+        private static void ResolveCommandDependencies(ILifetimeScope scope)
+        {
             scope
                 .Resolve<ICommandRepository>()
                 .AddCommand(scope.Resolve<AtAll>())
@@ -288,8 +183,139 @@ namespace Chubberino.Bots.Channel
                 .AddItem(scope.Resolve<Population>())
                 .AddItem(scope.Resolve<Gear>())
                 .AddItem(scope.Resolve<Mousetrap>());
+        }
 
-            return credentials;
+        private static IContainer RegisterTypes()
+        {
+            var builder = new ContainerBuilder();
+            builder.RegisterType<Bot>().As<IBot>().SingleInstance();
+            builder.Register(x => Console.Out).As<TextWriter>().SingleInstance();
+            builder.Register(x => Console.In).As<TextReader>().SingleInstance();
+            builder.RegisterType<TwitchClientManager>().As<ITwitchClientManager>().SingleInstance();
+            builder.RegisterType<CrendentialsManager>().As<ICredentialsManager>().SingleInstance();
+            builder.RegisterType<UserCommandValidator>().As<IUserCommandValidator>().SingleInstance();
+            builder.RegisterType<CommandRepository>().As<ICommandRepository>().SingleInstance();
+            builder.RegisterType<CommandConfigurationStrategy>().As<ICommandConfigurationStrategy>().SingleInstance();
+            builder.Register(c => new TwitchClientFactory(
+                (options) => new WebSocketClient(options),
+                ClientProtocol.WebSocket,
+                null,
+                c.Resolve<ICredentialsManager>()))
+                .As<ITwitchClientFactory>().SingleInstance();
+
+            builder.RegisterType<DateTimeService>().As<IDateTimeService>().SingleInstance();
+            builder.RegisterType<ThreadService>().As<IThreadService>().SingleInstance();
+
+            builder.RegisterType<StopSettingStrategy>().As<IStopSettingStrategy>().SingleInstance();
+            builder.RegisterType<Repeater>().As<IRepeater>();
+            builder.RegisterType<ContainsComparator>().As<IContainsComparator>().SingleInstance();
+            builder.RegisterType<EqualsComparator>().As<IEqualsComparator>().SingleInstance();
+            builder.RegisterType<Random>().AsSelf().SingleInstance();
+            builder.RegisterType<ComplimentGenerator>().As<IComplimentGenerator>().SingleInstance();
+            builder.RegisterType<ComplimentGenerator>().As<IComplimentGenerator>().SingleInstance();
+            builder.RegisterType<RainbowColorSelector>().AsSelf().SingleInstance();
+            builder.RegisterType<RandomColorSelector>().AsSelf().SingleInstance();
+            builder.RegisterType<PresetColorSelector>().AsSelf().SingleInstance();
+            builder.Register(c =>
+            {
+                var services = new ServiceCollection().AddNodeJS();
+
+                var serviceProvider = services.BuildServiceProvider();
+                return serviceProvider.GetRequiredService<INodeJSService>();
+            }).As<INodeJSService>().SingleInstance();
+            builder.RegisterType<SpinWaitService>().As<ISpinWaitService>().SingleInstance();
+            builder.RegisterType<ModeratorClientOptions>().As<IModeratorClientOptions>().SingleInstance();
+            builder.RegisterType<RegularClientOptions>().As<IRegularClientOptions>().SingleInstance();
+            builder.RegisterType<PyramidBuilder>().AsSelf().SingleInstance();
+
+            builder.Register(c =>
+            {
+                var api = new TwitchAPI();
+
+                var credentials = c.Resolve<ICredentialsManager>();
+
+                api.Settings.ClientId = credentials.ApplicationCredentials.TwitchAPIClientID;
+                // Doesn't matter which user credentials access token is used here.
+                api.Settings.AccessToken = credentials.UserCredentials.AccessToken;
+
+                return api;
+            }).As<ITwitchAPI>().SingleInstance();
+
+            builder.Register(c => new WolframAlpha(c.Resolve<ICredentialsManager>().ApplicationCredentials.WolframAlphaAppID)).AsSelf().SingleInstance();
+
+            RegisterCommands(builder);
+
+            builder.RegisterType<ApplicationContextFactory>().As<IApplicationContextFactory>().SingleInstance();
+
+            RegisterCheeseGame(builder);
+
+            IContainer container = builder.Build();
+            return container;
+        }
+
+        private static void RegisterCommands(ContainerBuilder builder)
+        {
+            // Commands
+            builder.RegisterType<AtAll>().AsSelf().SingleInstance();
+            builder.RegisterType<AutoChat>().AsSelf().SingleInstance();
+            builder.RegisterType<AutoPogO>().AsSelf().SingleInstance();
+            builder.RegisterType<ChannelCommand>().AsSelf().SingleInstance();
+            builder.RegisterType<Cheese>().AsSelf().SingleInstance();
+            builder.RegisterType<Color>().AsSelf().SingleInstance();
+            builder.RegisterType<Cookie>().AsSelf().SingleInstance();
+            builder.RegisterType<Copy>().AsSelf().SingleInstance();
+            builder.RegisterType<Count>().AsSelf().SingleInstance();
+            builder.RegisterType<DisableAll>().AsSelf().SingleInstance();
+            builder.RegisterType<Emotes>().AsSelf().SingleInstance();
+            // builder.RegisterType<Greet>().AsSelf().SingleInstance();
+            builder.RegisterType<Jimbox>().AsSelf().SingleInstance();
+            builder.RegisterType<Join>().AsSelf().SingleInstance();
+            builder.RegisterType<Leave>().AsSelf().SingleInstance();
+            builder.RegisterType<Log>().AsSelf().SingleInstance();
+            builder.RegisterType<MockStreamElements>().AsSelf().SingleInstance();
+            builder.RegisterType<ModCheck>().AsSelf().SingleInstance();
+            builder.RegisterType<Mode>().AsSelf().SingleInstance();
+            builder.RegisterType<Moya>().AsSelf().SingleInstance();
+            builder.RegisterType<Permutations>().AsSelf().SingleInstance();
+            builder.RegisterType<Pyramid>().AsSelf().SingleInstance();
+            builder.RegisterType<Refresh>().AsSelf().SingleInstance();
+            builder.RegisterType<Repeat>().AsSelf().SingleInstance();
+            builder.RegisterType<Reply>().AsSelf().SingleInstance();
+            builder.RegisterType<Say>().AsSelf().SingleInstance();
+            builder.RegisterType<Switch>().AsSelf().SingleInstance();
+            builder.RegisterType<TimeoutAlert>().AsSelf().SingleInstance();
+            builder.RegisterType<TrackJimbox>().AsSelf().SingleInstance();
+            builder.RegisterType<TrackPyramids>().AsSelf().SingleInstance();
+            builder.RegisterType<Translate>().AsSelf().SingleInstance();
+            builder.RegisterType<Wolfram>().AsSelf().SingleInstance();
+        }
+
+        private static void RegisterCheeseGame(ContainerBuilder builder)
+        {
+            // Cheese game
+            builder.RegisterType<HelpManager>().As<IHelpManager>().SingleInstance();
+            builder.RegisterType<Shop>().As<IShop>().SingleInstance();
+            builder.RegisterType<PointManager>().As<IPointManager>().SingleInstance();
+            builder.RegisterType<RankManager>().As<IRankManager>().SingleInstance();
+            builder.RegisterType<QuestManager>().As<IQuestManager>().SingleInstance();
+            builder.RegisterType<HeistManager>().As<IHeistManager>().SingleInstance();
+            builder.RegisterType<EmoteManager>().As<IEmoteManager>().SingleInstance();
+            builder.Register(x => RecipeRepository.Recipes).As<IReadOnlyList<RecipeInfo>>().SingleInstance();
+            builder.Register(x => RecipeModifierRepository.Modifiers).As<IReadOnlyList<RecipeModifier>>().SingleInstance();
+            builder.RegisterType<HazardManager>().As<IHazardManager>().SingleInstance();
+
+            // Items
+            builder.RegisterType<Gear>().AsSelf().SingleInstance();
+            builder.RegisterType<Mousetrap>().AsSelf().SingleInstance();
+            builder.RegisterType<Population>().AsSelf().SingleInstance();
+            builder.RegisterType<QuestLocation>().AsSelf().SingleInstance();
+            builder.RegisterType<Recipe>().AsSelf().SingleInstance();
+            builder.RegisterType<Storage>().AsSelf().SingleInstance();
+            builder.RegisterType<Upgrade>().AsSelf().SingleInstance();
+            builder.RegisterType<Worker>().AsSelf().SingleInstance();
+
+            // Quests
+            builder.RegisterType<QuestRepository>().As<IQuestRepository>().SingleInstance();
         }
     }
 }

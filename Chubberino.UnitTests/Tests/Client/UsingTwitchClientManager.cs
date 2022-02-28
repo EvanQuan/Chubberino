@@ -86,7 +86,7 @@ namespace Chubberino.UnitTests.Tests.Client
 
             var credentials = LoginCredentials;
             MockedCredentialsManager
-                .Setup(x => x.TryLoginAsNewUser())
+                .Setup(x => x.TryUpdateLoginCredentials(It.IsAny<LoginCredentials>(), out credentials))
                 .Returns(true);
 
             MockedCredentialsManager

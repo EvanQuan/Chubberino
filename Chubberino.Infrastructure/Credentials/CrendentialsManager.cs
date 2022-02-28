@@ -58,8 +58,14 @@ namespace Chubberino.Infrastructure.Credentials
             });
         }
 
-        public Boolean TryLoginAsNewUser()
+        public Boolean TryUpdateLoginCredentials(LoginCredentials oldCredentials, out LoginCredentials newCredentials)
         {
+            if (oldCredentials is not null)
+            {
+                newCredentials = oldCredentials;
+                return true;
+            }
+
             using var context = ContextFactory.GetContext();
 
             var users = context.UserCredentials.OrderBy(x => x.ID);
@@ -67,10 +73,12 @@ namespace Chubberino.Infrastructure.Credentials
             if (!users.Any())
             {
                 loginCredentials = null;
+                newCredentials = null;
                 return false;
             }
 
-            loginCredentials = PromptLogIn(users.ToArray()); ;
+            loginCredentials = PromptLogIn(users.ToArray());
+            newCredentials = loginCredentials;
             return true;
         }
 

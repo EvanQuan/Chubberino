@@ -55,6 +55,23 @@ namespace Chubberino.Infrastructure.Client
             IsModerator = true;
         }
 
+        public LoginCredentials Initialize(LoginCredentials credentials)
+        {
+            credentials = TwitchClientManager.TryInitializeTwitchClient(this, credentials: credentials);
+
+            if (credentials == null)
+            {
+                return null;
+            }
+
+            if (!TwitchClientManager.TryJoinInitialChannels())
+            {
+                return null;
+            }
+
+            return credentials;
+        }
+
         public LoginCredentials Start(
             IClientOptions clientOptions = null,
             LoginCredentials credentials = null)
@@ -62,7 +79,7 @@ namespace Chubberino.Infrastructure.Client
             IReadOnlyList<JoinedChannel> previouslyJoinedChannels = TwitchClientManager.Client?.JoinedChannels;
 
             LoginCredentials = TwitchClientManager.TryInitializeTwitchClient(this, clientOptions, credentials);
-            if (LoginCredentials != null && TwitchClientManager.TryJoinInitialChannels(previouslyJoinedChannels))
+            if (LoginCredentials is not null && TwitchClientManager.TryJoinInitialChannels(previouslyJoinedChannels))
             {
                 Commands.Configure(LoginCredentials);
 

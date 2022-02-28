@@ -23,11 +23,13 @@ namespace Chubberino.Infrastructure.Client.TwitchClients
         public TwitchClientFactory(
             Func<IClientOptions, IClient> clientFactory,
             ClientProtocol clientProtocol,
-            ILogger<TwitchClient> logger)
+            ILogger<TwitchClient> logger,
+            ICredentialsManager credentialsManager)
         {
             ClientFactory = clientFactory;
             ClientProtocol = clientProtocol;
             Logger = logger;
+            CredentialsManager = credentialsManager;
         }
 
         public ITwitchClient CreateClient(IClientOptions options)
@@ -60,13 +62,7 @@ namespace Chubberino.Infrastructure.Client.TwitchClients
             }
 
             // Try to get new credentials if not provided
-            if (!CredentialsManager.LoginCredentials.HasValue && !CredentialsManager.TryLoginAsNewUser()) { return false; }
-
-            var loginCredentials = CredentialsManager.LoginCredentials.Value;
-
-            // RefreshTwitchClient(bot);
-
-            return true;
+            return CredentialsManager.LoginCredentials.HasValue || CredentialsManager.TryUpdateLoginCredentials(null, out _);
         }
     }
 }

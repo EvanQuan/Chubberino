@@ -19,6 +19,6 @@ namespace Chubberino.Infrastructure.Credentials
         /// Try to get the credentials of the user to log in as. Updates <see cref="LoginCredentials"/>
         /// </summary>
         /// <returns>true if some credentials were found and returned.</returns>
-        Boolean TryLoginAsNewUser();
+        Boolean TryUpdateLoginCredentials(LoginCredentials oldCredentials, out LoginCredentials newCredentials);
     }
 }

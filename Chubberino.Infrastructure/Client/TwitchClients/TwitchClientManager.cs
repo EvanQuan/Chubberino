@@ -90,8 +90,9 @@ namespace Chubberino.Infrastructure.Client.TwitchClients
                 CurrentClientOptions = clientOptions;
             }
 
-            if (credentials is null && !CredentialsManager.TryLoginAsNewUser())
+            if (!CredentialsManager.TryUpdateLoginCredentials(credentials, out credentials))
             {
+                Writer.WriteLine("Failed to update login credentials");
                 return null;
             }
 
