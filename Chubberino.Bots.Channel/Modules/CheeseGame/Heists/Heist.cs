@@ -83,7 +83,14 @@ namespace Chubberino.Modules.CheeseGame.Heists
 
             var winners = new List<Wager>();
 
-            winnerCount.Repeat(() => winners.Add(Random.RemoveElement(Wagers)));
+            winnerCount.Repeat(() =>
+            {
+                var result = Random.RemoveElement(Wagers).Invoke();
+                if (result.HasValue)
+                {
+                    winners.Add(result.Value);
+                }
+            });
 
             foreach (Wager wager in winners)
             {
