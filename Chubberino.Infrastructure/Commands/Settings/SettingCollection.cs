@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Chubberino.Common.ValueObjects;
 
 namespace Chubberino.Infrastructure.Commands.Settings
 {
@@ -10,9 +11,9 @@ namespace Chubberino.Infrastructure.Commands.Settings
 
         public IReadOnlyCollection<TElement> Disabled => DisabledEntries.Values;
 
-        private Dictionary<String, TElement> EnabledEntries { get; }
+        private Dictionary<Name, TElement> EnabledEntries { get; }
 
-        private Dictionary<String, TElement> DisabledEntries { get; }
+        private Dictionary<Name, TElement> DisabledEntries { get; }
 
         public SettingCollection()
         {
@@ -36,7 +37,7 @@ namespace Chubberino.Infrastructure.Commands.Settings
             return this;
         }
 
-        public void Enable(String settingName)
+        public void Enable(Name settingName)
         {
             if (DisabledEntries.Remove(settingName, out var setting))
             {
@@ -45,7 +46,7 @@ namespace Chubberino.Infrastructure.Commands.Settings
             }
         }
 
-        public void Disable(String settingName)
+        public void Disable(Name settingName)
         {
             if (EnabledEntries.Remove(settingName, out var setting))
             {
@@ -54,7 +55,7 @@ namespace Chubberino.Infrastructure.Commands.Settings
             }
         }
 
-        public TElement GetValueOrDefault(String name)
+        public TElement GetValueOrDefault(Name name)
         {
             return EnabledEntries.GetValueOrDefault(name)
                 ?? DisabledEntries.GetValueOrDefault(name);

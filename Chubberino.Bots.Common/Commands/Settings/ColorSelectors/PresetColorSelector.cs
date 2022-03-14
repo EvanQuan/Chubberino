@@ -11,7 +11,7 @@ namespace Chubberino.Client.Commands.Settings.ColorSelectors
 
         private Random Random { get; }
 
-        public LowercaseString Name { get; } = LowercaseString.From("preset");
+        public Name Name { get; } = Name.From("preset");
 
         public PresetColorSelector(Random random)
         {

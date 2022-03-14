@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Chubberino.Common.ValueObjects;
 using Chubberino.Infrastructure.Commands.Settings;
 using Moq;
 using Xunit;
@@ -17,7 +18,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
 
             MockedSetting
                 .Setup(x => x.Name)
-                .Returns(Guid.NewGuid().ToString());
+                .Returns(Name.From(Guid.NewGuid().ToString()));
 
             Sut.AddCommand(MockedSetting.Object);
         }
@@ -38,12 +39,12 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
                     return property == "valid" && "valid" == args.FirstOrDefault();
                 });
 
-            String validCommandName = MockedSetting.Object.Name;
+            var validCommandName = MockedSetting.Object.Name;
             String propertyName = arguments[0];
-            List<String> commandWithArguments = new() { validCommandName };
+            List<String> commandWithArguments = new() { validCommandName.Value };
             commandWithArguments.AddRange(arguments);
 
-            Sut.Execute("add", commandWithArguments);
+            Sut.Execute(Name.From("add"), commandWithArguments);
 
             MockedWriter.Verify(x => x.WriteLine($"Command \"{validCommandName}\" property \"{propertyName}\" not added to."), Times.Once());
         }
@@ -59,7 +60,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
             List<String> commandWithArguments = new() { invalidCommandName };
             commandWithArguments.AddRange(arguments);
 
-            Sut.Execute("add", commandWithArguments);
+            Sut.Execute(Name.From("add"), commandWithArguments);
 
             MockedWriter.Verify(x => x.WriteLine($"Command \"{invalidCommandName}\" not found to add to."), Times.Once());
         }
@@ -73,13 +74,13 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
                 .Setup(x => x.Add(It.IsAny<String>(), It.IsAny<IEnumerable<String>>()))
                 .Returns(true);
 
-            String validCommandName = MockedSetting.Object.Name;
+            var validCommandName = MockedSetting.Object.Name;
             String propertyName = arguments[0];
             IEnumerable<String> propertyValue = arguments.Skip(1);
-            List<String> commandWithArguments = new() { validCommandName };
+            List<String> commandWithArguments = new() { validCommandName.Value };
             commandWithArguments.AddRange(arguments);
 
-            Sut.Execute("add", commandWithArguments);
+            Sut.Execute(Name.From("add"), commandWithArguments);
 
             MockedWriter.Verify(x => x.WriteLine($"Command \"{validCommandName}\" property \"{propertyName}\" added \"{String.Join(" ", propertyValue)}\"."), Times.Once());
         }

@@ -48,14 +48,14 @@ namespace Chubberino.UnitTests.Tests.Client
 
         protected String TwitchOAuth { get; }
 
-        protected LowercaseString PrimaryChannelName { get; }
+        protected Name PrimaryChannelName { get; }
 
         protected UsingTwitchClientManager()
         {
             TwitchUsername = Guid.NewGuid().ToString();
             TwitchOAuth = Guid.NewGuid().ToString();
 
-            PrimaryChannelName = LowercaseString.From("p");
+            PrimaryChannelName = Name.From("p");
 
             MockedBot = new();
             MockedApplicationContextFactory = new();

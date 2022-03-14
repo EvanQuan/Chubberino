@@ -1,4 +1,5 @@
 ﻿using Chubberino.Client;
+using Chubberino.Common.ValueObjects;
 using Chubberino.Infrastructure.Client;
 using Moq;
 using System;
@@ -30,7 +31,7 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
             Sut.ReadCommand(command);
 
             Assert.Equal(BotState.ShouldContinue, Sut.State);
-            MockedCommandRepository.Verify(x => x.Execute(It.IsAny<String>(), It.IsAny<IEnumerable<String>>()), Times.Never());
+            MockedCommandRepository.Verify(x => x.Execute(It.IsAny<Name>(), It.IsAny<IEnumerable<String>>()), Times.Never());
         }
 
         [Theory]
@@ -40,17 +41,14 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
         [InlineData("a b c")]
         public void ShouldExecuteCommand(String command)
         {
-            MockedCommandRepository
-                .Setup(x => x.Execute(It.IsAny<String>(), It.IsAny<IEnumerable<String>>()))
-                .Callback((String command, IEnumerable<String> args) =>
-                {
-                    Assert.DoesNotContain(args, x => String.IsNullOrWhiteSpace(x));
-                });
-
             Sut.ReadCommand(command);
 
             Assert.Equal(BotState.ShouldContinue, Sut.State);
-            MockedCommandRepository.Verify(x => x.Execute("a", It.IsAny<IEnumerable<String>>()), Times.Once());
+            MockedCommandRepository.Verify(x => x
+                .Execute(
+                    Name.From("a"),
+                    It.Is<IEnumerable<String>>(args => !args.Any(String.IsNullOrWhiteSpace))),
+                Times.Once);
         }
     }
 }

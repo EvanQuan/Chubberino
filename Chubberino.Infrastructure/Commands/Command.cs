@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Chubberino.Common.ValueObjects;
 using Chubberino.Infrastructure.Client.TwitchClients;
 using TwitchLib.Client.Interfaces;
 
@@ -10,7 +11,7 @@ namespace Chubberino.Infrastructure.Commands
     {
         public const String NoHelpImplementedMessage = "No help implemented yet.";
 
-        public String Name { get; }
+        public Name Name { get; init; }
 
         protected ITwitchClientManager TwitchClientManager { get; private set; }
         protected TextWriter Writer { get; }
@@ -19,7 +20,7 @@ namespace Chubberino.Infrastructure.Commands
         {
             TwitchClientManager = client;
             Writer = writer;
-            Name = GetType().Name.ToLowerInvariant();
+            Name = Name.From(GetType().Name.ToLowerInvariant());
             TwitchClientManager.OnTwitchClientRefreshed += TwitchClientManager_OnTwitchClientRefreshed;
         }
 

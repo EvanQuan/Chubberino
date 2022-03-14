@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Chubberino.Client.Commands.Settings.UserCommands;
+using Chubberino.Common.ValueObjects;
 using Chubberino.Infrastructure.Client;
 using TwitchLib.Client.Models;
 
@@ -14,7 +15,7 @@ namespace Chubberino.Infrastructure.Commands.Settings.UserCommands
         /// </summary>
         public const Char CommandPrefix = '!';
 
-        public Boolean TryValidateCommand(ChatMessage message, out String userCommandName, out OnUserCommandReceivedArgs args)
+        public Boolean TryValidateCommand(ChatMessage message, out Name userCommandName, out OnUserCommandReceivedArgs args)
         {
             userCommandName = default;
             args = default;
@@ -26,7 +27,7 @@ namespace Chubberino.Infrastructure.Commands.Settings.UserCommands
 
             if (!IsCommand(firstWord)) { return false; }
 
-            userCommandName = firstWord[1..].ToLower();
+            userCommandName = Name.From(firstWord[1..].ToLower());
 
             var words = allWords.Skip(1).ToArray();
             args = new OnUserCommandReceivedArgs(message, words);

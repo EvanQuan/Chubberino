@@ -17,7 +17,7 @@ namespace Chubberino.Client.Commands.Settings.ColorSelectors
             "#9400D3",
         };
 
-        public LowercaseString Name { get; } = LowercaseString.From("rainbow");
+        public Name Name { get; } = Name.From("rainbow");
 
         private Int32 ColorIndex { get; set; }
 

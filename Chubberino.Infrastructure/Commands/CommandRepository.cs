@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Chubberino.Client.Commands.Settings.UserCommands;
+using Chubberino.Common.ValueObjects;
 using Chubberino.Infrastructure.Client.TwitchClients;
 using Chubberino.Infrastructure.Commands.Settings;
 using Chubberino.Infrastructure.Commands.Settings.UserCommands;
@@ -23,9 +24,9 @@ namespace Chubberino.Infrastructure.Commands
         public IUserCommandValidator UserCommandValidator { get; }
 
         public SettingCollection<ISetting> Settings { get; }
-        public Dictionary<String, ICommand> Commands { get; }
-        public Dictionary<String, ICommand> RegularCommands { get; }
-        public Dictionary<String, IUserCommand> UserCommands { get; }
+        public Dictionary<Name, ICommand> Commands { get; }
+        public Dictionary<Name, ICommand> RegularCommands { get; }
+        public Dictionary<Name, IUserCommand> UserCommands { get; }
         public ICommandConfigurationStrategy CommandConfigurationStrategy { get; }
 
         public CommandRepository(
@@ -133,29 +134,29 @@ namespace Chubberino.Infrastructure.Commands
 
             stringBuilder.AppendLine(StatusLine + "Commands" + StatusLine);
 
-            foreach (var regularCommand in RegularCommands.OrderBy(x => x.Key).Select(x => x.Value))
+            foreach (var regularCommand in RegularCommands.OrderBy(x => x.Key.Value).Select(x => x.Value))
             {
-                stringBuilder.AppendLine(regularCommand.Name);
+                stringBuilder.AppendLine(regularCommand.Name.Value);
             }
 
             stringBuilder.AppendLine(StatusLine + "User Commands" + StatusLine);
 
-            foreach (var userCommand in UserCommands.OrderBy(x => x.Key).Select(x => x.Value))
+            foreach (var userCommand in UserCommands.OrderBy(x => x.Key.Value).Select(x => x.Value))
             {
-                stringBuilder.AppendLine(userCommand.Name);
+                stringBuilder.AppendLine(userCommand.Name.Value);
             }
 
             stringBuilder.AppendLine(StatusLine + "Disabled Settings" + StatusLine);
 
             // Disabled settings are first.
-            foreach (var setting in Settings.Disabled.OrderBy(x => x.Name))
+            foreach (var setting in Settings.Disabled.OrderBy(x => x.Name.Value))
             {
                 stringBuilder.AppendLine(setting.Name + ": " + setting.Status);
             }
 
             stringBuilder.AppendLine(StatusLine + "Enabled Settings" + StatusLine);
 
-            foreach (var setting in Settings.Enabled.OrderBy(x => x.Name))
+            foreach (var setting in Settings.Enabled.OrderBy(x => x.Name.Value))
             {
                 stringBuilder.AppendLine(setting.Name + ": " + setting.Status);
             }
@@ -163,32 +164,32 @@ namespace Chubberino.Infrastructure.Commands
             return stringBuilder.ToString();
         }
 
-        public void Execute(String commandName, IEnumerable<String> arguments)
+        public void Execute(Name commandName, IEnumerable<String> arguments)
         {
-            if (String.IsNullOrWhiteSpace(commandName)) { return; }
+            if (String.IsNullOrWhiteSpace(commandName.Value)) { return; }
 
-            switch (commandName)
+            switch (commandName.Value)
             {
                 // Meta commands
                 case "g":
                 case "get":
-                    Get(arguments.FirstOrDefault(), arguments.Skip(1));
+                    Get(Name.From(arguments.FirstOrDefault()), arguments.Skip(1));
                     break;
                 case "s":
                 case "set":
-                    Set(arguments.FirstOrDefault(), arguments.Skip(1));
+                    Set(Name.From(arguments.FirstOrDefault()), arguments.Skip(1));
                     break;
                 case "a":
                 case "add":
-                    Add(arguments.FirstOrDefault(), arguments.Skip(1));
+                    Add(Name.From(arguments.FirstOrDefault()), arguments.Skip(1));
                     break;
                 case "r":
                 case "remove":
-                    Remove(arguments.FirstOrDefault(), arguments.Skip(1));
+                    Remove(Name.From(arguments.FirstOrDefault()), arguments.Skip(1));
                     break;
                 case "h":
                 case "help":
-                    Help(arguments.FirstOrDefault());
+                    Help(Name.From(arguments.FirstOrDefault()));
                     break;
 
 
@@ -209,12 +210,12 @@ namespace Chubberino.Infrastructure.Commands
 
         }
 
-        private void Get(String commandName, IEnumerable<String> arguments)
+        private void Get(Name commandName, IEnumerable<String> arguments)
         {
             Writer.WriteLine(GetGetMessage(commandName, arguments));
         }
 
-        private String GetGetMessage(String commandName, IEnumerable<String> arguments)
+        private String GetGetMessage(Name commandName, IEnumerable<String> arguments)
         {
             ICommand commandToSet = GetCommand(commandName);
 
@@ -232,7 +233,7 @@ namespace Chubberino.Infrastructure.Commands
             return $"Command \"{commandName}\" value \"{String.Join(" ", arguments)}\" is \"{value}\".";
         }
 
-        private void Set(String commandName, IEnumerable<String> arguments)
+        private void Set(Name commandName, IEnumerable<String> arguments)
         {
             ApplyMetaCommand(
                 commandName,
@@ -243,7 +244,7 @@ namespace Chubberino.Infrastructure.Commands
                 (commandName, property) => $"Command \"{commandName}\" property \"{property}\" not set.");
         }
 
-        private void Add(String commandName, IEnumerable<String> arguments)
+        private void Add(Name commandName, IEnumerable<String> arguments)
         {
             ApplyMetaCommand(
                 commandName,
@@ -254,7 +255,7 @@ namespace Chubberino.Infrastructure.Commands
                 (commandName, property) => $"Command \"{commandName}\" property \"{property}\" not added to.");
         }
 
-        private void Remove(String commandName, IEnumerable<String> arguments)
+        private void Remove(Name commandName, IEnumerable<String> arguments)
         {
             ApplyMetaCommand(
                 commandName,
@@ -266,12 +267,12 @@ namespace Chubberino.Infrastructure.Commands
         }
 
         private void ApplyMetaCommand(
-            String commandName,
+            Name commandName,
             IEnumerable<String> arguments,
             Func<ICommand, String, IEnumerable<String>, Boolean> metaCommand,
-            Func<String, String> notFoundMessage,
-            Func<String, String, String, String> successMessage,
-            Func<String, String, String> failureMessage)
+            Func<Name, String> notFoundMessage,
+            Func<Name, String, String, String> successMessage,
+            Func<Name, String, String> failureMessage)
         {
             ICommand commandToAddTo = GetCommand(commandName);
             String property = arguments.FirstOrDefault();
@@ -295,7 +296,7 @@ namespace Chubberino.Infrastructure.Commands
             Writer.WriteLine(resultMessage);
         }
 
-        private void Help(String commandName)
+        private void Help(Name commandName)
         {
 
             ICommand commandToSet = GetCommand(commandName);
@@ -312,15 +313,15 @@ namespace Chubberino.Infrastructure.Commands
             }
         }
 
-        private ICommand GetCommand(String commandName) => Commands.GetValueOrDefault(commandName.ToLower());
+        private ICommand GetCommand(Name commandName) => Commands.GetValueOrDefault(commandName);
 
-        public ICommandRepository Disable(String settingName)
+        public ICommandRepository Disable(Name settingName)
         {
             Settings.Disable(settingName);
             return this;
         }
 
-        public ICommandRepository Enable(String settingName)
+        public ICommandRepository Enable(Name settingName)
         {
             Settings.Enable(settingName);
             return this;

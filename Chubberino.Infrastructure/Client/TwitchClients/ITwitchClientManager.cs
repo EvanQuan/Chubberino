@@ -10,7 +10,7 @@ namespace Chubberino.Infrastructure.Client.TwitchClients
 {
     public interface ITwitchClientManager
     {
-        LowercaseString Name { get; }
+        Name Name { get; }
 
         String PrimaryChannelName { get; set; }
 

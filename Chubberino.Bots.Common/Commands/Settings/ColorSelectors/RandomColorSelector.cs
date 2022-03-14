@@ -8,7 +8,7 @@ namespace Chubberino.Client.Commands.Settings.ColorSelectors
     {
         private Random Random { get; }
 
-        public LowercaseString Name { get; } = LowercaseString.From("random");
+        public Name Name { get; } = Name.From("random");
 
         public RandomColorSelector(Random random)
         {

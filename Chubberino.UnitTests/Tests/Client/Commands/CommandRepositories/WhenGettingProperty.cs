@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Chubberino.Common.ValueObjects;
 using Chubberino.Infrastructure.Commands.Settings;
 using Moq;
 using Xunit;
@@ -15,7 +16,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
             MockedSetting = new Mock<ISetting>().SetupAllProperties();
             MockedSetting
                 .Setup(x => x.Name)
-                .Returns(Guid.NewGuid().ToString());
+                .Returns(Name.From(Guid.NewGuid().ToString()));
 
             Sut.AddCommand(MockedSetting.Object);
         }
@@ -35,7 +36,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
             List<String> commandWithArguments = new() { invalidCommandName };
             commandWithArguments.AddRange(arguments);
 
-            Sut.Execute("get", commandWithArguments);
+            Sut.Execute(Name.From("get"), commandWithArguments);
 
             MockedWriter.Verify(x => x.WriteLine($"Command \"{invalidCommandName}\" not found to get."), Times.Once());
         }
@@ -49,13 +50,13 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
                 .Setup(x => x.Get(It.IsAny<IEnumerable<String>>()))
                 .Returns("valid");
 
-            String validCommandName = MockedSetting.Object.Name;
+            var validCommandName = MockedSetting.Object.Name;
             String propertyName = arguments[0];
             IEnumerable<String> propertyValue = arguments.Skip(1);
-            List<String> commandWithArguments = new() { validCommandName };
+            List<String> commandWithArguments = new() { validCommandName.Value };
             commandWithArguments.AddRange(arguments);
 
-            Sut.Execute("get", commandWithArguments);
+            Sut.Execute(Name.From("get"), commandWithArguments);
 
             MockedWriter.Verify(x => x.WriteLine($"Command \"{validCommandName}\" value \"{String.Join(" ", arguments)}\" is \"valid\"."), Times.Once());
         }

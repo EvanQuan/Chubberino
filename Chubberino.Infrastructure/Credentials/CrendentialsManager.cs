@@ -30,7 +30,7 @@ namespace Chubberino.Infrastructure.Credentials
 
         private LoginCredentials loginCredentials;
 
-        private Lazy<LowercaseString> PrimaryChannelName { get; }
+        private Lazy<Name> PrimaryChannelName { get; }
 
         public CrendentialsManager(TextWriter writer, TextReader reader, IApplicationContextFactory contextFactory)
         {
@@ -54,7 +54,7 @@ namespace Chubberino.Infrastructure.Credentials
 
             PrimaryChannelName = new(() =>
             {
-                return LowercaseString.From(ApplicationCredentials.InitialTwitchPrimaryChannelName);
+                return Name.From(ApplicationCredentials.InitialTwitchPrimaryChannelName);
             });
         }
 

@@ -30,7 +30,7 @@ namespace Chubberino.Infrastructure.Commands.Settings.UserCommands
 
             String message = args.ChatMessage.Message;
             var allWords = message.Split(' ');
-            if (allWords[0].Equals('!' + Name, StringComparison.OrdinalIgnoreCase))
+            if (allWords[0].Equals('!' + Name.Value, StringComparison.OrdinalIgnoreCase))
             {
                 words = allWords.Skip(1);
             }

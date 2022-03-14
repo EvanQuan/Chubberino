@@ -1,4 +1,5 @@
-﻿using Chubberino.Infrastructure.Commands.Settings;
+﻿using Chubberino.Common.ValueObjects;
+using Chubberino.Infrastructure.Commands.Settings;
 using Moq;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands.Groups.SettingCollections
@@ -25,9 +26,9 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Groups.SettingCollections
 
             Sut = new();
 
-            Element1.Setup(x => x.Name).Returns("1");
-            Element2.Setup(x => x.Name).Returns("2");
-            Element3.Setup(x => x.Name).Returns("3");
+            Element1.Setup(x => x.Name).Returns(Name.From("1"));
+            Element2.Setup(x => x.Name).Returns(Name.From("2"));
+            Element3.Setup(x => x.Name).Returns(Name.From("3"));
         }
     }
 }
