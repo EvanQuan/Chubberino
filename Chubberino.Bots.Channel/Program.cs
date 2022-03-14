@@ -8,7 +8,6 @@ using Chubberino.Bots.Common.Commands.Settings;
 using Chubberino.Bots.Common.Commands.Settings.Pyramids;
 using Chubberino.Bots.Common.Commands.Settings.Replies;
 using Chubberino.Bots.Common.Commands.Settings.Strategies;
-using Chubberino.Bots.Common.Commands.Settings.UserCommands;
 using Chubberino.Client.Commands;
 using Chubberino.Client.Commands.Settings;
 using Chubberino.Client.Commands.Settings.ColorSelectors;
@@ -137,14 +136,14 @@ namespace Chubberino.Bots.Channel
                 .AddCommand(scope.Resolve<AtAll>())
                 .AddCommand(scope.Resolve<AutoChat>())
                 .AddCommand(scope.Resolve<AutoPogO>())
-                .AddCommand(scope.Resolve<ChannelCommand>())
-                .AddCommand(scope.Resolve<Cheese>())
+                .AddCommand(scope.Resolve<ChannelCommand>(), true)
+                .AddCommand(scope.Resolve<Cheese>(), true)
                 .AddCommand(scope.Resolve<Color>())
                 .AddCommand(scope.Resolve<Cookie>())
                 .AddCommand(scope.Resolve<Copy>())
                 .AddCommand(scope.Resolve<Count>())
                 .AddCommand(scope.Resolve<DisableAll>())
-                .AddCommand(scope.Resolve<Emotes>())
+                .AddCommand(scope.Resolve<Emotes>(), true)
                 // .AddCommand(scope.Resolve<Greet>())
                 .AddCommand(scope.Resolve<Jimbox>())
                 //.AddCommand(scope.Resolve<Join>())
@@ -191,8 +190,8 @@ namespace Chubberino.Bots.Channel
         {
             var builder = new ContainerBuilder();
             builder.RegisterType<Bot>().As<IBot>().SingleInstance();
-            builder.Register(x => Console.Out).As<TextWriter>().SingleInstance();
-            builder.Register(x => Console.In).As<TextReader>().SingleInstance();
+            builder.RegisterInstance(Console.Out).As<TextWriter>().SingleInstance();
+            builder.RegisterInstance(Console.In).As<TextReader>().SingleInstance();
             builder.RegisterType<TwitchClientManager>().As<ITwitchClientManager>().SingleInstance();
             builder.RegisterType<CrendentialsManager>().As<ICredentialsManager>().SingleInstance();
             builder.RegisterType<UserCommandValidator>().As<IUserCommandValidator>().SingleInstance();
@@ -212,7 +211,7 @@ namespace Chubberino.Bots.Channel
             builder.RegisterType<Repeater>().As<IRepeater>();
             builder.RegisterType<ContainsComparator>().As<IContainsComparator>().SingleInstance();
             builder.RegisterType<EqualsComparator>().As<IEqualsComparator>().SingleInstance();
-            builder.RegisterType<System.Random>().AsSelf().SingleInstance();
+            builder.RegisterType<Random>().AsSelf().SingleInstance();
             builder.RegisterType<ComplimentGenerator>().As<IComplimentGenerator>().SingleInstance();
             builder.RegisterType<ComplimentGenerator>().As<IComplimentGenerator>().SingleInstance();
             builder.RegisterType<RainbowColorSelector>().AsSelf().SingleInstance();

@@ -78,16 +78,30 @@ namespace Chubberino.Infrastructure.Commands
 
             if (command is ISetting setting)
             {
-                Settings.AddDisabled(setting);
-
-                if (command is IUserCommand userCommand)
-                {
-                    UserCommands.TryAdd(userCommand.Name, userCommand);
-                }
+                AddCommand(setting, false);
             }
             else
             {
                 RegularCommands.Add(command.Name, command);
+            }
+
+            return this;
+        }
+
+        public ICommandRepository AddCommand(ISetting command, Boolean enabled)
+        {
+            if (enabled)
+            {
+                Settings.AddEnabled(command);
+            }
+            else
+            {
+                Settings.AddDisabled(command);
+            }
+
+            if (command is IUserCommand userCommand)
+            {
+                UserCommands.TryAdd(userCommand.Name, userCommand);
             }
 
             return this;
@@ -117,13 +131,21 @@ namespace Chubberino.Infrastructure.Commands
         {
             StringBuilder stringBuilder = new();
 
-            // Regular
+            stringBuilder.AppendLine(StatusLine + "Commands" + StatusLine);
+
             foreach (var regularCommand in RegularCommands.OrderBy(x => x.Key).Select(x => x.Value))
             {
                 stringBuilder.AppendLine(regularCommand.Name);
             }
 
-            stringBuilder.AppendLine(StatusLine);
+            stringBuilder.AppendLine(StatusLine + "User Commands" + StatusLine);
+
+            foreach (var userCommand in UserCommands.OrderBy(x => x.Key).Select(x => x.Value))
+            {
+                stringBuilder.AppendLine(userCommand.Name);
+            }
+
+            stringBuilder.AppendLine(StatusLine + "Disabled Settings" + StatusLine);
 
             // Disabled settings are first.
             foreach (var setting in Settings.Disabled.OrderBy(x => x.Name))
@@ -131,7 +153,7 @@ namespace Chubberino.Infrastructure.Commands
                 stringBuilder.AppendLine(setting.Name + ": " + setting.Status);
             }
 
-            stringBuilder.AppendLine(StatusLine);
+            stringBuilder.AppendLine(StatusLine + "Enabled Settings" + StatusLine);
 
             foreach (var setting in Settings.Enabled.OrderBy(x => x.Name))
             {

@@ -22,6 +22,7 @@ namespace Chubberino.Infrastructure.Commands.Settings
 
         public SettingCollection<TElement> AddEnabled(TElement command)
         {
+            command.IsEnabled = true;
             EnabledEntries.TryAdd(command.Name, command);
 
             return this;
@@ -29,6 +30,7 @@ namespace Chubberino.Infrastructure.Commands.Settings
 
         public SettingCollection<TElement> AddDisabled(TElement command)
         {
+            command.IsEnabled = false;
             DisabledEntries.TryAdd(command.Name, command);
 
             return this;

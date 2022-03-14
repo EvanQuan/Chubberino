@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Chubberino.Infrastructure.Commands.Settings;
+using Chubberino.Infrastructure.Commands.Settings.UserCommands;
 using Chubberino.Infrastructure.Credentials;
 
 namespace Chubberino.Infrastructure.Commands
@@ -9,6 +11,7 @@ namespace Chubberino.Infrastructure.Commands
         String GetStatus();
 
         ICommandRepository AddCommand(ICommand command);
+        ICommandRepository AddCommand(ISetting command, Boolean enabled = false);
 
         void Execute(String commandName, IEnumerable<String> arguments);
 
