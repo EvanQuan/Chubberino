@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Monad;
 
 namespace Chubberino.Common.Extensions
 {
@@ -93,14 +94,20 @@ namespace Chubberino.Common.Extensions
         /// <param name="random">Source.</param>
         /// <param name="list">List to get an element from.</param>
         /// <returns>A random element of the <paramref name="list"/>.</returns>
-        public static TElement RemoveElement<TElement>(this Random random, IList<TElement> list)
+        public static Option<TElement> RemoveElement<TElement>(this Random random, IList<TElement> list)
         {
-            Int32 index = random.Next(list.Count);
-            var element = list[index];
-            list.RemoveAt(index);
+            if (list.Count == 0)
+            {
+                return Option.Nothing<TElement>();
+            }
 
-            return element;
+            return Option.Return(() =>
+            {
+                Int32 index = random.Next(list.Count);
+                var element = list[index];
+                list.RemoveAt(index);
+                return element;
+            });
         }
-
     }
 }
