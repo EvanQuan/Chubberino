@@ -1,5 +1,6 @@
 ﻿using System;
 using Chubberino.Infrastructure.Commands;
+using FluentAssertions;
 using Xunit;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
@@ -23,16 +24,18 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
             Sut.Settings.Enable(MockedSetting3.Object.Name);
 
             String expectedStatus =
+                CommandRepository.StatusLine + "Commands" + CommandRepository.StatusLine + Environment.NewLine +
                 MockedCommand.Object.Name + Environment.NewLine +
-                CommandRepository.StatusLine + Environment.NewLine +
+                CommandRepository.StatusLine + "User Commands" + CommandRepository.StatusLine + Environment.NewLine +
+                CommandRepository.StatusLine + "Disabled Settings" + CommandRepository.StatusLine + Environment.NewLine +
                 MockedSetting1.Object.Name + ": " + MockedSetting1.Object.Status + Environment.NewLine +
-                CommandRepository.StatusLine + Environment.NewLine +
+                CommandRepository.StatusLine + "Enabled Settings" + CommandRepository.StatusLine + Environment.NewLine +
                 MockedSetting2.Object.Name + ": " + MockedSetting2.Object.Status + Environment.NewLine +
                 MockedSetting3.Object.Name + ": " + MockedSetting3.Object.Status + Environment.NewLine;
 
             var status = Sut.GetStatus();
 
-            Assert.Equal(expectedStatus, status);
+            status.Should().Be(expectedStatus);
         }
 
         [Fact]
@@ -43,16 +46,18 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
             Sut.Settings.Enable(MockedSetting3.Object.Name);
 
             String expectedStatus =
+                CommandRepository.StatusLine + "Commands" + CommandRepository.StatusLine + Environment.NewLine +
                 MockedCommand.Object.Name + Environment.NewLine +
-                CommandRepository.StatusLine + Environment.NewLine +
+                CommandRepository.StatusLine + "User Commands" + CommandRepository.StatusLine + Environment.NewLine +
+                CommandRepository.StatusLine + "Disabled Settings" + CommandRepository.StatusLine + Environment.NewLine +
                 MockedSetting1.Object.Name + ": " + MockedSetting1.Object.Status + Environment.NewLine +
                 MockedSetting2.Object.Name + ": " + MockedSetting2.Object.Status + Environment.NewLine +
-                CommandRepository.StatusLine + Environment.NewLine +
+                CommandRepository.StatusLine + "Enabled Settings" + CommandRepository.StatusLine + Environment.NewLine +
                 MockedSetting3.Object.Name + ": " + MockedSetting3.Object.Status + Environment.NewLine;
 
             var status = Sut.GetStatus();
 
-            Assert.Equal(expectedStatus, status);
+            status.Should().Be(expectedStatus);
         }
 
         [Fact]
@@ -63,16 +68,18 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
             Sut.Settings.Disable(MockedSetting3.Object.Name);
 
             String expectedStatus =
+                CommandRepository.StatusLine + "Commands" + CommandRepository.StatusLine + Environment.NewLine +
                 MockedCommand.Object.Name + Environment.NewLine +
-                CommandRepository.StatusLine + Environment.NewLine +
+                CommandRepository.StatusLine + "User Commands" + CommandRepository.StatusLine + Environment.NewLine +
+                CommandRepository.StatusLine + "Disabled Settings" + CommandRepository.StatusLine + Environment.NewLine +
                 MockedSetting1.Object.Name + ": " + MockedSetting1.Object.Status + Environment.NewLine +
                 MockedSetting2.Object.Name + ": " + MockedSetting2.Object.Status + Environment.NewLine +
                 MockedSetting3.Object.Name + ": " + MockedSetting3.Object.Status + Environment.NewLine +
-                CommandRepository.StatusLine + Environment.NewLine;
+                CommandRepository.StatusLine + "Enabled Settings" + CommandRepository.StatusLine + Environment.NewLine;
 
             var status = Sut.GetStatus();
 
-            Assert.Equal(expectedStatus, status);
+            status.Should().Be(expectedStatus);
         }
 
         [Fact]
@@ -83,16 +90,18 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
             Sut.Settings.Enable(MockedSetting3.Object.Name);
 
             String expectedStatus =
+                CommandRepository.StatusLine + "Commands" + CommandRepository.StatusLine + Environment.NewLine +
                 MockedCommand.Object.Name + Environment.NewLine +
-                CommandRepository.StatusLine + Environment.NewLine +
-                CommandRepository.StatusLine + Environment.NewLine +
+                CommandRepository.StatusLine + "User Commands" + CommandRepository.StatusLine + Environment.NewLine +
+                CommandRepository.StatusLine + "Disabled Settings" + CommandRepository.StatusLine + Environment.NewLine +
+                CommandRepository.StatusLine + "Enabled Settings" + CommandRepository.StatusLine + Environment.NewLine +
                 MockedSetting1.Object.Name + ": " + MockedSetting1.Object.Status + Environment.NewLine +
                 MockedSetting2.Object.Name + ": " + MockedSetting2.Object.Status + Environment.NewLine +
                 MockedSetting3.Object.Name + ": " + MockedSetting3.Object.Status + Environment.NewLine;
 
             var status = Sut.GetStatus();
 
-            Assert.Equal(expectedStatus, status);
+            status.Should().Be(expectedStatus);
         }
     }
 }
