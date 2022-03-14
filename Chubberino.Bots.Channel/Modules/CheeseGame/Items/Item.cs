@@ -1,4 +1,4 @@
-﻿using Chubberino.Modules.CheeseGame.Models;
+using Chubberino.Modules.CheeseGame.Models;
 using Monad;
 using System;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ namespace Chubberino.Modules.CheeseGame.Items
     {
         public const String NotEnoughPointsErrorMessage = "You need {0} more cheese to buy {1}.";
 
-        public const String UnexpectedErrorMessage = "This error message should never show up.";
+        public const String UnexpectedErrorMessage = "This error message should never show up. monkaX ";
 
         public abstract IEnumerable<String> Names { get; }
 
