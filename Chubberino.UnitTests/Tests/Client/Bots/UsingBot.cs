@@ -58,7 +58,7 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
 
         protected IList<Player> Players { get; }
 
-        protected LowercaseString PrimaryChannelName { get; }
+        protected Name PrimaryChannelName { get; }
 
         protected String CommandStatus { get; }
 
@@ -84,7 +84,7 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
                 }
             };
 
-            PrimaryChannelName = LowercaseString.From("p");
+            PrimaryChannelName = Name.From("p");
             CommandStatus = "s";
 
             MockedContext = new Mock<IApplicationContext>();

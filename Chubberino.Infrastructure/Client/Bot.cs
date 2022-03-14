@@ -1,4 +1,5 @@
 ﻿using Chubberino.Common.Services;
+using Chubberino.Common.ValueObjects;
 using Chubberino.Infrastructure.Client.TwitchClients;
 using Chubberino.Infrastructure.Commands;
 using Chubberino.Infrastructure.Credentials;
@@ -122,9 +123,9 @@ namespace Chubberino.Infrastructure.Client
 
                 if (arguments.Length == 0) { return; }
 
-                String commandName = arguments[0].ToLower();
+                var commandName = Name.From(arguments[0].ToLower());
 
-                switch (commandName)
+                switch (commandName.Value)
                 {
                     case "quit":
                         State = BotState.ShouldStop;

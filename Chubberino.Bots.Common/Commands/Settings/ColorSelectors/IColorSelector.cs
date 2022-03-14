@@ -5,7 +5,7 @@ namespace Chubberino.Bots.Common.Commands.Settings.ColorSelectors
 {
     public interface IColorSelector
     {
-        public LowercaseString Name { get; }
+        public Name Name { get; }
 
         String GetNextColor();
     }

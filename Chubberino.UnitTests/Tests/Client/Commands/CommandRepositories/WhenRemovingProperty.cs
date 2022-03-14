@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Chubberino.Common.ValueObjects;
 using Moq;
 using Xunit;
 
@@ -35,12 +36,12 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
                     return property == "valid" && "valid" == args.FirstOrDefault();
                 });
 
-            String validCommandName = MockedSetting1.Object.Name;
+            var validCommandName = MockedSetting1.Object.Name;
             String propertyName = arguments[0];
-            List<String> commandWithArguments = new() { validCommandName };
+            List<String> commandWithArguments = new() { validCommandName.Value };
             commandWithArguments.AddRange(arguments);
 
-            Sut.Execute("remove", commandWithArguments);
+            Sut.Execute(Name.From("remove"), commandWithArguments);
 
             MockedWriter.Verify(x => x.WriteLine($"Command \"{validCommandName}\" property \"{propertyName}\" not removed from."), Times.Once());
         }
@@ -60,7 +61,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
             List<String> commandWithArguments = new() { invalidCommandName };
             commandWithArguments.AddRange(arguments);
 
-            Sut.Execute("remove", commandWithArguments);
+            Sut.Execute(Name.From("remove"), commandWithArguments);
 
             MockedWriter.Verify(x => x.WriteLine($"Command \"{invalidCommandName}\" not found to remove from."), Times.Once());
         }
@@ -74,13 +75,13 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
                 .Setup(x => x.Remove(It.IsAny<String>(), It.IsAny<IEnumerable<String>>()))
                 .Returns(true);
 
-            String validCommandName = MockedSetting1.Object.Name;
+            var validCommandName = MockedSetting1.Object.Name;
             String propertyName = arguments[0];
             IEnumerable<String> propertyValue = arguments.Skip(1);
-            List<String> commandWithArguments = new() { validCommandName };
+            List<String> commandWithArguments = new() { validCommandName.Value };
             commandWithArguments.AddRange(arguments);
 
-            Sut.Execute("remove", commandWithArguments);
+            Sut.Execute(Name.From("remove"), commandWithArguments);
 
             MockedWriter.Verify(x => x.WriteLine($"Command \"{validCommandName}\" property \"{propertyName}\" removed \"{String.Join(" ", propertyValue)}\"."), Times.Once());
         }

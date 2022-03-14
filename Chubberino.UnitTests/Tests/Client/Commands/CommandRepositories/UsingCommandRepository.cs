@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using Chubberino.Client.Commands.Settings.UserCommands;
+using Chubberino.Common.ValueObjects;
 using Chubberino.Infrastructure.Client.TwitchClients;
 using Chubberino.Infrastructure.Commands;
 using Chubberino.Infrastructure.Commands.Settings;
@@ -66,12 +67,12 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
             MockedUserCommand1.SetupAllProperties();
             MockedUserCommand2.SetupAllProperties();
 
-            MockedSetting1.Setup(x => x.Name).Returns("s1");
-            MockedSetting2.Setup(x => x.Name).Returns("s2");
-            MockedSetting3.Setup(x => x.Name).Returns("s3");
-            MockedCommand.Setup(x => x.Name).Returns("c");
-            MockedUserCommand1.Setup(x => x.Name).Returns("uc1");
-            MockedUserCommand2.Setup(x => x.Name).Returns("uc2");
+            MockedSetting1.Setup(x => x.Name).Returns(Name.From("s1"));
+            MockedSetting2.Setup(x => x.Name).Returns(Name.From("s2"));
+            MockedSetting3.Setup(x => x.Name).Returns(Name.From("s3"));
+            MockedCommand.Setup(x => x.Name).Returns(Name.From("c"));
+            MockedUserCommand1.Setup(x => x.Name).Returns(Name.From("uc1"));
+            MockedUserCommand2.Setup(x => x.Name).Returns(Name.From("uc2"));
 
             MockedSetting1.Setup(x => x.Status).Returns("1");
             MockedSetting2.Setup(x => x.Status).Returns("2");

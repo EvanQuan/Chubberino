@@ -6,7 +6,7 @@ namespace Chubberino.Infrastructure.Credentials
 {
     public class LoginCredentials
     {
-        public LoginCredentials(ConnectionCredentials connectionCredentials, Boolean isBot, LowercaseString primaryChannelName)
+        public LoginCredentials(ConnectionCredentials connectionCredentials, Boolean isBot, Name primaryChannelName)
         {
             ConnectionCredentials = connectionCredentials;
             IsBot = isBot;
@@ -20,6 +20,6 @@ namespace Chubberino.Infrastructure.Credentials
         /// <summary>
         /// Name of the initial primary channel to join.
         /// </summary>
-        public LowercaseString PrimaryChannelName { get; }
+        public Name PrimaryChannelName { get; }
     }
 }

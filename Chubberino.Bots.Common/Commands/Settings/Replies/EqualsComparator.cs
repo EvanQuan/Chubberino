@@ -5,7 +5,7 @@ namespace Chubberino.Bots.Common.Commands.Settings.Replies
 {
     public sealed class EqualsComparator : IEqualsComparator
     {
-        public LowercaseString Name { get; } = LowercaseString.From("equals");
+        public Name Name { get; } = Name.From("equals");
 
         public Boolean Matches(String left, String right)
         {

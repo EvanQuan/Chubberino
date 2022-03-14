@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Chubberino.Common.ValueObjects;
 using Chubberino.Infrastructure.Credentials;
 
 namespace Chubberino.Infrastructure.Commands
@@ -9,7 +9,7 @@ namespace Chubberino.Infrastructure.Commands
         {
             if (loginCredentials.IsBot)
             {
-                repository.Enable("cheese");
+                repository.Enable(Name.From("cheese"));
             }
         }
     }

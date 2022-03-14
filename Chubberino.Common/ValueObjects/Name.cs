@@ -5,7 +5,7 @@ using ValueOf;
 
 namespace Chubberino.Common.ValueObjects
 {
-    public sealed class LowercaseString : ValueOf<String, LowercaseString>
+    public sealed class Name : ValueOf<String, Name>
     {
         public const String FormatExceptionMesage = "String value \"{0}\" must be all lowercase.";
 

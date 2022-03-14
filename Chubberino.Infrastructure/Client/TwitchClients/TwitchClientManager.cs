@@ -53,7 +53,7 @@ namespace Chubberino.Infrastructure.Client.TwitchClients
 
         private TextWriter Writer { get; }
 
-        public LowercaseString Name { get; private set; }
+        public Name Name { get; private set; }
 
         public TwitchClientManager(
             IApplicationContextFactory contextFactory,
@@ -98,7 +98,7 @@ namespace Chubberino.Infrastructure.Client.TwitchClients
 
             ConnectionCredentials = credentials.ConnectionCredentials;
             bot.LoginCredentials = credentials;
-            Name = LowercaseString.From(credentials.ConnectionCredentials.TwitchUsername);
+            Name = Name.From(credentials.ConnectionCredentials.TwitchUsername);
             IsBot = credentials.IsBot;
 
             if (PrimaryChannelName is null)

@@ -2,6 +2,7 @@
 using Chubberino.Client.Commands.Settings.UserCommands;
 using Chubberino.Infrastructure.Client;
 using Chubberino.Infrastructure.Commands.Settings.UserCommands;
+using FluentAssertions;
 using TwitchLib.Client.Models.Builders;
 using Xunit;
 
@@ -25,9 +26,9 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.UserCommands
                 out var userCommandName,
                 out var args);
 
-            Assert.True(result);
-            Assert.Equal(expectedUserCommandName, userCommandName);
-            Assert.Equal(expectedWords, args.Words);
+            result.Should().BeTrue();
+            userCommandName.Value.Should().Be(expectedUserCommandName);
+            args.Words.Should().Equal(expectedWords);
         }
 
         [Theory]
@@ -47,9 +48,9 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.UserCommands
                     out var userCommandName,
                     out var args);
 
-                Assert.False(result);
-                Assert.Null(userCommandName);
-                Assert.Null(args);
+                result.Should().BeFalse();
+                userCommandName.Should().BeNull();
+                args.Should().BeNull();
             }
         }
 
@@ -67,9 +68,9 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.UserCommands
                 out var userCommandName,
                 out var args);
 
-            Assert.False(result);
-            Assert.Null(userCommandName);
-            Assert.Null(args);
+            result.Should().BeFalse();
+            userCommandName.Should().BeNull();
+            args.Should().BeNull();
         }
     }
 }

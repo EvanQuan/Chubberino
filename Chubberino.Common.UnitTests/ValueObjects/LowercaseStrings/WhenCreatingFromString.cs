@@ -15,7 +15,7 @@ namespace Chubberino.Common.UnitTests.ValueObjects.LowercaseStrings
         [InlineData("q *")]
         public void ShouldCreateSuccessfully(String value)
         {
-            var result = LowercaseString.From(value);
+            var result = Name.From(value);
 
             Assert.Equal(result.ToString(), value);
         }
@@ -25,7 +25,7 @@ namespace Chubberino.Common.UnitTests.ValueObjects.LowercaseStrings
         {
             var exception = Assert.Throws<ArgumentNullException>(() =>
             {
-                LowercaseString.From(null);
+                Name.From(null);
             });
         }
 
@@ -38,10 +38,10 @@ namespace Chubberino.Common.UnitTests.ValueObjects.LowercaseStrings
         {
             var exception = Assert.Throws<FormatException>(() =>
             {
-                LowercaseString.From(value);
+                Name.From(value);
             });
 
-            Assert.Equal(String.Format(LowercaseString.FormatExceptionMesage, value), exception.Message);
+            Assert.Equal(String.Format(Name.FormatExceptionMesage, value), exception.Message);
         }
     }
 }
