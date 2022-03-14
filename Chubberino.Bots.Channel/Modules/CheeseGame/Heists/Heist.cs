@@ -58,7 +58,7 @@ namespace Chubberino.Modules.CheeseGame.Heists
 
             var intro = new StringBuilder($"[Heist] {people} into the lair of the great cheese dragon. ");
 
-            Double winnerPercent = Random.NextDouble(0, 1);
+            Double winnerPercent = Random.NextDouble(0, 1) + 0.2;
 
             // Convert.ToInt32 will round up to the nearest Int32 instead of truncating with casting,
             // so a single wager will still have a chance to fail or succeed randomly.
