@@ -1,8 +1,8 @@
-﻿using Chubberino.Client.Commands.Settings;
-using Moq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Chubberino.Infrastructure.Commands.Settings;
+using Moq;
 using Xunit;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
@@ -45,7 +45,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
 
             Sut.Execute("add", commandWithArguments);
 
-            MockedConsole.Verify(x => x.WriteLine($"Command \"{validCommandName}\" property \"{propertyName}\" not added to."), Times.Once());
+            MockedWriter.Verify(x => x.WriteLine($"Command \"{validCommandName}\" property \"{propertyName}\" not added to."), Times.Once());
         }
 
         [Theory]
@@ -61,7 +61,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
 
             Sut.Execute("add", commandWithArguments);
 
-            MockedConsole.Verify(x => x.WriteLine($"Command \"{invalidCommandName}\" not found to add to."), Times.Once());
+            MockedWriter.Verify(x => x.WriteLine($"Command \"{invalidCommandName}\" not found to add to."), Times.Once());
         }
 
         [Theory]
@@ -81,7 +81,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
 
             Sut.Execute("add", commandWithArguments);
 
-            MockedConsole.Verify(x => x.WriteLine($"Command \"{validCommandName}\" property \"{propertyName}\" added \"{String.Join(" ", propertyValue)}\"."), Times.Once());
+            MockedWriter.Verify(x => x.WriteLine($"Command \"{validCommandName}\" property \"{propertyName}\" added \"{String.Join(" ", propertyValue)}\"."), Times.Once());
         }
     }
 }

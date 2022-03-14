@@ -1,6 +1,6 @@
-﻿using Chubberino.Client;
+﻿using System;
+using Chubberino.Infrastructure.Client;
 using Moq;
-using System;
 using TwitchLib.Client.Events;
 using TwitchLib.Client.Models.Builders;
 using Xunit;

@@ -15,7 +15,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.DisableAlls
 
             MockedCommandRepository.Verify(x => x.DisableAllSettings(), Times.Once());
 
-            MockedConsole.Verify(x => x.WriteLine("Disabled all settings."), Times.Once());
+            MockedWriter.Verify(x => x.WriteLine("Disabled all settings."), Times.Once());
         }
 
         [Fact]
@@ -25,7 +25,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.DisableAlls
 
             MockedCommandRepository.Verify(x => x.DisableAllSettings(), Times.Once());
 
-            MockedConsole.Verify(x => x.WriteLine("Disabled all settings."), Times.Once());
+            MockedWriter.Verify(x => x.WriteLine("Disabled all settings."), Times.Once());
         }
     }
 }

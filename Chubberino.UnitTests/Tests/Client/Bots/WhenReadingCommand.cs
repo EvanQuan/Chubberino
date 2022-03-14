@@ -1,4 +1,5 @@
 ﻿using Chubberino.Client;
+using Chubberino.Infrastructure.Client;
 using Moq;
 using System;
 using System.Collections.Generic;

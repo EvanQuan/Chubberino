@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Platforms>x64</Platforms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="csharp-monad" Version="1.0.1" />
+    <PackageReference Include="TwitchLib" Version="3.2.0" />
+    <PackageReference Include="ValueOf" Version="2.0.21" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Chubberino.Common\Chubberino.Common.csproj" />
+    <ProjectReference Include="..\Chubberino.Database\Chubberino.Database.csproj" />
+  </ItemGroup>
+
+</Project>

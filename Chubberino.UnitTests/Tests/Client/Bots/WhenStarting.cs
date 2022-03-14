@@ -1,7 +1,7 @@
-﻿using Chubberino.Client.Credentials;
-using Moq;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Chubberino.Infrastructure.Credentials;
+using Moq;
 using TwitchLib.Client.Models;
 using TwitchLib.Communication.Interfaces;
 using Xunit;
@@ -21,7 +21,7 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
             Boolean expectedSucess)
         {
             MockedTwitchClientManager
-                .Setup(x => x.TryInitialize(Sut, It.IsAny<IClientOptions>(), It.IsAny<LoginCredentials>()))
+                .Setup(x => x.TryInitializeTwitchClient(Sut, It.IsAny<IClientOptions>(), It.IsAny<LoginCredentials>()))
                 .Returns(successfullyInitializeClient ? LoginCredentials : null);
 
             MockedTwitchClientManager

@@ -1,7 +1,7 @@
-﻿using Chubberino.Client.Credentials;
-using Moq;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Chubberino.Infrastructure.Credentials;
+using Moq;
 using TwitchLib.Client.Models;
 using TwitchLib.Communication.Interfaces;
 using Xunit;
@@ -19,9 +19,8 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
 
             Sut.Refresh(clientOptions);
 
-            MockedTwitchClientManager.Verify(x => x.TryInitialize(Sut, clientOptions, It.IsAny<LoginCredentials>()), Times.Once());
+            MockedTwitchClientManager.Verify(x => x.TryInitializeTwitchClient(Sut, clientOptions, It.IsAny<LoginCredentials>()), Times.Once());
             MockedTwitchClientManager.Verify(x => x.TryJoinInitialChannels(It.IsAny<IReadOnlyList<JoinedChannel>>()), Times.Once());
-            MockedCommandRepository.Verify(x => x.RefreshAll(), Times.Once());
         }
     }
 }

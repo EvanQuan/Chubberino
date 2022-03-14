@@ -6,7 +6,7 @@
 
         public UsingSetting()
         {
-            Sut = new SettingExtender(MockedTwitchClientManager.Object, MockedConsole.Object);
+            Sut = new SettingExtender(MockedTwitchClientManager.Object, MockedWriter.Object);
         }
     }
 }

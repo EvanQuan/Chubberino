@@ -1,4 +1,4 @@
-﻿using Chubberino.Client.Commands.Settings;
+﻿using Chubberino.Bots.Common.Commands.Settings;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Logs
 {
@@ -8,7 +8,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Logs
 
         public UsingLog()
         {
-            Sut = new Log(MockedTwitchClientManager.Object, MockedConsole.Object);
+            Sut = new Log(MockedTwitchClientManager.Object, MockedWriter.Object);
         }
     }
 }

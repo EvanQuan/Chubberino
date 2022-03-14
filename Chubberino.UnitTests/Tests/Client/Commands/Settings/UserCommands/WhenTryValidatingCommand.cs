@@ -1,7 +1,7 @@
-﻿using Chubberino.Client.Commands.Settings.UserCommands;
-using System;
-using System.Linq;
-using TwitchLib.Client.Events;
+﻿using System;
+using Chubberino.Client.Commands.Settings.UserCommands;
+using Chubberino.Infrastructure.Client;
+using Chubberino.Infrastructure.Commands.Settings.UserCommands;
 using TwitchLib.Client.Models.Builders;
 using Xunit;
 
@@ -10,67 +10,66 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.UserCommands
     public sealed class WhenTryValidatingCommand : UsingUserCommand
     {
         [Theory]
-        [InlineData("!usercommandwrapper", new String[] { })]
-        [InlineData("!userCommandWrapper", new String[] { })]
-        [InlineData("!userCommandWrapper a", new String[] { "a" })]
-        [InlineData("!userCommandWrapper a b", new String[] { "a", "b" })]
-        public void ShouldValidateCommand(String input, String[] expectedWords)
+        [InlineData("!name", "name", new String[] { })]
+        [InlineData("!NAME", "name", new String[] { })]
+        [InlineData("!nAmE", "name", new String[] { })]
+        [InlineData("!name a", "name", new String[] { "a" })]
+        [InlineData("!name A", "name", new String[] { "A" })]
+        [InlineData("!name a b", "name", new String[] { "a", "b" })]
+        public void ShouldValidateCommand(String input, String expectedUserCommandName, String[] expectedWords)
         {
-            Boolean result = Sut.TryValidateCommand(new OnMessageReceivedArgs()
-            {
-                ChatMessage = ChatMessageBuilder.Create()
-                .WithMessage(input)
-                .Build()
-            },
-            out var words);
+            Boolean result = Sut.TryValidateCommand(
+                ChatMessageBuilder.Create()
+                    .WithMessage(input)
+                    .Build(),
+                out var userCommandName,
+                out var args);
 
             Assert.True(result);
-            Assert.True(expectedWords.SequenceEqual(words));
+            Assert.Equal(expectedUserCommandName, userCommandName);
+            Assert.Equal(expectedWords, args.Words);
         }
 
         [Theory]
-        [InlineData("!usercommandwrapper")]
-        [InlineData("!userCommandWrapper")]
-        [InlineData("!userCommandWrapper a")]
-        [InlineData("!userCommandWrapper a b")]
+        [InlineData("!name")]
+        [InlineData("!nAmE")]
+        [InlineData("!name a")]
+        [InlineData("!name a b")]
         public void ShouldIgnoreUser(String input)
         {
-            foreach (String id in UserCommand.UserIdsToIgnore)
+            foreach (String id in TwitchUserIDs.ChannelBots)
             {
-                Boolean result = Sut.TryValidateCommand(new OnMessageReceivedArgs()
-                {
-                    ChatMessage = ChatMessageBuilder.Create()
+                Boolean result = Sut.TryValidateCommand(
+                    ChatMessageBuilder.Create()
                     .WithTwitchLibMessage(TwitchLibMessageBuilder.Create().WithUserId(id).Build())
                     .WithMessage(input)
-                    .Build()
-                },
-                out var words);
+                    .Build(),
+                    out var userCommandName,
+                    out var args);
 
                 Assert.False(result);
-                Assert.Null(words);
+                Assert.Null(userCommandName);
+                Assert.Null(args);
             }
         }
 
         [Theory]
-        [InlineData("!a")]
-        [InlineData("!usercommandwrappera")]
-        [InlineData("usercommandwrapper")]
-        [InlineData("userCommandWrapper")]
-        [InlineData("!userCommandWrappera")]
-        [InlineData("!userCommandWrappera a")]
-        [InlineData("!userCommandWrappera a b")]
-        public void ShouldInvalidateCommand(String input)
+        [InlineData("!")]
+        [InlineData("! a")]
+        [InlineData("a")]
+        [InlineData("a a")]
+        public void ShouldIgnoreNonCommand(String input)
         {
-            Boolean result = Sut.TryValidateCommand(new OnMessageReceivedArgs()
-            {
-                ChatMessage = ChatMessageBuilder.Create()
-                .WithMessage(input)
-                .Build()
-            },
-            out var words);
+            Boolean result = Sut.TryValidateCommand(
+                ChatMessageBuilder.Create()
+                    .WithMessage(input)
+                    .Build(),
+                out var userCommandName,
+                out var args);
 
             Assert.False(result);
-            Assert.Null(words);
+            Assert.Null(userCommandName);
+            Assert.Null(args);
         }
     }
 }

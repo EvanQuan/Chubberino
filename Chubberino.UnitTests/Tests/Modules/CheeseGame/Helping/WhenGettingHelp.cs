@@ -1,7 +1,7 @@
-﻿using Chubberino.Client;
+﻿using System;
+using Chubberino.Infrastructure.Client;
 using Chubberino.Modules.CheeseGame.Helping;
 using Moq;
-using System;
 using TwitchLib.Client.Models;
 using TwitchLib.Client.Models.Builders;
 using Xunit;

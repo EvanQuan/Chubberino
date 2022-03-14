@@ -1,25 +1,16 @@
-﻿using Chubberino.Client.Commands.Settings;
-using Moq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Moq;
 using Xunit;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
 {
     public sealed class WhenRemovingProperty : UsingCommandRepository
     {
-        private Mock<ISetting> MockedSetting { get; }
-
         public WhenRemovingProperty()
         {
-            MockedSetting = new Mock<ISetting>().SetupAllProperties();
-
-            MockedSetting
-                .Setup(x => x.Name)
-                .Returns(Guid.NewGuid().ToString());
-
-            Sut.AddCommand(MockedSetting.Object);
+            Sut.AddCommand(MockedSetting1.Object);
         }
 
         /// <summary>
@@ -37,21 +28,21 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
         [InlineData("valid", "invalid")]
         public void ShouldOutputPropertyNotSetMessage(params String[] arguments)
         {
-            MockedSetting
+            MockedSetting1
                 .Setup(x => x.Remove(It.IsAny<String>(), It.IsAny<IEnumerable<String>>()))
                 .Returns((String property, IEnumerable<String> args) =>
                 {
                     return property == "valid" && "valid" == args.FirstOrDefault();
                 });
 
-            String validCommandName = MockedSetting.Object.Name;
+            String validCommandName = MockedSetting1.Object.Name;
             String propertyName = arguments[0];
             List<String> commandWithArguments = new() { validCommandName };
             commandWithArguments.AddRange(arguments);
 
             Sut.Execute("remove", commandWithArguments);
 
-            MockedConsole.Verify(x => x.WriteLine($"Command \"{validCommandName}\" property \"{propertyName}\" not removed from."), Times.Once());
+            MockedWriter.Verify(x => x.WriteLine($"Command \"{validCommandName}\" property \"{propertyName}\" not removed from."), Times.Once());
         }
 
         /// <summary>
@@ -71,7 +62,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
 
             Sut.Execute("remove", commandWithArguments);
 
-            MockedConsole.Verify(x => x.WriteLine($"Command \"{invalidCommandName}\" not found to remove from."), Times.Once());
+            MockedWriter.Verify(x => x.WriteLine($"Command \"{invalidCommandName}\" not found to remove from."), Times.Once());
         }
 
         [Theory]
@@ -79,11 +70,11 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
         [InlineData("message", "a b")]
         public void ShouldOutputPropertyRemovedMessage(params String[] arguments)
         {
-            MockedSetting
+            MockedSetting1
                 .Setup(x => x.Remove(It.IsAny<String>(), It.IsAny<IEnumerable<String>>()))
                 .Returns(true);
 
-            String validCommandName = MockedSetting.Object.Name;
+            String validCommandName = MockedSetting1.Object.Name;
             String propertyName = arguments[0];
             IEnumerable<String> propertyValue = arguments.Skip(1);
             List<String> commandWithArguments = new() { validCommandName };
@@ -91,7 +82,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
 
             Sut.Execute("remove", commandWithArguments);
 
-            MockedConsole.Verify(x => x.WriteLine($"Command \"{validCommandName}\" property \"{propertyName}\" removed \"{String.Join(" ", propertyValue)}\"."), Times.Once());
+            MockedWriter.Verify(x => x.WriteLine($"Command \"{validCommandName}\" property \"{propertyName}\" removed \"{String.Join(" ", propertyValue)}\"."), Times.Once());
         }
     }
 }

@@ -1,8 +1,7 @@
-﻿using Chubberino.Client.Commands.Settings;
-using Chubberino.Client.Commands.Settings.ColorSelectors;
+﻿using System;
+using Chubberino.Bots.Common.Commands.Settings.ColorSelectors;
+using Chubberino.Client.Commands.Settings;
 using Moq;
-using System;
-using TwitchLib.Client.Events;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Colors
 {
@@ -25,7 +24,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Colors
             MockedSelector1 = new Mock<IColorSelector>().SetupAllProperties();
             MockedSelector2 = new Mock<IColorSelector>().SetupAllProperties();
 
-            Sut = new Color(MockedTwitchClientManager.Object, MockedConsole.Object);
+            Sut = new Color(MockedTwitchClientManager.Object, MockedWriter.Object);
 
             MockedSelector1.Setup(x => x.GetNextColor())
                 .Returns(Color1);

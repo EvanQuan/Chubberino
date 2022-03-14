@@ -1,6 +1,6 @@
-﻿using Chubberino.Client;
+﻿using System;
+using Chubberino.Infrastructure.Client;
 using Moq;
-using System;
 using TwitchLib.Client.Events;
 using TwitchLib.Client.Models.Builders;
 using Xunit;
@@ -29,7 +29,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Colors
                     .Build()
             };
 
-            Sut.TwitchClient_OnMessageReceived(null, args);
+            Sut.Client_OnMessageReceived(null, args);
 
             MockedTwitchClientManager
                 .Verify(x => x.SpoolMessage(PrimaryChannelName, It.IsAny<String>(), It.IsAny<Priority>()), Times.Never());
@@ -50,7 +50,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Colors
                     .Build()
             };
 
-            Sut.TwitchClient_OnMessageReceived(null, args);
+            Sut.Client_OnMessageReceived(null, args);
 
             MockedTwitchClientManager
                 .Verify(x => x.SpoolMessage(PrimaryChannelName, $".color {Color1}", Priority.Medium), Times.Once());

@@ -1,14 +1,17 @@
-﻿using Chubberino.Client;
-using Chubberino.Client.Commands;
-using Chubberino.Client.Credentials;
-using Chubberino.Client.Threading;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using Chubberino.Common.Services;
+using Chubberino.Common.ValueObjects;
 using Chubberino.Database.Contexts;
 using Chubberino.Database.Models;
+using Chubberino.Infrastructure.Client;
+using Chubberino.Infrastructure.Client.TwitchClients;
+using Chubberino.Infrastructure.Commands;
+using Chubberino.Infrastructure.Credentials;
 using Chubberino.Modules.CheeseGame.Models;
-using Chubberino.UnitTests.Utility;
+using Chubberino.UnitTestQualityTools.Extensions;
 using Moq;
-using System;
-using System.Collections.Generic;
 using TwitchLib.Client.Interfaces;
 using TwitchLib.Client.Models;
 using TwitchLib.Communication.Interfaces;
@@ -25,7 +28,7 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
 
         protected ApplicationCredentials ApplicationCredentials { get; }
 
-        protected Mock<IConsole> MockedConsole { get; }
+        protected Mock<TextWriter> MockedWriter { get; }
 
         protected LoginCredentials LoginCredentials { get; }
 
@@ -47,11 +50,17 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
 
         protected IList<JoinedChannel> JoinedChannels { get; set; }
 
-        protected Mock<ISpinWait> MockedSpinWait { get; }
+        protected Mock<ISpinWaitService> MockedSpinWait { get; }
+
+        protected Mock<IThreadService> MockedThreadService { get; }
 
         protected IList<StartupChannel> StartupChannels { get; }
 
         protected IList<Player> Players { get; }
+
+        protected LowercaseString PrimaryChannelName { get; }
+
+        protected String CommandStatus { get; }
 
         public UsingBot()
         {
@@ -75,6 +84,9 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
                 }
             };
 
+            PrimaryChannelName = LowercaseString.From("p");
+            CommandStatus = "s";
+
             MockedContext = new Mock<IApplicationContext>();
 
             MockedCredentialsManager = new Mock<ICredentialsManager>();
@@ -94,22 +106,23 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
                 WolframAlphaAppID = Guid.NewGuid().ToString()
             };
 
-            MockedConsole = new Mock<IConsole>();
+            MockedWriter = new();
 
             JoinedChannels = new List<JoinedChannel>();
 
-
-            LoginCredentials = new LoginCredentials(new ConnectionCredentials(Username, TwitchOAuth, disableUsernameCheck: true), true);
+            LoginCredentials = new(new(Username, TwitchOAuth, disableUsernameCheck: true), true, PrimaryChannelName);
 
             var credentials = LoginCredentials;
 
-            MockedCredentialsManager.Setup(x => x.TryGetCredentials(out credentials)).Returns(true);
+            MockedCredentialsManager.Setup(x => x.TryUpdateLoginCredentials(It.IsAny<LoginCredentials>(), out credentials)).Returns(true);
 
             MockedCommandRepository = new Mock<ICommandRepository>().SetupAllProperties();
 
+            MockedCommandRepository.Setup(x => x.GetStatus()).Returns(CommandStatus);
+
             MockedTwitchClientManager = new Mock<ITwitchClientManager>().SetupAllProperties();
 
-            MockedTwitchClientManager.Setup(x => x.TryInitialize(It.IsAny<IBot>(), It.IsAny<IClientOptions>(), It.IsAny<LoginCredentials>())).Returns(LoginCredentials);
+            MockedTwitchClientManager.Setup(x => x.TryInitializeTwitchClient(It.IsAny<IBot>(), It.IsAny<IClientOptions>(), It.IsAny<LoginCredentials>())).Returns(LoginCredentials);
             MockedTwitchClientManager.Setup(x => x.TryJoinInitialChannels(It.IsAny<IReadOnlyList<JoinedChannel>>())).Returns(true);
 
             MockedClient = new Mock<ITwitchClient>();
@@ -118,7 +131,7 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
 
             ModeratorClientOptions = new ModeratorClientOptions();
 
-            MockedSpinWait = new Mock<ISpinWait>();
+            MockedSpinWait = new();
 
             MockedSpinWait
                 .Setup(x => x.SpinUntil(It.IsAny<Func<Boolean>>(), It.IsAny<TimeSpan>()))
@@ -162,12 +175,14 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
                 .Returns(true);
 
             Sut = new Bot(
-                MockedConsole.Object,
+                MockedWriter.Object,
                 MockedCommandRepository.Object,
                 ModeratorClientOptions,
                 RegularClientOptions,
                 MockedTwitchClientManager.Object,
                 MockedSpinWait.Object);
+
+            Sut.LoginCredentials = LoginCredentials;
 
             MockedTwitchClientManager.Invocations.Clear();
             MockedCommandRepository.Invocations.Clear();

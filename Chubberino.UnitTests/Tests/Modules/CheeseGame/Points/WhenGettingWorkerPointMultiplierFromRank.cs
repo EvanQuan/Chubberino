@@ -1,6 +1,6 @@
-﻿using Chubberino.Modules.CheeseGame.Items.Workers;
+﻿using System;
+using Chubberino.Modules.CheeseGame.Items.Workers;
 using Chubberino.Modules.CheeseGame.Ranks;
-using System;
 using Xunit;
 
 namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Points

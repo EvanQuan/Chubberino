@@ -1,5 +1,5 @@
-﻿using Chubberino.Client.Commands;
-using Chubberino.Client.Commands.Settings;
+﻿using Chubberino.Bots.Common.Commands;
+using Chubberino.Bots.Common.Commands.Settings;
 using Moq;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Greets
@@ -12,9 +12,9 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Greets
 
         public UsingGreet()
         {
-            MockedCompliments = new Mock<IComplimentGenerator>();
+            MockedCompliments = new();
 
-            Sut = new Greet(MockedTwitchClientManager.Object, MockedBot.Object, MockedConsole.Object, MockedCompliments.Object);
+            Sut = new Greet(MockedTwitchClientManager.Object, MockedWriter.Object, MockedCompliments.Object);
         }
     }
 }

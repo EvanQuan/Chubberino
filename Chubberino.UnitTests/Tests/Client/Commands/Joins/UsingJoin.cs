@@ -1,4 +1,4 @@
-﻿using Chubberino.Client.Commands.Settings.UserCommands;
+﻿using Chubberino.Bots.Channel.Commands;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands.Joins
 {
@@ -8,7 +8,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Joins
 
         public UsingJoin()
         {
-            Sut = new Join(MockedContextFactory.Object, MockedTwitchClientManager.Object, MockedConsole.Object);
+            Sut = new Join(MockedContextFactory.Object, MockedTwitchClientManager.Object, MockedWriter.Object);
         }
     }
 }

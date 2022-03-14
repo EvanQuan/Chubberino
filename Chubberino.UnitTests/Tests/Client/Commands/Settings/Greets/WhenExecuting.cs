@@ -24,7 +24,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Greets
 
             String greeting = String.Join(" ", arguments);
 
-            MockedConsole.Verify(x => x.WriteLine($"Greeting message is \"{greeting}\"."), Times.Once());
+            MockedWriter.Verify(x => x.WriteLine($"Greeting message is \"{greeting}\"."), Times.Once());
         }
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Greets
         {
             Sut.Execute(Array.Empty<String>());
 
-            MockedConsole.Verify(x => x.WriteLine(It.IsAny<String>()), Times.Never());
+            MockedWriter.Verify(x => x.WriteLine(It.IsAny<String>()), Times.Never());
 
             Assert.False(Sut.IsEnabled);
         }

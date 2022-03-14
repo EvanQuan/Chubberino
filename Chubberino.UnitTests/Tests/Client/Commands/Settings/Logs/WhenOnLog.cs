@@ -26,7 +26,7 @@ namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Logs
 
             Sut.TwitchClient_OnLog(null, args);
 
-            MockedConsole.Verify(x => x.WriteLine($"{expectedDateTime}: {expectedBotUserName} - {expectedData}"), Times.Once());
+            MockedWriter.Verify(x => x.WriteLine($"{expectedDateTime}: {expectedBotUserName} - {expectedData}"), Times.Once());
         }
     }
 }
