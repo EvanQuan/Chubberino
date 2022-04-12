@@ -1,23 +1,21 @@
 ﻿using System;
-using Chubberino.Bots.Common.Commands.Settings.ColorSelectors;
 using Chubberino.Common.ValueObjects;
 
-namespace Chubberino.Client.Commands.Settings.ColorSelectors
+namespace Chubberino.Bots.Common.Commands.Settings.ColorSelectors;
+
+public sealed class RandomColorSelector : IColorSelector
 {
-    public sealed class RandomColorSelector : IColorSelector
+    private Random Random { get; }
+
+    public Name Name { get; } = Name.From("random");
+
+    public RandomColorSelector(Random random)
     {
-        private Random Random { get; }
+        Random = random;
+    }
 
-        public Name Name { get; } = Name.From("random");
-
-        public RandomColorSelector(Random random)
-        {
-            Random = random;
-        }
-
-        public String GetNextColor()
-        {
-            return $"#{Random.Next(0x1000000):X6}";
-        }
+    public String GetNextColor()
+    {
+        return $"#{Random.Next(0x1000000):X6}";
     }
 }
