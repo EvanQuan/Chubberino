@@ -1,18 +1,13 @@
-﻿using Chubberino.Bots.Common.Commands.Settings.Pyramids;
-using Chubberino.Client.Commands.Settings.UserCommands;
+﻿using Chubberino.Bots.Common.Commands.Settings.UserCommands;
 
-namespace Chubberino.UnitTests.Tests.Client.Commands.Pyramids
+namespace Chubberino.UnitTests.Tests.Client.Commands.Pyramids;
+
+public abstract class UsingPyramid : UsingCommand
 {
-    public abstract class UsingPyramid : UsingCommand
+    protected Pyramid Sut { get; private set; }
+
+    public UsingPyramid()
     {
-        protected Pyramid Sut { get; private set; }
-
-        protected PyramidBuilder PyramidBuilder { get; private set; }
-
-        public UsingPyramid()
-        {
-            PyramidBuilder = new();
-            Sut = new(MockedTwitchClientManager.Object, MockedWriter.Object, PyramidBuilder);
-        }
+        Sut = new(MockedTwitchClientManager.Object, MockedWriter.Object);
     }
 }
