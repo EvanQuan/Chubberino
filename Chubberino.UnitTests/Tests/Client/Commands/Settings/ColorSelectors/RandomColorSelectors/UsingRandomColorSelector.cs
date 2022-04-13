@@ -1,21 +1,20 @@
-﻿using Chubberino.Client.Commands.Settings.ColorSelectors;
+﻿using System;
+using Chubberino.Bots.Common.Commands.Settings.ColorSelectors;
 using Moq;
-using System;
 
-namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.ColorSelectors.RandomColorSelectors
+namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.ColorSelectors.RandomColorSelectors;
+
+public abstract class UsingRandomColorSelector
 {
-    public abstract class UsingRandomColorSelector
+    protected RandomColorSelector Sut { get; }
+
+    protected Mock<Random> MockedRandom { get; }
+
+    public UsingRandomColorSelector()
     {
-        protected RandomColorSelector Sut { get; }
+        MockedRandom = new Mock<Random>().SetupAllProperties();
 
-        protected Mock<Random> MockedRandom { get; }
-
-        public UsingRandomColorSelector()
-        {
-            MockedRandom = new Mock<Random>().SetupAllProperties();
-
-            Sut = new RandomColorSelector(MockedRandom.Object);
-        }
-
+        Sut = new RandomColorSelector(MockedRandom.Object);
     }
+
 }

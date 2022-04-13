@@ -2,31 +2,24 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Chubberino.Bots.Common.Commands.Settings.Pyramids
+namespace Chubberino.Bots.Common.Commands.Settings.Pyramids;
+
+public static class PyramidBuilder
 {
-    public sealed class PyramidBuilder
+    public static IEnumerable<String> Get(String block, Int32 height)
     {
-        public IEnumerable<String> GetPyramid(String block, Int32 height)
+        Int32 currentPyramidHeight = 0;
+
+        // Build pyramid up
+        while (currentPyramidHeight < height)
         {
-            var pyramid = new List<String>();
+            yield return String.Join(' ', Enumerable.Repeat(block, ++currentPyramidHeight));
+        }
 
-            Int32 currentPyramidHeight = 0;
-
-            // Build pyramid up
-            while (currentPyramidHeight < height)
-            {
-                String message = String.Join(' ', Enumerable.Repeat(block, ++currentPyramidHeight));
-                pyramid.Add(message);
-            }
-
-            // Build pyramid down
-            while (currentPyramidHeight > 0)
-            {
-                String message = String.Join(' ', Enumerable.Repeat(block, --currentPyramidHeight));
-                pyramid.Add(message);
-            }
-
-            return pyramid;
+        // Build pyramid down
+        while (currentPyramidHeight > 0)
+        {
+            yield return String.Join(' ', Enumerable.Repeat(block, --currentPyramidHeight));
         }
     }
 }
