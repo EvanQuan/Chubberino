@@ -40,10 +40,6 @@ public class Program
                     case BotState.ShouldStop:
                         shouldContinue = false;
                         break;
-                    case BotState.ShouldRestart:
-                        (bot, credentials) = DependencyManager.SetupIoC(credentials);
-                        shouldContinue = credentials != null;
-                        break;
                 }
 
                 shouldGetPrompt = true;
@@ -51,7 +47,6 @@ public class Program
             catch (Exception ex)
             {
                 Writer.WriteLine(ex.Message);
-                bot.State = BotState.ShouldRestart;
                 shouldGetPrompt = false;
             }
         }

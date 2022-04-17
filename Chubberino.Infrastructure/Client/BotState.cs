@@ -17,10 +17,5 @@ namespace Chubberino.Infrastructure.Client
         /// The program should stop.
         /// </summary>
         ShouldStop = 1,
-
-        /// <summary>
-        /// The bot should restart, reconnecting with the original settings.
-        /// </summary>
-        ShouldRestart = 2,
     }
 }

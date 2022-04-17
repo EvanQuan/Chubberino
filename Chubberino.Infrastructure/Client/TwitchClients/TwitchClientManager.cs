@@ -127,7 +127,7 @@ namespace Chubberino.Infrastructure.Client.TwitchClients
             {
                 Writer.WriteLine($"!! Connection Error!! {e.Error.Message}");
 
-                bot.State = BotState.ShouldRestart;
+                bot.Refresh(CurrentClientOptions);
             };
 
             OnTwitchClientRefreshedArgs = new OnTwitchClientRefreshedArgs(optionOldClient, Client);
