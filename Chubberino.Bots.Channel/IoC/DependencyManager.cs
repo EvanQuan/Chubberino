@@ -39,6 +39,8 @@ using TwitchLib.Communication.Clients;
 using WolframAlphaNet;
 
 using ChannelCommand = Chubberino.Bots.Common.Commands.Settings.Channel;
+using RandomCommand = Chubberino.Bots.Common.Commands.Settings.UserCommands.Random;
+using RandomSource = System.Random;
 
 namespace Chubberino.Bots.Channel.IoC;
 
@@ -95,7 +97,7 @@ internal sealed class DependencyManager
             .AddCommand(scope.Resolve<Jimbox>())
             //.AddCommand(scope.Resolve<Join>())
             //.AddCommand(scope.Resolve<Leave>())
-            .AddCommand(scope.Resolve<Common.Commands.Settings.UserCommands.Random>())
+            .AddCommand(scope.Resolve<RandomCommand>())
             .AddCommand(scope.Resolve<Log>())
             .AddCommand(scope.Resolve<MockStreamElements>())
             .AddCommand(scope.Resolve<ModCheck>())
@@ -158,7 +160,7 @@ internal sealed class DependencyManager
         builder.RegisterType<Repeater>().As<IRepeater>();
         builder.RegisterType<ContainsComparator>().As<IContainsComparator>().SingleInstance();
         builder.RegisterType<EqualsComparator>().As<IEqualsComparator>().SingleInstance();
-        builder.RegisterType<Common.Commands.Settings.UserCommands.Random>().AsSelf().SingleInstance();
+        builder.RegisterType<RandomSource>().AsSelf().SingleInstance();
         builder.RegisterType<ComplimentGenerator>().As<IComplimentGenerator>().SingleInstance();
         builder.RegisterType<ComplimentGenerator>().As<IComplimentGenerator>().SingleInstance();
         builder.RegisterType<RainbowColorSelector>().AsSelf().SingleInstance();
@@ -218,7 +220,7 @@ internal sealed class DependencyManager
         builder.RegisterType<Jimbox>().AsSelf().SingleInstance();
         builder.RegisterType<Join>().AsSelf().SingleInstance();
         builder.RegisterType<Leave>().AsSelf().SingleInstance();
-        builder.RegisterType<Common.Commands.Settings.UserCommands.Random>().AsSelf().SingleInstance();
+        builder.RegisterType<RandomCommand>().AsSelf().SingleInstance();
         builder.RegisterType<Log>().AsSelf().SingleInstance();
         builder.RegisterType<MockStreamElements>().AsSelf().SingleInstance();
         builder.RegisterType<ModCheck>().AsSelf().SingleInstance();
