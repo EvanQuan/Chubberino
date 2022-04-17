@@ -35,8 +35,6 @@ namespace Chubberino.Infrastructure.Client
 
         private ITwitchClientManager TwitchClientManager { get; }
 
-        public ISpinWaitService SpinWait { get; }
-
         public LoginCredentials LoginCredentials { get; set; }
 
         public Bot(
@@ -44,15 +42,13 @@ namespace Chubberino.Infrastructure.Client
             ICommandRepository commands,
             IModeratorClientOptions moderatorOptions,
             IRegularClientOptions regularOptions,
-            ITwitchClientManager twitchClientManager,
-            ISpinWaitService spinWait)
+            ITwitchClientManager twitchClientManager)
         {
             Writer = writer;
             Commands = commands;
             ModeratorClientOptions = moderatorOptions;
             RegularClientOptions = regularOptions;
             TwitchClientManager = twitchClientManager;
-            SpinWait = spinWait;
             IsModerator = true;
         }
 
@@ -111,7 +107,7 @@ namespace Chubberino.Infrastructure.Client
             else
             {
                 Writer.WriteLine("Failed to refresh");
-                State = BotState.ShouldRestart;
+                State = BotState.ShouldStop;
             }
         }
 
@@ -140,7 +136,7 @@ namespace Chubberino.Infrastructure.Client
             {
                 Writer.WriteLine("Exception thrown: " + e.Message);
                 Writer.WriteLine("Restarting");
-                State = BotState.ShouldRestart;
+                Refresh(ModeratorClientOptions);
             }
         }
 

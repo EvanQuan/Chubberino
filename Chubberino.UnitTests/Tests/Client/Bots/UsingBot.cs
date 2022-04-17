@@ -50,8 +50,6 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
 
         protected IList<JoinedChannel> JoinedChannels { get; set; }
 
-        protected Mock<ISpinWaitService> MockedSpinWait { get; }
-
         protected Mock<IThreadService> MockedThreadService { get; }
 
         protected IList<StartupChannel> StartupChannels { get; }
@@ -131,12 +129,6 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
 
             ModeratorClientOptions = new ModeratorClientOptions();
 
-            MockedSpinWait = new();
-
-            MockedSpinWait
-                .Setup(x => x.SpinUntil(It.IsAny<Func<Boolean>>(), It.IsAny<TimeSpan>()))
-                .Returns((Func<Boolean> func, TimeSpan timeout) => func());
-
             MockedTwitchClientManager
                 .Setup(x => x.Client)
                 .Returns(MockedClient.Object);
@@ -174,13 +166,12 @@ namespace Chubberino.UnitTests.Tests.Client.Bots
                 })
                 .Returns(true);
 
-            Sut = new Bot(
+            Sut = new(
                 MockedWriter.Object,
                 MockedCommandRepository.Object,
                 ModeratorClientOptions,
                 RegularClientOptions,
-                MockedTwitchClientManager.Object,
-                MockedSpinWait.Object);
+                MockedTwitchClientManager.Object);
 
             Sut.LoginCredentials = LoginCredentials;
 
