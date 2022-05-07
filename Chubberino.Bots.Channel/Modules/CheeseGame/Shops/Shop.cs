@@ -87,38 +87,36 @@ namespace Chubberino.Modules.CheeseGame.Shops
         private String GetBuyItemMessage(ChatMessage message, IApplicationContext context, Player player, String remainingArguments, String itemToBuy, out Priority priority)
         {
             priority = Priority.Low;
-            if (Items.TryGetFirst(x => x.Names.Contains(itemToBuy, StringComparer.InvariantCultureIgnoreCase), out var item))
+            if (!Items.TryGetFirst(x => x.Names.Contains(itemToBuy, StringComparer.InvariantCultureIgnoreCase), out var item))
             {
-                remainingArguments.GetNextWord(out String quantityString);
-
-                Int32 quantityRequested = Int32.TryParse(quantityString, out Int32 quantityParsed) && quantityParsed > 0
-                    ? quantityParsed
-                    : new String[] { "a", "all" }.Contains(quantityString, StringComparer.InvariantCultureIgnoreCase)
-                        ? Int32.MaxValue
-                        : 1;
-
-                var result = item.TryBuy(quantityRequested, player)();
-                    
-                if (result.IsRight)
-                {
-                    return result.Right;
-                }
-
-                var buyResult = result.Left;
-
-                var outputMessage = $"You bought {item.GetSpecificNameForSuccessfulBuy(player, buyResult.QuantityPurchased)}. " +
-                    $"{buyResult.ExtraMessage} " +
-                    $"{Random.NextElement(EmoteManager.Get(message.Channel, EmoteCategory.Positive))} " +
-                    $"(-{buyResult.PointsSpent} cheese)";
-
-                priority = Priority.Medium;
-
-                context.SaveChanges();
-
-                return outputMessage;
+                return $"Invalid item \"{itemToBuy}\" to buy. Type \"!cheese shop\" to see the items available for purchase.";
             }
 
-            return $"Invalid item \"{itemToBuy}\" to buy. Type \"!cheese shop\" to see the items available for purchase.";
+            remainingArguments.GetNextWord(out String quantityString);
+
+            Int32 quantityRequested = Int32.TryParse(quantityString, out Int32 quantityParsed) && quantityParsed > 0
+                ? quantityParsed
+                : new String[] { "a", "all" }.Contains(quantityString, StringComparer.InvariantCultureIgnoreCase)
+                    ? Int32.MaxValue
+                    : 1;
+
+            var result = item.TryBuy(quantityRequested, player)();
+                
+            if (result.IsRight)
+            {
+                return result.Right;
+            }
+
+            var buyResult = result.Left;
+
+            var outputMessage = $"You bought {item.GetSpecificNameForSuccessfulBuy(player, buyResult.QuantityPurchased)}. " +
+                $"{buyResult.ExtraMessage} " +
+                $"{Random.NextElement(EmoteManager.Get(message.Channel, EmoteCategory.Positive))} " +
+                $"(-{buyResult.PointsSpent} cheese)";
+
+            context.SaveChanges();
+
+            return outputMessage;
         }
 
         public IShop AddItem(IItem item)
