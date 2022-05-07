@@ -125,7 +125,7 @@ namespace Chubberino.Modules.CheeseGame.Items
 
         public virtual String GetShopPrompt(Player player)
         {
-            return $"{Names.First()}";
+            return Names.First();
         }
     }
 }
