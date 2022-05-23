@@ -134,27 +134,42 @@ namespace Chubberino.Modules.CheeseGame.Ranks
 
             if (RanksToPoints.TryGetValue(player.Rank, out Int32 pointsToRank))
             {
-                StringBuilder nextRankInformation = new();
+                var nextRankInformation = new StringBuilder("You are currently in ")
+                    .Append(player.Rank)
+                    .Append(" rank. ");
 
                 if (pointsToRank > player.Points)
                 {
-                    nextRankInformation.Append($"You need {pointsToRank - player.Points} more cheese to rankup to ");
+                    nextRankInformation
+                        .Append("You need ")
+                        .Append(pointsToRank - player.Points)
+                        .Append(" more cheese to rankup to ");
                 }
                 else
                 {
-                    nextRankInformation.Append($"You have enough cheese ({pointsToRank}) to rankup right now to ");
+                    nextRankInformation
+                        .Append("You have enough cheese (")
+                        .Append(pointsToRank)
+                        .Append(") to rankup right now to ");
                 }
 
                 if (nextRank == Rank.None)
                 {
-                    nextRankInformation.Append($"prestige back to {Rank.Bronze} rank. You will lose all your cheese and upgrades, but will gain a permanent {(Int32)(PrestigeBonus * 100)}% bonus on your cheese gains.");
+                    nextRankInformation
+                        .Append("prestige back to ")
+                        .Append(Rank.Bronze)
+                        .Append(" rank. You will lose all your cheese and upgrades, but will gain a permanent ")
+                        .Append((Int32)(PrestigeBonus * 100))
+                        .Append("% bonus on your cheese gains.");
                 }
                 else
                 {
-                    nextRankInformation.Append($"{nextRank} rank.");
+                    nextRankInformation
+                        .Append(nextRank)
+                        .Append(" rank.");
                 }
 
-                return $"You are currently in {player.Rank} rank. {nextRankInformation}";
+                return nextRankInformation.ToString();
             }
 
             return $"Uh oh, you broke something. You have an invalid rank of {player.Rank}.";
