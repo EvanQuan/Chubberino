@@ -49,14 +49,17 @@ namespace Chubberino.Modules.CheeseGame.Heists
                 return false;
             }
 
-            String people = Wagers.Count switch
+            var intro = new StringBuilder("[Heist] ");
+
+            intro.Append(Wagers.Count switch
             {
                 0 => "No one goes",
                 1 => "1 person goes",
                 _ => $"{Wagers.Count} people go"
-            };
+            });
 
-            var intro = new StringBuilder($"[Heist] {people} into the lair of the great cheese dragon. ");
+
+            intro.Append(" into the lair of the great cheese dragon. ");
 
             Double winnerPercent = Random.NextDouble(0, 1.4).Min(1);
 
@@ -67,7 +70,7 @@ namespace Chubberino.Modules.CheeseGame.Heists
 
             if (winnerCount == 0)
             {
-                intro.Append("Unfortunately the cheese dragon prevented anyone from getting anything");
+                intro.Append("Unfortunately the cheese dragon prevented anyone from getting anything.");
                 TwitchClient.SpoolMessageAsMe(InitiatorMessage.Channel, intro.ToString());
                 return true;
             }
@@ -78,7 +81,9 @@ namespace Chubberino.Modules.CheeseGame.Heists
             }
             else
             {
-                intro.Append($"{winnerCount} made it out with the spoils! ");
+                intro
+                    .Append(winnerCount)
+                    .Append(" made it out with the spoils! ");
             }
 
             var winners = new List<Wager>();
@@ -98,7 +103,11 @@ namespace Chubberino.Modules.CheeseGame.Heists
                 Int32 winnerPoints = (Int32)((1.0 / winnerPercent + 0.5) * wager.WageredPoints).Max(2);
                 player.AddPoints(winnerPoints);
                 context.SaveChanges();
-                intro.Append($"{player.Name} (+{winnerPoints}) ");
+                intro
+                    .Append(player.Name)
+                    .Append(" (+")
+                    .Append(winnerPoints)
+                    .Append(") ");
             }
 
             TwitchClient.SpoolMessageAsMe(InitiatorMessage.Channel, intro.ToString());
@@ -108,7 +117,7 @@ namespace Chubberino.Modules.CheeseGame.Heists
 
         public void UpdateWager(IApplicationContext context, Player player, Func<Player, Int32> points, Boolean silent = false)
         {
-            String updateMessage;
+            var updateMessage = new StringBuilder("[Heist] ");
 
             Priority priority = Priority.Medium;
 
@@ -125,7 +134,7 @@ namespace Chubberino.Modules.CheeseGame.Heists
                 if (updatedPoints <= 0)
                 {
                     Wagers.Remove(wager);
-                    updateMessage = String.Format(SucceedToLeaveHeistMessage, wager.WageredPoints);
+                    updateMessage.Append(SucceedToLeaveHeistMessage.Format(wager.WageredPoints));
                 }
                 else
                 {
@@ -135,12 +144,12 @@ namespace Chubberino.Modules.CheeseGame.Heists
 
                     if (oldWager == updatedPoints)
                     {
-                        updateMessage = String.Format(WagerIsUnchangedMessage, oldWager);
+                        updateMessage.Append(WagerIsUnchangedMessage.Format(oldWager));
                         priority = Priority.Low;
                     }
                     else
                     {
-                        updateMessage = String.Format(SucceedToUpdateHeistMessage, oldWager, updatedPoints);
+                        updateMessage.Append(SucceedToUpdateHeistMessage.Format(oldWager, updatedPoints));
                     }
                 }
                 context.SaveChanges();
@@ -148,13 +157,13 @@ namespace Chubberino.Modules.CheeseGame.Heists
             }
             else if (player.Points == 0)
             {
-                updateMessage = FailToJoinHeistBecauseNoCheeseMessage;
+                updateMessage.Append(FailToJoinHeistBecauseNoCheeseMessage);
                 priority = Priority.Low;
             }
             else if (points(player) <= 0)
             {
                 // Trying to join the heist, but failing.
-                updateMessage = FailToJoinHeistMessage;
+                updateMessage.Append(FailToJoinHeistMessage);
                 priority = Priority.Low;
             }
             else
@@ -164,12 +173,12 @@ namespace Chubberino.Modules.CheeseGame.Heists
                 Wagers.Add(new Wager(player.TwitchUserID, updatedPoints));
                 player.AddPoints(-updatedPoints);
                 context.SaveChanges();
-                updateMessage = String.Format(SucceedToJoinHeistMessage, updatedPoints);
+                updateMessage.Append(SucceedToJoinHeistMessage.Format(updatedPoints));
             }
 
             if (!silent)
             {
-                TwitchClient.SpoolMessageAsMe(InitiatorMessage.Channel, player, "[Heist] " + updateMessage, priority);
+                TwitchClient.SpoolMessageAsMe(InitiatorMessage.Channel, player, updateMessage.ToString(), priority);
             }
         }
     }
