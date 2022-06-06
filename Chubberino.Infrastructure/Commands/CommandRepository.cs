@@ -75,7 +75,7 @@ namespace Chubberino.Infrastructure.Commands
 
         public ICommandRepository AddCommand(ICommand command)
         {
-            Commands.Add(command.Name, command);
+            Commands.TryAdd(command.Name, command);
 
             if (command is ISetting setting)
             {
@@ -83,7 +83,7 @@ namespace Chubberino.Infrastructure.Commands
             }
             else
             {
-                RegularCommands.Add(command.Name, command);
+                RegularCommands.TryAdd(command.Name, command);
             }
 
             return this;
@@ -91,6 +91,8 @@ namespace Chubberino.Infrastructure.Commands
 
         public ICommandRepository AddCommand(ISetting command, Boolean enabled)
         {
+            Commands.TryAdd(command.Name, command);
+
             if (enabled)
             {
                 Settings.AddEnabled(command);
