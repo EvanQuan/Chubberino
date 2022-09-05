@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace Chubberino.Infrastructure.Commands
+namespace Chubberino.Infrastructure.Commands;
+
+public interface IEventListenerCommand<TEventArgs> : IEventListener<TEventArgs>, ICommand
+    where TEventArgs : EventArgs
 {
-    public interface IEventListenerCommand<TEventArgs> : IEventListener<TEventArgs>, ICommand
-        where TEventArgs : EventArgs
-    {
-    }
 }

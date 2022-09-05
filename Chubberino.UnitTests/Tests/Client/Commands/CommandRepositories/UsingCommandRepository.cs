@@ -9,80 +9,79 @@ using Chubberino.UnitTestQualityTools.Extensions;
 using Moq;
 using TwitchLib.Client.Interfaces;
 
-namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories
+namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories;
+
+public abstract class UsingCommandRepository
 {
-    public abstract class UsingCommandRepository
+    /// <summary>
+    /// System under test.
+    /// </summary>
+    protected CommandRepository Sut { get; }
+
+    protected Mock<TextWriter> MockedWriter { get; }
+
+    protected Mock<ITwitchClientManager> MockedTwitchClientManager { get; }
+
+    protected Mock<ITwitchClient> MockedTwitchClient { get; }
+
+    protected Mock<ISetting> MockedSetting1 { get; }
+
+    protected Mock<ISetting> MockedSetting2 { get; }
+
+    protected Mock<ISetting> MockedSetting3 { get; }
+
+    protected Mock<ICommand> MockedCommand { get; }
+
+    protected Mock<IUserCommand> MockedUserCommand1 { get; }
+
+    protected Mock<IUserCommand> MockedUserCommand2 { get; }
+
+    protected Mock<IUserCommandValidator> MockedUserCommandValidator { get; }
+    public Mock<ICommandConfigurationStrategy> MockedCommandConfigurationStrategy { get; set; }
+
+    public UsingCommandRepository()
     {
-        /// <summary>
-        /// System under test.
-        /// </summary>
-        protected CommandRepository Sut { get; }
+        MockedWriter = new();
 
-        protected Mock<TextWriter> MockedWriter { get; }
+        MockedTwitchClientManager = new();
 
-        protected Mock<ITwitchClientManager> MockedTwitchClientManager { get; }
+        MockedUserCommandValidator = new();
 
-        protected Mock<ITwitchClient> MockedTwitchClient { get; }
+        MockedCommandConfigurationStrategy = new();
 
-        protected Mock<ISetting> MockedSetting1 { get; }
+        MockedTwitchClientManager.SetupAllProperties();
 
-        protected Mock<ISetting> MockedSetting2 { get; }
+        MockedTwitchClient = MockedTwitchClientManager.SetupClient();
 
-        protected Mock<ISetting> MockedSetting3 { get; }
+        MockedSetting1 = new();
+        MockedSetting2 = new();
+        MockedSetting3 = new();
+        MockedCommand = new();
+        MockedUserCommand1 = new();
+        MockedUserCommand2 = new();
 
-        protected Mock<ICommand> MockedCommand { get; }
+        MockedSetting1.SetupAllProperties();
+        MockedSetting2.SetupAllProperties();
+        MockedSetting3.SetupAllProperties();
+        MockedCommand.SetupAllProperties();
+        MockedUserCommand1.SetupAllProperties();
+        MockedUserCommand2.SetupAllProperties();
 
-        protected Mock<IUserCommand> MockedUserCommand1 { get; }
+        MockedSetting1.Setup(x => x.Name).Returns(Name.From("s1"));
+        MockedSetting2.Setup(x => x.Name).Returns(Name.From("s2"));
+        MockedSetting3.Setup(x => x.Name).Returns(Name.From("s3"));
+        MockedCommand.Setup(x => x.Name).Returns(Name.From("c"));
+        MockedUserCommand1.Setup(x => x.Name).Returns(Name.From("uc1"));
+        MockedUserCommand2.Setup(x => x.Name).Returns(Name.From("uc2"));
 
-        protected Mock<IUserCommand> MockedUserCommand2 { get; }
+        MockedSetting1.Setup(x => x.Status).Returns("1");
+        MockedSetting2.Setup(x => x.Status).Returns("2");
+        MockedSetting3.Setup(x => x.Status).Returns("3");
 
-        protected Mock<IUserCommandValidator> MockedUserCommandValidator { get; }
-        public Mock<ICommandConfigurationStrategy> MockedCommandConfigurationStrategy { get; set; }
-
-        public UsingCommandRepository()
-        {
-            MockedWriter = new();
-
-            MockedTwitchClientManager = new();
-
-            MockedUserCommandValidator = new();
-
-            MockedCommandConfigurationStrategy = new();
-
-            MockedTwitchClientManager.SetupAllProperties();
-
-            MockedTwitchClient = MockedTwitchClientManager.SetupClient();
-
-            MockedSetting1 = new();
-            MockedSetting2 = new();
-            MockedSetting3 = new();
-            MockedCommand = new();
-            MockedUserCommand1 = new();
-            MockedUserCommand2 = new();
-
-            MockedSetting1.SetupAllProperties();
-            MockedSetting2.SetupAllProperties();
-            MockedSetting3.SetupAllProperties();
-            MockedCommand.SetupAllProperties();
-            MockedUserCommand1.SetupAllProperties();
-            MockedUserCommand2.SetupAllProperties();
-
-            MockedSetting1.Setup(x => x.Name).Returns(Name.From("s1"));
-            MockedSetting2.Setup(x => x.Name).Returns(Name.From("s2"));
-            MockedSetting3.Setup(x => x.Name).Returns(Name.From("s3"));
-            MockedCommand.Setup(x => x.Name).Returns(Name.From("c"));
-            MockedUserCommand1.Setup(x => x.Name).Returns(Name.From("uc1"));
-            MockedUserCommand2.Setup(x => x.Name).Returns(Name.From("uc2"));
-
-            MockedSetting1.Setup(x => x.Status).Returns("1");
-            MockedSetting2.Setup(x => x.Status).Returns("2");
-            MockedSetting3.Setup(x => x.Status).Returns("3");
-
-            Sut = new CommandRepository(
-                MockedWriter.Object,
-                MockedTwitchClientManager.Object,
-                MockedUserCommandValidator.Object,
-                MockedCommandConfigurationStrategy.Object);
-        }
+        Sut = new CommandRepository(
+            MockedWriter.Object,
+            MockedTwitchClientManager.Object,
+            MockedUserCommandValidator.Object,
+            MockedCommandConfigurationStrategy.Object);
     }
 }

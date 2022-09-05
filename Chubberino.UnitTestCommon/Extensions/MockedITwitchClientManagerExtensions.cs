@@ -2,19 +2,18 @@
 using Moq;
 using TwitchLib.Client.Interfaces;
 
-namespace Chubberino.UnitTestQualityTools.Extensions
+namespace Chubberino.UnitTestQualityTools.Extensions;
+
+public static class MockedITwitchClientManagerExtensions
 {
-    public static class MockedITwitchClientManagerExtensions
+    public static Mock<ITwitchClient> SetupClient(this Mock<ITwitchClientManager> source)
     {
-        public static Mock<ITwitchClient> SetupClient(this Mock<ITwitchClientManager> source)
-        {
-            Mock<ITwitchClient> client = new();
+        Mock<ITwitchClient> client = new();
 
-            client.SetupAllProperties();
+        client.SetupAllProperties();
 
-            source.Setup(x => x.Client).Returns(client.Object);
+        source.Setup(x => x.Client).Returns(client.Object);
 
-            return client;
-        }
+        return client;
     }
 }

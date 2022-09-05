@@ -1,16 +1,5 @@
 ﻿using System;
 
-namespace Chubberino.Modules.CheeseGame.Items.Upgrades.RecipeModifiers
-{
-    public sealed class RecipeModifier
-    {
-        public RecipeModifier(String name, Int32 points)
-        {
-            Name = name;
-            Points = points;
-        }
+namespace Chubberino.Bots.Channel.Modules.CheeseGame.Items.Upgrades.RecipeModifiers;
 
-        public String Name { get; }
-        public Int32 Points { get; }
-    }
-}
+public record RecipeModifier(String Name, Int32 Points);

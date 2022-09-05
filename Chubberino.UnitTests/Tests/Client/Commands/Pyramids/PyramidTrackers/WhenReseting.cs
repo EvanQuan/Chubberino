@@ -1,41 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Xunit;
+﻿using Xunit;
 
-namespace Chubberino.UnitTests.Tests.Client.Commands.Pyramids
+namespace Chubberino.UnitTests.Tests.Client.Commands.Pyramids.PyramidTrackers;
+
+public sealed class WhenReseting : UsingPyramidTracker
 {
-    public sealed class WhenReseting : UsingPyramidTracker
+    public WhenReseting()
     {
-        public WhenReseting()
-        {
-            Sut.Start(ExpectedName1, ExpectedBlock1);
-        }
+        Sut.Start(ExpectedName1, ExpectedBlock1);
+    }
 
-        [Fact]
-        public void ShouldResetValuesForSingleContributor()
-        {
-            Sut.Reset();
+    [Fact]
+    public void ShouldResetValuesForSingleContributor()
+    {
+        Sut.Reset();
 
-            Assert.Empty(Sut.ContributorDisplayNames);
-            Assert.Equal(0, Sut.CurrentHeight);
-            Assert.Equal(0, Sut.TallestHeight);
-            Assert.Null(Sut.Block);
-            Assert.False(Sut.HasStarted);
-        }
+        Assert.Empty(Sut.ContributorDisplayNames);
+        Assert.Equal(0, Sut.CurrentHeight);
+        Assert.Equal(0, Sut.TallestHeight);
+        Assert.Null(Sut.Block);
+        Assert.False(Sut.HasStarted);
+    }
 
-        [Fact]
-        public void ShouldResetValuesForMultipleContributors()
-        {
-            Sut.BuildUp(ExpectedName2);
+    [Fact]
+    public void ShouldResetValuesForMultipleContributors()
+    {
+        Sut.BuildUp(ExpectedName2);
 
-            Sut.Reset();
+        Sut.Reset();
 
-            Assert.Empty(Sut.ContributorDisplayNames);
-            Assert.Equal(0, Sut.CurrentHeight);
-            Assert.Equal(0, Sut.TallestHeight);
-            Assert.Null(Sut.Block);
-            Assert.False(Sut.HasStarted);
-        }
+        Assert.Empty(Sut.ContributorDisplayNames);
+        Assert.Equal(0, Sut.CurrentHeight);
+        Assert.Equal(0, Sut.TallestHeight);
+        Assert.Null(Sut.Block);
+        Assert.False(Sut.HasStarted);
     }
 }

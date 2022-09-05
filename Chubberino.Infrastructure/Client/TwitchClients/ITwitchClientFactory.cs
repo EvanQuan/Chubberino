@@ -1,10 +1,9 @@
 ﻿using TwitchLib.Client.Interfaces;
 using TwitchLib.Communication.Interfaces;
 
-namespace Chubberino.Infrastructure.Client.TwitchClients
+namespace Chubberino.Infrastructure.Client.TwitchClients;
+
+public interface ITwitchClientFactory
 {
-    public interface ITwitchClientFactory
-    {
-        ITwitchClient CreateClient(IClientOptions options);
-    }
+    ITwitchClient CreateClient(IClientOptions options);
 }

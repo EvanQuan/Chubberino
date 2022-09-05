@@ -1,10 +1,9 @@
-﻿namespace Chubberino.Database.Contexts
+﻿namespace Chubberino.Database.Contexts;
+
+public sealed class ApplicationContextFactory : IApplicationContextFactory
 {
-    public sealed class ApplicationContextFactory : IApplicationContextFactory
+    public IApplicationContext GetContext()
     {
-        public IApplicationContext GetContext()
-        {
-            return new ApplicationContext();
-        }
+        return new ApplicationContext();
     }
 }

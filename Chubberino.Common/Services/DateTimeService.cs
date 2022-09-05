@@ -1,13 +1,12 @@
 ﻿using System;
 
-namespace Chubberino.Common.Services
+namespace Chubberino.Common.Services;
+
+public sealed class DateTimeService : IDateTimeService
 {
-    public sealed class DateTimeService : IDateTimeService
-    {
-        public DateTime Now => DateTime.Now;
+    public DateTime Now => DateTime.Now;
 
-        public DateTime MinValue => DateTime.MinValue;
+    public DateTime MinValue => DateTime.MinValue;
 
-        public DateTime MaxValue => DateTime.MaxValue;
-    }
+    public DateTime MaxValue => DateTime.MaxValue;
 }

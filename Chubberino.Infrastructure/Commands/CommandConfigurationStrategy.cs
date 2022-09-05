@@ -1,16 +1,15 @@
 ﻿using Chubberino.Common.ValueObjects;
 using Chubberino.Infrastructure.Credentials;
 
-namespace Chubberino.Infrastructure.Commands
+namespace Chubberino.Infrastructure.Commands;
+
+public sealed class CommandConfigurationStrategy : ICommandConfigurationStrategy
 {
-    public sealed class CommandConfigurationStrategy : ICommandConfigurationStrategy
+    public void Configure(ICommandRepository repository, LoginCredentials loginCredentials)
     {
-        public void Configure(ICommandRepository repository, LoginCredentials loginCredentials)
+        if (loginCredentials.IsBot)
         {
-            if (loginCredentials.IsBot)
-            {
-                repository.Enable(Name.From("cheese"));
-            }
+            repository.Enable(Name.From("cheese"));
         }
     }
 }

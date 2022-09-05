@@ -1,9 +1,8 @@
-﻿namespace Chubberino.Infrastructure.Commands.Settings
+﻿namespace Chubberino.Infrastructure.Commands.Settings;
+
+public enum SettingState
 {
-    public enum SettingState
-    {
-        Enable,
-        Disable,
-        Toggle
-    };
-}
+    Enable,
+    Disable,
+    Toggle
+};

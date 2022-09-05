@@ -1,14 +1,13 @@
-﻿using Chubberino.Modules.CheeseGame.Items;
+﻿using Chubberino.Bots.Channel.Modules.CheeseGame.Items;
 using TwitchLib.Client.Models;
 
-namespace Chubberino.Modules.CheeseGame.Shops
+namespace Chubberino.Bots.Channel.Modules.CheeseGame.Shops;
+
+public interface IShop
 {
-    public interface IShop
-    {
-        void ListInventory(ChatMessage message);
+    void ListInventory(ChatMessage message);
 
-        void BuyItem(ChatMessage message);
+    void BuyItem(ChatMessage message);
 
-        IShop AddItem(IItem item);
-    }
+    IShop AddItem(IItem item);
 }

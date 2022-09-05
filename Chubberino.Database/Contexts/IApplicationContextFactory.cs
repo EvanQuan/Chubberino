@@ -1,7 +1,6 @@
-﻿namespace Chubberino.Database.Contexts
+﻿namespace Chubberino.Database.Contexts;
+
+public interface IApplicationContextFactory
 {
-    public interface IApplicationContextFactory
-    {
-        IApplicationContext GetContext();
-    }
+    IApplicationContext GetContext();
 }

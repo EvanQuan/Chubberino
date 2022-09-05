@@ -1,31 +1,30 @@
 ﻿using Moq;
 using Xunit;
 
-namespace Chubberino.UnitTests.Tests.Client.Bots
+namespace Chubberino.UnitTests.Tests.Client.Bots;
+
+public sealed class WhenDisposing : UsingBot
 {
-    public sealed class WhenDisposing : UsingBot
+    [Fact]
+    public void ShouldDisconnect()
     {
-        [Fact]
-        public void ShouldDisconnect()
-        {
-            Sut.Start();
-            MockedClient.Setup(x => x.IsConnected).Returns(true);
+        Sut.Start();
+        MockedClient.Setup(x => x.IsConnected).Returns(true);
 
-            Sut.Dispose();
+        Sut.Dispose();
 
-            MockedClient.Verify(x => x.Disconnect(), Times.Once());
-        }
+        MockedClient.Verify(x => x.Disconnect(), Times.Once());
+    }
 
-        [Fact]
-        public void ShouldNotDisconnect()
-        {
+    [Fact]
+    public void ShouldNotDisconnect()
+    {
 
-            Sut.Start();
-            MockedClient.Setup(x => x.IsConnected).Returns(false);
+        Sut.Start();
+        MockedClient.Setup(x => x.IsConnected).Returns(false);
 
-            Sut.Dispose();
+        Sut.Dispose();
 
-            MockedClient.Verify(x => x.Disconnect(), Times.Never());
-        }
+        MockedClient.Verify(x => x.Disconnect(), Times.Never());
     }
 }

@@ -6,63 +6,62 @@ using TwitchLib.Client.Enums;
 using TwitchLib.Client.Interfaces;
 using TwitchLib.Communication.Interfaces;
 
-namespace Chubberino.Infrastructure.Client.TwitchClients
+namespace Chubberino.Infrastructure.Client.TwitchClients;
+
+public sealed class TwitchClientFactory : ITwitchClientFactory
 {
-    public sealed class TwitchClientFactory : ITwitchClientFactory
+    private Func<IClientOptions, IClient> ClientFactory { get; }
+
+    private ClientProtocol ClientProtocol { get; }
+
+    private ILogger<TwitchClient> Logger { get; }
+
+    private IClientOptions CurrentClientOptions { get; set; }
+
+    private ICredentialsManager CredentialsManager { get; }
+
+    public TwitchClientFactory(
+        Func<IClientOptions, IClient> clientFactory,
+        ClientProtocol clientProtocol,
+        ILogger<TwitchClient> logger,
+        ICredentialsManager credentialsManager)
     {
-        private Func<IClientOptions, IClient> ClientFactory { get; }
+        ClientFactory = clientFactory;
+        ClientProtocol = clientProtocol;
+        Logger = logger;
+        CredentialsManager = credentialsManager;
+    }
 
-        private ClientProtocol ClientProtocol { get; }
+    public ITwitchClient CreateClient(IClientOptions options)
+    {
+        var client = new TwitchClient(
+            ClientFactory(options),
+            ClientProtocol,
+            Logger);
 
-        private ILogger<TwitchClient> Logger { get; }
-
-        private IClientOptions CurrentClientOptions { get; set; }
-
-        private ICredentialsManager CredentialsManager { get; }
-
-        public TwitchClientFactory(
-            Func<IClientOptions, IClient> clientFactory,
-            ClientProtocol clientProtocol,
-            ILogger<TwitchClient> logger,
-            ICredentialsManager credentialsManager)
+        if (TryInitializeTwitchClient(options))
         {
-            ClientFactory = clientFactory;
-            ClientProtocol = clientProtocol;
-            Logger = logger;
-            CredentialsManager = credentialsManager;
+            return client;
         }
 
-        public ITwitchClient CreateClient(IClientOptions options)
+        // TODO replace
+        throw new ApplicationException("Could not initialize client.");
+    }
+
+    public Boolean TryInitializeTwitchClient(IClientOptions clientOptions = null)
+    {
+        // We need to get all the channel that the old client was connected to,
+        // so we can rejoin those channels on the new client.
+        //var previouslyJoinedChannels = Client == null
+        //    ? Array.Empty<JoinedChannel>()
+        //    : Client.JoinedChannels.ToArray();
+
+        if (clientOptions is not null)
         {
-            var client = new TwitchClient(
-                ClientFactory(options),
-                ClientProtocol,
-                Logger);
-
-            if (TryInitializeTwitchClient(options))
-            {
-                return client;
-            }
-
-            // TODO replace
-            throw new ApplicationException("Could not initialize client.");
+            CurrentClientOptions = clientOptions;
         }
 
-        public Boolean TryInitializeTwitchClient(IClientOptions clientOptions = null)
-        {
-            // We need to get all the channel that the old client was connected to,
-            // so we can rejoin those channels on the new client.
-            //var previouslyJoinedChannels = Client == null
-            //    ? Array.Empty<JoinedChannel>()
-            //    : Client.JoinedChannels.ToArray();
-
-            if (clientOptions is not null)
-            {
-                CurrentClientOptions = clientOptions;
-            }
-
-            // Try to get new credentials if not provided
-            return CredentialsManager.LoginCredentials.HasValue || CredentialsManager.TryUpdateLoginCredentials(null, out _);
-        }
+        // Try to get new credentials if not provided
+        return CredentialsManager.LoginCredentials.HasValue || CredentialsManager.TryUpdateLoginCredentials(null, out _);
     }
 }

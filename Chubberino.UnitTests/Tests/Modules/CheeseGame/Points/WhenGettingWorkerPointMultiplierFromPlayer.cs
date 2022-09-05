@@ -1,38 +1,36 @@
 ﻿using System;
-using Chubberino.Modules.CheeseGame.Items.Workers;
-using Chubberino.Modules.CheeseGame.Models;
-using Chubberino.Modules.CheeseGame.Ranks;
+using Chubberino.Bots.Channel.Modules.CheeseGame.Items.Workers;
+using Chubberino.Database.Models;
 using Xunit;
 
-namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Points
+namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Points;
+
+public sealed class WhenGettingWorkerPointMultiplierFromPlayer
 {
-    public sealed class WhenGettingWorkerPointMultiplierFromPlayer
+    private Player Player { get; }
+
+    public WhenGettingWorkerPointMultiplierFromPlayer()
     {
-        private Player Player { get; }
+        Player = new();
+    }
 
-        public WhenGettingWorkerPointMultiplierFromPlayer()
-        {
-            Player = new();
-        }
+    [Fact]
+    public void ShouldReturnBaseMultiplier()
+    {
+        Double multiplier = Player.GetWorkerPointMultiplier();
 
-        [Fact]
-        public void ShouldReturnBaseMultiplier()
-        {
-            Double multiplier = Player.GetWorkerPointMultiplier();
+        Assert.Equal(RankWorkerUpgradeExtensions.BaseWorkerPointPercent, multiplier);
+    }
 
-            Assert.Equal(RankWorkerUpgradeExtensions.BaseWorkerPointPercent, multiplier);
-        }
+    [Fact]
+    public void ShouldAddRankUpgradeMultiplier()
+    {
+        Player.NextWorkerProductionUpgradeUnlock = Rank.Silver;
 
-        [Fact]
-        public void ShouldAddRankUpgradeMultiplier()
-        {
-            Player.NextWorkerProductionUpgradeUnlock = Rank.Silver;
+        Double multiplier = Player.GetWorkerPointMultiplier();
 
-            Double multiplier = Player.GetWorkerPointMultiplier();
+        Double expectedMultiplier = RankWorkerUpgradeExtensions.BaseWorkerPointPercent + RankWorkerUpgradeExtensions.WorkerUpgradePercent;
 
-            Double expectedMultiplier = RankWorkerUpgradeExtensions.BaseWorkerPointPercent + RankWorkerUpgradeExtensions.WorkerUpgradePercent;
-
-            Assert.Equal(expectedMultiplier, multiplier);
-        }
+        Assert.Equal(expectedMultiplier, multiplier);
     }
 }

@@ -1,14 +1,12 @@
-﻿using Chubberino.Modules.CheeseGame.Items.Recipes;
-using Chubberino.Modules.CheeseGame.Models;
+﻿using Chubberino.Database.Models;
 using System;
 
-namespace Chubberino.Modules.CheeseGame.Items.Upgrades.Recipes
+namespace Chubberino.Bots.Channel.Modules.CheeseGame.Items.Recipes;
+
+public static class PlayerRecipeExtensions
 {
-    public static class PlayerRecipeExtensions
+    public static Boolean HasUnlockedAllRecipes(this Player player)
     {
-        public static Boolean HasUnlockedAllRecipes(this Player player)
-        {
-            return player.CheeseUnlocked + 1 >= RecipeRepository.Recipes.Count;
-        }
+        return player.CheeseUnlocked + 1 >= RecipeRepository.Recipes.Count;
     }
 }

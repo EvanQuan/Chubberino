@@ -1,8 +1,8 @@
-﻿using Chubberino.Modules.CheeseGame.Models;
-using Chubberino.Modules.CheeseGame.Ranks;
+﻿using Chubberino.Bots.Channel.Modules.CheeseGame.Ranks;
+using Chubberino.Database.Models;
 using System;
 
-namespace Chubberino.Modules.CheeseGame.Items.Upgrades;
+namespace Chubberino.Bots.Channel.Modules.CheeseGame.Items.Upgrades;
 
 public sealed class UpgradeInfo
 {

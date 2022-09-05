@@ -5,44 +5,43 @@ using System.Linq;
 using Chubberino.Infrastructure.Client.TwitchClients;
 using Chubberino.Infrastructure.Commands;
 
-namespace Chubberino.Infrastructure.Client
+namespace Chubberino.Infrastructure.Client;
+
+public sealed class Mode : Command
 {
-    public sealed class Mode : Command
+    private IBot Bot { get; }
+    public IModeratorClientOptions ModeratorClientOptions { get; }
+    public IRegularClientOptions RegularClientOptions { get; }
+
+    public Mode(
+        ITwitchClientManager client,
+        TextWriter writer,
+        IBot bot,
+        IModeratorClientOptions moderatorClientOptions,
+        IRegularClientOptions regularClientOptions)
+        : base(client, writer)
     {
-        private IBot Bot { get; }
-        public IModeratorClientOptions ModeratorClientOptions { get; }
-        public IRegularClientOptions RegularClientOptions { get; }
+        Bot = bot;
+        ModeratorClientOptions = moderatorClientOptions;
+        RegularClientOptions = regularClientOptions;
+    }
 
-        public Mode(
-            ITwitchClientManager client,
-            TextWriter writer,
-            IBot bot,
-            IModeratorClientOptions moderatorClientOptions,
-            IRegularClientOptions regularClientOptions)
-            : base(client, writer)
+    public override void Execute(IEnumerable<String> arguments)
+    {
+        switch (arguments?.FirstOrDefault())
         {
-            Bot = bot;
-            ModeratorClientOptions = moderatorClientOptions;
-            RegularClientOptions = regularClientOptions;
-        }
+            case "m":
+            case "mod":
+            case "moderator":
+                Bot.Refresh(ModeratorClientOptions);
+                Bot.IsModerator = true;
+                break;
+            case "n":
+            case "normal":
+                Bot.Refresh(RegularClientOptions);
+                Bot.IsModerator = false;
+                break;
 
-        public override void Execute(IEnumerable<String> arguments)
-        {
-            switch (arguments?.FirstOrDefault())
-            {
-                case "m":
-                case "mod":
-                case "moderator":
-                    Bot.Refresh(ModeratorClientOptions);
-                    Bot.IsModerator = true;
-                    break;
-                case "n":
-                case "normal":
-                    Bot.Refresh(RegularClientOptions);
-                    Bot.IsModerator = false;
-                    break;
-
-            }
         }
     }
 }

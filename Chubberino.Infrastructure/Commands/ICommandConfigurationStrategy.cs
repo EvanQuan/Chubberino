@@ -1,9 +1,8 @@
 ﻿using Chubberino.Infrastructure.Credentials;
 
-namespace Chubberino.Infrastructure.Commands
+namespace Chubberino.Infrastructure.Commands;
+
+public interface ICommandConfigurationStrategy
 {
-    public interface ICommandConfigurationStrategy
-    {
-        void Configure(ICommandRepository repository, LoginCredentials loginCredentials);
-    }
+    void Configure(ICommandRepository repository, LoginCredentials loginCredentials);
 }

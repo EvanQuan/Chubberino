@@ -1,51 +1,51 @@
-﻿using Chubberino.Modules.CheeseGame.Models;
+﻿using Chubberino.Bots.Channel.Modules.CheeseGame.Items.Storages;
+using Chubberino.Database.Models;
 using Monad;
 using System;
 using System.Collections.Generic;
 
-namespace Chubberino.Modules.CheeseGame.Items
+namespace Chubberino.Bots.Channel.Modules.CheeseGame.Items;
+
+public sealed class Storage : Item
 {
-    public sealed class Storage : Item
+    /// <summary>
+    /// Base storage quantity gained when buying from the shop.
+    /// </summary>
+    public const Int32 BaseQuantity = 100;
+
+    public override IEnumerable<String> Names { get; } = new String[] { "Storage", "s" };
+
+    public override Int32 GetPrice(Player player)
     {
-        /// <summary>
-        /// Base storage quantity gained when buying from the shop.
-        /// </summary>
-        public const Int32 BaseQuantity = 100;
+        return player.GetStoragePrice();
+    }
 
-        public override IEnumerable<String> Names { get; } = new String[] { "Storage", "s" };
+    public override String GetSpecificNameForNotEnoughToBuy(Player player)
+    {
+        Int32 storageGain = (Int32)(BaseQuantity * player.GetStorageUpgradeMultiplier());
 
-        public override Int32 GetPrice(Player player)
-        {
-            return player.GetStoragePrice();
-        }
+        return $"{storageGain} storage units";
+    }
 
-        public override String GetSpecificNameForNotEnoughToBuy(Player player)
-        {
-            Int32 storageGain = (Int32)(BaseQuantity * player.GetStorageUpgradeMultiplier());
+    public override String GetSpecificNameForSuccessfulBuy(Player player, Int32 quantity)
+    {
+        return $"{quantity} storage units";
+    }
 
-            return $"{storageGain} storage units";
-        }
+    public override Either<Int32, String> TryBuySingleUnit(Player player, Int32 price)
+    {
+        player.MaximumPointStorage += BaseQuantity;
+        player.Points -= price;
 
-        public override String GetSpecificNameForSuccessfulBuy(Player player, Int32 quantity)
-        {
-            return $"{quantity} storage units";
-        }
+        Int32 storageGain = (Int32)(BaseQuantity * player.GetStorageUpgradeMultiplier());
 
-        public override Either<Int32, String> TryBuySingleUnit(Player player, Int32 price)
-        {
-            player.MaximumPointStorage += BaseQuantity;
-            player.Points -= price;
+        return () => storageGain;
+    }
 
-            Int32 storageGain = (Int32)(BaseQuantity * player.GetStorageUpgradeMultiplier());
+    public override String GetShopPrompt(Player player)
+    {
+        Int32 storageGain = (Int32)(BaseQuantity * player.GetStorageUpgradeMultiplier());
 
-            return () => storageGain;
-        }
-
-        public override String GetShopPrompt(Player player)
-        {
-            Int32 storageGain = (Int32)(BaseQuantity * player.GetStorageUpgradeMultiplier());
-
-            return $"{base.GetShopPrompt(player)} [+{storageGain}] for {GetPrice(player)} cheese";
-        }
+        return $"{base.GetShopPrompt(player)} [+{storageGain}] for {GetPrice(player)} cheese";
     }
 }

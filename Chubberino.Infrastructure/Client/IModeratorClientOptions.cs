@@ -1,8 +1,7 @@
 ﻿using TwitchLib.Communication.Interfaces;
 
-namespace Chubberino.Infrastructure.Client
+namespace Chubberino.Infrastructure.Client;
+
+public interface IModeratorClientOptions : IClientOptions
 {
-    public interface IModeratorClientOptions : IClientOptions
-    {
-    }
 }

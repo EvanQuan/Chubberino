@@ -6,25 +6,24 @@ using Chubberino.Infrastructure.Client.TwitchClients;
 using Chubberino.Infrastructure.Commands.Settings.UserCommands;
 using Jering.Javascript.NodeJS;
 
-namespace Chubberino.Bots.Channel.Commands
+namespace Chubberino.Bots.Channel.Commands;
+
+public sealed class Translate : UserCommand
 {
-    public sealed class Translate : UserCommand
+    private INodeJSService NodeService { get; }
+
+    public Translate(ITwitchClientManager client, TextWriter writer, INodeJSService nodeService) : base(client, writer)
     {
-        private INodeJSService NodeService { get; }
+        NodeService = nodeService;
+    }
 
-        public Translate(ITwitchClientManager client, TextWriter writer, INodeJSService nodeService) : base(client, writer)
+    public override void Invoke(Object sender, OnUserCommandReceivedArgs e)
+    {
+        String translatedText = NodeService.InvokeFromStringAsync<String>(moduleString: JavaScript.Translate, args: e.Words).Result;
+
+        if (translatedText is not null)
         {
-            NodeService = nodeService;
-        }
-
-        public override void Invoke(Object sender, OnUserCommandReceivedArgs e)
-        {
-            String translatedText = NodeService.InvokeFromStringAsync<String>(moduleString: JavaScript.Translate, args: e.Words).Result;
-
-            if (translatedText is not null)
-            {
-                TwitchClientManager.SpoolMessage(translatedText);
-            }
+            TwitchClientManager.SpoolMessage(translatedText);
         }
     }
 }

@@ -1,14 +1,12 @@
 ﻿using Chubberino.Database.Contexts;
-using Chubberino.Modules.CheeseGame.Models;
-using System;
+using Chubberino.Database.Models;
 using TwitchLib.Client.Models;
 
-namespace Chubberino.Modules.CheeseGame.Heists
-{
-    public interface IHeistManager
-    {
-        void Heist(ChatMessage message);
+namespace Chubberino.Bots.Channel.Modules.CheeseGame.Heists;
 
-        void LeaveAllHeists(IApplicationContext context, Player player);
-    }
+public interface IHeistManager
+{
+    void Heist(ChatMessage message);
+
+    void LeaveAllHeists(IApplicationContext context, Player player);
 }

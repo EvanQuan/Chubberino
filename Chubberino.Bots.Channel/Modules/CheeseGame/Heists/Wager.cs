@@ -1,17 +1,10 @@
 ﻿using System;
 
-namespace Chubberino.Modules.CheeseGame.Heists
+namespace Chubberino.Bots.Channel.Modules.CheeseGame.Heists;
+
+public struct Wager
 {
-    public class Wager
-    {
-        public Wager(String playerTwitchID, Int32 wageredPoints)
-        {
-            PlayerTwitchID = playerTwitchID;
-            WageredPoints = wageredPoints;
-        }
+    public String PlayerTwitchID { get; init; }
 
-        public String PlayerTwitchID { get; }
-
-        public Int32 WageredPoints { get; set; }
-    }
+    public Int32 WageredPoints { get; set; }
 }

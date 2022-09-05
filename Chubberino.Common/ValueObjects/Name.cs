@@ -3,18 +3,17 @@ using System.Linq;
 using Chubberino.Common.Extensions;
 using ValueOf;
 
-namespace Chubberino.Common.ValueObjects
-{
-    public sealed class Name : ValueOf<String, Name>
-    {
-        public const String FormatExceptionMesage = "String value \"{0}\" must be all lowercase.";
+namespace Chubberino.Common.ValueObjects;
 
-        protected override void Validate()
+public sealed class Name : ValueOf<String, Name>
+{
+    public const String FormatExceptionMesage = "String value \"{0}\" must be all lowercase.";
+
+    protected override void Validate()
+    {
+        if (Value.Any(Char.IsUpper))
         {
-            if (Value.Any(Char.IsUpper))
-            {
-                throw new FormatException(FormatExceptionMesage.Format(Value));
-            }
+            throw new FormatException(FormatExceptionMesage.Format(Value));
         }
     }
 }

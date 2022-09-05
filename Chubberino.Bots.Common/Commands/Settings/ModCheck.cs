@@ -7,43 +7,42 @@ using Chubberino.Infrastructure.Commands.Settings;
 using TwitchLib.Client.Events;
 using TwitchLib.Client.Interfaces;
 
-namespace Chubberino.Bots.Common.Commands.Settings
+namespace Chubberino.Bots.Common.Commands.Settings;
+
+public sealed class ModCheck : Setting
 {
-    public sealed class ModCheck : Setting
+    public ICommandRepository Commands { get; }
+
+    private IStopSettingStrategy StopSettingStrategy { get; }
+
+    public ModCheck(
+        ITwitchClientManager client,
+        TextWriter writer,
+        ICommandRepository commands,
+        IStopSettingStrategy stopSettingStrategy)
+        : base(client, writer)
     {
-        public ICommandRepository Commands { get; }
+        Commands = commands;
+        StopSettingStrategy = stopSettingStrategy;
+    }
 
-        private IStopSettingStrategy StopSettingStrategy { get; }
+    public override void Register(ITwitchClient client)
+    {
+        client.OnMessageReceived += Client_OnMessageReceived;
+    }
 
-        public ModCheck(
-            ITwitchClientManager client,
-            TextWriter writer,
-            ICommandRepository commands,
-            IStopSettingStrategy stopSettingStrategy)
-            : base(client, writer)
+    public override void Unregister(ITwitchClient client)
+    {
+        client.OnMessageReceived -= Client_OnMessageReceived;
+    }
+
+    public void Client_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
+    {
+        if (StopSettingStrategy.ShouldStop(e.ChatMessage))
         {
-            Commands = commands;
-            StopSettingStrategy = stopSettingStrategy;
-        }
-
-        public override void Register(ITwitchClient client)
-        {
-            client.OnMessageReceived += Client_OnMessageReceived;
-        }
-
-        public override void Unregister(ITwitchClient client)
-        {
-            client.OnMessageReceived -= Client_OnMessageReceived;
-        }
-
-        public void Client_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
-        {
-            if (StopSettingStrategy.ShouldStop(e.ChatMessage))
-            {
-                Commands.DisableAllSettings();
-                Writer.WriteLine("! ! ! DISABLED ALL SETTINGS ! ! !");
-                Writer.WriteLine($"Moderator {e.ChatMessage.DisplayName} said: \"{e.ChatMessage.Message}\"");
-            }
+            Commands.DisableAllSettings();
+            Writer.WriteLine("! ! ! DISABLED ALL SETTINGS ! ! !");
+            Writer.WriteLine($"Moderator {e.ChatMessage.DisplayName} said: \"{e.ChatMessage.Message}\"");
         }
     }
 }

@@ -1,17 +1,16 @@
 ﻿using Xunit;
 
-namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Colors
+namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Colors;
+
+public sealed class WhenAddingColorSelectors : UsingColor
 {
-    public sealed class WhenAddingColorSelectors : UsingColor
+    [Fact]
+    public void ShouldAddColorSelector()
     {
-        [Fact]
-        public void ShouldAddColorSelector()
-        {
-            Sut.AddColorSelector(MockedSelector1.Object);
+        Sut.AddColorSelector(MockedSelector1.Object);
 
-            Assert.Single(Sut.Selectors);
+        Assert.Single(Sut.Selectors);
 
-            Assert.Equal(MockedSelector1.Object, Sut.Selectors[0]);
-        }
+        Assert.Equal(MockedSelector1.Object, Sut.Selectors[0]);
     }
 }

@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace Chubberino.Bots.Common.Commands
+namespace Chubberino.Bots.Common.Commands;
+
+public interface IComplimentGenerator
 {
-    public interface IComplimentGenerator
-    {
-        String GetCompliment();
-    }
+    String GetCompliment();
 }

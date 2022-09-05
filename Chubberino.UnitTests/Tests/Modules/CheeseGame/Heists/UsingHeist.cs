@@ -1,53 +1,52 @@
 ﻿using System;
+using Chubberino.Bots.Channel.Modules.CheeseGame.Heists;
 using Chubberino.Database.Contexts;
+using Chubberino.Database.Models;
 using Chubberino.Infrastructure.Client.TwitchClients;
-using Chubberino.Modules.CheeseGame.Heists;
-using Chubberino.Modules.CheeseGame.Models;
 using Moq;
 using TwitchLib.Client.Interfaces;
 using TwitchLib.Client.Models;
 using TwitchLib.Client.Models.Builders;
 
-namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Heists
+namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Heists;
+
+public abstract class UsingHeist
 {
-    public abstract class UsingHeist
+    protected Heist Sut { get; }
+
+    protected ChatMessage ChatMessage { get; }
+
+    protected Mock<IApplicationContext> MockedContext { get; }
+
+    protected Mock<Random> MockedRandom { get; }
+
+    protected Mock<ITwitchClientManager> MockedTwitchClientManager { get; }
+
+    protected Mock<ITwitchClient> MockedTwitchClient { get; }
+
+    protected Player Player { get; }
+
+    public UsingHeist()
     {
-        protected Heist Sut { get; }
+        ChatMessage = ChatMessageBuilder.Create()
+            .WithChannel(Guid.NewGuid().ToString())
+            .Build();
 
-        protected ChatMessage ChatMessage { get; }
+        MockedContext = new Mock<IApplicationContext>();
 
-        protected Mock<IApplicationContext> MockedContext { get; }
+        MockedRandom = new Mock<Random>();
 
-        protected Mock<Random> MockedRandom { get; }
+        MockedTwitchClientManager = new Mock<ITwitchClientManager>();
 
-        protected Mock<ITwitchClientManager> MockedTwitchClientManager { get; }
+        MockedTwitchClient = new Mock<ITwitchClient>();
 
-        protected Mock<ITwitchClient> MockedTwitchClient { get; }
+        MockedTwitchClientManager.Setup(x => x.Client).Returns(MockedTwitchClient.Object);
 
-        protected Player Player { get; }
-
-        public UsingHeist()
+        Player = new Player()
         {
-            ChatMessage = ChatMessageBuilder.Create()
-                .WithChannel(Guid.NewGuid().ToString())
-                .Build();
+            TwitchUserID = Guid.NewGuid().ToString()
+        };
 
-            MockedContext = new Mock<IApplicationContext>();
-
-            MockedRandom = new Mock<Random>();
-
-            MockedTwitchClientManager = new Mock<ITwitchClientManager>();
-
-            MockedTwitchClient = new Mock<ITwitchClient>();
-
-            MockedTwitchClientManager.Setup(x => x.Client).Returns(MockedTwitchClient.Object);
-
-            Player = new Player()
-            {
-                TwitchUserID = Guid.NewGuid().ToString()
-            };
-
-            Sut = new Heist(ChatMessage, MockedRandom.Object, MockedTwitchClientManager.Object);
-        }
+        Sut = new Heist(ChatMessage, MockedRandom.Object, MockedTwitchClientManager.Object);
     }
 }
