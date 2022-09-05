@@ -8,154 +8,153 @@ using Chubberino.Infrastructure.Commands.Settings;
 using TwitchLib.Client.Events;
 using TwitchLib.Client.Interfaces;
 
-namespace Chubberino.Bots.Common.Commands.Settings
+namespace Chubberino.Bots.Common.Commands.Settings;
+
+public sealed class TrackJimbox : Setting
 {
-    public sealed class TrackJimbox : Setting
+    /// <summary>
+    /// Progression in making a Jimbox.
+    /// </summary>
+    private enum JimboxStage
     {
         /// <summary>
-        /// Progression in making a Jimbox.
+        /// Not in any Jimbox progression.
         /// </summary>
-        private enum JimboxStage
-        {
-            /// <summary>
-            /// Not in any Jimbox progression.
-            /// </summary>
-            None = 0,
-
-            /// <summary>
-            /// Top border, composed of 4 of the same emote.
-            /// </summary>
-            Top = 1,
-
-            /// <summary>
-            /// Border emotes surrounding eyes: yyj1 yyj2
-            /// </summary>
-            Eyes = 2,
-
-            /// <summary>
-            /// Borer emotes surrounding mouth: yyj3 yyj4
-            /// </summary>
-            Mouth = 3,
-
-            /// <summary>
-            /// Bottom border, composed of 4 border emotes.
-            /// </summary>
-            Bottom = 4
-        }
+        None = 0,
 
         /// <summary>
-        /// Current progression.
+        /// Top border, composed of 4 of the same emote.
         /// </summary>
-        private JimboxStage CurrentStage { get; set; }
-
-
-        private HashSet<String> Contributors { get; }
+        Top = 1,
 
         /// <summary>
-        /// Emote bordering the box.
+        /// Border emotes surrounding eyes: yyj1 yyj2
         /// </summary>
-        private String Border { get; set; }
+        Eyes = 2,
 
-        public TrackJimbox(ITwitchClientManager client, TextWriter console)
-            : base(client, console)
+        /// <summary>
+        /// Borer emotes surrounding mouth: yyj3 yyj4
+        /// </summary>
+        Mouth = 3,
+
+        /// <summary>
+        /// Bottom border, composed of 4 border emotes.
+        /// </summary>
+        Bottom = 4
+    }
+
+    /// <summary>
+    /// Current progression.
+    /// </summary>
+    private JimboxStage CurrentStage { get; set; }
+
+
+    private HashSet<String> Contributors { get; }
+
+    /// <summary>
+    /// Emote bordering the box.
+    /// </summary>
+    private String Border { get; set; }
+
+    public TrackJimbox(ITwitchClientManager client, TextWriter console)
+        : base(client, console)
+    {
+        Contributors = new HashSet<String>();
+    }
+
+    public override void Register(ITwitchClient client)
+    {
+        client.OnMessageReceived += TwitchClient_OnMessageReceived;
+    }
+
+    public override void Unregister(ITwitchClient client)
+    {
+        client.OnMessageReceived -= TwitchClient_OnMessageReceived;
+    }
+
+    public void TwitchClient_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
+    {
+        String cleanMessage = e.ChatMessage.Message.Trim(' ', Data.InvisibleCharacter);
+
+        String[] tokens = cleanMessage.Split(' ');
+
+        if (tokens.Length < 4)
         {
-            Contributors = new HashSet<String>();
+            CurrentStage = JimboxStage.None;
+            return;
         }
 
-        public override void Register(ITwitchClient client)
+        if (IsTop(tokens))
         {
-            client.OnMessageReceived += TwitchClient_OnMessageReceived;
-        }
-
-        public override void Unregister(ITwitchClient client)
-        {
-            client.OnMessageReceived -= TwitchClient_OnMessageReceived;
-        }
-
-        public void TwitchClient_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
-        {
-            String cleanMessage = e.ChatMessage.Message.Trim(' ', Data.InvisibleCharacter);
-
-            String[] tokens = cleanMessage.Split(' ');
-
-            if (tokens.Length < 4)
+            // Differentiate between top and bottom.
+            if (CurrentStage == JimboxStage.Mouth)
             {
-                CurrentStage = JimboxStage.None;
-                return;
-            }
-
-            if (IsTop(tokens))
-            {
-                // Differentiate between top and bottom.
-                if (CurrentStage == JimboxStage.Mouth)
-                {
-                    // We are at the bottom and have completed the jimbox.
-                    CurrentStage = JimboxStage.Bottom;
-                    Contributors.Add(e.ChatMessage.DisplayName);
-                    SpoolSuccessMessage();
-                    Border = null;
-                    Contributors.Clear();
-                }
-                else
-                {
-                    // We just started a new jimbox.
-                    CurrentStage = JimboxStage.Top;
-                    Border = tokens[0];
-                    Contributors.Clear();
-                    Contributors.Add(e.ChatMessage.DisplayName);
-                }
-            }
-            else if (CurrentStage == JimboxStage.Top && IsEyes(tokens))
-            {
-                CurrentStage = JimboxStage.Eyes;
+                // We are at the bottom and have completed the jimbox.
+                CurrentStage = JimboxStage.Bottom;
                 Contributors.Add(e.ChatMessage.DisplayName);
-            }
-            else if (CurrentStage == JimboxStage.Eyes && IsMouth(tokens))
-            {
-                CurrentStage = JimboxStage.Mouth;
-                Contributors.Add(e.ChatMessage.DisplayName);
-            }
-            else
-            {
-                CurrentStage = JimboxStage.None;
+                SpoolSuccessMessage();
                 Border = null;
                 Contributors.Clear();
             }
-        }
-
-        private void SpoolSuccessMessage()
-        {
-            if (Contributors.Count == 1)
-            {
-                TwitchClientManager.SpoolMessage($"@{Contributors.Single()} Nice {Border} jimbox! peepoClap");
-            }
             else
             {
-                TwitchClientManager.SpoolMessage($"@{String.Join(", @", Contributors)} Nice {Border} jimbox! Hooray teamwork! peepoClap");
+                // We just started a new jimbox.
+                CurrentStage = JimboxStage.Top;
+                Border = tokens[0];
+                Contributors.Clear();
+                Contributors.Add(e.ChatMessage.DisplayName);
             }
         }
-
-        private static Boolean IsTop(String[] tokens)
+        else if (CurrentStage == JimboxStage.Top && IsEyes(tokens))
         {
-            return tokens[1] == tokens[0]
-                && tokens[2] == tokens[0]
-                && tokens[3] == tokens[0];
+            CurrentStage = JimboxStage.Eyes;
+            Contributors.Add(e.ChatMessage.DisplayName);
         }
-
-        private Boolean IsEyes(String[] tokens)
+        else if (CurrentStage == JimboxStage.Eyes && IsMouth(tokens))
         {
-            return tokens[0] == Border
-                && tokens[1] == "yyj1"
-                && tokens[2] == "yyj2"
-                && tokens[3] == Border;
+            CurrentStage = JimboxStage.Mouth;
+            Contributors.Add(e.ChatMessage.DisplayName);
         }
-
-        private Boolean IsMouth(String[] tokens)
+        else
         {
-            return tokens[0] == Border
-                && tokens[1] == "yyj3"
-                && tokens[2] == "yyj4"
-                && tokens[3] == Border;
+            CurrentStage = JimboxStage.None;
+            Border = null;
+            Contributors.Clear();
         }
+    }
+
+    private void SpoolSuccessMessage()
+    {
+        if (Contributors.Count == 1)
+        {
+            TwitchClientManager.SpoolMessage($"@{Contributors.Single()} Nice {Border} jimbox! peepoClap");
+        }
+        else
+        {
+            TwitchClientManager.SpoolMessage($"@{String.Join(", @", Contributors)} Nice {Border} jimbox! Hooray teamwork! peepoClap");
+        }
+    }
+
+    private static Boolean IsTop(String[] tokens)
+    {
+        return tokens[1] == tokens[0]
+            && tokens[2] == tokens[0]
+            && tokens[3] == tokens[0];
+    }
+
+    private Boolean IsEyes(String[] tokens)
+    {
+        return tokens[0] == Border
+            && tokens[1] == "yyj1"
+            && tokens[2] == "yyj2"
+            && tokens[3] == Border;
+    }
+
+    private Boolean IsMouth(String[] tokens)
+    {
+        return tokens[0] == Border
+            && tokens[1] == "yyj3"
+            && tokens[2] == "yyj4"
+            && tokens[3] == Border;
     }
 }

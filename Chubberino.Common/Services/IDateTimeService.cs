@@ -1,11 +1,10 @@
 ﻿using System;
 
-namespace Chubberino.Common.Services
+namespace Chubberino.Common.Services;
+
+public interface IDateTimeService
 {
-    public interface IDateTimeService
-    {
-        public DateTime Now { get; }
-        public DateTime MinValue { get; }
-        public DateTime MaxValue { get; }
-    }
+    public DateTime Now { get; }
+    public DateTime MinValue { get; }
+    public DateTime MaxValue { get; }
 }

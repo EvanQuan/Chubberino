@@ -1,17 +1,16 @@
 ﻿using System;
 
-namespace Chubberino.Infrastructure.Commands.Settings
-{
-    public sealed class OnSettingStateChangeArgs : EventArgs
-    {
-        public OnSettingStateChangeArgs(SettingState state)
-        {
-            RequestState = state;
-        }
+namespace Chubberino.Infrastructure.Commands.Settings;
 
-        /// <summary>
-        /// Request to make setting enabled.
-        /// </summary>
-        public SettingState RequestState { get; }
+public sealed class OnSettingStateChangeArgs : EventArgs
+{
+    public OnSettingStateChangeArgs(SettingState state)
+    {
+        RequestState = state;
     }
+
+    /// <summary>
+    /// Request to make setting enabled.
+    /// </summary>
+    public SettingState RequestState { get; }
 }

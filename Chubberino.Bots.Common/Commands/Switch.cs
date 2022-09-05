@@ -5,33 +5,32 @@ using System.Linq;
 using Chubberino.Infrastructure.Client.TwitchClients;
 using Chubberino.Infrastructure.Commands;
 
-namespace Chubberino.Bots.Common.Commands
+namespace Chubberino.Bots.Common.Commands;
+
+public sealed class Switch : Command
 {
-    public sealed class Switch : Command
+    public Switch(ITwitchClientManager client, TextWriter writer) : base(client, writer)
     {
-        public Switch(ITwitchClientManager client, TextWriter writer) : base(client, writer)
+    }
+
+    public override void Execute(IEnumerable<String> arguments)
+    {
+        if (!arguments.Any()) { return; }
+
+        if (!TwitchClientManager.Client.IsConnected)
         {
+            TwitchClientManager.Client.Connect();
         }
 
-        public override void Execute(IEnumerable<String> arguments)
+        String channelName = arguments.First();
+
+        var joinedChannels = TwitchClientManager.Client.JoinedChannels;
+
+        foreach (var channel in joinedChannels)
         {
-            if (!arguments.Any()) { return; }
-
-            if (!TwitchClientManager.Client.IsConnected)
-            {
-                TwitchClientManager.Client.Connect();
-            }
-
-            String channelName = arguments.First();
-
-            var joinedChannels = TwitchClientManager.Client.JoinedChannels;
-
-            foreach (var channel in joinedChannels)
-            {
-                TwitchClientManager.Client.LeaveChannel(channel);
-            }
-
-            TwitchClientManager.EnsureJoinedToChannel(channelName);
+            TwitchClientManager.Client.LeaveChannel(channel);
         }
+
+        TwitchClientManager.EnsureJoinedToChannel(channelName);
     }
 }

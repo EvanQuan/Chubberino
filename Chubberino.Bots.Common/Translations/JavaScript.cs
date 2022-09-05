@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace Chubberino.Bots.Common.Translations
+namespace Chubberino.Bots.Common.Translations;
+
+public static class JavaScript
 {
-    public static class JavaScript
-    {
-        public const String Translate = @"
+    public const String Translate = @"
 const translate = require('@vitalets/google-translate-api');
 
 module.exports = async (message) => {
@@ -16,5 +16,4 @@ module.exports = async (message) => {
     }
 }";
 
-    }
 }

@@ -9,57 +9,56 @@ using Moq;
 using TwitchLib.Client.Interfaces;
 using TwitchLib.Communication.Models;
 
-namespace Chubberino.UnitTests.Tests.Client.Commands
+namespace Chubberino.UnitTests.Tests.Client.Commands;
+
+public abstract class UsingCommand
 {
-    public abstract class UsingCommand
+    protected Mock<IApplicationContextFactory> MockedContextFactory { get; }
+
+    protected Mock<IApplicationContext> MockedContext { get; }
+
+    protected Mock<ITwitchClientManager> MockedTwitchClientManager { get; }
+
+    protected Mock<ITwitchClient> MockedTwitchClient { get; }
+
+    protected Mock<IRepeater> MockedRepeater { get; }
+
+    protected Mock<TextWriter> MockedWriter { get; }
+
+    protected Mock<ICommandRepository> MockedCommandRepository { get; }
+
+    protected Mock<IBot> MockedBot { get; }
+
+    protected String PrimaryChannelName { get; }
+
+    public UsingCommand()
     {
-        protected Mock<IApplicationContextFactory> MockedContextFactory { get; }
+        PrimaryChannelName = Guid.NewGuid().ToString();
 
-        protected Mock<IApplicationContext> MockedContext { get; }
+        MockedBot = new Mock<IBot>().SetupAllProperties();
 
-        protected Mock<ITwitchClientManager> MockedTwitchClientManager { get; }
+        var moderatorOptions =  new ClientOptions();
+        var regularOptions = new ClientOptions();
 
-        protected Mock<ITwitchClient> MockedTwitchClient { get; }
+        MockedWriter = new();
 
-        protected Mock<IRepeater> MockedRepeater { get; }
+        MockedContextFactory = new();
 
-        protected Mock<TextWriter> MockedWriter { get; }
+        MockedContext = new Mock<IApplicationContext>();
 
-        protected Mock<ICommandRepository> MockedCommandRepository { get; }
+        MockedContextFactory.Setup(x => x.GetContext()).Returns(MockedContext.Object);
 
-        protected Mock<IBot> MockedBot { get; }
+        MockedTwitchClient = new Mock<ITwitchClient>();
 
-        protected String PrimaryChannelName { get; }
+        MockedTwitchClientManager = new Mock<ITwitchClientManager>();
 
-        public UsingCommand()
-        {
-            PrimaryChannelName = Guid.NewGuid().ToString();
+        MockedTwitchClientManager.Setup(x => x.PrimaryChannelName).Returns(PrimaryChannelName);
 
-            MockedBot = new Mock<IBot>().SetupAllProperties();
+        MockedTwitchClientManager.Setup(x => x.Client).Returns(MockedTwitchClient.Object);
 
-            var moderatorOptions =  new ClientOptions();
-            var regularOptions = new ClientOptions();
+        MockedRepeater = new Mock<IRepeater>().SetupAllProperties();
 
-            MockedWriter = new();
-
-            MockedContextFactory = new();
-
-            MockedContext = new Mock<IApplicationContext>();
-
-            MockedContextFactory.Setup(x => x.GetContext()).Returns(MockedContext.Object);
-
-            MockedTwitchClient = new Mock<ITwitchClient>();
-
-            MockedTwitchClientManager = new Mock<ITwitchClientManager>();
-
-            MockedTwitchClientManager.Setup(x => x.PrimaryChannelName).Returns(PrimaryChannelName);
-
-            MockedTwitchClientManager.Setup(x => x.Client).Returns(MockedTwitchClient.Object);
-
-            MockedRepeater = new Mock<IRepeater>().SetupAllProperties();
-
-            MockedCommandRepository = new Mock<ICommandRepository>().SetupAllProperties();
-        }
-
+        MockedCommandRepository = new Mock<ICommandRepository>().SetupAllProperties();
     }
+
 }

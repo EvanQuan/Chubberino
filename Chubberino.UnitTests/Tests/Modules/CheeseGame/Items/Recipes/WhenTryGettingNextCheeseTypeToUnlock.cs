@@ -1,50 +1,49 @@
-﻿using Chubberino.Modules.CheeseGame.Items.Recipes;
-using Chubberino.Modules.CheeseGame.Models;
+﻿using Chubberino.Bots.Channel.Modules.CheeseGame.Items.Recipes;
+using Chubberino.Database.Models;
 using System.Collections.Generic;
 using Xunit;
 
-namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Items.Recipes
+namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Items.Recipes;
+
+public sealed class WhenTryGettingNextCheeseTypeToUnlock
 {
-    public sealed class WhenTryGettingNextCheeseTypeToUnlock
+    public IReadOnlyList<RecipeInfo> Sut = RecipeRepository.Recipes;
+
+    private Player Player { get; }
+
+    public WhenTryGettingNextCheeseTypeToUnlock()
     {
-        public IReadOnlyList<RecipeInfo> Sut = RecipeRepository.Recipes;
+        Player = new Player();
+    }
 
-        private Player Player { get; }
+    [Fact]
+    public void ShouldReturnSecondCheese()
+    {
+        var result = Sut.TryGetNextToUnlock(Player, out var cheeseType);
 
-        public WhenTryGettingNextCheeseTypeToUnlock()
-        {
-            Player = new Player();
-        }
+        Assert.True(result);
+        Assert.NotNull(cheeseType);
+        Assert.Equal(Sut[1], cheeseType);
+    }
 
-        [Fact]
-        public void ShouldReturnSecondCheese()
-        {
-            var result = Sut.TryGetNextToUnlock(Player, out var cheeseType);
+    [Fact]
+    public void ShouldReturnLastCheese()
+    {
+        Player.CheeseUnlocked = Sut.Count - 2;
+        var result = Sut.TryGetNextToUnlock(Player, out var cheeseType);
 
-            Assert.True(result);
-            Assert.NotNull(cheeseType);
-            Assert.Equal(Sut[1], cheeseType);
-        }
+        Assert.True(result);
+        Assert.NotNull(cheeseType);
+        Assert.Equal(Sut[Sut.Count - 1], cheeseType);
+    }
 
-        [Fact]
-        public void ShouldReturnLastCheese()
-        {
-            Player.CheeseUnlocked = Sut.Count - 2;
-            var result = Sut.TryGetNextToUnlock(Player, out var cheeseType);
+    [Fact]
+    public void ShouldReturnNoCheese()
+    {
+        Player.CheeseUnlocked = Sut.Count;
+        var result = Sut.TryGetNextToUnlock(Player, out var cheeseType);
 
-            Assert.True(result);
-            Assert.NotNull(cheeseType);
-            Assert.Equal(Sut[Sut.Count - 1], cheeseType);
-        }
-
-        [Fact]
-        public void ShouldReturnNoCheese()
-        {
-            Player.CheeseUnlocked = Sut.Count;
-            var result = Sut.TryGetNextToUnlock(Player, out var cheeseType);
-
-            Assert.False(result);
-            Assert.Null(cheeseType);
-        }
+        Assert.False(result);
+        Assert.Null(cheeseType);
     }
 }

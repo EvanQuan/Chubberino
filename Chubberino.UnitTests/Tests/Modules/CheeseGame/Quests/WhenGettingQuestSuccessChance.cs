@@ -1,62 +1,60 @@
-﻿using Chubberino.Modules.CheeseGame.Models;
-using Chubberino.Modules.CheeseGame.Quests;
-using Chubberino.Modules.CheeseGame.Ranks;
-using System;
+﻿using System;
+using Chubberino.Bots.Channel.Modules.CheeseGame.Quests;
+using Chubberino.Database.Models;
 using Xunit;
 
-namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Quests
+namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Quests;
+
+public sealed class WhenGettingQuestSuccessChance
 {
-    public sealed class WhenGettingQuestSuccessChance
+    private Player Player { get; set; }
+    
+    public WhenGettingQuestSuccessChance()
     {
-        private Player Player { get; set; }
-        
-        public WhenGettingQuestSuccessChance()
-        {
-            Player = new Player();
-        }
+        Player = new Player();
+    }
 
-        [Fact]
-        public void ShouldReturnBaseChance()
-        {
-            Double result = Player.GetQuestSuccessChance();
+    [Fact]
+    public void ShouldReturnBaseChance()
+    {
+        Double result = Player.GetQuestSuccessChance();
 
-            Assert.Equal(Quest.BaseSuccessChance, result);
-        }
+        Assert.Equal(Quest.BaseSuccessChance, result);
+    }
 
-        [Theory]
-        [InlineData(0, 1)]
-        [InlineData(0, 2)]
-        [InlineData(1, 2)]
-        public void ShouldAddGearBonus(Int32 lesserGearCount, Int32 greaterGearCount)
-        {
-            Player.GearCount = lesserGearCount;
+    [Theory]
+    [InlineData(0, 1)]
+    [InlineData(0, 2)]
+    [InlineData(1, 2)]
+    public void ShouldAddGearBonus(Int32 lesserGearCount, Int32 greaterGearCount)
+    {
+        Player.GearCount = lesserGearCount;
 
-            Double lesserResult = Player.GetQuestSuccessChance();
+        Double lesserResult = Player.GetQuestSuccessChance();
 
-            Player.GearCount = greaterGearCount;
+        Player.GearCount = greaterGearCount;
 
-            Double greaterResult = Player.GetQuestSuccessChance();
+        Double greaterResult = Player.GetQuestSuccessChance();
 
-            Assert.True(lesserResult < greaterResult);
-        }
+        Assert.True(lesserResult < greaterResult);
+    }
 
-        [Theory]
-        [InlineData(0, Rank.Bronze, Rank.Bronze)]
-        [InlineData(0, Rank.Bronze, Rank.Silver)]
-        [InlineData(1, Rank.Silver, Rank.Silver)]
-        [InlineData(1, Rank.Silver, Rank.Gold)]
-        public void ShouldNotBeImpactedByRank(Int32 workerCount, Rank lessRanker, Rank greaterRank)
-        {
-            Player.WorkerCount = workerCount;
-            Player.NextQuestUpgradeUnlock = lessRanker;
+    [Theory]
+    [InlineData(0, Rank.Bronze, Rank.Bronze)]
+    [InlineData(0, Rank.Bronze, Rank.Silver)]
+    [InlineData(1, Rank.Silver, Rank.Silver)]
+    [InlineData(1, Rank.Silver, Rank.Gold)]
+    public void ShouldNotBeImpactedByRank(Int32 workerCount, Rank lessRanker, Rank greaterRank)
+    {
+        Player.WorkerCount = workerCount;
+        Player.NextQuestUpgradeUnlock = lessRanker;
 
-            Double lesserResult = Player.GetQuestSuccessChance();
+        Double lesserResult = Player.GetQuestSuccessChance();
 
-            Player.NextQuestUpgradeUnlock = greaterRank;
+        Player.NextQuestUpgradeUnlock = greaterRank;
 
-            Double greaterResult = Player.GetQuestSuccessChance();
+        Double greaterResult = Player.GetQuestSuccessChance();
 
-            Assert.Equal(lesserResult,  greaterResult);
-        }
+        Assert.Equal(lesserResult,  greaterResult);
     }
 }

@@ -2,45 +2,44 @@
 using Chubberino.Infrastructure.Commands.Settings;
 using Xunit;
 
-namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Copies
+namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Copies;
+
+/// <summary>
+/// When calling <see cref="Copy.Execute(IEnumerable{String})"/>
+/// </summary>
+public sealed class WhenExecuting : UsingCopy
 {
     /// <summary>
-    /// When calling <see cref="Copy.Execute(IEnumerable{String})"/>
+    /// Should output the setting properties.
     /// </summary>
-    public sealed class WhenExecuting : UsingCopy
+    [Theory]
+    [InlineData("a", "Mock", "1")]
+    [InlineData("b", "Reverse", "2")]
+    public void ShouldOutputProperties(params String[] arguments)
     {
-        /// <summary>
-        /// Should output the setting properties.
-        /// </summary>
-        [Theory]
-        [InlineData("a", "Mock", "1")]
-        [InlineData("b", "Reverse", "2")]
-        public void ShouldOutputProperties(params String[] arguments)
-        {
-            String userToCopy = arguments[0];
-            String mode = arguments[1];
-            String prefix = arguments[2];
+        String userToCopy = arguments[0];
+        String mode = arguments[1];
+        String prefix = arguments[2];
 
-            Sut.Execute(arguments);
+        Sut.Execute(arguments);
 
-            MockedWriter.Verify(x => x.WriteLine($"Copying user \"{userToCopy}\" Mode: \"{mode}\" Prefix: \"{prefix}\""));
-        }
+        MockedWriter.Verify(x => x.WriteLine($"Copying user \"{userToCopy}\" Mode: \"{mode}\" Prefix: \"{prefix}\""));
+    }
 
-        /// <summary>
-        /// Should disable setting.
-        /// </summary>
-        [Fact]
-        public void ShouldDisable()
-        {
-            Assert.Raises<OnSettingStateChangeArgs>(
-                x => Sut.OnSettingStateChange += x,
-                x => Sut.OnSettingStateChange -= x,
-                () =>
-                {
-                    Sut.Execute(Array.Empty<String>());
-                });
+    /// <summary>
+    /// Should disable setting.
+    /// </summary>
+    [Fact]
+    public void ShouldDisable()
+    {
+        Assert.Raises<OnSettingStateChangeArgs>(
+            x => Sut.OnSettingStateChange += x,
+            x => Sut.OnSettingStateChange -= x,
+            () =>
+            {
+                Sut.Execute(Array.Empty<String>());
+            });
 
-            MockedWriter.Verify(x => x.WriteLine("Copy disabled"));
-        }
+        MockedWriter.Verify(x => x.WriteLine("Copy disabled"));
     }
 }

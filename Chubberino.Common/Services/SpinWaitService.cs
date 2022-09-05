@@ -1,12 +1,12 @@
 ﻿using System;
+using System.Threading;
 
-namespace Chubberino.Common.Services
+namespace Chubberino.Common.Services;
+
+public sealed class SpinWaitService : ISpinWaitService
 {
-    public sealed class SpinWaitService : ISpinWaitService
+    public Boolean SpinUntil(Func<Boolean> condition, TimeSpan timeout)
     {
-        public Boolean SpinUntil(Func<Boolean> condition, TimeSpan timeout)
-        {
-            return System.Threading.SpinWait.SpinUntil(condition, timeout);
-        }
+        return SpinWait.SpinUntil(condition, timeout);
     }
 }

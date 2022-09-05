@@ -2,28 +2,27 @@
 using Chubberino.Bots.Common.Commands.Settings;
 using Xunit;
 
-namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Replies
+namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Replies;
+
+public sealed class WhenSetting : UsingCommand
 {
-    public sealed class WhenSetting : UsingCommand
+    private Repeat Sut { get; }
+
+    public WhenSetting()
     {
-        private Repeat Sut { get; }
+        Sut = new Repeat(MockedTwitchClientManager.Object, MockedRepeater.Object, MockedWriter.Object);
+    }
 
-        public WhenSetting()
-        {
-            Sut = new Repeat(MockedTwitchClientManager.Object, MockedRepeater.Object, MockedWriter.Object);
-        }
+    [Theory]
+    [InlineData("i", "2.5", 2.5)]
+    [InlineData("interval", "1.5", 1.5)]
+    [InlineData("interval", "0", 0)]
+    [InlineData("i", "-1", 0)]
+    [InlineData("interval", "-1.25", 0)]
+    public void ShouldSetInterval(String property, String value, Double expectedIntervalSeconds)
+    {
+        Sut.Set(property, new String[] { value });
 
-        [Theory]
-        [InlineData("i", "2.5", 2.5)]
-        [InlineData("interval", "1.5", 1.5)]
-        [InlineData("interval", "0", 0)]
-        [InlineData("i", "-1", 0)]
-        [InlineData("interval", "-1.25", 0)]
-        public void ShouldSetInterval(String property, String value, Double expectedIntervalSeconds)
-        {
-            Sut.Set(property, new String[] { value });
-
-            Assert.Equal(expectedIntervalSeconds, MockedRepeater.Object.Interval.TotalSeconds);
-        }
+        Assert.Equal(expectedIntervalSeconds, MockedRepeater.Object.Interval.TotalSeconds);
     }
 }

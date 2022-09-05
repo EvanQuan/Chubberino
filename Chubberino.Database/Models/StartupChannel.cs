@@ -1,22 +1,21 @@
 ﻿using System;
 
-namespace Chubberino.Database.Models
+namespace Chubberino.Database.Models;
+
+/// <summary>
+/// Channel to join at program startup.
+/// </summary>
+public class StartupChannel
 {
+    public Int32 ID { get; set; }
+
     /// <summary>
-    /// Channel to join at program startup.
+    /// Twitch user ID.
     /// </summary>
-    public class StartupChannel
-    {
-        public Int32 ID { get; set; }
+    public String UserID { get; set; }
 
-        /// <summary>
-        /// Twitch user ID.
-        /// </summary>
-        public String UserID { get; set; }
-
-        /// <summary>
-        /// Twitch display name.
-        /// </summary>
-        public String DisplayName { get; set; }
-    }
+    /// <summary>
+    /// Twitch display name.
+    /// </summary>
+    public String DisplayName { get; set; }
 }

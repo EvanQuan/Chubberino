@@ -1,31 +1,30 @@
-﻿using Chubberino.Database.Contexts;
-using Chubberino.Modules.CheeseGame.Emotes;
+﻿using Chubberino.Bots.Channel.Modules.CheeseGame.Emotes;
+using Chubberino.Database.Contexts;
 using Moq;
 using System;
 
-namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Emotes
+namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Emotes;
+
+public abstract class UsingEmoteManager
 {
-    public abstract class UsingEmoteManager
+    protected Mock<IApplicationContextFactory> MockedContextFactory { get; }
+
+    protected Mock<IApplicationContext> MockedContext { get; }
+
+    protected Mock<Random> MockedRandom { get; }
+
+    protected EmoteManager Sut { get; }
+
+    protected UsingEmoteManager()
     {
-        protected Mock<IApplicationContextFactory> MockedContextFactory { get; }
+        MockedContextFactory = new();
+        MockedContext = new();
+        MockedRandom = new();
 
-        protected Mock<IApplicationContext> MockedContext { get; }
+        Sut = new(MockedContextFactory.Object, MockedRandom.Object);
 
-        protected Mock<Random> MockedRandom { get; }
-
-        protected EmoteManager Sut { get; }
-
-        protected UsingEmoteManager()
-        {
-            MockedContextFactory = new();
-            MockedContext = new();
-            MockedRandom = new();
-
-            Sut = new(MockedContextFactory.Object, MockedRandom.Object);
-
-            MockedContextFactory
-                .Setup(x => x.GetContext())
-                .Returns(MockedContext.Object);
-        }
+        MockedContextFactory
+            .Setup(x => x.GetContext())
+            .Returns(MockedContext.Object);
     }
 }

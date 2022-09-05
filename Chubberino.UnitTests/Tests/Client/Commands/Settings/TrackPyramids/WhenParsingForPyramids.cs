@@ -1,23 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using Chubberino.Bots.Common.Commands.Settings;
 using Chubberino.Infrastructure.Client;
-using Chubberino.UnitTests.Tests.Client.Commands;
 using Moq;
 using TwitchLib.Client.Events;
 using TwitchLib.Client.Models;
 using TwitchLib.Client.Models.Builders;
 using Xunit;
 
-namespace Chubberino.UnitTests.Tests.Client.UsingTrackPyramids
+using PyramidTracker = Chubberino.Bots.Common.Commands.Settings.TrackPyramids;
+
+namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.TrackPyramids
 {
     public sealed class WhenParsingForPyramids : UsingCommand
     {
-        private TrackPyramids Sut { get; }
+        private PyramidTracker Sut { get; }
 
         public WhenParsingForPyramids()
         {
-            Sut = new TrackPyramids(MockedTwitchClientManager.Object, MockedWriter.Object);
+            Sut = new PyramidTracker(MockedTwitchClientManager.Object, MockedWriter.Object);
         }
 
         [Theory]

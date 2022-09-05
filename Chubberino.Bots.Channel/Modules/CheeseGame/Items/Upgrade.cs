@@ -1,77 +1,76 @@
-﻿using Chubberino.Modules.CheeseGame.Items.Upgrades;
-using Chubberino.Modules.CheeseGame.Models;
+﻿using Chubberino.Bots.Channel.Modules.CheeseGame.Items.Upgrades;
+using Chubberino.Database.Models;
 using Monad;
 using System;
 using System.Collections.Generic;
 
-namespace Chubberino.Modules.CheeseGame.Items
+namespace Chubberino.Bots.Channel.Modules.CheeseGame.Items;
+
+public sealed class Upgrade : Item
 {
-    public sealed class Upgrade : Item
+    public override IEnumerable<String> Names => new String[] { "Upgrade", "u", "up", "upgrades" };
+
+    public override Int32 GetPrice(Player player)
     {
-        public override IEnumerable<String> Names => new String[] { "Upgrade", "u", "up", "upgrades" };
-
-        public override Int32 GetPrice(Player player)
+        if (player.TryGetNextUpgradeToUnlock(out var upgrade))
         {
-            if (player.TryGetNextUpgradeToUnlock(out var upgrade))
-            {
-                return upgrade.Price;
-            }
-
-            return Int32.MaxValue;
+            return upgrade.Price;
         }
 
-        public override String GetSpecificNameForNotEnoughToBuy(Player player)
-        {
-            if (player.TryGetNextUpgradeToUnlock(out var upgrade))
-            {
-                return $"the {upgrade.Description} upgrade";
-            }
+        return Int32.MaxValue;
+    }
 
-            return UnexpectedErrorMessage;
+    public override String GetSpecificNameForNotEnoughToBuy(Player player)
+    {
+        if (player.TryGetNextUpgradeToUnlock(out var upgrade))
+        {
+            return $"the {upgrade.Description} upgrade";
         }
 
-        public override String GetSpecificNameForSuccessfulBuy(Player player, Int32 quantity)
-        {
-            if (player.TryPreviousUpgradeUnlocked(out var upgrade))
-            {
-                return $"the {upgrade.Description} upgrade{(quantity == 1 ? String.Empty : $" and {quantity - 1} other{(quantity - 1 == 1 ? String.Empty : "s")}")}";
-            }
+        return UnexpectedErrorMessage;
+    }
 
-            return UnexpectedErrorMessage;
+    public override String GetSpecificNameForSuccessfulBuy(Player player, Int32 quantity)
+    {
+        if (player.TryPreviousUpgradeUnlocked(out var upgrade))
+        {
+            return $"the {upgrade.Description} upgrade{(quantity == 1 ? String.Empty : $" and {quantity - 1} other{(quantity - 1 == 1 ? String.Empty : "s")}")}";
         }
 
-        public override Either<Int32, String> TryBuySingleUnit(Player player, Int32 price)
+        return UnexpectedErrorMessage;
+    }
+
+    public override Either<Int32, String> TryBuySingleUnit(Player player, Int32 price)
+    {
+        if (!player.TryGetNextUpgradeToUnlock(out var nextUpgradeToLock))
         {
-            if (!player.TryGetNextUpgradeToUnlock(out var nextUpgradeToLock))
-            {
-                return () => UnexpectedErrorMessage;
-            }
-
-            nextUpgradeToLock.UpdatePlayer(player);
-
-            player.Points -= nextUpgradeToLock.Price;
-
-            return () => 1;
+            return () => UnexpectedErrorMessage;
         }
 
-        public override String GetShopPrompt(Player player)
-        {
-            String upgradePrompt;
-            if (player.TryGetNextUpgradeToUnlock(out var upgrade))
-            {
-                if (upgrade.RankToUnlock > player.Rank)
-                {
-                    upgradePrompt = $"{upgrade.Description}] unlocked at {upgrade.RankToUnlock} rank";
-                }
-                else
-                {
-                    upgradePrompt = $"{upgrade.Description}] for {upgrade.Price} cheese";
-                }
+        nextUpgradeToLock.UpdatePlayer(player);
 
-                return $"{base.GetShopPrompt(player)} [{upgradePrompt}";
+        player.Points -= nextUpgradeToLock.Price;
+
+        return () => 1;
+    }
+
+    public override String GetShopPrompt(Player player)
+    {
+        String upgradePrompt;
+        if (player.TryGetNextUpgradeToUnlock(out var upgrade))
+        {
+            if (upgrade.RankToUnlock > player.Rank)
+            {
+                upgradePrompt = $"{upgrade.Description}] unlocked at {upgrade.RankToUnlock} rank";
+            }
+            else
+            {
+                upgradePrompt = $"{upgrade.Description}] for {upgrade.Price} cheese";
             }
 
-            return null;
+            return $"{base.GetShopPrompt(player)} [{upgradePrompt}";
         }
+
+        return null;
     }
 }

@@ -8,70 +8,69 @@ using Chubberino.Infrastructure.Client.TwitchClients;
 using Chubberino.Infrastructure.Commands.Settings.UserCommands;
 using WolframAlphaNet;
 
-namespace Chubberino.Bots.Channel.Commands
+namespace Chubberino.Bots.Channel.Commands;
+
+public sealed class Wolfram : UserCommand
 {
-    public sealed class Wolfram : UserCommand
+    private WolframAlpha WolframAlpha { get; }
+
+    private const String FirstSentencePattern = @"^.*?[.?!](?=\s+\p{P}*[\p{Lu}\p{N}]|\s*$)";
+
+    private Regex FirstSentenceRegex { get; }
+
+    public Wolfram(ITwitchClientManager client, TextWriter console, WolframAlpha wolfram) : base(client, console)
     {
-        private WolframAlpha WolframAlpha { get; }
+        WolframAlpha = wolfram;
+        FirstSentenceRegex = new Regex(FirstSentencePattern, RegexOptions.Compiled);
+    }
 
-        private const String FirstSentencePattern = @"^.*?[.?!](?=\s+\p{P}*[\p{Lu}\p{N}]|\s*$)";
+    public override void Invoke(Object sender, OnUserCommandReceivedArgs e)
+    {
+        var request = String.Join(' ', e.Words);
 
-        private Regex FirstSentenceRegex { get; }
+        var result = WolframAlpha.Query(request);
 
-        public Wolfram(ITwitchClientManager client, TextWriter console, WolframAlpha wolfram) : base(client, console)
+        if (result.Success)
         {
-            WolframAlpha = wolfram;
-            FirstSentenceRegex = new Regex(FirstSentencePattern, RegexOptions.Compiled);
-        }
+            var pod = result.Pods.FirstOrDefault(pod => pod.Title == "Result" || pod.Title == "Wikipedia summary");
 
-        public override void Invoke(Object sender, OnUserCommandReceivedArgs e)
-        {
-            var request = String.Join(' ', e.Words);
-
-            var result = WolframAlpha.Query(request);
-
-            if (result.Success)
+            if (pod != null && pod.SubPods != null)
             {
-                var pod = result.Pods.FirstOrDefault(pod => pod.Title == "Result" || pod.Title == "Wikipedia summary");
+                StringBuilder messageBuilder = new();
 
-                if (pod != null && pod.SubPods != null)
+                messageBuilder.Append(e.ChatMessage.DisplayName);
+                messageBuilder.Append(' ');
+
+                if (pod.Title == "Result")
                 {
-                    StringBuilder messageBuilder = new();
-
-                    messageBuilder.Append(e.ChatMessage.DisplayName);
-                    messageBuilder.Append(' ');
-
-                    if (pod.Title == "Result")
+                    foreach (var subpod in pod.SubPods)
                     {
-                        foreach (var subpod in pod.SubPods)
-                        {
-                            messageBuilder.Append(subpod.Plaintext);
-                        }
+                        messageBuilder.Append(subpod.Plaintext);
                     }
-                    else
-                    {
-                        StringBuilder wikipediaEntryBuilder = new();
-                        foreach (var subpod in pod.SubPods)
-                        {
-                            wikipediaEntryBuilder.Append(subpod.Plaintext);
-                            wikipediaEntryBuilder.Append(' ');
-                        }
-
-                        var match = FirstSentenceRegex.Match(wikipediaEntryBuilder.ToString());
-
-                        if (match.Success)
-                        {
-                            messageBuilder.Append(match.Value);
-                        }
-                    }
-
-                    TwitchClientManager.SpoolMessage(messageBuilder.ToString());
                 }
+                else
+                {
+                    StringBuilder wikipediaEntryBuilder = new();
+                    foreach (var subpod in pod.SubPods)
+                    {
+                        wikipediaEntryBuilder.Append(subpod.Plaintext);
+                        wikipediaEntryBuilder.Append(' ');
+                    }
+
+                    var match = FirstSentenceRegex.Match(wikipediaEntryBuilder.ToString());
+
+                    if (match.Success)
+                    {
+                        messageBuilder.Append(match.Value);
+                    }
+                }
+
+                TwitchClientManager.SpoolMessage(messageBuilder.ToString());
             }
-            else
-            {
-                TwitchClientManager.SpoolMessage(e.ChatMessage.DisplayName + " Could not query WolframAlpha successfully.");
-            }
+        }
+        else
+        {
+            TwitchClientManager.SpoolMessage(e.ChatMessage.DisplayName + " Could not query WolframAlpha successfully.");
         }
     }
 }

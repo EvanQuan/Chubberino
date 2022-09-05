@@ -1,41 +1,39 @@
-﻿using Chubberino.UnitTests.Tests.Client.Commands.Groups.SettingCollections;
-using Xunit;
+﻿using Xunit;
 
-namespace Chubberino.UnitTests.Tests.Client.Commands.Groups.EnableableCollections
+namespace Chubberino.UnitTests.Tests.Client.Commands.Groups.SettingCollections;
+
+public sealed class WhenEnabling : UsingSettingCollection
 {
-    public sealed class WhenEnabling : UsingSettingCollection
+    [Fact]
+    public void ShouldEnableExistingDisabledElement()
     {
-        [Fact]
-        public void ShouldEnableExistingDisabledElement()
-        {
-            Sut.AddDisabled(Element1.Object);
+        Sut.AddDisabled(Element1.Object);
 
-            Sut.Enable(Element1.Object.Name);
+        Sut.Enable(Element1.Object.Name);
 
-            Assert.Single(Sut.Enabled);
-            Assert.Contains(Element1.Object, Sut.Enabled);
-            Assert.DoesNotContain(Element1.Object, Sut.Disabled);
-        }
+        Assert.Single(Sut.Enabled);
+        Assert.Contains(Element1.Object, Sut.Enabled);
+        Assert.DoesNotContain(Element1.Object, Sut.Disabled);
+    }
 
-        [Fact]
-        public void ShouldDoNothingOnNonExistingElement()
-        {
-            Sut.Enable(Element1.Object.Name);
+    [Fact]
+    public void ShouldDoNothingOnNonExistingElement()
+    {
+        Sut.Enable(Element1.Object.Name);
 
-            Assert.DoesNotContain(Element1.Object, Sut.Enabled);
-            Assert.DoesNotContain(Element1.Object, Sut.Disabled);
-        }
+        Assert.DoesNotContain(Element1.Object, Sut.Enabled);
+        Assert.DoesNotContain(Element1.Object, Sut.Disabled);
+    }
 
-        [Fact]
-        public void ShouldDoNothingOnEnabledElement()
-        {
-            Sut.AddEnabled(Element1.Object);
+    [Fact]
+    public void ShouldDoNothingOnEnabledElement()
+    {
+        Sut.AddEnabled(Element1.Object);
 
-            Sut.Enable(Element1.Object.Name);
+        Sut.Enable(Element1.Object.Name);
 
-            Assert.Single(Sut.Enabled);
-            Assert.Contains(Element1.Object, Sut.Enabled);
-            Assert.DoesNotContain(Element1.Object, Sut.Disabled);
-        }
+        Assert.Single(Sut.Enabled);
+        Assert.Contains(Element1.Object, Sut.Enabled);
+        Assert.DoesNotContain(Element1.Object, Sut.Disabled);
     }
 }

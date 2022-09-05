@@ -1,28 +1,27 @@
-﻿using Chubberino.Modules.CheeseGame.Quests;
-using Chubberino.Modules.CheeseGame.Ranks;
-using System;
+﻿using System;
+using Chubberino.Bots.Channel.Modules.CheeseGame.Quests;
+using Chubberino.Database.Models;
 using Xunit;
 
-namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Quests
+namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Quests;
+
+public sealed class WhenGettingRareQuestChanceFromRank
 {
-    public sealed class WhenGettingRareQuestChanceFromRank
+    [Fact]
+    public void ShouldReturnBaseChance()
     {
-        [Fact]
-        public void ShouldReturnBaseChance()
-        {
-            Double chance = Rank.Bronze.GetRareQuestChance();
+        Double chance = Rank.Bronze.GetRareQuestChance();
 
-            Assert.Equal(RankQuestUpgradeExtensions.BaseRareQuestChance, chance);
-        }
+        Assert.Equal(RankQuestUpgradeExtensions.BaseRareQuestChance, chance);
+    }
 
-        [Fact]
-        public void ShouldAddRankUpgradeChance()
-        {
-            Double chance = Rank.Silver.GetRareQuestChance();
+    [Fact]
+    public void ShouldAddRankUpgradeChance()
+    {
+        Double chance = Rank.Silver.GetRareQuestChance();
 
-            Double expectedChance = RankQuestUpgradeExtensions.BaseRareQuestChance + RankQuestUpgradeExtensions.RareQuestUpgradePercent;
+        Double expectedChance = RankQuestUpgradeExtensions.BaseRareQuestChance + RankQuestUpgradeExtensions.RareQuestUpgradePercent;
 
-            Assert.Equal(expectedChance, chance);
-        }
+        Assert.Equal(expectedChance, chance);
     }
 }

@@ -1,12 +1,11 @@
 ﻿using TwitchLib.Client.Models;
 
-namespace Chubberino.Modules.CheeseGame.Ranks
+namespace Chubberino.Bots.Channel.Modules.CheeseGame.Ranks;
+
+public interface IRankManager
 {
-    public interface IRankManager
-    {
-        void ShowRank(ChatMessage message);
+    void ShowRank(ChatMessage message);
 
-        void RankUp(ChatMessage message);
+    void RankUp(ChatMessage message);
 
-    }
 }

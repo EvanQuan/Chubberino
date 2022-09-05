@@ -1,42 +1,41 @@
-﻿using Chubberino.Modules.CheeseGame.Models;
+﻿using Chubberino.Database.Models;
 using Monad;
 using System;
 using System.Collections.Generic;
 
-namespace Chubberino.Modules.CheeseGame.Items
+namespace Chubberino.Bots.Channel.Modules.CheeseGame.Items;
+
+public sealed class Population : Item
 {
-    public sealed class Population : Item
+    public const Int32 ShopUnitQuantity = 5;
+
+    public override IEnumerable<String> Names { get; } = new String[] { "Population", "p", "pop" };
+
+    public override Int32 GetPrice(Player player)
     {
-        public const Int32 ShopUnitQuantity = 5;
+        return (Int32)(20 + Math.Pow(player.PopulationCount, 2));
+    }
 
-        public override IEnumerable<String> Names { get; } = new String[] { "Population", "p", "pop" };
+    public override String GetSpecificNameForNotEnoughToBuy(Player player)
+    {
+        return ShopUnitQuantity + " population slots";
+    }
 
-        public override Int32 GetPrice(Player player)
-        {
-            return (Int32)(20 + Math.Pow(player.PopulationCount, 2));
-        }
+    public override String GetSpecificNameForSuccessfulBuy(Player player, Int32 quantity)
+    {
+        return quantity + " population slots";
+    }
 
-        public override String GetSpecificNameForNotEnoughToBuy(Player player)
-        {
-            return ShopUnitQuantity + " population slots";
-        }
+    public override Either<Int32, String> TryBuySingleUnit(Player player, Int32 price)
+    {
+        player.PopulationCount += ShopUnitQuantity;
+        player.Points -= price;
 
-        public override String GetSpecificNameForSuccessfulBuy(Player player, Int32 quantity)
-        {
-            return quantity + " population slots";
-        }
+        return () => ShopUnitQuantity;
+    }
 
-        public override Either<Int32, String> TryBuySingleUnit(Player player, Int32 price)
-        {
-            player.PopulationCount += ShopUnitQuantity;
-            player.Points -= price;
-
-            return () => ShopUnitQuantity;
-        }
-
-        public override String GetShopPrompt(Player player)
-        {
-            return $"{base.GetShopPrompt(player)} [+{ShopUnitQuantity}] for {GetPrice(player)}";
-        }
+    public override String GetShopPrompt(Player player)
+    {
+        return $"{base.GetShopPrompt(player)} [+{ShopUnitQuantity}] for {GetPrice(player)}";
     }
 }

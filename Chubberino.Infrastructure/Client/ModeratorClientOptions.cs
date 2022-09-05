@@ -1,14 +1,13 @@
 ﻿using System;
 using TwitchLib.Communication.Models;
 
-namespace Chubberino.Infrastructure.Client
+namespace Chubberino.Infrastructure.Client;
+
+public sealed class ModeratorClientOptions : ClientOptions, IModeratorClientOptions
 {
-    public sealed class ModeratorClientOptions : ClientOptions, IModeratorClientOptions
+    public ModeratorClientOptions()
     {
-        public ModeratorClientOptions()
-        {
-            MessagesAllowedInPeriod = 90;
-            ThrottlingPeriod = TimeSpan.FromSeconds(30);
-        }
+        MessagesAllowedInPeriod = 90;
+        ThrottlingPeriod = TimeSpan.FromSeconds(30);
     }
 }

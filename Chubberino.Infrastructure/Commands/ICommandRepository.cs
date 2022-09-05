@@ -4,25 +4,24 @@ using Chubberino.Common.ValueObjects;
 using Chubberino.Infrastructure.Commands.Settings;
 using Chubberino.Infrastructure.Credentials;
 
-namespace Chubberino.Infrastructure.Commands
+namespace Chubberino.Infrastructure.Commands;
+
+public interface ICommandRepository
 {
-    public interface ICommandRepository
-    {
-        String GetStatus();
+    String GetStatus();
 
-        ICommandRepository AddCommand(ICommand command);
-        ICommandRepository AddCommand(ISetting command, Boolean enabled = false);
+    ICommandRepository AddCommand(ICommand command);
+    ICommandRepository AddCommand(ISetting command, Boolean enabled = false);
 
-        void Execute(Name commandName, IEnumerable<String> arguments);
+    void Execute(Name commandName, IEnumerable<String> arguments);
 
-        void DisableAllSettings();
+    void DisableAllSettings();
 
-        void DisableAllUserCommands();
+    void DisableAllUserCommands();
 
-        ICommandRepository Disable(Name settingName);
+    ICommandRepository Disable(Name settingName);
 
-        ICommandRepository Enable(Name settingName);
+    ICommandRepository Enable(Name settingName);
 
-        void Configure(LoginCredentials loginCredentials);
-    }
+    void Configure(LoginCredentials loginCredentials);
 }

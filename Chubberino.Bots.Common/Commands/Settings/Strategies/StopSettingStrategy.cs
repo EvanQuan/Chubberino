@@ -4,31 +4,30 @@ using System.Linq;
 using Chubberino.Infrastructure.Client.TwitchClients;
 using TwitchLib.Client.Models;
 
-namespace Chubberino.Bots.Common.Commands.Settings.Strategies
+namespace Chubberino.Bots.Common.Commands.Settings.Strategies;
+
+public sealed class StopSettingStrategy : IStopSettingStrategy
 {
-    public sealed class StopSettingStrategy : IStopSettingStrategy
+    public StopSettingStrategy(ITwitchClientManager client)
     {
-        public StopSettingStrategy(ITwitchClientManager client)
-        {
-            TwitchClientManager = client;
-        }
+        TwitchClientManager = client;
+    }
 
-        private static ISet<String> StopWords { get; } = new HashSet<String>()
-        {
-            "bot",
-        };
+    private static ISet<String> StopWords { get; } = new HashSet<String>()
+    {
+        "bot",
+    };
 
-        public ITwitchClientManager TwitchClientManager { get; }
+    public ITwitchClientManager TwitchClientManager { get; }
 
-        public Boolean ShouldStop(ChatMessage chatMessage)
-        {
-            if (!chatMessage.IsModerator) { return false; }
+    public Boolean ShouldStop(ChatMessage chatMessage)
+    {
+        if (!chatMessage.IsModerator) { return false; }
 
-            if (chatMessage.Username.Equals("streamelements", StringComparison.OrdinalIgnoreCase)) { return false; }
+        if (chatMessage.Username.Equals("streamelements", StringComparison.OrdinalIgnoreCase)) { return false; }
 
-            String[] messageWords = chatMessage.Message.Split(' ');
+        String[] messageWords = chatMessage.Message.Split(' ');
 
-            return messageWords.Any(word => StopWords.Contains(word.ToLower()) || word.Equals(TwitchClientManager.Name.Value, StringComparison.OrdinalIgnoreCase));
-        }
+        return messageWords.Any(word => StopWords.Contains(word.ToLower()) || word.Equals(TwitchClientManager.Name.Value, StringComparison.OrdinalIgnoreCase));
     }
 }

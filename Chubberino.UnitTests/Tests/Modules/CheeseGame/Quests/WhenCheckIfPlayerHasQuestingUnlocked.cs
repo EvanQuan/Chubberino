@@ -1,42 +1,41 @@
 ﻿using System;
-using Chubberino.Modules.CheeseGame.Models;
-using Chubberino.Modules.CheeseGame.Quests;
+using Chubberino.Bots.Channel.Modules.CheeseGame.Quests;
+using Chubberino.Database.Models;
 using Xunit;
 
-namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Quests
+namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Quests;
+
+public sealed class WhenCheckIfPlayerHasQuestingUnlocked
 {
-    public sealed class WhenCheckIfPlayerHasQuestingUnlocked
+    private Player Player { get; }
+
+    public WhenCheckIfPlayerHasQuestingUnlocked()
     {
-        private Player Player { get; }
+        Player = new();
+    }
 
-        public WhenCheckIfPlayerHasQuestingUnlocked()
-        {
-            Player = new();
-        }
+    [Theory]
+    [InlineData(Int32.MaxValue)]
+    [InlineData(1)]
+    public void ShouldReturnTrue(Int32 questsUnlocked)
+    {
+        Player.QuestsUnlockedCount = questsUnlocked;
 
-        [Theory]
-        [InlineData(Int32.MaxValue)]
-        [InlineData(1)]
-        public void ShouldReturnTrue(Int32 questsUnlocked)
-        {
-            Player.QuestsUnlockedCount = questsUnlocked;
+        var result = Player.HasQuestingUnlocked();
 
-            var result = Player.HasQuestingUnlocked();
+        Assert.True(result);
+    }
 
-            Assert.True(result);
-        }
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-1)]
+    [InlineData(Int32.MinValue)]
+    public void ShouldReturnFalse(Int32 questUnlocked)
+    {
+        Player.QuestsUnlockedCount = questUnlocked;
 
-        [Theory]
-        [InlineData(0)]
-        [InlineData(-1)]
-        [InlineData(Int32.MinValue)]
-        public void ShouldReturnFalse(Int32 questUnlocked)
-        {
-            Player.QuestsUnlockedCount = questUnlocked;
+        var result = Player.HasQuestingUnlocked();
 
-            var result = Player.HasQuestingUnlocked();
-
-            Assert.False(result);
-        }
+        Assert.False(result);
     }
 }

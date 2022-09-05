@@ -1,12 +1,11 @@
-﻿namespace Chubberino.UnitTests.Tests.Client.Commands.Settings
-{
-    public abstract class UsingSetting : UsingCommand
-    {
-        protected SettingExtender Sut { get; }
+﻿namespace Chubberino.UnitTests.Tests.Client.Commands.Settings;
 
-        public UsingSetting()
-        {
-            Sut = new SettingExtender(MockedTwitchClientManager.Object, MockedWriter.Object);
-        }
+public abstract class UsingSetting : UsingCommand
+{
+    protected SettingExtender Sut { get; }
+
+    public UsingSetting()
+    {
+        Sut = new SettingExtender(MockedTwitchClientManager.Object, MockedWriter.Object);
     }
 }

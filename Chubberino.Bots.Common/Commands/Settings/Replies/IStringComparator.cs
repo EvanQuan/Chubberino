@@ -1,12 +1,11 @@
 ﻿using System;
 using Chubberino.Common.ValueObjects;
 
-namespace Chubberino.Bots.Common.Commands.Settings.Replies
-{
-    public interface IStringComparator
-    {
-        Name Name { get; }
+namespace Chubberino.Bots.Common.Commands.Settings.Replies;
 
-        Boolean Matches(String left, String right);
-    }
+public interface IStringComparator
+{
+    Name Name { get; }
+
+    Boolean Matches(String left, String right);
 }

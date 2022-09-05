@@ -1,29 +1,28 @@
-﻿using Chubberino.Modules.CheeseGame.Hazards;
-using Chubberino.Modules.CheeseGame.Items;
-using Chubberino.Modules.CheeseGame.Models;
+﻿using Chubberino.Bots.Channel.Modules.CheeseGame.Hazards;
+using Chubberino.Bots.Channel.Modules.CheeseGame.Items;
+using Chubberino.Database.Models;
 using System;
 
-namespace Chubberino.Modules.CheeseGame.Quests
+namespace Chubberino.Bots.Channel.Modules.CheeseGame.Quests;
+
+public static class PlayerQuestExtensions
 {
-    public static class PlayerQuestExtensions
+    public static Double GetRareQuestChance(this Player player)
     {
-        public static Double GetRareQuestChance(this Player player)
-        {
-            return player.NextQuestUpgradeUnlock.GetRareQuestChance();
-        }
+        return player.NextQuestUpgradeUnlock.GetRareQuestChance();
+    }
 
-        public static Boolean HasQuestingUnlocked(this Player player)
-        {
-            return player.QuestsUnlockedCount > 0;
-        }
+    public static Boolean HasQuestingUnlocked(this Player player)
+    {
+        return player.QuestsUnlockedCount > 0;
+    }
 
-        public static Double GetQuestSuccessChance(this Player player, Boolean includeInfestation = true)
-        {
-            Double baseSuccessChance = Quest.BaseSuccessChance;
+    public static Double GetQuestSuccessChance(this Player player, Boolean includeInfestation = true)
+    {
+        Double baseSuccessChance = Quest.BaseSuccessChance;
 
-            Double workerSuccessChance = includeInfestation && player.IsInfested() ? 0 : player.GearCount * Gear.QuestSuccessBonus;
+        Double workerSuccessChance = includeInfestation && player.IsInfested() ? 0 : player.GearCount * Gear.QuestSuccessBonus;
 
-            return baseSuccessChance + workerSuccessChance;
-        }
+        return baseSuccessChance + workerSuccessChance;
     }
 }

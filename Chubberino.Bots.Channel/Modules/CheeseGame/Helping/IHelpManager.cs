@@ -1,10 +1,9 @@
 ﻿using System;
 using TwitchLib.Client.Models;
 
-namespace Chubberino.Modules.CheeseGame.Helping
+namespace Chubberino.Bots.Channel.Modules.CheeseGame.Helping;
+
+public interface IHelpManager
 {
-    public interface IHelpManager
-    {
-        void GetHelp(ChatMessage chatMessage);
-    }
+    void GetHelp(ChatMessage chatMessage);
 }

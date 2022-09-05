@@ -1,14 +1,13 @@
 ﻿using Chubberino.Infrastructure.Commands.Settings.UserCommands;
 
-namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.UserCommands
-{
-    public abstract class UsingUserCommand
-    {
-        protected UserCommandValidator Sut { get; }
+namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.UserCommands;
 
-        protected UsingUserCommand()
-        {
-            Sut = new();
-        }
+public abstract class UsingUserCommand
+{
+    protected UserCommandValidator Sut { get; }
+
+    protected UsingUserCommand()
+    {
+        Sut = new();
     }
 }

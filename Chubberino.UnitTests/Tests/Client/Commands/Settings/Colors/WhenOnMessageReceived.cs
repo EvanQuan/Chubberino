@@ -5,55 +5,54 @@ using TwitchLib.Client.Events;
 using TwitchLib.Client.Models.Builders;
 using Xunit;
 
-namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Colors
+namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Colors;
+
+public sealed class WhenOnMessageReceived : UsingColor
 {
-    public sealed class WhenOnMessageReceived : UsingColor
+    public WhenOnMessageReceived()
     {
-        public WhenOnMessageReceived()
-        {
-            Sut.AddColorSelector(MockedSelector1.Object);
-        }
+        Sut.AddColorSelector(MockedSelector1.Object);
+    }
 
-        [Fact]
-        public void ShouldIgnoreNonBotUsername()
+    [Fact]
+    public void ShouldIgnoreNonBotUsername()
+    {
+        var args = new OnMessageReceivedArgs()
         {
-            var args = new OnMessageReceivedArgs()
-            {
-                ChatMessage = ChatMessageBuilder
+            ChatMessage = ChatMessageBuilder
+                .Create()
+                .WithTwitchLibMessage(TwitchLibMessageBuilder
                     .Create()
-                    .WithTwitchLibMessage(TwitchLibMessageBuilder
-                        .Create()
-                        .WithUsername(Username)
-                        .WithBotUserName(BotUsername))
-                    .WithMessage(Message)
-                    .Build()
-            };
+                    .WithUsername(Username)
+                    .WithBotUserName(BotUsername))
+                .WithMessage(Message)
+                .Build()
+        };
 
-            Sut.Client_OnMessageReceived(null, args);
+        Sut.Client_OnMessageReceived(null, args);
 
-            MockedTwitchClientManager
-                .Verify(x => x.SpoolMessage(PrimaryChannelName, It.IsAny<String>(), It.IsAny<Priority>()), Times.Never());
-        }
+        MockedTwitchClientManager
+            .Verify(x => x.SpoolMessage(PrimaryChannelName, It.IsAny<String>(), It.IsAny<Priority>()), Times.Never());
+    }
 
-        [Fact]
-        public void ShouldSetColorFromColorSelector()
+    [Fact]
+    public void ShouldSetColorFromColorSelector()
+    {
+        var args = new OnMessageReceivedArgs()
         {
-            var args = new OnMessageReceivedArgs()
-            {
-                ChatMessage = ChatMessageBuilder
+            ChatMessage = ChatMessageBuilder
+                .Create()
+                .WithTwitchLibMessage(TwitchLibMessageBuilder
                     .Create()
-                    .WithTwitchLibMessage(TwitchLibMessageBuilder
-                        .Create()
-                        .WithUsername(BotUsername)
-                        .WithBotUserName(BotUsername))
-                    .WithMessage(Message)
-                    .Build()
-            };
+                    .WithUsername(BotUsername)
+                    .WithBotUserName(BotUsername))
+                .WithMessage(Message)
+                .Build()
+        };
 
-            Sut.Client_OnMessageReceived(null, args);
+        Sut.Client_OnMessageReceived(null, args);
 
-            MockedTwitchClientManager
-                .Verify(x => x.SpoolMessage(PrimaryChannelName, $".color {Color1}", Priority.Medium), Times.Once());
-        }
+        MockedTwitchClientManager
+            .Verify(x => x.SpoolMessage(PrimaryChannelName, $".color {Color1}", Priority.Medium), Times.Once());
     }
 }

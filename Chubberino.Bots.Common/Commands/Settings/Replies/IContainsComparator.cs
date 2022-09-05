@@ -1,6 +1,5 @@
-﻿namespace Chubberino.Bots.Common.Commands.Settings.Replies
+﻿namespace Chubberino.Bots.Common.Commands.Settings.Replies;
+
+public interface IContainsComparator : IStringComparator
 {
-    public interface IContainsComparator : IStringComparator
-    {
-    }
 }

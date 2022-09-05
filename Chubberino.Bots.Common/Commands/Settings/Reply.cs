@@ -9,164 +9,164 @@ using Chubberino.Infrastructure.Commands.Settings;
 using TwitchLib.Client.Events;
 using TwitchLib.Client.Interfaces;
 
-namespace Chubberino.Bots.Common.Commands.Settings
+namespace Chubberino.Bots.Common.Commands.Settings;
+
+public sealed class Reply : Setting
 {
-    public sealed class Reply : Setting
+    /// <summary>
+    /// The specified users to reply to. If empty, reply to any user.
+    /// </summary>
+    private HashSet<String> UsersToReplyTo { get; set; }
+
+    /// <summary>
+    /// The message to trigger a reply.
+    /// </summary>
+    private String TriggerMessage { get; set; } = String.Empty;
+
+    /// <summary>
+    /// The message to reply with.
+    /// If null, reply with "@<see cref="UserToReplyTo"/> <see cref="TriggerMessage"/>".
+    /// </summary>
+    private String ReplyMessage { get; set; }
+
+    /// <summary>
+    /// The function that compares the received message with the trigger
+    /// message. If the comparator returns true, the received message
+    /// matches.
+    /// </summary>
+    private IStringComparator Comparator { get; set; }
+
+    private IEqualsComparator EqualsComparator { get; }
+
+    private IContainsComparator ContainsComparator { get; }
+
+    public override String Status => new StringBuilder()
+        .AppendLine(base.Status)
+        .AppendLine($"\tto: {(String.IsNullOrWhiteSpace(TriggerMessage) ? "< Any message >" : TriggerMessage)}\n")
+        .AppendLine($"\tcomparator: {Comparator.Name}\n")
+        .AppendLine($"\twith: {(String.IsNullOrWhiteSpace(ReplyMessage) ? "< Mirroring user message >" : ReplyMessage)}\n")
+        .AppendLine($"\tusers: {(UsersToReplyTo.Count == 0 ? "< Any user >" : "\n\t\t" + String.Join("\n\t\t", UsersToReplyTo))}")
+        .ToString();
+
+    public Reply(ITwitchClientManager client, IEqualsComparator equalsComparator, IContainsComparator containsComparator, TextWriter writer)
+        : base(client, writer)
     {
-        /// <summary>
-        /// The specified users to reply to. If empty, reply to any user.
-        /// </summary>
-        private HashSet<String> UsersToReplyTo { get; set; }
+        UsersToReplyTo = new HashSet<String>();
+        EqualsComparator = equalsComparator;
+        ContainsComparator = containsComparator;
+        Comparator = ContainsComparator;
+    }
 
-        /// <summary>
-        /// The message to trigger a reply.
-        /// </summary>
-        private String TriggerMessage { get; set; } = String.Empty;
+    public override void Register(ITwitchClient client)
+    {
+        client.OnMessageReceived += TwitchClient_OnMessageReceived;
+    }
 
-        /// <summary>
-        /// The message to reply with.
-        /// If null, reply with "@<see cref="UserToReplyTo"/> <see cref="TriggerMessage"/>".
-        /// </summary>
-        private String ReplyMessage { get; set; }
+    public override void Unregister(ITwitchClient client)
+    {
+        client.OnMessageReceived -= TwitchClient_OnMessageReceived;
+    }
 
-        /// <summary>
-        /// The function that compares the received message with the trigger
-        /// message. If the comparator returns true, the received message
-        /// matches.
-        /// </summary>
-        private IStringComparator Comparator { get; set; }
+    private void TwitchClient_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
+    {
+        if (UsersToReplyTo.Any() && !UsersToReplyTo.Contains(e.ChatMessage.Username)) { return; }
 
-        private IEqualsComparator EqualsComparator { get; }
+        if (!Comparator.Matches(e.ChatMessage.Message, TriggerMessage)) { return; }
 
-        private IContainsComparator ContainsComparator { get; }
+        String replyMessage = String.IsNullOrWhiteSpace(ReplyMessage) ? TriggerMessage : ReplyMessage;
 
-        public override String Status => new StringBuilder()
-            .AppendLine(base.Status)
-            .AppendLine($"\tto: {(String.IsNullOrWhiteSpace(TriggerMessage) ? "< Any message >" : TriggerMessage)}\n")
-            .AppendLine($"\tcomparator: {Comparator.Name}\n")
-            .AppendLine($"\twith: {(String.IsNullOrWhiteSpace(ReplyMessage) ? "< Mirroring user message >" : ReplyMessage)}\n")
-            .AppendLine($"\tusers: {(UsersToReplyTo.Count == 0 ? "< Any user >" : "\n\t\t" + String.Join("\n\t\t", UsersToReplyTo))}")
-            .ToString();
+        String replyMessageWithUserName = replyMessage.Replace("@", $"@{e.ChatMessage.DisplayName}");
 
-        public Reply(ITwitchClientManager client, IEqualsComparator equalsComparator, IContainsComparator containsComparator, TextWriter writer)
-            : base(client, writer)
+        TwitchClientManager.SpoolMessage(replyMessageWithUserName);
+    }
+
+    public override Boolean Set(String property, IEnumerable<String> arguments)
+    {
+        switch (property.ToLower())
         {
-            UsersToReplyTo = new HashSet<String>();
-            EqualsComparator = equalsComparator;
-            ContainsComparator = containsComparator;
-            Comparator = ContainsComparator;
+            case "u":
+            case "user":
+            case "users":
+                switch (arguments.FirstOrDefault())
+                {
+                    case "c":
+                    case "clear":
+                        UsersToReplyTo.Clear();
+                        break;
+                }
+                break;
+            case "c":
+            case "compare":
+            case "comparator":
+                Comparator = arguments.FirstOrDefault() switch
+                {
+                    "c" or "contain" or "contains" => ContainsComparator,
+                    _ => EqualsComparator,
+                };
+                break;
+
+            case "w":
+            case "with":
+                // If there are no arguments, this will return empty string,
+                // indicating the default behaviour of mirror the trigger
+                // message.
+                ReplyMessage = String.Join(' ', arguments);
+                return true;
+
+            case "t":
+            case "to":
+                // If there are no arguments, this will return empty string,
+                // indicating the default behaviour of replying to any
+                // message.
+                TriggerMessage = String.Join(' ', arguments);
+                return true;
+
+            default:
+                return false;
         }
 
-        public override void Register(ITwitchClient client)
+        return true;
+    }
+
+    public override Boolean Add(String property, IEnumerable<String> arguments)
+    {
+        switch (property)
         {
-            client.OnMessageReceived += TwitchClient_OnMessageReceived;
+            case "u":
+            case "user":
+            case "users":
+                Int32 beforeCount = UsersToReplyTo.Count;
+                foreach (String username in arguments)
+                {
+                    UsersToReplyTo.Add(username);
+                }
+                return beforeCount != UsersToReplyTo.Count;
+            default:
+                return false;
         }
+    }
 
-        public override void Unregister(ITwitchClient client)
+    public override Boolean Remove(String property, IEnumerable<String> arguments)
+    {
+        switch (property)
         {
-            client.OnMessageReceived -= TwitchClient_OnMessageReceived;
+            case "u":
+            case "user":
+            case "users":
+                Int32 beforeCount = UsersToReplyTo.Count;
+                foreach (String username in arguments)
+                {
+                    UsersToReplyTo.Remove(username);
+                }
+                return beforeCount != UsersToReplyTo.Count;
+            default:
+                return false;
         }
+    }
 
-        private void TwitchClient_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
-        {
-            if (UsersToReplyTo.Any() && !UsersToReplyTo.Contains(e.ChatMessage.Username)) { return; }
-
-            if (!Comparator.Matches(e.ChatMessage.Message, TriggerMessage)) { return; }
-
-            String replyMessage = String.IsNullOrWhiteSpace(ReplyMessage) ? TriggerMessage : ReplyMessage;
-
-            String replyMessageWithUserName = replyMessage.Replace("@", $"@{e.ChatMessage.DisplayName}");
-
-            TwitchClientManager.SpoolMessage(replyMessageWithUserName);
-        }
-
-        public override Boolean Set(String property, IEnumerable<String> arguments)
-        {
-            switch (property.ToLower())
-            {
-                case "u":
-                case "user":
-                case "users":
-                    switch (arguments.FirstOrDefault())
-                    {
-                        case "c":
-                        case "clear":
-                            UsersToReplyTo.Clear();
-                            break;
-                    }
-                    break;
-                case "c":
-                case "compare":
-                case "comparator":
-                    Comparator = arguments.FirstOrDefault() switch
-                    {
-                        "c" or "contain" or "contains" => ContainsComparator,
-                        _ => EqualsComparator,
-                    };
-                    break;
-
-                case "w":
-                case "with":
-                    // If there are no arguments, this will return empty string,
-                    // indicating the default behaviour of mirror the trigger
-                    // message.
-                    ReplyMessage = String.Join(' ', arguments);
-                    return true;
-
-                case "t":
-                case "to":
-                    // If there are no arguments, this will return empty string,
-                    // indicating the default behaviour of replying to any
-                    // message.
-                    TriggerMessage = String.Join(' ', arguments);
-                    return true;
-
-                default:
-                    return false;
-            }
-
-            return true;
-        }
-
-        public override Boolean Add(String property, IEnumerable<String> arguments)
-        {
-            switch (property)
-            {
-                case "u":
-                case "user":
-                case "users":
-                    Int32 beforeCount = UsersToReplyTo.Count;
-                    foreach (String username in arguments)
-                    {
-                        UsersToReplyTo.Add(username);
-                    }
-                    return beforeCount != UsersToReplyTo.Count;
-                default:
-                    return false;
-            }
-        }
-
-        public override Boolean Remove(String property, IEnumerable<String> arguments)
-        {
-            switch (property)
-            {
-                case "u":
-                case "user":
-                case "users":
-                    Int32 beforeCount = UsersToReplyTo.Count;
-                    foreach (String username in arguments)
-                    {
-                        UsersToReplyTo.Remove(username);
-                    }
-                    return beforeCount != UsersToReplyTo.Count;
-                default:
-                    return false;
-            }
-        }
-
-        public override String GetHelp()
-        {
-            return @"
+    public override String GetHelp()
+    {
+        return @"
 Reply to any message that matches to a specified message, by copying the
 message back.
 
@@ -201,6 +201,5 @@ add:
 remove:
     user        - The users to reply to.
 ";
-        }
     }
 }

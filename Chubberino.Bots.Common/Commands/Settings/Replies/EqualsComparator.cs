@@ -1,15 +1,14 @@
 ﻿using System;
 using Chubberino.Common.ValueObjects;
 
-namespace Chubberino.Bots.Common.Commands.Settings.Replies
-{
-    public sealed class EqualsComparator : IEqualsComparator
-    {
-        public Name Name { get; } = Name.From("equals");
+namespace Chubberino.Bots.Common.Commands.Settings.Replies;
 
-        public Boolean Matches(String left, String right)
-        {
-            return left == right;
-        }
+public sealed class EqualsComparator : IEqualsComparator
+{
+    public Name Name { get; } = Name.From("equals");
+
+    public Boolean Matches(String left, String right)
+    {
+        return left == right;
     }
 }
