@@ -2,7 +2,7 @@
 
 namespace Chubberino.Bots.Channel.Modules.CheeseGame.Heists;
 
-public struct Wager
+public sealed class Wager
 {
     public String PlayerTwitchID { get; init; }
 
