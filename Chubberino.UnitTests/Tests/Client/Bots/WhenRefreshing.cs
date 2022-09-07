@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Chubberino.Infrastructure.Credentials;
 using Moq;
 using TwitchLib.Client.Models;
 using TwitchLib.Communication.Interfaces;
@@ -19,7 +18,15 @@ public sealed class WhenRefreshing : UsingBot
 
         Sut.Refresh(clientOptions);
 
-        MockedTwitchClientManager.Verify(x => x.TryInitializeTwitchClient(Sut, clientOptions, It.IsAny<LoginCredentials>()), Times.Once());
-        MockedTwitchClientManager.Verify(x => x.TryJoinInitialChannels(It.IsAny<IReadOnlyList<JoinedChannel>>()), Times.Once());
+        MockedTwitchClientManager
+            .Verify(x => x
+                .TryInitializeTwitchClient(
+                    Sut,
+                    clientOptions,
+                    LoginCredentials),
+                Times.Once);
+        MockedTwitchClientManager
+            .Verify(x => x.TryJoinInitialChannels(It.IsAny<IReadOnlyList<JoinedChannel>>()),
+            Times.Once);
     }
 }

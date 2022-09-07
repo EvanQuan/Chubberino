@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Chubberino.Infrastructure.Credentials;
+using FluentAssertions;
+using Monad;
 using Moq;
 using TwitchLib.Client.Models;
 using TwitchLib.Communication.Interfaces;
@@ -10,19 +12,41 @@ namespace Chubberino.UnitTests.Tests.Client.Bots;
 
 public sealed class WhenStarting : UsingBot
 {
-    [Theory]
-    [InlineData(false, false, false)]
-    [InlineData(false, true, false)]
-    [InlineData(true, false, false)]
-    [InlineData(true, true, true)]
-    public void ShouldJoinChannelIfBothInitializeClientAndJoinChannels(
-        Boolean successfullyInitializeClient,
-        Boolean successfullyJoinChannels,
-        Boolean expectedSucess)
+    [Fact]
+    public void GivenClientInitializesAndJoinsChannels_ThenLoginCredentialsReturned()
     {
         MockedTwitchClientManager
-            .Setup(x => x.TryInitializeTwitchClient(Sut, It.IsAny<IClientOptions>(), It.IsAny<LoginCredentials>()))
-            .Returns(successfullyInitializeClient ? LoginCredentials : null);
+            .Setup(x => x.TryInitializeTwitchClient(
+                Sut,
+                It.IsAny<IClientOptions>(),
+                It.IsAny<LoginCredentials>()))
+            .Returns(LoginCredentials);
+
+        MockedTwitchClientManager
+            .Setup(x => x.TryJoinInitialChannels(It.IsAny<IReadOnlyList<JoinedChannel>>()))
+            .Returns(true);
+
+        var result = Sut.Start();
+
+        result.HasValue.Should().BeTrue();
+        result.Value.Should().Be(LoginCredentials);
+
+    }
+
+    [Theory]
+    [InlineData(false, false)]
+    [InlineData(false, true)]
+    [InlineData(true, false)]
+    public void GivenClientDoesNotInitializeClientAndJoinChannels_ThenNothingIsReturned(
+        Boolean successfullyInitializeClient,
+        Boolean successfullyJoinChannels)
+    {
+        MockedTwitchClientManager
+            .Setup(x => x.TryInitializeTwitchClient(
+                Sut,
+                It.IsAny<IClientOptions>(),
+                It.IsAny<LoginCredentials>()))
+            .Returns(successfullyInitializeClient ? LoginCredentials : new NothingResult<LoginCredentials>());
 
         MockedTwitchClientManager
             .Setup(x => x.TryJoinInitialChannels(It.IsAny<IReadOnlyList<JoinedChannel>>()))
@@ -30,6 +54,6 @@ public sealed class WhenStarting : UsingBot
 
         var result = Sut.Start();
 
-        Assert.Equal(expectedSucess ? LoginCredentials : null, result);
+        result.HasValue.Should().BeFalse();
     }
 }
