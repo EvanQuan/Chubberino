@@ -123,6 +123,12 @@ public sealed class TwitchClientManager : ITwitchClientManager
 
             bot.Refresh(CurrentClientOptions);
         };
+        Client.OnDisconnected += (_, e) =>
+        {
+            Writer.WriteLine($"!! Disconnected Error!! {e}");
+            bot.Refresh(CurrentClientOptions);
+        };
+
 
         OnTwitchClientRefreshedArgs = new OnTwitchClientRefreshedArgs(optionOldClient, Client);
     }
