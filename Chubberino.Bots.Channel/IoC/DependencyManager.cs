@@ -3,23 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using Autofac;
 using Chubberino.Bots.Channel.Commands;
-using Chubberino.Bots.Channel.Modules.CheeseGame.Emotes;
-using Chubberino.Bots.Channel.Modules.CheeseGame.Hazards;
-using Chubberino.Bots.Channel.Modules.CheeseGame.Heists;
-using Chubberino.Bots.Channel.Modules.CheeseGame.Helping;
-using Chubberino.Bots.Channel.Modules.CheeseGame.Items;
-using Chubberino.Bots.Channel.Modules.CheeseGame.Items.Recipes;
-using Chubberino.Bots.Channel.Modules.CheeseGame.Items.Upgrades.RecipeModifiers;
-using Chubberino.Bots.Channel.Modules.CheeseGame.Points;
-using Chubberino.Bots.Channel.Modules.CheeseGame.Quests;
-using Chubberino.Bots.Channel.Modules.CheeseGame.Ranks;
-using Chubberino.Bots.Channel.Modules.CheeseGame.Shops;
 using Chubberino.Bots.Common.Commands;
 using Chubberino.Bots.Common.Commands.Settings;
 using Chubberino.Bots.Common.Commands.Settings.ColorSelectors;
 using Chubberino.Bots.Common.Commands.Settings.Replies;
 using Chubberino.Bots.Common.Commands.Settings.Strategies;
 using Chubberino.Bots.Common.Commands.Settings.UserCommands;
+using Chubberino.Client.Commands;
+using Chubberino.Client.Commands.Settings;
 using Chubberino.Client.Commands.Settings.UserCommands;
 using Chubberino.Common.Services;
 using Chubberino.Database.Contexts;
@@ -27,7 +18,19 @@ using Chubberino.Infrastructure.Client;
 using Chubberino.Infrastructure.Client.TwitchClients;
 using Chubberino.Infrastructure.Commands;
 using Chubberino.Infrastructure.Commands.Settings.UserCommands;
+using Chubberino.Infrastructure.Configurations;
 using Chubberino.Infrastructure.Credentials;
+using Chubberino.Modules.CheeseGame.Emotes;
+using Chubberino.Modules.CheeseGame.Hazards;
+using Chubberino.Modules.CheeseGame.Heists;
+using Chubberino.Modules.CheeseGame.Helping;
+using Chubberino.Modules.CheeseGame.Items;
+using Chubberino.Modules.CheeseGame.Items.Recipes;
+using Chubberino.Modules.CheeseGame.Items.Upgrades.RecipeModifiers;
+using Chubberino.Modules.CheeseGame.Points;
+using Chubberino.Modules.CheeseGame.Quests;
+using Chubberino.Modules.CheeseGame.Ranks;
+using Chubberino.Modules.CheeseGame.Shops;
 using Jering.Javascript.NodeJS;
 using Microsoft.Extensions.DependencyInjection;
 using TwitchLib.Api;
@@ -61,7 +64,7 @@ internal sealed class DependencyManager
 
         credentials = twitchClientManager.TryInitializeTwitchClient(bot, credentials: credentials);
 
-        if (credentials == null)
+        if (credentials is null)
         {
             return default;
         }
@@ -139,6 +142,7 @@ internal sealed class DependencyManager
         builder.RegisterType<Bot>().As<IBot>().SingleInstance();
         builder.RegisterInstance(Console.Out).As<TextWriter>().SingleInstance();
         builder.RegisterInstance(Console.In).As<TextReader>().SingleInstance();
+        builder.RegisterType<Config>().As<IConfig>().SingleInstance();
         builder.RegisterType<TwitchClientManager>().As<ITwitchClientManager>().SingleInstance();
         builder.RegisterType<CrendentialsManager>().As<ICredentialsManager>().SingleInstance();
         builder.RegisterType<UserCommandValidator>().As<IUserCommandValidator>().SingleInstance();

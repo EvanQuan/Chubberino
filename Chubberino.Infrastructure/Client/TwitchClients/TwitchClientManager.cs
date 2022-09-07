@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
 using System.IO;
-using System.Linq;
 using Chubberino.Common.Extensions;
 using Chubberino.Common.Services;
 using Chubberino.Common.ValueObjects;
-using Chubberino.Database.Contexts;
+using Chubberino.Infrastructure.Configurations;
 using Chubberino.Infrastructure.Credentials;
 using Monad;
 using TwitchLib.Client.Exceptions;
@@ -30,7 +27,7 @@ public sealed class TwitchClientManager : ITwitchClientManager
 
     public ITwitchClient Client { get; private set; }
 
-    private IApplicationContextFactory ContextFactory { get; }
+    private IConfig Config { get; }
 
     private ITwitchClientFactory Factory { get; }
 
@@ -56,7 +53,7 @@ public sealed class TwitchClientManager : ITwitchClientManager
     public Name Name { get; private set; }
 
     public TwitchClientManager(
-        IApplicationContextFactory contextFactory,
+        IConfig config,
         ITwitchClientFactory factory,
         ICredentialsManager credentialsManager,
         ISpinWaitService spinWaitService,
@@ -64,7 +61,7 @@ public sealed class TwitchClientManager : ITwitchClientManager
         IDateTimeService dateTime,
         TextWriter writer)
     {
-        ContextFactory = contextFactory;
+        Config = config;
         Factory = factory;
         CredentialsManager = credentialsManager;
         SpinWaitService = spinWaitService;
@@ -101,10 +98,7 @@ public sealed class TwitchClientManager : ITwitchClientManager
         Name = Name.From(credentials.ConnectionCredentials.TwitchUsername);
         IsBot = credentials.IsBot;
 
-        if (PrimaryChannelName is null)
-        {
-            PrimaryChannelName = CredentialsManager.ApplicationCredentials.InitialTwitchPrimaryChannelName;
-        }
+        PrimaryChannelName ??= CredentialsManager.ApplicationCredentials.InitialTwitchPrimaryChannelName;
 
         RefreshTwitchClient(bot);
 
@@ -135,17 +129,15 @@ public sealed class TwitchClientManager : ITwitchClientManager
 
     public Boolean TryJoinInitialChannels(IReadOnlyList<JoinedChannel> previouslyJoinedChannels = null)
     {
-        Boolean channelJoined = EnsureJoinedToChannel(PrimaryChannelName);
+        Boolean primaryChannelJoined = EnsureJoinedToChannel(PrimaryChannelName);
 
-        if (!channelJoined) { return false; }
-
-        using var context = ContextFactory.GetContext();
+        if (!primaryChannelJoined) { return false; }
 
         if (IsBot)
         {
-            foreach (var channel in context.StartupChannels)
+            foreach (var channel in Config.StartupChannelDisplayNames)
             {
-                Client.JoinChannel(channel.DisplayName);
+                Client.JoinChannel(channel);
             }
         }
 
@@ -154,8 +146,8 @@ public sealed class TwitchClientManager : ITwitchClientManager
             foreach (var channelName in previouslyJoinedChannels.Select(x => x.Channel))
             {
                 Writer.WriteLine("Connecting to " + channelName);
-                channelJoined = EnsureJoinedToChannel(channelName);
-                if (!channelJoined) { return false; }
+                Boolean otherChannelJoined = EnsureJoinedToChannel(channelName);
+                if (!otherChannelJoined) { return false; }
             }
         }
 
