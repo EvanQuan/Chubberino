@@ -1,5 +1,4 @@
-﻿using System;
-using Chubberino.Infrastructure.Credentials;
+﻿using Chubberino.Infrastructure.Credentials;
 using Microsoft.Extensions.Logging;
 using TwitchLib.Client;
 using TwitchLib.Client.Enums;
@@ -62,6 +61,7 @@ public sealed class TwitchClientFactory : ITwitchClientFactory
         }
 
         // Try to get new credentials if not provided
-        return CredentialsManager.LoginCredentials.HasValue || CredentialsManager.TryUpdateLoginCredentials(null, out _);
+        return CredentialsManager.LoginCredentials.HasValue
+            || CredentialsManager.TryUpdateLoginCredentials(null).HasValue;
     }
 }

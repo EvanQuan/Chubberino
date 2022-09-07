@@ -71,7 +71,7 @@ public sealed class TwitchClientManager : ITwitchClientManager
         LastLowPriorityMessageSent = new();
     }
 
-    public LoginCredentials TryInitializeTwitchClient(
+    public OptionResult<LoginCredentials> TryInitializeTwitchClient(
         IBot bot,
         IClientOptions clientOptions = null,
         LoginCredentials credentials = null)
@@ -86,23 +86,23 @@ public sealed class TwitchClientManager : ITwitchClientManager
         {
             CurrentClientOptions = clientOptions;
         }
-
-        if (!CredentialsManager.TryUpdateLoginCredentials(credentials, out credentials))
+        var maybeUpdatedCredentials = CredentialsManager.TryUpdateLoginCredentials(credentials);
+        if (!maybeUpdatedCredentials.HasValue)
         {
             Writer.WriteLine("Failed to update login credentials");
             return null;
         }
-
-        ConnectionCredentials = credentials.ConnectionCredentials;
-        bot.LoginCredentials = credentials;
-        Name = Name.From(credentials.ConnectionCredentials.TwitchUsername);
-        IsBot = credentials.IsBot;
+        var updatedCredentials = maybeUpdatedCredentials.Value;
+        ConnectionCredentials = updatedCredentials.ConnectionCredentials;
+        bot.LoginCredentials = updatedCredentials;
+        Name = Name.From(updatedCredentials.ConnectionCredentials.TwitchUsername);
+        IsBot = updatedCredentials.IsBot;
 
         PrimaryChannelName ??= CredentialsManager.ApplicationCredentials.InitialTwitchPrimaryChannelName;
 
         RefreshTwitchClient(bot);
 
-        return credentials;
+        return updatedCredentials;
     }
 
     private void RefreshTwitchClient(IBot bot)

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using Chubberino.Common.ValueObjects;
 using Chubberino.Infrastructure.Client.TwitchClients;
 using Chubberino.Infrastructure.Commands;
@@ -51,38 +48,39 @@ public sealed class Bot : IBot
         IsModerator = true;
     }
 
-    public LoginCredentials Initialize(LoginCredentials credentials)
+    private OptionResult<LoginCredentials> Initialize(LoginCredentials credentials)
     {
-        credentials = TwitchClientManager.TryInitializeTwitchClient(this, credentials: credentials);
+        var maybeCredentials = TwitchClientManager.TryInitializeTwitchClient(this, credentials: credentials);
 
-        if (credentials == null)
+        if (!maybeCredentials.HasValue)
         {
-            return null;
+            return maybeCredentials;
         }
 
         if (!TwitchClientManager.TryJoinInitialChannels())
         {
-            return null;
+            return maybeCredentials;
         }
 
-        return credentials;
+        return maybeCredentials.Value;
     }
 
-    public LoginCredentials Start(
+    public OptionResult<LoginCredentials> Start(
         IClientOptions clientOptions = null,
         LoginCredentials credentials = null)
     {
         IReadOnlyList<JoinedChannel> previouslyJoinedChannels = TwitchClientManager.Client?.JoinedChannels;
 
-        LoginCredentials = TwitchClientManager.TryInitializeTwitchClient(this, clientOptions, credentials);
-        if (LoginCredentials is not null && TwitchClientManager.TryJoinInitialChannels(previouslyJoinedChannels))
+        var maybeCredentials = TwitchClientManager.TryInitializeTwitchClient(this, clientOptions, credentials);
+        if (maybeCredentials.HasValue && TwitchClientManager.TryJoinInitialChannels(previouslyJoinedChannels))
         {
+            LoginCredentials = maybeCredentials.Value;
             Commands.Configure(LoginCredentials);
 
             return LoginCredentials;
         }
 
-        return null;
+        return new NothingResult<LoginCredentials>();
     }
 
     public String GetPrompt()
@@ -96,11 +94,11 @@ public sealed class Bot : IBot
     public void Refresh(IClientOptions clientOptions = null)
     {
         // TODO: Is this needed if the whole program will restart after?
-        LoginCredentials = Start(clientOptions, LoginCredentials);
+        var maybeCredentials = Start(clientOptions, LoginCredentials);
 
-        Boolean successful = LoginCredentials != null;
-        if (successful)
+        if (maybeCredentials.HasValue)
         {
+            LoginCredentials = maybeCredentials.Value;
             Writer.WriteLine("Refresh successful");
         }
         else
@@ -135,7 +133,7 @@ public sealed class Bot : IBot
         {
             Writer.WriteLine("Exception thrown: " + e.Message);
             Writer.WriteLine("Restarting");
-            Refresh(ModeratorClientOptions);
+            Refresh();
         }
     }
 

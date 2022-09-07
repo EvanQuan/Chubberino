@@ -1,6 +1,4 @@
 ﻿using Chubberino.Database.Models;
-using Monad;
-using System;
 
 namespace Chubberino.Infrastructure.Credentials;
 
@@ -19,5 +17,5 @@ public interface ICredentialsManager
     /// Try to get the credentials of the user to log in as. Updates <see cref="LoginCredentials"/>
     /// </summary>
     /// <returns>true if some credentials were found and returned.</returns>
-    Boolean TryUpdateLoginCredentials(LoginCredentials oldCredentials, out LoginCredentials newCredentials);
+    OptionResult<LoginCredentials> TryUpdateLoginCredentials(LoginCredentials oldCredentials = null);
 }
