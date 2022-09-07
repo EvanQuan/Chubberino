@@ -32,8 +32,6 @@ public abstract class UsingTwitchClientManager
 
     protected Mock<ICredentialsManager> MockedCredentialsManager { get; } = new();
 
-    protected Mock<ISpinWaitService> MockedSpinWait { get; } = new();
-
     protected Mock<IThreadService> MockedThreadService { get; } = new();
 
     protected Mock<IDateTimeService> MockedDateTimeService { get; } = new();
@@ -69,7 +67,6 @@ public abstract class UsingTwitchClientManager
             MockedConfig.Object,
             MockedTwitchClientFactory.Object,
             MockedCredentialsManager.Object,
-            MockedSpinWait.Object,
             MockedThreadService.Object,
             MockedDateTimeService.Object,
             MockedWriter.Object);

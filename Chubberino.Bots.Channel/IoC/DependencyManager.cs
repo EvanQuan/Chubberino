@@ -173,7 +173,6 @@ internal sealed class DependencyManager
             var serviceProvider = services.BuildServiceProvider();
             return serviceProvider.GetRequiredService<INodeJSService>();
         }).As<INodeJSService>().SingleInstance();
-        builder.RegisterType<SpinWaitService>().As<ISpinWaitService>().SingleInstance();
         builder.RegisterType<ModeratorClientOptions>().As<IModeratorClientOptions>().SingleInstance();
         builder.RegisterType<RegularClientOptions>().As<IRegularClientOptions>().SingleInstance();
 

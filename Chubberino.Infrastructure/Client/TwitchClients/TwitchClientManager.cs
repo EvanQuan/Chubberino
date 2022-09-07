@@ -1,11 +1,11 @@
 ﻿using System.Collections.Concurrent;
 using System.IO;
+using System.Threading;
 using Chubberino.Common.Extensions;
 using Chubberino.Common.Services;
 using Chubberino.Common.ValueObjects;
 using Chubberino.Infrastructure.Configurations;
 using Chubberino.Infrastructure.Credentials;
-using Monad;
 using TwitchLib.Client.Exceptions;
 using TwitchLib.Client.Interfaces;
 using TwitchLib.Client.Models;
@@ -32,8 +32,6 @@ public sealed class TwitchClientManager : ITwitchClientManager
     private ITwitchClientFactory Factory { get; }
 
 
-    private ISpinWaitService SpinWaitService { get; }
-
     private IThreadService ThreadService { get; }
 
     private IDateTimeService DateTime { get; }
@@ -56,7 +54,6 @@ public sealed class TwitchClientManager : ITwitchClientManager
         IConfig config,
         ITwitchClientFactory factory,
         ICredentialsManager credentialsManager,
-        ISpinWaitService spinWaitService,
         IThreadService threadService,
         IDateTimeService dateTime,
         TextWriter writer)
@@ -64,7 +61,6 @@ public sealed class TwitchClientManager : ITwitchClientManager
         Config = config;
         Factory = factory;
         CredentialsManager = credentialsManager;
-        SpinWaitService = spinWaitService;
         ThreadService = threadService;
         DateTime = dateTime;
         Writer = writer;
@@ -165,29 +161,31 @@ public sealed class TwitchClientManager : ITwitchClientManager
 
     public Boolean EnsureJoinedToChannel(String channelName)
     {
-        Boolean isConnected = SpinWaitService.SpinUntil(() =>
+        SpinWait.SpinUntil(() =>
         {
-            if (!Client.IsConnected)
-            {
-                Client.Connect();
-                ThreadService.Sleep(TimeSpan.FromSeconds(1));
-                return Client.IsConnected;
-            }
-            return true;
-
-        },
-        TimeSpan.FromSeconds(10));
-
-        if (!isConnected) { return false; }
-
-        Boolean isJoined = SpinWaitService.SpinUntil(() =>
-        {
+            EnsureClientIsConnected();
             Client.JoinChannel(channelName);
             return Client.JoinedChannels.Any(x => x.Channel.Equals(channelName, StringComparison.OrdinalIgnoreCase));
-        },
-        TimeSpan.FromSeconds(10));
+        });
 
-        return isJoined;
+        return true;
+    }
+
+    private void EnsureClientIsConnected()
+    {
+        Int32 sleepSeconds = 1;
+        SpinWait.SpinUntil(() =>
+        {
+            if (Client.IsConnected)
+            {
+                return true;
+            }
+
+            Client.Connect();
+            ThreadService.Sleep(TimeSpan.FromSeconds(sleepSeconds));
+            sleepSeconds = Math.Min(3600, sleepSeconds << 2); // max out at 1 hour
+            return Client.IsConnected;
+        });
     }
 
     public void SpoolMessage(String channelName, String message, Priority priority = Priority.Medium)

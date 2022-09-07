@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using Chubberino.Common.Extensions;
 using Chubberino.Common.Services;
 using Chubberino.Infrastructure.Client;
@@ -14,7 +15,6 @@ namespace Chubberino.Bots.Common.Commands.Settings;
 public sealed class Cookie : Setting
 {
     private IRepeater Repeater { get; }
-    public ISpinWaitService SpinWait { get; }
     private IDateTimeService DateTime { get; }
     private Boolean Responded { get; set; }
 
@@ -29,13 +29,11 @@ public sealed class Cookie : Setting
     public Cookie(
         ITwitchClientManager client,
         IRepeater repeater,
-        ISpinWaitService spinWait,
         TextWriter writer,
         IDateTimeService dateTime)
         : base(client, writer)
     {
         Repeater = repeater;
-        SpinWait = spinWait;
         DateTime = dateTime;
         Repeater.Action = SpoolRepeatMessages;
         Repeater.Interval = TimeSpan.FromHours(1);
