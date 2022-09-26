@@ -1,6 +1,6 @@
 ﻿using System;
 using Chubberino.Common.ValueObjects;
-using TwitchLib.Api.Core.Enums;
+using TwitchLib.Client.Enums;
 
 namespace Chubberino.Bots.Common.Commands.Settings.ColorSelectors;
 

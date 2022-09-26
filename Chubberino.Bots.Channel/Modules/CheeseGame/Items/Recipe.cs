@@ -4,7 +4,7 @@ using Chubberino.Bots.Channel.Modules.CheeseGame.Items.Recipes;
 using Chubberino.Bots.Channel.Modules.CheeseGame.Points;
 using Chubberino.Common.Extensions;
 using Chubberino.Database.Models;
-using Monad;
+using LanguageExt;
 
 namespace Chubberino.Bots.Channel.Modules.CheeseGame.Items;
 
@@ -66,7 +66,7 @@ public sealed class Recipe : Item
     {
         if (!RecipeRepository.TryGetNextToUnlock(player, out var nextCheeseToUnlock))
         {
-            return () => UnexpectedErrorMessage;
+            return UnexpectedErrorMessage;
         }
 
         player.CheeseUnlocked++;
@@ -78,7 +78,7 @@ public sealed class Recipe : Item
 
         player.Points -= nextCheeseToUnlock.CostToUnlock;
 
-        return () => 1;
+        return 1;
     }
 
     public override Boolean IsForSale(Player player, out String reason)

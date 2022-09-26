@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Chubberino.Infrastructure.Client;
+﻿namespace Chubberino.Infrastructure.Client;
 
 /// <summary>
 /// Notable twitch user IDs.
 /// </summary>
 public static class TwitchUserIDs
 {
-    public static IReadOnlyCollection<String> ChannelBots { get; } = new HashSet<String>
+    public static readonly LanguageExt.HashSet<String> ChannelBots = new()
     {
         ThePositiveBot,
         MoTroBo,

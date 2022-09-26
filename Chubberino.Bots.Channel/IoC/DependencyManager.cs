@@ -62,19 +62,20 @@ internal sealed class DependencyManager
 
         var finalCredentials = twitchClientManager.TryInitializeTwitchClient(bot, credentials: credentials);
 
-        if (!finalCredentials.HasValue)
-        {
-            return default;
-        }
+        return finalCredentials.Match(
+            Some: credentials =>
+            {
 
-        if (!twitchClientManager.TryJoinInitialChannels())
-        {
-            return default;
-        }
+                if (!twitchClientManager.TryJoinInitialChannels())
+                {
+                    return default;
+                }
 
-        ResolveCommandDependencies(scope);
+                ResolveCommandDependencies(scope);
 
-        return (bot, finalCredentials.Value);
+                return (bot, credentials);
+            },
+            None: () => default);
     }
 
     private static void ResolveCommandDependencies(ILifetimeScope scope)

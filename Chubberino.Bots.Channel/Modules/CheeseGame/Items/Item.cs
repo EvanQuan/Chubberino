@@ -1,8 +1,8 @@
-using Chubberino.Database.Models;
-using Monad;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Chubberino.Database.Models;
+using LanguageExt;
 
 namespace Chubberino.Bots.Channel.Modules.CheeseGame.Items;
 
@@ -23,7 +23,7 @@ public abstract class Item : IItem
         // attempting to do so.
         if (!IsForSale(player, out String reason))
         {
-            return () => reason;
+            return reason;
         }
 
         OnBeforeBuy();
@@ -41,22 +41,23 @@ public abstract class Item : IItem
         {
             if (player.Points >= currentPrice)
             {
-                EitherPair<Int32, String> result = TryBuySingleUnit(player, currentPrice)();
+                Either<Int32, String> result = TryBuySingleUnit(player, currentPrice);
 
-                if (result.IsRight)
-                {
-                    // Could not buy due to some item-specific non-price restriction.
-                    errorMessage = result.Right;
-                    shouldContinue = false;
-                }
-                else
-                {
-                    quantityPurchased += result.Left;
-                    unitQuantityPurchased++;
-                    pointsSpent += currentPrice;
-                    shouldContinue = unitQuantityPurchased < quantity;
-                    currentPrice = GetPrice(player);
-                }
+                result
+                    .Right(error =>
+                    {
+                        // Could not buy due to some item-specific non-price restriction.
+                        errorMessage = error;
+                        shouldContinue = false;
+                    })
+                    .Left(count =>
+                    {
+                        quantityPurchased += count;
+                        unitQuantityPurchased++;
+                        pointsSpent += currentPrice;
+                        shouldContinue = unitQuantityPurchased < quantity;
+                        currentPrice = GetPrice(player);
+                    });
             }
             else if (unitQuantityPurchased == 0)
             {
@@ -75,9 +76,9 @@ public abstract class Item : IItem
 
         var extraMessage = OnAfterBuy(player, quantityPurchased, pointsSpent);
 
-        return errorMessage == null
-            ? () => new BuyResult(quantityPurchased, pointsSpent, extraMessage)
-            : () => errorMessage;
+        return errorMessage is null
+            ? new BuyResult(quantityPurchased, pointsSpent, extraMessage)
+            : errorMessage;
     }
 
     /// <summary>

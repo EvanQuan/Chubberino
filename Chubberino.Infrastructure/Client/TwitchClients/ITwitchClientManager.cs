@@ -1,5 +1,6 @@
 ﻿using Chubberino.Common.ValueObjects;
 using Chubberino.Infrastructure.Credentials;
+using LanguageExt;
 using TwitchLib.Client.Interfaces;
 using TwitchLib.Client.Models;
 using TwitchLib.Communication.Interfaces;
@@ -24,7 +25,7 @@ public interface ITwitchClientManager
     /// <param name="clientOptions"></param>
     /// <param name="credentials">Supplied credentials; will prompt for credentials if null.</param>
     /// <returns>the user credentials of the user successfully logged in; otherwise <see cref="NothingResult{T}"/>.</returns>
-    OptionResult<LoginCredentials> TryInitializeTwitchClient(
+    Option<LoginCredentials> TryInitializeTwitchClient(
         IBot bot,
         IClientOptions clientOptions = null,
         LoginCredentials credentials = null);

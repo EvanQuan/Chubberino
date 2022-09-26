@@ -90,11 +90,8 @@ public sealed class Heist : IHeist
 
         winnerCount.Repeat(() =>
         {
-            var result = Random.RemoveElement(Wagers).Invoke();
-            if (result.HasValue)
-            {
-                winners.Add(result.Value);
-            }
+            var result = Random.RemoveElement(Wagers);
+            result.IfSome(wager => winners.Add(wager));
         });
 
         foreach (Wager wager in winners)

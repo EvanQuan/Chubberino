@@ -98,23 +98,21 @@ public class Shop : IShop
                 ? Int32.MaxValue
                 : 1;
 
-        var result = item.TryBuy(quantityRequested, player)();
+        var result = item.TryBuy(quantityRequested, player);
 
-        if (result.IsRight)
-        {
-            return result.Right;
-        }
+        return result
+            .Right(error => error)
+            .Left(buyResult =>
+            {
+                var outputMessage = $"You bought {item.GetSpecificNameForSuccessfulBuy(player, buyResult.QuantityPurchased)}. " +
+                    $"{buyResult.ExtraMessage} " +
+                    $"{Random.NextElement(EmoteManager.Get(message.Channel, EmoteCategory.Positive))} " +
+                    $"(-{buyResult.PointsSpent} cheese)";
 
-        var buyResult = result.Left;
+                context.SaveChanges();
 
-        var outputMessage = $"You bought {item.GetSpecificNameForSuccessfulBuy(player, buyResult.QuantityPurchased)}. " +
-            $"{buyResult.ExtraMessage} " +
-            $"{Random.NextElement(EmoteManager.Get(message.Channel, EmoteCategory.Positive))} " +
-            $"(-{buyResult.PointsSpent} cheese)";
-
-        context.SaveChanges();
-
-        return outputMessage;
+                return outputMessage;
+            });
     }
 
     public IShop AddItem(IItem item)

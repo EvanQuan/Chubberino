@@ -1,7 +1,8 @@
-﻿using Chubberino.Database.Models;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using Chubberino.Database.Models;
+using FluentAssertions;
 using Xunit;
 
 namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Emotes;
@@ -15,9 +16,9 @@ public sealed class WhenTryGettingCachedEmoteList : UsingEmoteManager
         String channelName,
         EmoteCategory category)
     {
-        var result = Sut.TryGetCachedEmoteList(channelName, category)();
+        var result = Sut.TryGetCachedEmoteList(channelName, category);
 
-        Assert.False(result.HasValue);
+        result.IsNone.Should().BeTrue();
     }
 
     [Theory]
@@ -28,9 +29,9 @@ public sealed class WhenTryGettingCachedEmoteList : UsingEmoteManager
         EmoteCategory category)
     {
         Sut.CachedEmotes.TryAdd(channelName, new());
-        var result = Sut.TryGetCachedEmoteList(channelName, category)();
+        var result = Sut.TryGetCachedEmoteList(channelName, category);
 
-        Assert.False(result.HasValue);
+        result.IsNone.Should().BeTrue();
     }
 
     [Theory]
@@ -44,15 +45,17 @@ public sealed class WhenTryGettingCachedEmoteList : UsingEmoteManager
 
         String name = Guid.NewGuid().ToString();
 
-        List<String> emoteList = new();
-        emoteList.Add(name);
+        List<String> emoteList = new()
+        {
+            name
+        };
 
         categoryList[category] = emoteList; 
 
         Sut.CachedEmotes.TryAdd(channelName, categoryList);
-        var result = Sut.TryGetCachedEmoteList(channelName, category)();
+        var result = Sut.TryGetCachedEmoteList(channelName, category);
 
-        Assert.True(result.HasValue);
-        Assert.Equal(emoteList, result.Value);
+        result.IsSome.Should().BeTrue();
+        result.IfSome(list => list.Should().Equal(emoteList));
     }
 }

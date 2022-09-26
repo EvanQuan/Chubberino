@@ -54,10 +54,7 @@ public sealed class CommandRepository : ICommandRepository
 
     private void ClientManager_OnTwitchClientRefreshed(Object sender, OnTwitchClientRefreshedArgs e)
     {
-        if (e.OldClient.HasValue)
-        {
-            e.OldClient.Value.OnMessageReceived -= Client_OnMessageReceived;
-        }
+        e.OldClient.IfSome(client => client.OnMessageReceived -= Client_OnMessageReceived);
         e.NewClient.OnMessageReceived += Client_OnMessageReceived;
     }
 

@@ -1,8 +1,8 @@
-﻿using Chubberino.Bots.Channel.Modules.CheeseGame.Items;
-using Chubberino.Database.Models;
-using Monad;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Chubberino.Bots.Channel.Modules.CheeseGame.Items;
+using Chubberino.Database.Models;
+using LanguageExt;
 
 namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Items;
 
@@ -22,7 +22,7 @@ public sealed class IncrementingPriceItem : Item
     public override Either<Int32, String> TryBuySingleUnit(Player player, Int32 price)
     {
         player.Points -= price;
-        return () => 1;
+        return 1;
     }
 
     public override String GetSpecificNameForNotEnoughToBuy(Player player)

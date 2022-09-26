@@ -5,7 +5,7 @@ using System.Linq;
 using Chubberino.Common.Extensions;
 using Chubberino.Database.Contexts;
 using Chubberino.Database.Models;
-using Monad;
+using LanguageExt;
 
 namespace Chubberino.Bots.Channel.Modules.CheeseGame.Emotes;
 
@@ -128,14 +128,12 @@ public sealed class EmoteManager : IEmoteManager
     {
         return TryGetCachedEmoteList(channel, category)
             .Match(
-                Just: cachedEmoteList => cachedEmoteList,
-                Nothing: () =>
+                Some: cachedEmoteList => cachedEmoteList,
+                None: () =>
                     TryGetAndCacheDatabaseEmoteList(channel, category)
                         .Match(
-                            Just: databaseEmoteList => databaseEmoteList,
-                            Nothing: () => DefaultEmotes[category])
-                        .Invoke())
-            .Invoke();
+                            Some: databaseEmoteList => databaseEmoteList,
+                            None: () => DefaultEmotes[category]));
     }
 
     public Option<IReadOnlyList<String>> TryGetCachedEmoteList(String channelName, EmoteCategory category)
@@ -144,19 +142,16 @@ public sealed class EmoteManager : IEmoteManager
         {
             if (categoryList.TryGetValue(category, out List<String> emoteList))
             {
-                return () => emoteList.AsReadOnly();
+                return emoteList.AsReadOnly();
             }
         }
 
-        return Option.Nothing<IReadOnlyList<String>>();
+        return Option<IReadOnlyList<String>>.None;
     }
 
     public Option<IReadOnlyList<String>> TryGetAndCacheDatabaseEmoteList(String channelName, EmoteCategory category, IApplicationContext context = default)
     {
-        if (context is null)
-        {
-            context = ContextFactory.GetContext();
-        }
+        context ??= ContextFactory.GetContext();
 
         var categoryList = CachedEmotes.GetOrAdd(channelName, _ => new ConcurrentDictionary<EmoteCategory, List<String>>());
 
@@ -177,10 +172,10 @@ public sealed class EmoteManager : IEmoteManager
                 categoryEmotes.Add(emote);
             }
 
-            return () => databaseEmoteList;
+            return databaseEmoteList;
         }
 
-        return Option.Nothing<IReadOnlyList<String>>();
+        return Option<IReadOnlyList<String>>.None;
     }
 
     public EmoteManagerResult AddAll(IEnumerable<String> emotes, EmoteCategory category, String channel)

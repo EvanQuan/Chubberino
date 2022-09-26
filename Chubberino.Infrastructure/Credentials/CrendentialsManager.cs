@@ -2,6 +2,8 @@
 using Chubberino.Common.ValueObjects;
 using Chubberino.Database.Contexts;
 using Chubberino.Database.Models;
+using LanguageExt;
+using LanguageExt.SomeHelp;
 using Microsoft.EntityFrameworkCore;
 using TwitchLib.Client.Models;
 
@@ -19,7 +21,7 @@ public sealed class CrendentialsManager : ICredentialsManager
 
     public ApplicationCredentials ApplicationCredentials => LazyApplicationCredentials.Value;
 
-    public OptionResult<LoginCredentials> LoginCredentials => loginCredentials.ToOption();
+    public Option<LoginCredentials> LoginCredentials => loginCredentials.ToSome();
 
     private Lazy<ApplicationCredentials> LazyApplicationCredentials { get; }
 
@@ -55,7 +57,7 @@ public sealed class CrendentialsManager : ICredentialsManager
         });
     }
 
-    public OptionResult<LoginCredentials> TryUpdateLoginCredentials(LoginCredentials oldCredentials = null)
+    public Option<LoginCredentials> TryUpdateLoginCredentials(LoginCredentials oldCredentials = null)
     {
         if (oldCredentials is not null)
         {
@@ -69,11 +71,11 @@ public sealed class CrendentialsManager : ICredentialsManager
         if (!users.Any())
         {
             loginCredentials = null;
-            return new NothingResult<LoginCredentials>();
+            return Option<LoginCredentials>.None;
         }
 
         loginCredentials = PromptLogIn(users.ToArray());
-        return loginCredentials.ToOption();
+        return loginCredentials;
     }
 
     /// <summary>

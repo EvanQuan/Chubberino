@@ -1,7 +1,7 @@
-﻿using Chubberino.Database.Models;
-using Monad;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Chubberino.Database.Models;
+using LanguageExt;
 
 namespace Chubberino.Bots.Channel.Modules.CheeseGame.Items;
 
@@ -31,7 +31,7 @@ public sealed class Population : Item
         player.PopulationCount += ShopUnitQuantity;
         player.Points -= price;
 
-        return () => ShopUnitQuantity;
+        return ShopUnitQuantity;
     }
 
     public override String GetShopPrompt(Player player)

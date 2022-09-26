@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Chubberino.Infrastructure.Credentials;
 using FluentAssertions;
-using Monad;
+using LanguageExt;
 using Moq;
 using TwitchLib.Client.Models;
 using TwitchLib.Communication.Interfaces;
@@ -28,8 +28,8 @@ public sealed class WhenStarting : UsingBot
 
         var result = Sut.Start();
 
-        result.HasValue.Should().BeTrue();
-        result.Value.Should().Be(LoginCredentials);
+        result.IsSome.Should().BeTrue();
+        result.IfSome(credentials => credentials.Should().Be(LoginCredentials));
 
     }
 
@@ -46,7 +46,7 @@ public sealed class WhenStarting : UsingBot
                 Sut,
                 It.IsAny<IClientOptions>(),
                 It.IsAny<LoginCredentials>()))
-            .Returns(successfullyInitializeClient ? LoginCredentials : new NothingResult<LoginCredentials>());
+            .Returns(successfullyInitializeClient ? LoginCredentials : Option<LoginCredentials>.None);
 
         MockedTwitchClientManager
             .Setup(x => x.TryJoinInitialChannels(It.IsAny<IReadOnlyList<JoinedChannel>>()))
@@ -54,6 +54,6 @@ public sealed class WhenStarting : UsingBot
 
         var result = Sut.Start();
 
-        result.HasValue.Should().BeFalse();
+        result.IsNone.Should().BeTrue();
     }
 }

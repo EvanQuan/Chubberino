@@ -5,7 +5,8 @@ using Chubberino.Common.Services;
 using Chubberino.Common.ValueObjects;
 using Chubberino.Infrastructure.Configurations;
 using Chubberino.Infrastructure.Credentials;
-using Monad;
+using LanguageExt;
+using LanguageExt.SomeHelp;
 using TwitchLib.Client.Exceptions;
 using TwitchLib.Client.Interfaces;
 using TwitchLib.Client.Models;
@@ -71,7 +72,7 @@ public sealed class TwitchClientManager : ITwitchClientManager
         LastLowPriorityMessageSent = new();
     }
 
-    public OptionResult<LoginCredentials> TryInitializeTwitchClient(
+    public Option<LoginCredentials> TryInitializeTwitchClient(
         IBot bot,
         IClientOptions clientOptions = null,
         LoginCredentials credentials = null)
@@ -87,29 +88,32 @@ public sealed class TwitchClientManager : ITwitchClientManager
             CurrentClientOptions = clientOptions;
         }
         var maybeUpdatedCredentials = CredentialsManager.TryUpdateLoginCredentials(credentials);
-        if (!maybeUpdatedCredentials.HasValue)
-        {
-            Writer.WriteLine("Failed to update login credentials");
-            return null;
-        }
-        var updatedCredentials = maybeUpdatedCredentials.Value;
-        ConnectionCredentials = updatedCredentials.ConnectionCredentials;
-        bot.LoginCredentials = updatedCredentials;
-        Name = Name.From(updatedCredentials.ConnectionCredentials.TwitchUsername);
-        IsBot = updatedCredentials.IsBot;
+        return maybeUpdatedCredentials.Match(
+            Some: updatedCredentials =>
+            {
+                ConnectionCredentials = updatedCredentials.ConnectionCredentials;
+                bot.LoginCredentials = updatedCredentials;
+                Name = Name.From(updatedCredentials.ConnectionCredentials.TwitchUsername);
+                IsBot = updatedCredentials.IsBot;
 
-        PrimaryChannelName ??= CredentialsManager.ApplicationCredentials.InitialTwitchPrimaryChannelName;
+                PrimaryChannelName ??= CredentialsManager.ApplicationCredentials.InitialTwitchPrimaryChannelName;
 
-        RefreshTwitchClient(bot);
+                RefreshTwitchClient(bot);
 
-        return updatedCredentials;
+                return updatedCredentials;
+            },
+            None: () =>
+            {
+                Writer.WriteLine("Failed to update login credentials");
+                return Option<LoginCredentials>.None;
+            });
     }
 
     private void RefreshTwitchClient(IBot bot)
     {
         var oldClient = Client;
 
-        OptionResult<ITwitchClient> optionOldClient = oldClient is null ? Option.Nothing<ITwitchClient>().Invoke() : oldClient.ToOption();
+        Option<ITwitchClient> optionOldClient = oldClient is null ? Option<ITwitchClient>.None : oldClient.ToSome();
 
         Client = Factory.CreateClient(CurrentClientOptions);
 
