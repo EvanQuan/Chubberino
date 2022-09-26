@@ -27,6 +27,7 @@ using Chubberino.Infrastructure.Client;
 using Chubberino.Infrastructure.Client.TwitchClients;
 using Chubberino.Infrastructure.Commands;
 using Chubberino.Infrastructure.Commands.Settings.UserCommands;
+using Chubberino.Infrastructure.Configurations;
 using Chubberino.Infrastructure.Credentials;
 using Jering.Javascript.NodeJS;
 using Microsoft.Extensions.DependencyInjection;
@@ -49,7 +50,7 @@ internal sealed class DependencyManager
     /// </summary>
     /// <param name="credentials">Previous <see cref="LoginCredentials"/> if they exist; otherwise <see langword="null"/>.</param>
     /// <returns>The current <see cref="LoginCredentials"/>; <see langword="null"/> if failed to set up.</returns>
-    public static (IBot Bot, LoginCredentials Credentials) SetupIoC(LoginCredentials? credentials)
+    public static (IBot Bot, LoginCredentials Credentials) SetupIoC(LoginCredentials credentials)
     {
         IContainer container = RegisterTypes();
 
@@ -59,21 +60,22 @@ internal sealed class DependencyManager
 
         var twitchClientManager = scope.Resolve<ITwitchClientManager>();
 
-        credentials = twitchClientManager.TryInitializeTwitchClient(bot, credentials: credentials);
+        var finalCredentials = twitchClientManager.TryInitializeTwitchClient(bot, credentials: credentials);
 
-        if (credentials == null)
-        {
-            return default;
-        }
+        return finalCredentials.Match(
+            Some: credentials =>
+            {
 
-        if (!twitchClientManager.TryJoinInitialChannels())
-        {
-            return default;
-        }
+                if (!twitchClientManager.TryJoinInitialChannels())
+                {
+                    return default;
+                }
 
-        ResolveCommandDependencies(scope);
+                ResolveCommandDependencies(scope);
 
-        return (bot, credentials);
+                return (bot, credentials);
+            },
+            None: () => default);
     }
 
     private static void ResolveCommandDependencies(ILifetimeScope scope)
@@ -139,6 +141,7 @@ internal sealed class DependencyManager
         builder.RegisterType<Bot>().As<IBot>().SingleInstance();
         builder.RegisterInstance(Console.Out).As<TextWriter>().SingleInstance();
         builder.RegisterInstance(Console.In).As<TextReader>().SingleInstance();
+        builder.RegisterType<Config>().As<IConfig>().SingleInstance();
         builder.RegisterType<TwitchClientManager>().As<ITwitchClientManager>().SingleInstance();
         builder.RegisterType<CrendentialsManager>().As<ICredentialsManager>().SingleInstance();
         builder.RegisterType<UserCommandValidator>().As<IUserCommandValidator>().SingleInstance();

@@ -109,9 +109,9 @@ public abstract class UsingBot
 
         LoginCredentials = new(new(Username, TwitchOAuth, disableUsernameCheck: true), true, PrimaryChannelName);
 
-        var credentials = LoginCredentials;
-
-        MockedCredentialsManager.Setup(x => x.TryUpdateLoginCredentials(It.IsAny<LoginCredentials>(), out credentials)).Returns(true);
+        MockedCredentialsManager
+            .Setup(x => x.TryUpdateLoginCredentials(It.IsAny<LoginCredentials>()))
+            .Returns(LoginCredentials);
 
         MockedCommandRepository = new Mock<ICommandRepository>().SetupAllProperties();
 
@@ -119,8 +119,15 @@ public abstract class UsingBot
 
         MockedTwitchClientManager = new Mock<ITwitchClientManager>().SetupAllProperties();
 
-        MockedTwitchClientManager.Setup(x => x.TryInitializeTwitchClient(It.IsAny<IBot>(), It.IsAny<IClientOptions>(), It.IsAny<LoginCredentials>())).Returns(LoginCredentials);
-        MockedTwitchClientManager.Setup(x => x.TryJoinInitialChannels(It.IsAny<IReadOnlyList<JoinedChannel>>())).Returns(true);
+        MockedTwitchClientManager
+            .Setup(x => x.TryInitializeTwitchClient(
+                It.IsAny<IBot>(),
+                It.IsAny<IClientOptions>(),
+                It.IsAny<LoginCredentials>()))
+            .Returns(LoginCredentials);
+        MockedTwitchClientManager
+            .Setup(x => x.TryJoinInitialChannels(It.IsAny<IReadOnlyList<JoinedChannel>>()))
+            .Returns(true);
 
         MockedClient = new Mock<ITwitchClient>();
 
@@ -170,9 +177,10 @@ public abstract class UsingBot
             MockedCommandRepository.Object,
             ModeratorClientOptions,
             RegularClientOptions,
-            MockedTwitchClientManager.Object);
-
-        Sut.LoginCredentials = LoginCredentials;
+            MockedTwitchClientManager.Object)
+        {
+            LoginCredentials = LoginCredentials
+        };
 
         MockedTwitchClientManager.Invocations.Clear();
         MockedCommandRepository.Invocations.Clear();

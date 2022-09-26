@@ -1,5 +1,5 @@
 ﻿using Chubberino.Infrastructure.Credentials;
-using System;
+using LanguageExt;
 using TwitchLib.Communication.Interfaces;
 
 namespace Chubberino.Infrastructure.Client;
@@ -21,7 +21,7 @@ public interface IBot : IDisposable
     /// <param name="clientOptions"></param>
     /// <param name="credentials">User to log in as. If null, will prompt for which user to log in as.</param>
     /// <returns>The login credentials of the user that successfully logged in; null otherwise.</returns>
-    LoginCredentials Start(IClientOptions clientOptions = null, LoginCredentials credentials = null);
+    Option<LoginCredentials> Start(IClientOptions clientOptions = null, LoginCredentials credentials = null);
 
     String GetPrompt();
 

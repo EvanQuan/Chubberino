@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using Chubberino.Common.ValueObjects;
 using Chubberino.Database.Contexts;
 using Chubberino.Database.Models;
@@ -59,12 +57,11 @@ public sealed class CrendentialsManager : ICredentialsManager
         });
     }
 
-    public Boolean TryUpdateLoginCredentials(LoginCredentials oldCredentials, out LoginCredentials newCredentials)
+    public Option<LoginCredentials> TryUpdateLoginCredentials(LoginCredentials oldCredentials = null)
     {
         if (oldCredentials is not null)
         {
-            newCredentials = oldCredentials;
-            return true;
+            return oldCredentials;
         }
 
         using var context = ContextFactory.GetContext();
@@ -74,13 +71,11 @@ public sealed class CrendentialsManager : ICredentialsManager
         if (!users.Any())
         {
             loginCredentials = null;
-            newCredentials = null;
-            return false;
+            return Option<LoginCredentials>.None;
         }
 
         loginCredentials = PromptLogIn(users.ToArray());
-        newCredentials = loginCredentials;
-        return true;
+        return loginCredentials;
     }
 
     /// <summary>

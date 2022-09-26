@@ -44,8 +44,7 @@ public abstract class Item : IItem
                 Either<Int32, String> result = TryBuySingleUnit(player, currentPrice);
 
                 result
-                    .Right(
-                    error =>
+                    .Right(error =>
                     {
                         // Could not buy due to some item-specific non-price restriction.
                         errorMessage = error;

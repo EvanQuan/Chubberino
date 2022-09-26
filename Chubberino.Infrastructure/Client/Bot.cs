@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using Chubberino.Common.ValueObjects;
 using Chubberino.Infrastructure.Client.TwitchClients;
 using Chubberino.Infrastructure.Commands;
 using Chubberino.Infrastructure.Credentials;
+using LanguageExt;
 using TwitchLib.Client.Models;
 using TwitchLib.Communication.Interfaces;
 
@@ -51,38 +49,35 @@ public sealed class Bot : IBot
         IsModerator = true;
     }
 
-    public LoginCredentials Initialize(LoginCredentials credentials)
+    private Option<LoginCredentials> Initialize(LoginCredentials credentials)
     {
-        credentials = TwitchClientManager.TryInitializeTwitchClient(this, credentials: credentials);
+        var maybeCredentials = TwitchClientManager.TryInitializeTwitchClient(this, credentials: credentials);
 
-        if (credentials == null)
-        {
-            return null;
-        }
+        maybeCredentials.IfSome(credentials => TwitchClientManager.TryJoinInitialChannels());
 
-        if (!TwitchClientManager.TryJoinInitialChannels())
-        {
-            return null;
-        }
-
-        return credentials;
+        return maybeCredentials;
     }
 
-    public LoginCredentials Start(
+    public Option<LoginCredentials> Start(
         IClientOptions clientOptions = null,
         LoginCredentials credentials = null)
     {
         IReadOnlyList<JoinedChannel> previouslyJoinedChannels = TwitchClientManager.Client?.JoinedChannels;
 
-        LoginCredentials = TwitchClientManager.TryInitializeTwitchClient(this, clientOptions, credentials);
-        if (LoginCredentials is not null && TwitchClientManager.TryJoinInitialChannels(previouslyJoinedChannels))
-        {
-            Commands.Configure(LoginCredentials);
+        var maybeCredentials = TwitchClientManager.TryInitializeTwitchClient(this, clientOptions, credentials);
 
-            return LoginCredentials;
-        }
-
-        return null;
+        return maybeCredentials.Match(
+            Some:credentials =>
+            {
+                if (TwitchClientManager.TryJoinInitialChannels(previouslyJoinedChannels))
+                {
+                    LoginCredentials = credentials;
+                    Commands.Configure(LoginCredentials);
+                    return credentials;
+                }
+                return Option<LoginCredentials>.None;
+            },
+            None: () => Option<LoginCredentials>.None);
     }
 
     public String GetPrompt()
@@ -96,18 +91,19 @@ public sealed class Bot : IBot
     public void Refresh(IClientOptions clientOptions = null)
     {
         // TODO: Is this needed if the whole program will restart after?
-        LoginCredentials = Start(clientOptions, LoginCredentials);
+        var maybeCredentials = Start(clientOptions, LoginCredentials);
 
-        Boolean successful = LoginCredentials != null;
-        if (successful)
-        {
-            Writer.WriteLine("Refresh successful");
-        }
-        else
-        {
-            Writer.WriteLine("Failed to refresh");
-            State = BotState.ShouldStop;
-        }
+        maybeCredentials.Match(
+            Some: credentials =>
+            {
+                LoginCredentials = credentials;
+                Writer.WriteLine("Refresh successful");
+            },
+            None: () =>
+            {
+                Writer.WriteLine("Failed to refresh");
+                State = BotState.ShouldStop;
+            });
     }
 
     public void ReadCommand(String command)
@@ -135,7 +131,7 @@ public sealed class Bot : IBot
         {
             Writer.WriteLine("Exception thrown: " + e.Message);
             Writer.WriteLine("Restarting");
-            Refresh(ModeratorClientOptions);
+            Refresh();
         }
     }
 
