@@ -8,7 +8,8 @@ using Chubberino.Common.Services;
 using Chubberino.Common.ValueObjects;
 using Chubberino.Database.Contexts;
 using Chubberino.Infrastructure.Credentials;
-using Monad;
+using LanguageExt;
+using LanguageExt.SomeHelp;
 using TwitchLib.Client.Exceptions;
 using TwitchLib.Client.Interfaces;
 using TwitchLib.Client.Models;
@@ -115,7 +116,7 @@ public sealed class TwitchClientManager : ITwitchClientManager
     {
         var oldClient = Client;
 
-        OptionResult<ITwitchClient> optionOldClient = oldClient is null ? Option.Nothing<ITwitchClient>().Invoke() : oldClient.ToOption();
+        Option<ITwitchClient> optionOldClient = oldClient is null ? Option<ITwitchClient>.None : oldClient.ToSome();
 
         Client = Factory.CreateClient(CurrentClientOptions);
 

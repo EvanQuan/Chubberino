@@ -1,7 +1,7 @@
 ﻿using System;
 using Chubberino.Bots.Channel.Modules.CheeseGame.Items;
 using Chubberino.Database.Models;
-using Monad;
+using LanguageExt;
 using Xunit;
 
 namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Items;
@@ -18,8 +18,8 @@ public sealed class WhenTryBuying
 
         Either<BuyResult, String> result = item.TryBuy(quantity, new Player());
 
-        Assert.True(result.IsRight());
-        Assert.Equal(ErrorItem.ErrorMessage, result.Right());
+        Assert.True(result.IsRight);
+        result.IfRight(message => Assert.Equal(ErrorItem.ErrorMessage, message));
     }
 
     [Theory]
@@ -37,8 +37,9 @@ public sealed class WhenTryBuying
 
         Either<BuyResult, String> result = item.TryBuy(quantity, player);
 
-        Assert.True(result.IsRight());
-        Assert.Equal(String.Format(Item.NotEnoughPointsErrorMessage, expectedPointsNeeded, item.GetSpecificNameForNotEnoughToBuy(player)), result.Right());
+        Assert.True(result.IsRight);
+        result.IfRight(message =>
+            Assert.Equal(String.Format(Item.NotEnoughPointsErrorMessage, expectedPointsNeeded, item.GetSpecificNameForNotEnoughToBuy(player)), message));
     }
 
     [Theory]
@@ -56,8 +57,8 @@ public sealed class WhenTryBuying
 
         Either<BuyResult, String> result = item.TryBuy(quantity, player);
 
-        Assert.True(result.IsRight());
-        Assert.Equal(String.Format(Item.NotEnoughPointsErrorMessage, expectedPointsNeeded, item.GetSpecificNameForNotEnoughToBuy(player)), result.Right());
+        Assert.True(result.IsRight);
+        result.IfRight(message => Assert.Equal(String.Format(Item.NotEnoughPointsErrorMessage, expectedPointsNeeded, item.GetSpecificNameForNotEnoughToBuy(player)), message));
     }
 
     [Theory]
@@ -74,9 +75,12 @@ public sealed class WhenTryBuying
 
         Either<BuyResult, String> result = item.TryBuy(quantity, player);
 
-        Assert.True(result.IsLeft());
-        Assert.Equal(quantity, result.Left().QuantityPurchased);
-        Assert.Equal(expectedPointsSpent, result.Left().PointsSpent);
+        Assert.True(result.IsLeft);
+        result.IfLeft(buyResult =>
+        {
+            Assert.Equal(quantity, buyResult.QuantityPurchased);
+            Assert.Equal(expectedPointsSpent, buyResult.PointsSpent);
+        });
     }
 
     [Theory]
@@ -93,9 +97,12 @@ public sealed class WhenTryBuying
 
         Either<BuyResult, String> result = item.TryBuy(quantity, player);
 
-        Assert.True(result.IsLeft());
-        Assert.Equal(expectedQuantity, result.Left().QuantityPurchased);
-        Assert.Equal(expectedPointsSpent, result.Left().PointsSpent);
+        Assert.True(result.IsLeft);
+        result.IfLeft(buyResult =>
+        {
+            Assert.Equal(expectedQuantity, buyResult.QuantityPurchased);
+            Assert.Equal(expectedPointsSpent, buyResult.PointsSpent);
+        });
     }
 
     [Theory]
@@ -110,8 +117,11 @@ public sealed class WhenTryBuying
 
         Either<BuyResult, String> result = item.TryBuy(quantity, player);
 
-        Assert.True(result.IsLeft());
-        Assert.Equal(expectedQuantity, result.Left().QuantityPurchased);
-        Assert.Equal(expectedPointsSpent, result.Left().PointsSpent);
+        Assert.True(result.IsLeft);
+        result.IfLeft(buyResult =>
+        {
+            Assert.Equal(expectedQuantity, buyResult.QuantityPurchased);
+            Assert.Equal(expectedPointsSpent, buyResult.PointsSpent);
+        });
     }
 }

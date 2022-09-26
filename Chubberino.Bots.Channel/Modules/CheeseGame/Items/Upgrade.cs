@@ -1,8 +1,8 @@
-﻿using Chubberino.Bots.Channel.Modules.CheeseGame.Items.Upgrades;
-using Chubberino.Database.Models;
-using Monad;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Chubberino.Bots.Channel.Modules.CheeseGame.Items.Upgrades;
+using Chubberino.Database.Models;
+using LanguageExt;
 
 namespace Chubberino.Bots.Channel.Modules.CheeseGame.Items;
 
@@ -44,14 +44,14 @@ public sealed class Upgrade : Item
     {
         if (!player.TryGetNextUpgradeToUnlock(out var nextUpgradeToLock))
         {
-            return () => UnexpectedErrorMessage;
+            return UnexpectedErrorMessage;
         }
 
         nextUpgradeToLock.UpdatePlayer(player);
 
         player.Points -= nextUpgradeToLock.Price;
 
-        return () => 1;
+        return 1;
     }
 
     public override String GetShopPrompt(Player player)

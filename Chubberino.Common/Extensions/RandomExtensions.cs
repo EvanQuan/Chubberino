@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Monad;
+using LanguageExt;
 
 namespace Chubberino.Common.Extensions;
 
@@ -98,15 +98,12 @@ public static class RandomExtensions
     {
         if (list.Count == 0)
         {
-            return Option.Nothing<TElement>();
+            return Option<TElement>.None;
         }
 
-        return Option.Return(() =>
-        {
-            Int32 index = random.Next(list.Count);
-            var element = list[index];
-            list.RemoveAt(index);
-            return element;
-        });
+        Int32 index = random.Next(list.Count);
+        var element = list[index];
+        list.RemoveAt(index);
+        return element;
     }
 }

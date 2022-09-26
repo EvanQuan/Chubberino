@@ -26,10 +26,7 @@ public abstract class Command : ICommand
 
     private void TwitchClientManager_OnTwitchClientRefreshed(Object sender, OnTwitchClientRefreshedArgs e)
     {
-        if (e.OldClient.HasValue)
-        {
-            Unregister(e.OldClient.Value);
-        }
+        e.OldClient.IfSome(client => Unregister(client));
         Register(e.NewClient);
     }
 

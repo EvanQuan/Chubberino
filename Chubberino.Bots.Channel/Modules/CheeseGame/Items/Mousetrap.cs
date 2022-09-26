@@ -1,8 +1,8 @@
-﻿using Chubberino.Bots.Channel.Modules.CheeseGame.Hazards;
-using Chubberino.Database.Models;
-using Monad;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Chubberino.Bots.Channel.Modules.CheeseGame.Hazards;
+using Chubberino.Database.Models;
+using LanguageExt;
 
 namespace Chubberino.Bots.Channel.Modules.CheeseGame.Items;
 
@@ -30,7 +30,7 @@ public sealed class Mousetrap : Item
         player.MouseTrapCount++;
         player.Points -= price;
 
-        return () => 1;
+        return 1;
     }
 
     public override String GetShopPrompt(Player player)

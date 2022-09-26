@@ -1,7 +1,7 @@
-﻿using Chubberino.Database.Models;
-using Monad;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Chubberino.Database.Models;
+using LanguageExt;
 
 namespace Chubberino.Bots.Channel.Modules.CheeseGame.Items;
 
@@ -32,11 +32,11 @@ public sealed class Worker : Item
         {
             player.WorkerCount++;
             player.Points -= price;
-            return () => 1;
+            return 1;
         }
         else
         {
-            return () => NotEnoughPopulationMessage;
+            return NotEnoughPopulationMessage;
         }
     }
 

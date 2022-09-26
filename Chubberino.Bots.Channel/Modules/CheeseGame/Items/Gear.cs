@@ -1,6 +1,6 @@
 ﻿using Chubberino.Bots.Channel.Modules.CheeseGame.Quests;
 using Chubberino.Database.Models;
-using Monad;
+using LanguageExt;
 using System;
 using System.Collections.Generic;
 
@@ -39,7 +39,7 @@ public sealed class Gear : Item
         player.GearCount++;
         player.Points -= price;
 
-        return () => 1;
+        return 1;
     }
 
 

@@ -1,6 +1,6 @@
-﻿using Chubberino.Database.Models;
-using Monad;
-using System;
+﻿using System;
+using Chubberino.Database.Models;
+using LanguageExt;
 
 namespace Chubberino.Infrastructure.Credentials;
 
@@ -13,7 +13,7 @@ public interface ICredentialsManager
     /// <summary>
     /// The login credentials if the user has already logged in.
     /// </summary>
-    OptionResult<LoginCredentials> LoginCredentials { get; }
+    Option<LoginCredentials> LoginCredentials { get; }
 
     /// <summary>
     /// Try to get the credentials of the user to log in as. Updates <see cref="LoginCredentials"/>

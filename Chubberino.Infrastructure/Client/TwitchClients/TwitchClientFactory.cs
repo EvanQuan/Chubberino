@@ -62,6 +62,6 @@ public sealed class TwitchClientFactory : ITwitchClientFactory
         }
 
         // Try to get new credentials if not provided
-        return CredentialsManager.LoginCredentials.HasValue || CredentialsManager.TryUpdateLoginCredentials(null, out _);
+        return CredentialsManager.LoginCredentials.IsSome || CredentialsManager.TryUpdateLoginCredentials(null, out _);
     }
 }

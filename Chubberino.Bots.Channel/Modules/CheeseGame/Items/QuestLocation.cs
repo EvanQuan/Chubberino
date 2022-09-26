@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Chubberino.Bots.Channel.Modules.CheeseGame.Quests;
 using Chubberino.Common.Extensions;
 using Chubberino.Database.Models;
-using Monad;
+using LanguageExt;
 
 namespace Chubberino.Bots.Channel.Modules.CheeseGame.Items;
 
@@ -61,14 +61,14 @@ public sealed class QuestLocation : Item
     {
         if (!QuestRepository.CommonQuests.TryGetNextToUnlock(player, out var nextQuestToUnlock))
         {
-            return () => UnexpectedErrorMessage;
+            return UnexpectedErrorMessage;
         }
 
         player.QuestsUnlockedCount++;
 
         player.Points -= nextQuestToUnlock.Price;
 
-        return () => 1;
+        return 1;
     }
 
     public override String GetShopPrompt(Player player)

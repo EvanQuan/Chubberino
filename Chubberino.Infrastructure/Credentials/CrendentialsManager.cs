@@ -4,8 +4,9 @@ using System.Linq;
 using Chubberino.Common.ValueObjects;
 using Chubberino.Database.Contexts;
 using Chubberino.Database.Models;
+using LanguageExt;
+using LanguageExt.SomeHelp;
 using Microsoft.EntityFrameworkCore;
-using Monad;
 using TwitchLib.Client.Models;
 
 namespace Chubberino.Infrastructure.Credentials;
@@ -22,7 +23,7 @@ public sealed class CrendentialsManager : ICredentialsManager
 
     public ApplicationCredentials ApplicationCredentials => LazyApplicationCredentials.Value;
 
-    public OptionResult<LoginCredentials> LoginCredentials => loginCredentials.ToOption();
+    public Option<LoginCredentials> LoginCredentials => loginCredentials.ToSome();
 
     private Lazy<ApplicationCredentials> LazyApplicationCredentials { get; }
 

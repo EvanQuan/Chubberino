@@ -1,8 +1,8 @@
-﻿using Chubberino.Bots.Channel.Modules.CheeseGame.Items.Storages;
-using Chubberino.Database.Models;
-using Monad;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Chubberino.Bots.Channel.Modules.CheeseGame.Items.Storages;
+using Chubberino.Database.Models;
+using LanguageExt;
 
 namespace Chubberino.Bots.Channel.Modules.CheeseGame.Items;
 
@@ -39,7 +39,7 @@ public sealed class Storage : Item
 
         Int32 storageGain = (Int32)(BaseQuantity * player.GetStorageUpgradeMultiplier());
 
-        return () => storageGain;
+        return storageGain;
     }
 
     public override String GetShopPrompt(Player player)
