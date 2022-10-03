@@ -127,13 +127,11 @@ public sealed class EmoteManager : IEmoteManager
     public IReadOnlyList<String> Get(String channel, EmoteCategory category)
     {
         return TryGetCachedEmoteList(channel, category)
-            .Match(
-                Some: cachedEmoteList => cachedEmoteList,
-                None: () =>
-                    TryGetAndCacheDatabaseEmoteList(channel, category)
-                        .Match(
-                            Some: databaseEmoteList => databaseEmoteList,
-                            None: () => DefaultEmotes[category]));
+            .Some(cachedEmoteList => cachedEmoteList)
+            .None(() =>
+                TryGetAndCacheDatabaseEmoteList(channel, category)
+                    .Some(databaseEmoteList => databaseEmoteList)
+                    .None(() => DefaultEmotes[category]));
     }
 
     public Option<IReadOnlyList<String>> TryGetCachedEmoteList(String channelName, EmoteCategory category)

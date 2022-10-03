@@ -5,7 +5,6 @@ using Chubberino.Common.Services;
 using Chubberino.Common.ValueObjects;
 using Chubberino.Infrastructure.Configurations;
 using Chubberino.Infrastructure.Credentials;
-using LanguageExt;
 using LanguageExt.SomeHelp;
 using TwitchLib.Client.Exceptions;
 using TwitchLib.Client.Interfaces;
@@ -88,8 +87,8 @@ public sealed class TwitchClientManager : ITwitchClientManager
             CurrentClientOptions = clientOptions;
         }
         var maybeUpdatedCredentials = CredentialsManager.TryUpdateLoginCredentials(credentials);
-        return maybeUpdatedCredentials.Match(
-            Some: updatedCredentials =>
+        return maybeUpdatedCredentials
+            .Some(updatedCredentials =>
             {
                 ConnectionCredentials = updatedCredentials.ConnectionCredentials;
                 bot.LoginCredentials = updatedCredentials;
@@ -100,9 +99,9 @@ public sealed class TwitchClientManager : ITwitchClientManager
 
                 RefreshTwitchClient(bot);
 
-                return updatedCredentials;
-            },
-            None: () =>
+                return Option<LoginCredentials>.Some(updatedCredentials);
+            })
+            .None(() =>
             {
                 Writer.WriteLine("Failed to update login credentials");
                 return Option<LoginCredentials>.None;
