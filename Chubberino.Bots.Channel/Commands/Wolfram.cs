@@ -14,14 +14,42 @@ public sealed class Wolfram : UserCommand
 {
     private WolframAlpha WolframAlpha { get; }
 
-    private const String FirstSentencePattern = @"^.*?[.?!](?=\s+\p{P}*[\p{Lu}\p{N}]|\s*$)";
+    private static Regex FirstSentenceRegex { get; } = new Regex(
+        @"
+        # Match the first sentence.
+        ^ # Beginning of the string.
+        .*? # Lazily match 0 or more of any character.
+        # Match any punctuation that would end a sentence.
+        [
+            .
+            ?
+            !
+        ]
 
-    private Regex FirstSentenceRegex { get; }
+        # Do not include after the first sentence.
+        # Positive lookahead:
+        #   Matches a group after the main expression
+        #   without including it in the result.
+        (?=
+            \s+ # One or more whitespace.
+            \p{P} # Any kind of punctuation.
+            *
+            # \p{Lu}: An uppercase letter that has a lowercase variant.
+            # \p{N}: Any kind of numeric character in any script.
+            [
+                \p{Lu}
+                \p{N}
+            ] 
+            | # Or
+            \s* # Any amount of whitespace
+            $ # End of string
+        )",
+        RegexOptions.Compiled |
+        RegexOptions.IgnorePatternWhitespace);
 
     public Wolfram(ITwitchClientManager client, TextWriter console, WolframAlpha wolfram) : base(client, console)
     {
         WolframAlpha = wolfram;
-        FirstSentenceRegex = new Regex(FirstSentencePattern, RegexOptions.Compiled);
     }
 
     public override void Invoke(Object sender, OnUserCommandReceivedArgs e)
