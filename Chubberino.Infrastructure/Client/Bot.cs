@@ -3,7 +3,6 @@ using Chubberino.Common.ValueObjects;
 using Chubberino.Infrastructure.Client.TwitchClients;
 using Chubberino.Infrastructure.Commands;
 using Chubberino.Infrastructure.Credentials;
-using LanguageExt;
 using TwitchLib.Client.Models;
 using TwitchLib.Communication.Interfaces;
 
@@ -64,10 +63,11 @@ public sealed class Bot : IBot
     {
         IReadOnlyList<JoinedChannel> previouslyJoinedChannels = TwitchClientManager.Client?.JoinedChannels;
 
-        var maybeCredentials = TwitchClientManager.TryInitializeTwitchClient(this, clientOptions, credentials);
+        var maybeCredentials = TwitchClientManager
+            .TryInitializeTwitchClient(this, clientOptions, credentials);
 
-        return maybeCredentials.Match(
-            Some:credentials =>
+        return maybeCredentials
+            .Some(credentials =>
             {
                 if (TwitchClientManager.TryJoinInitialChannels(previouslyJoinedChannels))
                 {
@@ -76,8 +76,8 @@ public sealed class Bot : IBot
                     return credentials;
                 }
                 return Option<LoginCredentials>.None;
-            },
-            None: () => Option<LoginCredentials>.None);
+            })
+            .None(Option<LoginCredentials>.None);
     }
 
     public String GetPrompt()
@@ -93,13 +93,13 @@ public sealed class Bot : IBot
         // TODO: Is this needed if the whole program will restart after?
         var maybeCredentials = Start(clientOptions, LoginCredentials);
 
-        maybeCredentials.Match(
-            Some: credentials =>
+        maybeCredentials
+            .Some(credentials =>
             {
                 LoginCredentials = credentials;
                 Writer.WriteLine("Refresh successful");
-            },
-            None: () =>
+            })
+            .None(() =>
             {
                 Writer.WriteLine("Failed to refresh");
                 State = BotState.ShouldStop;
