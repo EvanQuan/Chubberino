@@ -1,7 +1,4 @@
-﻿using System;
-using Chubberino.Common.Extensions;
-using Moq;
-using Xunit;
+﻿using Chubberino.Common.Extensions;
 
 namespace Chubberino.Common.UnitTests.Extensions.RandomExtensions;
 

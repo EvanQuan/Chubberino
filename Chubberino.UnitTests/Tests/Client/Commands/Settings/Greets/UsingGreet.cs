@@ -1,6 +1,5 @@
 ﻿using Chubberino.Bots.Common.Commands;
 using Chubberino.Bots.Common.Commands.Settings;
-using Moq;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Greets;
 

@@ -1,6 +1,5 @@
 ﻿using Chubberino.Common.ValueObjects;
 using Chubberino.Infrastructure.Commands.Settings;
-using Moq;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands.Groups.SettingCollections;
 

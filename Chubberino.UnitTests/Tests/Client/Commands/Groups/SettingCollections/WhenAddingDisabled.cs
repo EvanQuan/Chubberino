@@ -1,6 +1,4 @@
-﻿using Xunit;
-
-namespace Chubberino.UnitTests.Tests.Client.Commands.Groups.SettingCollections;
+﻿namespace Chubberino.UnitTests.Tests.Client.Commands.Groups.SettingCollections;
 
 public sealed class WhenAddingDisabled : UsingSettingCollection
 {

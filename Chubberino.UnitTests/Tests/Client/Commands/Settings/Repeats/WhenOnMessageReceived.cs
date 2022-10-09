@@ -1,8 +1,5 @@
-﻿using Moq;
-using System;
-using TwitchLib.Client.Events;
+﻿using TwitchLib.Client.Events;
 using TwitchLib.Client.Models.Builders;
-using Xunit;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Repeats;
 

@@ -1,7 +1,5 @@
-﻿using System;
-using Chubberino.Bots.Channel.Modules.CheeseGame.Points;
+﻿using Chubberino.Bots.Channel.Modules.CheeseGame.Points;
 using Chubberino.Database.Models;
-using Xunit;
 
 namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Points;
 

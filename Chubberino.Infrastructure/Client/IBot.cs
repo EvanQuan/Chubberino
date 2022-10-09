@@ -1,5 +1,4 @@
 ﻿using Chubberino.Infrastructure.Credentials;
-using LanguageExt;
 using TwitchLib.Communication.Interfaces;
 
 namespace Chubberino.Infrastructure.Client;

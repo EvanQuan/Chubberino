@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Chubberino.Common.Extensions;
 using Chubberino.UnitTestQualityTools.Extensions;
-using Moq;
-using Xunit;
 
 namespace Chubberino.Common.UnitTests.Extensions.RandomExtensions;
 
@@ -11,7 +8,7 @@ public sealed class WhenGettingNextElement
 {
     private Mock<Random> Random { get; }
 
-    private IReadOnlyList<Int32> List { get; } = new List<Int32>
+    private static IReadOnlyList<Int32> List { get; } = new Int32[]
     {
         0,
         1,

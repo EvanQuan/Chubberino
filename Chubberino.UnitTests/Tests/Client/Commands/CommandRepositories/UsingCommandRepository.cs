@@ -6,7 +6,6 @@ using Chubberino.Infrastructure.Commands;
 using Chubberino.Infrastructure.Commands.Settings;
 using Chubberino.Infrastructure.Commands.Settings.UserCommands;
 using Chubberino.UnitTestQualityTools.Extensions;
-using Moq;
 using TwitchLib.Client.Interfaces;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories;

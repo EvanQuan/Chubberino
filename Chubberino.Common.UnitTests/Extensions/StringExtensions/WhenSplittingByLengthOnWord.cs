@@ -1,7 +1,5 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Chubberino.Common.Extensions;
-using Xunit;
 
 namespace Chubberino.Common.UnitTests.Extensions.StringExtensions;
 

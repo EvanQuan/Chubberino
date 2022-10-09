@@ -1,7 +1,4 @@
-﻿using System;
-using Chubberino.Infrastructure.Commands;
-using FluentAssertions;
-using Xunit;
+﻿using Chubberino.Infrastructure.Commands;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories;
 
@@ -25,13 +22,13 @@ public sealed class WhenGettingStatus : UsingCommandRepository
 
         String expectedStatus =
             CommandRepository.StatusLine + "Commands" + CommandRepository.StatusLine + Environment.NewLine +
-            MockedCommand.Object.Name + Environment.NewLine +
+            MockedCommand.Object.Name.Value + Environment.NewLine +
             CommandRepository.StatusLine + "User Commands" + CommandRepository.StatusLine + Environment.NewLine +
             CommandRepository.StatusLine + "Disabled Settings" + CommandRepository.StatusLine + Environment.NewLine +
-            MockedSetting1.Object.Name + ": " + MockedSetting1.Object.Status + Environment.NewLine +
+            MockedSetting1.Object.Name.Value + ": " + MockedSetting1.Object.Status + Environment.NewLine +
             CommandRepository.StatusLine + "Enabled Settings" + CommandRepository.StatusLine + Environment.NewLine +
-            MockedSetting2.Object.Name + ": " + MockedSetting2.Object.Status + Environment.NewLine +
-            MockedSetting3.Object.Name + ": " + MockedSetting3.Object.Status + Environment.NewLine;
+            MockedSetting2.Object.Name.Value + ": " + MockedSetting2.Object.Status + Environment.NewLine +
+            MockedSetting3.Object.Name.Value + ": " + MockedSetting3.Object.Status + Environment.NewLine;
 
         var status = Sut.GetStatus();
 
@@ -47,13 +44,13 @@ public sealed class WhenGettingStatus : UsingCommandRepository
 
         String expectedStatus =
             CommandRepository.StatusLine + "Commands" + CommandRepository.StatusLine + Environment.NewLine +
-            MockedCommand.Object.Name + Environment.NewLine +
+            MockedCommand.Object.Name.Value + Environment.NewLine +
             CommandRepository.StatusLine + "User Commands" + CommandRepository.StatusLine + Environment.NewLine +
             CommandRepository.StatusLine + "Disabled Settings" + CommandRepository.StatusLine + Environment.NewLine +
-            MockedSetting1.Object.Name + ": " + MockedSetting1.Object.Status + Environment.NewLine +
-            MockedSetting2.Object.Name + ": " + MockedSetting2.Object.Status + Environment.NewLine +
+            MockedSetting1.Object.Name.Value + ": " + MockedSetting1.Object.Status + Environment.NewLine +
+            MockedSetting2.Object.Name.Value + ": " + MockedSetting2.Object.Status + Environment.NewLine +
             CommandRepository.StatusLine + "Enabled Settings" + CommandRepository.StatusLine + Environment.NewLine +
-            MockedSetting3.Object.Name + ": " + MockedSetting3.Object.Status + Environment.NewLine;
+            MockedSetting3.Object.Name.Value + ": " + MockedSetting3.Object.Status + Environment.NewLine;
 
         var status = Sut.GetStatus();
 
@@ -69,12 +66,12 @@ public sealed class WhenGettingStatus : UsingCommandRepository
 
         String expectedStatus =
             CommandRepository.StatusLine + "Commands" + CommandRepository.StatusLine + Environment.NewLine +
-            MockedCommand.Object.Name + Environment.NewLine +
+            MockedCommand.Object.Name.Value + Environment.NewLine +
             CommandRepository.StatusLine + "User Commands" + CommandRepository.StatusLine + Environment.NewLine +
             CommandRepository.StatusLine + "Disabled Settings" + CommandRepository.StatusLine + Environment.NewLine +
-            MockedSetting1.Object.Name + ": " + MockedSetting1.Object.Status + Environment.NewLine +
-            MockedSetting2.Object.Name + ": " + MockedSetting2.Object.Status + Environment.NewLine +
-            MockedSetting3.Object.Name + ": " + MockedSetting3.Object.Status + Environment.NewLine +
+            MockedSetting1.Object.Name.Value + ": " + MockedSetting1.Object.Status + Environment.NewLine +
+            MockedSetting2.Object.Name.Value + ": " + MockedSetting2.Object.Status + Environment.NewLine +
+            MockedSetting3.Object.Name.Value + ": " + MockedSetting3.Object.Status + Environment.NewLine +
             CommandRepository.StatusLine + "Enabled Settings" + CommandRepository.StatusLine + Environment.NewLine;
 
         var status = Sut.GetStatus();
@@ -91,13 +88,13 @@ public sealed class WhenGettingStatus : UsingCommandRepository
 
         String expectedStatus =
             CommandRepository.StatusLine + "Commands" + CommandRepository.StatusLine + Environment.NewLine +
-            MockedCommand.Object.Name + Environment.NewLine +
+            MockedCommand.Object.Name.Value + Environment.NewLine +
             CommandRepository.StatusLine + "User Commands" + CommandRepository.StatusLine + Environment.NewLine +
             CommandRepository.StatusLine + "Disabled Settings" + CommandRepository.StatusLine + Environment.NewLine +
             CommandRepository.StatusLine + "Enabled Settings" + CommandRepository.StatusLine + Environment.NewLine +
-            MockedSetting1.Object.Name + ": " + MockedSetting1.Object.Status + Environment.NewLine +
-            MockedSetting2.Object.Name + ": " + MockedSetting2.Object.Status + Environment.NewLine +
-            MockedSetting3.Object.Name + ": " + MockedSetting3.Object.Status + Environment.NewLine;
+            MockedSetting1.Object.Name.Value + ": " + MockedSetting1.Object.Status + Environment.NewLine +
+            MockedSetting2.Object.Name.Value + ": " + MockedSetting2.Object.Status + Environment.NewLine +
+            MockedSetting3.Object.Name.Value + ": " + MockedSetting3.Object.Status + Environment.NewLine;
 
         var status = Sut.GetStatus();
 

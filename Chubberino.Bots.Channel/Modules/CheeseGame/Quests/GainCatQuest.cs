@@ -1,5 +1,4 @@
 ﻿using Chubberino.Database.Models;
-using System;
 
 namespace Chubberino.Bots.Channel.Modules.CheeseGame.Quests;
 

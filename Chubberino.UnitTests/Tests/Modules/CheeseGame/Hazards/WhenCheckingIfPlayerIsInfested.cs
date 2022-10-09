@@ -1,7 +1,5 @@
 ﻿using Chubberino.Bots.Channel.Modules.CheeseGame.Hazards;
 using Chubberino.Database.Models;
-using System;
-using Xunit;
 
 namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Hazards;
 

@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using Xunit;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands.Pyramids.PyramidTrackers;
 

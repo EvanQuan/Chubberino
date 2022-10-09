@@ -1,5 +1,4 @@
-﻿using System;
-using Chubberino.Common.ValueObjects;
+﻿using Chubberino.Common.ValueObjects;
 using TwitchLib.Client.Models;
 
 namespace Chubberino.Client.Commands.Settings.UserCommands;

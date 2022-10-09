@@ -1,8 +1,4 @@
-﻿using Moq;
-using System;
-using Xunit;
-
-namespace Chubberino.UnitTests.Tests.Client.Commands.DisableAlls;
+﻿namespace Chubberino.UnitTests.Tests.Client.Commands.DisableAlls;
 
 public sealed class WhenExecuting : UsingDisableAll
 {

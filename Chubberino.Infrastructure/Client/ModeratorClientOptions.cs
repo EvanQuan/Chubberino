@@ -1,5 +1,4 @@
-﻿using System;
-using TwitchLib.Communication.Models;
+﻿using TwitchLib.Communication.Models;
 
 namespace Chubberino.Infrastructure.Client;
 

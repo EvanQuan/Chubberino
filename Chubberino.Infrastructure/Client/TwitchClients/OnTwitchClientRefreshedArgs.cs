@@ -1,6 +1,4 @@
-﻿using System;
-using LanguageExt;
-using TwitchLib.Client.Interfaces;
+﻿using TwitchLib.Client.Interfaces;
 
 namespace Chubberino.Infrastructure.Client.TwitchClients;
 

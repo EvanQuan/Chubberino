@@ -1,7 +1,5 @@
-﻿using System;
-using Chubberino.Bots.Common.Commands.Settings;
+﻿using Chubberino.Bots.Common.Commands.Settings;
 using Chubberino.Bots.Common.Commands.Settings.ColorSelectors;
-using Moq;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Colors;
 

@@ -1,6 +1,4 @@
-﻿using System;
-using Chubberino.Bots.Common.Commands.Settings;
-using Xunit;
+﻿using Chubberino.Bots.Common.Commands.Settings;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Greets;
 

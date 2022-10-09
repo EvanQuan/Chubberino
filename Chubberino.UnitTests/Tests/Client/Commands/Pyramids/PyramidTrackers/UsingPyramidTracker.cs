@@ -1,5 +1,4 @@
-﻿using System;
-using Chubberino.Bots.Common.Commands.Settings.Pyramids;
+﻿using Chubberino.Bots.Common.Commands.Settings.Pyramids;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands.Pyramids.PyramidTrackers;
 

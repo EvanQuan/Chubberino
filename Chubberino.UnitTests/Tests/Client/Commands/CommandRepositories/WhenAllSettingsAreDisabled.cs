@@ -1,6 +1,4 @@
-﻿using Xunit;
-
-namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories;
+﻿namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories;
 
 public sealed class WhenAllSettingsAreDisabled : UsingCommandRepository
 {

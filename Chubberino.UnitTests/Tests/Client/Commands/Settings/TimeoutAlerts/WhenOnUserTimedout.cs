@@ -1,9 +1,6 @@
-﻿using System;
-using Chubberino.Infrastructure.Client;
-using Moq;
+﻿using Chubberino.Infrastructure.Client;
 using TwitchLib.Client.Events;
 using TwitchLib.Client.Models;
-using Xunit;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.TimeoutAlerts;
 

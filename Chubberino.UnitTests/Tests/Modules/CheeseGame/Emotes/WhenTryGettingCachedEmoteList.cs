@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Chubberino.Database.Models;
-using FluentAssertions;
-using Xunit;
 
 namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Emotes;
 

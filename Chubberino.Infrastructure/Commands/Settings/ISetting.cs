@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Chubberino.Infrastructure.Commands.Settings;
+﻿namespace Chubberino.Infrastructure.Commands.Settings;
 
 public interface ISetting : ICommand
 {

@@ -2,7 +2,6 @@
 using Chubberino.Common.ValueObjects;
 using Chubberino.Database.Contexts;
 using Chubberino.Database.Models;
-using LanguageExt;
 using LanguageExt.SomeHelp;
 using Microsoft.EntityFrameworkCore;
 using TwitchLib.Client.Models;

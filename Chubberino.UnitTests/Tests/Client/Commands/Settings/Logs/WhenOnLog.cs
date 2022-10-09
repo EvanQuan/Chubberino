@@ -1,7 +1,4 @@
-﻿using Moq;
-using System;
-using TwitchLib.Client.Events;
-using Xunit;
+﻿using TwitchLib.Client.Events;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Logs;
 

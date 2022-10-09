@@ -1,10 +1,7 @@
-﻿using System;
-using Chubberino.Bots.Channel.Modules.CheeseGame.Helping;
+﻿using Chubberino.Bots.Channel.Modules.CheeseGame.Helping;
 using Chubberino.Infrastructure.Client;
-using Moq;
 using TwitchLib.Client.Models;
 using TwitchLib.Client.Models.Builders;
-using Xunit;
 
 namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Helping;
 

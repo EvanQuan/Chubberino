@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Chubberino.Common.Extensions;
-using Xunit;
 
 namespace Chubberino.Common.UnitTests.Extensions.ListExtensions;
 

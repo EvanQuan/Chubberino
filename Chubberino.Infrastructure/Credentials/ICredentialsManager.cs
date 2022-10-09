@@ -1,5 +1,4 @@
 ﻿using Chubberino.Database.Models;
-using LanguageExt;
 
 namespace Chubberino.Infrastructure.Credentials;
 

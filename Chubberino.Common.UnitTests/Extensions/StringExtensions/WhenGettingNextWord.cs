@@ -1,6 +1,4 @@
-﻿using System;
-using Chubberino.Common.Extensions;
-using Xunit;
+﻿using Chubberino.Common.Extensions;
 
 namespace Chubberino.Common.UnitTests.Extensions.StringExtensions;
 

@@ -1,19 +1,22 @@
 ﻿using System;
 using System.Linq;
-using Chubberino.Common.Extensions;
-using ValueOf;
 
 namespace Chubberino.Common.ValueObjects;
 
-public sealed class Name : ValueOf<String, Name>
+public readonly record struct Name
 {
-    public const String FormatExceptionMesage = "String value \"{0}\" must be all lowercase.";
+    public static Name From(String value)
+        => new(value);
 
-    protected override void Validate()
+    private Name(String value)
+        => Value = value.Any(Char.IsUpper)
+            ? value.ToLower()
+            : value;
+
+    public String Value { get; }
+
+    public override String ToString()
     {
-        if (Value.Any(Char.IsUpper))
-        {
-            throw new FormatException(FormatExceptionMesage.Format(Value));
-        }
+        return Value;
     }
 }

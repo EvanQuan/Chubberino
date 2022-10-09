@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Chubberino.Bots.Channel.Modules.CheeseGame.Items;
 using Chubberino.Database.Models;
 using LanguageExt;

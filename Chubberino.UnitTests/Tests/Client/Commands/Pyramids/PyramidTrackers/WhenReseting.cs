@@ -1,6 +1,4 @@
-﻿using Xunit;
-
-namespace Chubberino.UnitTests.Tests.Client.Commands.Pyramids.PyramidTrackers;
+﻿namespace Chubberino.UnitTests.Tests.Client.Commands.Pyramids.PyramidTrackers;
 
 public sealed class WhenReseting : UsingPyramidTracker
 {

@@ -1,5 +1,4 @@
 ﻿using System;
-using Chubberino.Bots.Channel.Modules.CheeseGame;
 using Chubberino.Bots.Channel.Modules.CheeseGame.Items;
 using Chubberino.Bots.Channel.Modules.CheeseGame.Items.Workers;
 using Chubberino.Bots.Channel.Modules.CheeseGame.Ranks;

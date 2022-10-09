@@ -1,11 +1,9 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using Chubberino.Bots.Common.Commands;
 using Chubberino.Database.Contexts;
 using Chubberino.Infrastructure.Client;
 using Chubberino.Infrastructure.Client.TwitchClients;
 using Chubberino.Infrastructure.Commands;
-using Moq;
 using TwitchLib.Client.Interfaces;
 using TwitchLib.Communication.Models;
 

@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Chubberino.Infrastructure.Credentials;
-using FluentAssertions;
 using LanguageExt;
-using Moq;
 using TwitchLib.Client.Models;
 using TwitchLib.Communication.Interfaces;
-using Xunit;
 
 namespace Chubberino.UnitTests.Tests.Client.Bots;
 
