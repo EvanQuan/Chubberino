@@ -1,6 +1,4 @@
-﻿using System;
-using Chubberino.Infrastructure.Commands.Settings;
-using Xunit;
+﻿using Chubberino.Infrastructure.Commands.Settings;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Copies;
 

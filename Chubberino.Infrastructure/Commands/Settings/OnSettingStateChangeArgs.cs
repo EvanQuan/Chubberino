@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Chubberino.Infrastructure.Commands.Settings;
+﻿namespace Chubberino.Infrastructure.Commands.Settings;
 
 public sealed class OnSettingStateChangeArgs : EventArgs
 {

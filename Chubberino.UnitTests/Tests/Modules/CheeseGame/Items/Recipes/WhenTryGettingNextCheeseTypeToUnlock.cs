@@ -1,7 +1,6 @@
 ﻿using Chubberino.Bots.Channel.Modules.CheeseGame.Items.Recipes;
 using Chubberino.Database.Models;
 using System.Collections.Generic;
-using Xunit;
 
 namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Items.Recipes;
 

@@ -1,8 +1,4 @@
-﻿using Moq;
-using System;
-using Xunit;
-
-namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.DisableAlls;
+﻿namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.DisableAlls;
 
 /// <summary>
 /// When all the settings are already disabled.

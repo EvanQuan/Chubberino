@@ -1,10 +1,5 @@
-﻿using System;
-using Chubberino.Client.Commands.Settings.UserCommands;
-using Chubberino.Infrastructure.Client;
-using Chubberino.Infrastructure.Commands.Settings.UserCommands;
-using FluentAssertions;
+﻿using Chubberino.Infrastructure.Client;
 using TwitchLib.Client.Models.Builders;
-using Xunit;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.UserCommands;
 
@@ -69,7 +64,7 @@ public sealed class WhenTryValidatingCommand : UsingUserCommand
             out var args);
 
         result.Should().BeFalse();
-        userCommandName.Should().BeNull();
+        userCommandName.Value.Should().BeNull();
         args.Should().BeNull();
     }
 }

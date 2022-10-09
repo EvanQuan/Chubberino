@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Chubberino.Common.ValueObjects;
-using Moq;
-using Xunit;
+using LanguageExt;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories;
 
@@ -46,7 +44,7 @@ public sealed class WhenSettingProperty : UsingCommandRepository
 
         Sut.Execute(Name.From("set"), commandWithArguments);
 
-        MockedWriter.Verify(x => x.WriteLine($"Command \"{validCommandName}\" property \"{propertyName}\" not set."), Times.Once());
+        MockedWriter.Verify(x => x.WriteLine($"Command \"{validCommandName.Value}\" property \"{propertyName}\" not set."), Times.Once());
     }
 
     /// <summary>
@@ -86,6 +84,6 @@ public sealed class WhenSettingProperty : UsingCommandRepository
 
         Sut.Execute(Name.From("set"), commandWithArguments);
 
-        MockedWriter.Verify(x => x.WriteLine($"Command \"{validCommandName}\" property \"{propertyName}\" set to \"{String.Join(" ", propertyValue)}\"."), Times.Once());
+        MockedWriter.Verify(x => x.WriteLine($"Command \"{validCommandName.Value}\" property \"{propertyName}\" set to \"{String.Join(" ", propertyValue)}\"."), Times.Once());
     }
 }

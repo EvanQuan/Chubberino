@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using Chubberino.Common.Services;
 using Chubberino.Common.ValueObjects;
@@ -10,7 +9,6 @@ using Chubberino.Infrastructure.Client.TwitchClients;
 using Chubberino.Infrastructure.Commands;
 using Chubberino.Infrastructure.Credentials;
 using Chubberino.UnitTestQualityTools.Extensions;
-using Moq;
 using TwitchLib.Client.Interfaces;
 using TwitchLib.Client.Models;
 using TwitchLib.Communication.Interfaces;

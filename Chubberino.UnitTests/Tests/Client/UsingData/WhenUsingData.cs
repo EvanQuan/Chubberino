@@ -1,5 +1,4 @@
 ﻿using Chubberino.Infrastructure.Client;
-using Xunit;
 
 namespace Chubberino.UnitTests.Tests.Client.UsingData;
 

@@ -1,7 +1,5 @@
 ﻿using Chubberino.Bots.Channel.Modules.CheeseGame.Emotes;
 using Chubberino.Database.Contexts;
-using Moq;
-using System;
 
 namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Emotes;
 

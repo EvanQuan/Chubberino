@@ -1,5 +1,4 @@
-﻿using System;
-using Chubberino.Bots.Channel.Modules.CheeseGame.Hazards;
+﻿using Chubberino.Bots.Channel.Modules.CheeseGame.Hazards;
 using Chubberino.Database.Models;
 using Xunit.Abstractions;
 

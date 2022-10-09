@@ -1,10 +1,7 @@
-﻿using System;
-using Chubberino.Client.Commands.Settings.UserCommands;
-using Moq;
+﻿using Chubberino.Client.Commands.Settings.UserCommands;
 using TwitchLib.Client.Events;
 using TwitchLib.Client.Models;
 using TwitchLib.Client.Models.Builders;
-using Xunit;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories;
 

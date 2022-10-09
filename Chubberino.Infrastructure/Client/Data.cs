@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Chubberino.Infrastructure.Client;
+﻿namespace Chubberino.Infrastructure.Client;
 
 public static class Data
 {

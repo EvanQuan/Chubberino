@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Chubberino.Infrastructure.Client;
-using Moq;
 using TwitchLib.Client.Events;
 using TwitchLib.Client.Models;
 using TwitchLib.Client.Models.Builders;
-using Xunit;
 
 using PyramidTracker = Chubberino.Bots.Common.Commands.Settings.TrackPyramids;
 

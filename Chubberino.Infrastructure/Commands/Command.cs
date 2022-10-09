@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using Chubberino.Common.ValueObjects;
 using Chubberino.Infrastructure.Client.TwitchClients;
 using TwitchLib.Client.Interfaces;

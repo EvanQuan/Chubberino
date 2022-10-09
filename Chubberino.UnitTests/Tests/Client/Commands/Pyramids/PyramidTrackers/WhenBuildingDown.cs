@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using Xunit;
+﻿using System.Linq;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands.Pyramids.PyramidTrackers;
 

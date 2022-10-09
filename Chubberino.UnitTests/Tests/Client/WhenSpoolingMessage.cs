@@ -1,9 +1,6 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Chubberino.Infrastructure.Client;
 using Chubberino.Infrastructure.Client.TwitchClients;
-using Moq;
-using Xunit;
 
 namespace Chubberino.UnitTests.Tests.Client;
 

@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Chubberino.Bots.Channel.Modules.CheeseGame.Helping;
 using Chubberino.Database.Contexts;
 using Chubberino.Database.Models;
 using Chubberino.Infrastructure.Client.TwitchClients;
 using Chubberino.UnitTestQualityTools.Extensions;
-using Moq;
 
 namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Helping;
 

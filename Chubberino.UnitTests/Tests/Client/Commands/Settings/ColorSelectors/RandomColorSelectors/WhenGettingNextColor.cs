@@ -1,7 +1,4 @@
-﻿using System;
-using Xunit;
-
-namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.ColorSelectors.RandomColorSelectors;
+﻿namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.ColorSelectors.RandomColorSelectors;
 
 public sealed class WhenGettingNextColor : UsingRandomColorSelector
 {

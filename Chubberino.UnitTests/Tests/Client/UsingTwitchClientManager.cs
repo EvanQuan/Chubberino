@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using Chubberino.Common.Services;
 using Chubberino.Common.ValueObjects;
 using Chubberino.Database.Contexts;
@@ -8,7 +7,6 @@ using Chubberino.Infrastructure.Client;
 using Chubberino.Infrastructure.Client.TwitchClients;
 using Chubberino.Infrastructure.Configurations;
 using Chubberino.Infrastructure.Credentials;
-using Moq;
 using TwitchLib.Client.Interfaces;
 using TwitchLib.Client.Models;
 using TwitchLib.Communication.Interfaces;

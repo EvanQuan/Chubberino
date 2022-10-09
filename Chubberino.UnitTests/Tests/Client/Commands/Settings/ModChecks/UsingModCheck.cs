@@ -1,6 +1,5 @@
 ﻿using Chubberino.Bots.Common.Commands.Settings;
 using Chubberino.Bots.Common.Commands.Settings.Strategies;
-using Moq;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.ModChecks;
 

@@ -1,6 +1,4 @@
-﻿using System;
-using TwitchLib.Client.Enums;
-using Xunit;
+﻿using TwitchLib.Client.Enums;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.ColorSelectors.PresetColorSelectors;
 

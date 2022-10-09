@@ -1,6 +1,4 @@
-﻿using Xunit;
-
-namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Colors;
+﻿namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Colors;
 
 public sealed class WhenAddingColorSelectors : UsingColor
 {

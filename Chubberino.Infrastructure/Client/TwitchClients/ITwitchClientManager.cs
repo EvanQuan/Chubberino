@@ -1,6 +1,5 @@
 ﻿using Chubberino.Common.ValueObjects;
 using Chubberino.Infrastructure.Credentials;
-using LanguageExt;
 using TwitchLib.Client.Interfaces;
 using TwitchLib.Client.Models;
 using TwitchLib.Communication.Interfaces;

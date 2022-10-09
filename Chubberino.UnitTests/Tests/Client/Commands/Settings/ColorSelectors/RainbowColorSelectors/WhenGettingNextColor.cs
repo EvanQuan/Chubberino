@@ -1,6 +1,4 @@
-﻿using Xunit;
-
-namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.ColorSelectors.RainbowColorSelectors;
+﻿namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.ColorSelectors.RainbowColorSelectors;
 
 public sealed class WhenGettingNextColor : UsingRainbowColorSelector
 {

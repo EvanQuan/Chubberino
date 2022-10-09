@@ -1,7 +1,4 @@
-﻿using System;
-using Xunit;
-
-namespace Chubberino.UnitTests.Tests.Client.Bots;
+﻿namespace Chubberino.UnitTests.Tests.Client.Bots;
 
 public sealed class WhenGettingPrompt : UsingBot
 {

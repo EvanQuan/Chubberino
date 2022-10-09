@@ -1,8 +1,4 @@
-﻿using System;
-using Moq;
-using Xunit;
-
-namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Greets;
+﻿namespace Chubberino.UnitTests.Tests.Client.Commands.Settings.Greets;
 
 /// <summary>
 /// When calling <see cref="Greet.Execute(IEnumerable{String})"/>

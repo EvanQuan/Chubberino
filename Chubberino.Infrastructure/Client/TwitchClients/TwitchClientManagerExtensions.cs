@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Chubberino.Infrastructure.Client.TwitchClients;
+﻿namespace Chubberino.Infrastructure.Client.TwitchClients;
 
 public static class TwitchClientManagerExtensions
 {

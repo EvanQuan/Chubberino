@@ -1,7 +1,4 @@
-﻿using Moq;
-using Xunit;
-
-namespace Chubberino.UnitTests.Tests.Client.Bots;
+﻿namespace Chubberino.UnitTests.Tests.Client.Bots;
 
 public sealed class WhenDisposing : UsingBot
 {

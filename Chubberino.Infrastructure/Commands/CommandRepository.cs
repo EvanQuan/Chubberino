@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 using Chubberino.Client.Commands.Settings.UserCommands;
 using Chubberino.Common.ValueObjects;
 using Chubberino.Infrastructure.Client.TwitchClients;
@@ -150,14 +146,14 @@ public sealed class CommandRepository : ICommandRepository
         // Disabled settings are first.
         foreach (var setting in Settings.Disabled.OrderBy(x => x.Name.Value))
         {
-            stringBuilder.AppendLine(setting.Name + ": " + setting.Status);
+            stringBuilder.AppendLine(setting.Name.Value + ": " + setting.Status);
         }
 
         stringBuilder.AppendLine(StatusLine + "Enabled Settings" + StatusLine);
 
         foreach (var setting in Settings.Enabled.OrderBy(x => x.Name.Value))
         {
-            stringBuilder.AppendLine(setting.Name + ": " + setting.Status);
+            stringBuilder.AppendLine(setting.Name.Value + ": " + setting.Status);
         }
 
         return stringBuilder.ToString();
@@ -198,7 +194,7 @@ public sealed class CommandRepository : ICommandRepository
 
                 if (commandToExecute is null)
                 {
-                    Writer.WriteLine($"Command \"{commandName}\" not found.");
+                    Writer.WriteLine($"Command \"{commandName.Value}\" not found.");
                 }
                 else
                 {
@@ -220,16 +216,16 @@ public sealed class CommandRepository : ICommandRepository
 
         if (commandToSet is null)
         {
-            return $"Command \"{commandName}\" not found to get.";
+            return $"Command \"{commandName.Value}\" not found to get.";
         }
 
         String value = commandToSet.Get(arguments);
         if (String.IsNullOrWhiteSpace(value))
         {
-            return $"Command \"{commandName}\" value \"{String.Join(" ", arguments)}\" not found.";
+            return $"Command \"{commandName.Value}\" value \"{String.Join(" ", arguments)}\" not found.";
         }
 
-        return $"Command \"{commandName}\" value \"{String.Join(" ", arguments)}\" is \"{value}\".";
+        return $"Command \"{commandName.Value}\" value \"{String.Join(" ", arguments)}\" is \"{value}\".";
     }
 
     private void Set(Name commandName, IEnumerable<String> arguments)
@@ -238,9 +234,9 @@ public sealed class CommandRepository : ICommandRepository
             commandName,
             arguments,
             (command, property, arguments) => command.Set(property, arguments),
-            commandName => $"Command \"{commandName}\" not found to set.",
-            (commandName, property, arguments) => $"Command \"{commandName}\" property \"{property}\" set to \"{arguments}\".",
-            (commandName, property) => $"Command \"{commandName}\" property \"{property}\" not set.");
+            commandName => $"Command \"{commandName.Value}\" not found to set.",
+            (commandName, property, arguments) => $"Command \"{commandName.Value}\" property \"{property}\" set to \"{arguments}\".",
+            (commandName, property) => $"Command \"{commandName.Value}\" property \"{property}\" not set.");
     }
 
     private void Add(Name commandName, IEnumerable<String> arguments)
@@ -249,9 +245,9 @@ public sealed class CommandRepository : ICommandRepository
             commandName,
             arguments,
             (command, property, arguments) => command.Add(property, arguments),
-            commandName => $"Command \"{commandName}\" not found to add to.",
-            (commandName, property, arguments) => $"Command \"{commandName}\" property \"{property}\" added \"{arguments}\".",
-            (commandName, property) => $"Command \"{commandName}\" property \"{property}\" not added to.");
+            commandName => $"Command \"{commandName.Value}\" not found to add to.",
+            (commandName, property, arguments) => $"Command \"{commandName.Value}\" property \"{property}\" added \"{arguments}\".",
+            (commandName, property) => $"Command \"{commandName.Value}\" property \"{property}\" not added to.");
     }
 
     private void Remove(Name commandName, IEnumerable<String> arguments)
@@ -260,9 +256,9 @@ public sealed class CommandRepository : ICommandRepository
             commandName,
             arguments,
             (command, property, arguments) => command.Remove(property, arguments),
-            commandName => $"Command \"{commandName}\" not found to remove from.",
-            (commandName, property, arguments) => $"Command \"{commandName}\" property \"{property}\" removed \"{arguments}\".",
-            (commandName, property) => $"Command \"{commandName}\" property \"{property}\" not removed from.");
+            commandName => $"Command \"{commandName.Value}\" not found to remove from.",
+            (commandName, property, arguments) => $"Command \"{commandName.Value}\" property \"{property}\" removed \"{arguments}\".",
+            (commandName, property) => $"Command \"{commandName.Value}\" property \"{property}\" not removed from.");
     }
 
     private void ApplyMetaCommand(
@@ -308,7 +304,7 @@ public sealed class CommandRepository : ICommandRepository
         }
         else
         {
-            Writer.WriteLine($"Command \"{commandName}\" not found.");
+            Writer.WriteLine($"Command \"{commandName.Value}\" not found.");
         }
     }
 

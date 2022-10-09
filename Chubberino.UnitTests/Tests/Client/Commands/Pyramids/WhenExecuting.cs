@@ -1,7 +1,4 @@
-﻿using System;
-using Chubberino.Infrastructure.Client;
-using Moq;
-using Xunit;
+﻿using Chubberino.Infrastructure.Client;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands.Pyramids;
 

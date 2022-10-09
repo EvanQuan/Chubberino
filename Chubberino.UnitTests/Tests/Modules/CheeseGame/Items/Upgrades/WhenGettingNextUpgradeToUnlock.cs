@@ -1,6 +1,5 @@
 ﻿using Chubberino.Bots.Channel.Modules.CheeseGame.Items.Upgrades;
 using Chubberino.Database.Models;
-using Xunit;
 
 namespace Chubberino.UnitTests.Tests.Modules.CheeseGame.Items.Upgrades;
 

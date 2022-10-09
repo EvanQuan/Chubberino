@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using TwitchLib.Client.Interfaces;
+﻿using TwitchLib.Client.Interfaces;
 
 namespace Chubberino.Infrastructure.Commands;
 

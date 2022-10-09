@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Chubberino.Infrastructure.Commands;
+﻿namespace Chubberino.Infrastructure.Commands;
 
 public interface IEventListener<TEventArgs>
     where TEventArgs : EventArgs

@@ -1,11 +1,7 @@
-﻿using Chubberino.Client;
-using Chubberino.Common.ValueObjects;
+﻿using Chubberino.Common.ValueObjects;
 using Chubberino.Infrastructure.Client;
-using Moq;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using Xunit;
 
 namespace Chubberino.UnitTests.Tests.Client.Bots;
 
