@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace Chubberino.Bots.Common.Commands.Settings.Pyramids;
+﻿namespace Chubberino.Bots.Common.Commands.Settings.Pyramids;
 
 public static class PyramidBuilder
 {

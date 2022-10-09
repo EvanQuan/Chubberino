@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using Chubberino.Bots.Common.Commands.Settings.Pyramids;
 using Chubberino.Client.Commands.Settings.UserCommands;
 using Chubberino.Infrastructure.Client;

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using Chubberino.Common.Extensions;
 using Chubberino.Infrastructure.Client.TwitchClients;
 using Chubberino.Infrastructure.Commands.Settings;
@@ -12,7 +9,7 @@ namespace Chubberino.Bots.Common.Commands.Settings;
 
 public sealed class AutoPogO : Setting
 {
-    private HashSet<String> UsersToPogO { get; set; }
+    private System.Collections.Generic.HashSet<String> UsersToPogO { get; set; }
 
     public override String Status => base.Status
         + $"\n\tUsers:"
@@ -21,7 +18,7 @@ public sealed class AutoPogO : Setting
     public AutoPogO(ITwitchClientManager client, TextWriter writer)
         : base(client, writer)
     {
-        UsersToPogO = new HashSet<String>();
+        UsersToPogO = new();
     }
 
     public override void Register(ITwitchClient client)

@@ -1,11 +1,8 @@
-﻿using System;
-
-namespace Chubberino.Bots.Common.Commands;
+﻿namespace Chubberino.Bots.Common.Commands;
 
 /// <summary>
 /// Repeats an Action at a set interval, asynch.
 /// </summary>
-[Obsolete("Replace with System.Timers.Timer")]
 public interface IRepeater
 {
     /// <summary>

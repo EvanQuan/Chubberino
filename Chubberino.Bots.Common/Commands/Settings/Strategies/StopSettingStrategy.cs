@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Chubberino.Infrastructure.Client.TwitchClients;
+﻿using Chubberino.Infrastructure.Client.TwitchClients;
 using TwitchLib.Client.Models;
 
 namespace Chubberino.Bots.Common.Commands.Settings.Strategies;
@@ -13,7 +10,7 @@ public sealed class StopSettingStrategy : IStopSettingStrategy
         TwitchClientManager = client;
     }
 
-    private static ISet<String> StopWords { get; } = new HashSet<String>()
+    private static LanguageExt.HashSet<String> StopWords { get; } = new()
     {
         "bot",
     };
