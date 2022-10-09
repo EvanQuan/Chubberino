@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 using Chubberino.Bots.Common.Commands.Settings.Replies;
 using Chubberino.Infrastructure.Client.TwitchClients;
 using Chubberino.Infrastructure.Commands.Settings;
@@ -16,7 +12,7 @@ public sealed class Reply : Setting
     /// <summary>
     /// The specified users to reply to. If empty, reply to any user.
     /// </summary>
-    private HashSet<String> UsersToReplyTo { get; set; }
+    private System.Collections.Generic.HashSet<String> UsersToReplyTo { get; set; }
 
     /// <summary>
     /// The message to trigger a reply.
@@ -51,7 +47,7 @@ public sealed class Reply : Setting
     public Reply(ITwitchClientManager client, IEqualsComparator equalsComparator, IContainsComparator containsComparator, TextWriter writer)
         : base(client, writer)
     {
-        UsersToReplyTo = new HashSet<String>();
+        UsersToReplyTo = new();
         EqualsComparator = equalsComparator;
         ContainsComparator = containsComparator;
         Comparator = ContainsComparator;

@@ -1,5 +1,4 @@
-﻿using System;
-using Chubberino.Common.ValueObjects;
+﻿using Chubberino.Common.ValueObjects;
 
 namespace Chubberino.Bots.Common.Commands.Settings.ColorSelectors;
 

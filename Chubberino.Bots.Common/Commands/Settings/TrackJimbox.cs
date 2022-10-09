@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using Chubberino.Infrastructure.Client;
 using Chubberino.Infrastructure.Client.TwitchClients;
 using Chubberino.Infrastructure.Commands.Settings;
@@ -49,7 +46,7 @@ public sealed class TrackJimbox : Setting
     private JimboxStage CurrentStage { get; set; }
 
 
-    private HashSet<String> Contributors { get; }
+    private System.Collections.Generic.HashSet<String> Contributors { get; }
 
     /// <summary>
     /// Emote bordering the box.
@@ -59,7 +56,7 @@ public sealed class TrackJimbox : Setting
     public TrackJimbox(ITwitchClientManager client, TextWriter console)
         : base(client, console)
     {
-        Contributors = new HashSet<String>();
+        Contributors = new();
     }
 
     public override void Register(ITwitchClient client)

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Chubberino.Bots.Common.Commands.Settings.UserCommands;
+﻿using Chubberino.Bots.Common.Commands.Settings.UserCommands;
 using RandomSource = System.Random;
 
 namespace Chubberino.Bots.Common.Commands;

@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Chubberino.Bots.Common.Commands.Settings.Pyramids;
+﻿namespace Chubberino.Bots.Common.Commands.Settings.Pyramids;
 
 public sealed class PyramidTracker
 {
-    public HashSet<String> ContributorDisplayNames { get; }
+    public System.Collections.Generic.HashSet<String> ContributorDisplayNames { get; }
 
     public String Block { get; private set; }
 
@@ -22,7 +19,7 @@ public sealed class PyramidTracker
 
     public PyramidTracker()
     {
-        ContributorDisplayNames = new HashSet<String>();
+        ContributorDisplayNames = new();
         Reset();
     }
 

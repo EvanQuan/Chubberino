@@ -1,7 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Timers;
 using Chubberino.Bots.Common.Commands.Settings.UserCommands;
-using Chubberino.Common.Services;
 using RandomSource = System.Random;
 
 namespace Chubberino.Bots.Common.Commands;
@@ -11,8 +9,8 @@ namespace Chubberino.Bots.Common.Commands;
 /// </summary>
 public sealed class Repeater : IRepeater
 {
-    private RandomSource Random { get; set; }
-    public IThreadService ThreadService { get; }
+    private RandomSource Random { get; }
+    private Timer Timer { get; }
 
     private Boolean isRunning = false;
 
@@ -47,12 +45,23 @@ public sealed class Repeater : IRepeater
     /// </summary>
     public Action Action { get; set; }
 
-    public TimeSpan Variance { get; set; } = TimeSpan.FromSeconds(0.0);
+    public TimeSpan Variance { get; set; } = TimeSpan.Zero;
 
-    public Repeater(RandomSource random, IThreadService threadService)
+    public Repeater(RandomSource random)
     {
+        Timer = new Timer();
+        Timer.Elapsed += Timer_Elapsed;
         Random = random;
-        ThreadService = threadService;
+    }
+
+    private void Timer_Elapsed(Object sender, ElapsedEventArgs e)
+    {
+        Action();
+
+        if (HasVariance())
+        {
+            Timer.Interval = (Interval + GetVariance()).TotalMilliseconds;
+        }
     }
 
     /// <summary>
@@ -60,27 +69,24 @@ public sealed class Repeater : IRepeater
     /// </summary>
     private void Start()
     {
-        Task.Run(ExecuteAction);
-    }
-
-    /// <summary>
-    /// Continuously run the action at the specified interval.
-    /// </summary>
-    private void ExecuteAction()
-    {
-        while (isRunning)
-        {
-            Action();
-            ThreadService.Sleep(Interval + GetVariance());
-        }
+        Timer.Start();
     }
 
     private TimeSpan GetVariance()
     {
-        if (Variance == TimeSpan.Zero)
+        if (HasVariance())
         {
-            return TimeSpan.Zero;
+            return TimeSpan.FromMilliseconds(
+                Random.Next(
+                    -(Int32)Variance.TotalMilliseconds,
+                    (Int32)Variance.TotalMilliseconds));
         }
-        return TimeSpan.FromMilliseconds(Random.Next(-(Int32)Variance.TotalMilliseconds, (Int32)Variance.TotalMilliseconds));
+
+        return TimeSpan.Zero;
+    }
+
+    private Boolean HasVariance()
+    {
+        return Variance != TimeSpan.Zero;
     }
 }
