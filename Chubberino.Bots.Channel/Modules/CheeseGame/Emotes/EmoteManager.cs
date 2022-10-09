@@ -229,15 +229,17 @@ public sealed class EmoteManager : IEmoteManager
 
         foreach (String emote in emotes)
         {
-            if (context.Emotes.TryGetFirst(x => x.Name == emote && x.Category == category, out Emote found))
-            {
-                context.Emotes.Remove(found);
-                succeeded.Add(emote);
-            }
-            else
-            {
-                failed.Add(emote);
-            }
+            context.Emotes
+                .TryGetFirst(x => x.Name == emote && x.Category == category)
+                .Some(found =>
+                {
+                    context.Emotes.Remove(found);
+                    succeeded.Add(emote);
+                })
+                .None(() =>
+                {
+                    failed.Add(emote);
+                });
         }
 
         if (succeeded.Any())

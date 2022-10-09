@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Chubberino.Common.Services;
+﻿namespace Chubberino.Common.Services;
 
 public interface IThreadService
 {

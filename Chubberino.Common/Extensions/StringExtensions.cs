@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Chubberino.Common.Extensions;
+﻿namespace Chubberino.Common.Extensions;
 
 public static class StringExtensions
 {

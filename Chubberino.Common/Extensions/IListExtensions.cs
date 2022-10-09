@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Chubberino.Common.Extensions;
+﻿namespace Chubberino.Common.Extensions;
 
 public static class IListExtensions
 {

@@ -118,64 +118,67 @@ public sealed class Heist : IHeist
 
         Priority priority = Priority.Medium;
 
-        if (Wagers.TryGetFirst(x => x.PlayerTwitchID == player.TwitchUserID, out var wager))
-        {
-            // Already in the heist and updating.
-
-            // Refund points.
-            player.AddPoints(wager.WageredPoints);
-
-            // Updated so that points is never greater than what the player has.
-            Int32 updatedPoints = Math.Min(player.Points, points(player));
-
-            if (updatedPoints <= 0)
+        Wagers.TryGetFirst(x => x.PlayerTwitchID == player.TwitchUserID)
+            .Some(wager =>
             {
-                Wagers.Remove(wager);
-                updateMessage.Append(SucceedToLeaveHeistMessage.Format(wager.WageredPoints));
-            }
-            else
-            {
-                Int32 oldWager = wager.WageredPoints;
-                wager.WageredPoints = updatedPoints;
-                player.AddPoints(-updatedPoints);
+                // Already in the heist and updating.
 
-                if (oldWager == updatedPoints)
+                // Refund points.
+                player.AddPoints(wager.WageredPoints);
+
+                // Updated so that points is never greater than what the player has.
+                Int32 updatedPoints = Math.Min(player.Points, points(player));
+
+                if (updatedPoints <= 0)
                 {
-                    updateMessage.Append(WagerIsUnchangedMessage.Format(oldWager));
+                    Wagers.Remove(wager);
+                    updateMessage.Append(SucceedToLeaveHeistMessage.Format(wager.WageredPoints));
+                }
+                else
+                {
+                    Int32 oldWager = wager.WageredPoints;
+                    wager.WageredPoints = updatedPoints;
+                    player.AddPoints(-updatedPoints);
+
+                    if (oldWager == updatedPoints)
+                    {
+                        updateMessage.Append(WagerIsUnchangedMessage.Format(oldWager));
+                        priority = Priority.Low;
+                    }
+                    else
+                    {
+                        updateMessage.Append(SucceedToUpdateHeistMessage.Format(oldWager, updatedPoints));
+                    }
+                }
+                context.SaveChanges();
+            })
+            .None(() =>
+            {
+                if (player.Points == 0)
+                {
+                    updateMessage.Append(FailToJoinHeistBecauseNoCheeseMessage);
+                    priority = Priority.Low;
+                }
+                else if (points(player) <= 0)
+                {
+                    // Trying to join the heist, but failing.
+                    updateMessage.Append(FailToJoinHeistMessage);
                     priority = Priority.Low;
                 }
                 else
                 {
-                    updateMessage.Append(SucceedToUpdateHeistMessage.Format(oldWager, updatedPoints));
+                    // Joining the heist for the first time.
+                    Int32 updatedPoints = Math.Min(player.Points, points(player));
+                    Wagers.Add(new Wager()
+                    {
+                        PlayerTwitchID = player.TwitchUserID,
+                        WageredPoints = updatedPoints
+                    });
+                    player.AddPoints(-updatedPoints);
+                    context.SaveChanges();
+                    updateMessage.Append(SucceedToJoinHeistMessage.Format(updatedPoints));
                 }
-            }
-            context.SaveChanges();
-
-        }
-        else if (player.Points == 0)
-        {
-            updateMessage.Append(FailToJoinHeistBecauseNoCheeseMessage);
-            priority = Priority.Low;
-        }
-        else if (points(player) <= 0)
-        {
-            // Trying to join the heist, but failing.
-            updateMessage.Append(FailToJoinHeistMessage);
-            priority = Priority.Low;
-        }
-        else
-        {
-            // Joining the heist for the first time.
-            Int32 updatedPoints = Math.Min(player.Points, points(player));
-            Wagers.Add(new Wager()
-            {
-                PlayerTwitchID = player.TwitchUserID,
-                WageredPoints = updatedPoints
             });
-            player.AddPoints(-updatedPoints);
-            context.SaveChanges();
-            updateMessage.Append(SucceedToJoinHeistMessage.Format(updatedPoints));
-        }
 
         if (!silent)
         {

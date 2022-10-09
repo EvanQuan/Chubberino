@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using Chubberino.Common.Extensions;
 using Chubberino.Common.Services;
 using Chubberino.Infrastructure.Client;
@@ -99,17 +98,17 @@ public sealed class Cookie : Setting
 
     public override Boolean Set(String property, IEnumerable<String> arguments)
     {
-        switch (property?.ToLower())
+        return (property?.ToLower()) switch
         {
-            case "c":
-            case "channel":
-                if (arguments.TryGetFirst(out String channel))
+            "c" or "channel" => arguments
+                .TryGetFirst()
+                .Some(channel =>
                 {
                     Channel = channel;
                     return true;
-                }
-                return false;
-        }
-        return false;
+                })
+                .None(false),
+            _ => false,
+        };
     }
 }

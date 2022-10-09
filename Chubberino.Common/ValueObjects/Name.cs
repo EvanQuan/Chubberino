@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-
-namespace Chubberino.Common.ValueObjects;
+﻿namespace Chubberino.Common.ValueObjects;
 
 public readonly record struct Name
 {
