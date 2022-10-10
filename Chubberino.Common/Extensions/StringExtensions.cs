@@ -1,4 +1,4 @@
-﻿using System.Reflection.Metadata.Ecma335;
+﻿using ImmutableStringSet = LanguageExt.HashSet<System.String>;
 
 namespace Chubberino.Common.Extensions;
 
@@ -34,7 +34,10 @@ public static class StringExtensions
     /// </summary>
     /// <param name="source">Source string to get the first word from.</param>
     /// <param name="word">The first word found.</param>
-    /// <returns>The remaining string without the leading space, or <see cref="String.Empty"/> if there is nothing remaining.</returns>
+    /// <returns>
+    /// The remaining string without the leading space, or
+    /// <see cref="String.Empty"/> if there is nothing remaining.
+    /// </returns>
     public static String GetNextWord(this String source, out String word)
     {
         var trimmedSource = source.Trim();
@@ -74,7 +77,9 @@ public static class StringExtensions
     /// <param name="source"></param>
     /// <param name="segmentLength"></param>
     /// <returns></returns>
-    public static IEnumerable<String> SplitByLengthOnWord(this String source, Int32 segmentLength)
+    public static IEnumerable<String> SplitByLengthOnWord(
+        this String source,
+        Int32 segmentLength)
     {
         if (source.Length <= segmentLength)
         {
@@ -115,44 +120,54 @@ public static class StringExtensions
 
     public static IEnumerable<String> GetPermutations(this String source)
     {
-        var permutations = new List<String>();
 
-        if (source == String.Empty)
+        if (source is "" or null)
         {
-            return permutations.Append(String.Empty);
+            return new String[] { source };
         }
 
         Int32 maxRecursionDepth = source.Length - 1;
 
         Char[] array = source.ToCharArray();
 
-        array.GetPermutationHelper(permutations, 0, maxRecursionDepth);
+        var permutations = new ImmutableStringSet();
 
-        return permutations;
+        return array.GetPermutationHelper(
+            permutations,
+            0,
+            maxRecursionDepth);
     }
 
-    private static void GetPermutationHelper(this Char[] source, IList<String> permutations, Int32 currentRecursionDepth, Int32 maxRecursionDepth)
+    private static ImmutableStringSet GetPermutationHelper(
+        this Char[] source,
+        ImmutableStringSet permutations,
+        Int32 currentRecursionDepth,
+        Int32 maxRecursionDepth)
     {
         if (currentRecursionDepth == maxRecursionDepth)
         {
-            permutations.Add(String.Join(String.Empty, source));
-            return;
+            return permutations.TryAdd(String.Join(String.Empty, source));
         }
 
         for (Int32 i = currentRecursionDepth; i <= maxRecursionDepth; i++)
         {
             Swap(ref source[currentRecursionDepth], ref source[i]);
-            source.GetPermutationHelper(permutations, currentRecursionDepth + 1, maxRecursionDepth);
+
+            permutations = source.GetPermutationHelper(
+                permutations,
+                currentRecursionDepth + 1,
+                maxRecursionDepth);
+
             Swap(ref source[currentRecursionDepth], ref source[i]);
         }
+
+        return permutations;
     }
 
     private static void Swap(ref Char a, ref Char b)
     {
         if (a == b) { return; }
 
-        var temp = a;
-        a = b;
-        b = temp;
+        (b, a) = (a, b);
     }
 }
