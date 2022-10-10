@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Chubberino.Common.Extensions;
+﻿namespace Chubberino.Common.Extensions;
 
 public static class Int32Extensions
 {

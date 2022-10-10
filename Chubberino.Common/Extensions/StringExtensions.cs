@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Reflection.Metadata.Ecma335;
 
 namespace Chubberino.Common.Extensions;
 
@@ -54,28 +51,20 @@ public static class StringExtensions
         return trimmedSource[(firstSpaceIndex + 1)..];
     }
 
-    public static Boolean TryParseEnum<TEnum>(this String source, out TEnum value)
-        where TEnum : struct
+    public static Option<TEnum> TryParseEnum<TEnum>(this String source)
+        where TEnum : struct, Enum
     {
-        if (!typeof(TEnum).IsEnum || String.IsNullOrWhiteSpace(source))
+        if (String.IsNullOrWhiteSpace(source))
         {
-            value = default;
-            return false;
+            return Option<TEnum>.None;
         }
 
         var values = (TEnum[])Enum.GetValues(typeof(TEnum));
 
-        foreach (TEnum v in values)
-        {
-            if (v.ToString().StartsWith(source, StringComparison.OrdinalIgnoreCase))
-            {
-                value = v;
-                return true;
-            }
-        }
-
-        value = default;
-        return false;
+        return values
+            .TryGetFirst(v => v
+                .ToString()
+                .StartsWith(source, StringComparison.OrdinalIgnoreCase));
     }
 
     /// <summary>

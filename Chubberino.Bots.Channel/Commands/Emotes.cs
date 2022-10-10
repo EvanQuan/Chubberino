@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -23,107 +24,151 @@ public sealed class Emotes : UserCommand
 
     public override void Invoke(Object sender, OnUserCommandReceivedArgs e)
     {
-        if (!e.Words.TryGetFirst(out var keyword, out var next)) { return; }
+        e.Words
+            .TryGetFirstAndNext()
+            .IfSome(value =>
+            {
+                // TODO add channel admins
+                var username = e.ChatMessage.Username;
 
-        // TODO add channel admins
-        if (!e.ChatMessage.Username.Equals("chubbehmouse", StringComparison.OrdinalIgnoreCase)
-            && !e.ChatMessage.Username.Equals(e.ChatMessage.Channel, StringComparison.OrdinalIgnoreCase))
-        {
-            return;
-        }
+                var userIsChannelAdmin = username.Equals("chubbehmouse", StringComparison.OrdinalIgnoreCase)
+                    || username.Equals(e.ChatMessage.Channel, StringComparison.OrdinalIgnoreCase);
 
-        switch (keyword.ToLower())
-        {
-            case "a":
-            case "add":
+                if (!userIsChannelAdmin)
                 {
-                    if (next.TryGetFirst(out var categoryString, out var next2)
-                        && categoryString.TryParseEnum(out EmoteCategory category))
-                    {
-                        // Filter out single character words, such as chatterino message duplicate characters.
-                        var emotes = next2.Where(x => x.Length >= 2);
-                        var results = EmoteManager.AddAll(emotes, category, e.ChatMessage.Channel);
-
-                        StringBuilder builder = new StringBuilder()
-                            .Append(e.ChatMessage.DisplayName)
-                            .Append(',');
-
-                        if (results.Succeeded.Any())
-                        {
-                            builder
-                                .Append(" Added ")
-                                .Append(category)
-                                .Append(" emotes: ")
-                                .Append(String.Join(' ', results.Succeeded));
-                        }
-
-                        if (results.Failed.Any())
-                        {
-                            builder
-                                .Append(" Failed to add ")
-                                .Append(category)
-                                .Append(" emotes: ")
-                                .Append(String.Join(' ', results.Failed));
-                        }
-
-                        TwitchClientManager.SpoolMessage(e.ChatMessage.Channel, builder.ToString());
-                    }
+                    return;
                 }
-                break;
-            case "d":
-            case "delete":
-            case "remove":
+
+                var keyword = value.Element.ToLower();
+                var next = value.Next;
+
+                switch (keyword)
                 {
-                    if (next.TryGetFirst(out var categoryString, out var next2)
-                        && categoryString.TryParseEnum(out EmoteCategory category))
-                    {
-                        var emotes = next2.Where(x => x.Length > 1);
-
-                        var results = EmoteManager.RemoveAll(emotes, category, e.ChatMessage.Channel);
-
-                        StringBuilder builder = new StringBuilder()
-                            .Append(e.ChatMessage.DisplayName)
-                            .Append(',');
-
-                        if (results.Succeeded.Any())
+                    case "a":
+                    case "add":
+                        next
+                            .TryGetFirstAndNext()
+                            .IfSome(AddEmote(e));
+                        break;
+                    case "d":
+                    case "delete":
+                    case "remove":
                         {
-                            builder
-                                .Append(" Removed ")
-                                .Append(category)
-                                .Append(" emotes: ")
-                                .Append(String.Join(' ', results.Succeeded));
+                            next
+                                .TryGetFirstAndNext()
+                                .IfSome(DeleteEmote(e));
                         }
-
-                        if (results.Failed.Any())
-                        {
-                            builder
-                                .Append(" Failed to remove ")
-                                .Append(category)
-                                .Append(" emotes: ")
-                                .Append(String.Join(' ', results.Failed));
-                        }
-
-                        TwitchClientManager.SpoolMessage(e.ChatMessage.Channel, builder.ToString());
-                    }
+                        break;
+                    default:
+                        keyword
+                            .TryParseEnum<EmoteCategory>()
+                            .IfSome(DisplayAllEmotesOfCategory(e));
+                        break;
                 }
-                break;
-            default:
-                {
-                    if (keyword.TryParseEnum(out EmoteCategory category) && category != EmoteCategory.Invalid)
-                    {
-                        var emotes = EmoteManager.Get(e.ChatMessage.Channel, category);
+            });
+    }
 
-                        StringBuilder builder = new StringBuilder()
-                            .Append(e.ChatMessage.DisplayName)
-                            .Append(", ")
+    private Action<EmoteCategory> DisplayAllEmotesOfCategory(OnUserCommandReceivedArgs e)
+    {
+        return category =>
+        {
+            if (category != EmoteCategory.Invalid)
+            {
+                var emotes = EmoteManager.Get(e.ChatMessage.Channel, category);
+
+                StringBuilder builder = new StringBuilder()
+                    .Append(e.ChatMessage.DisplayName)
+                    .Append(", ")
+                    .Append(category)
+                    .Append(" emotes: ")
+                    .Append(String.Join(' ', emotes));
+
+                TwitchClientManager.SpoolMessage(e.ChatMessage.Channel, builder.ToString());
+            }
+        };
+    }
+
+    private Action<(String Element, IEnumerable<String> Next)> DeleteEmote(OnUserCommandReceivedArgs e)
+    {
+        return value =>
+        {
+            var categoryString = value.Element;
+            var next2 = value.Next;
+
+            categoryString
+                .TryParseEnum<EmoteCategory>()
+                .IfSome(category =>
+                {
+                    var emotes = next2.Where(x => x.Length > 1);
+
+                    var results = EmoteManager.RemoveAll(emotes, category, e.ChatMessage.Channel);
+
+                    StringBuilder builder = new StringBuilder()
+                        .Append(e.ChatMessage.DisplayName)
+                        .Append(',');
+
+                    if (results.Succeeded.Any())
+                    {
+                        builder
+                            .Append(" Removed ")
                             .Append(category)
                             .Append(" emotes: ")
-                            .Append(String.Join(' ', emotes));
-
-                        TwitchClientManager.SpoolMessage(e.ChatMessage.Channel, builder.ToString());
+                            .Append(String.Join(' ', results.Succeeded));
                     }
-                }
-                break;
-        }
+
+                    if (results.Failed.Any())
+                    {
+                        builder
+                            .Append(" Failed to remove ")
+                            .Append(category)
+                            .Append(" emotes: ")
+                            .Append(String.Join(' ', results.Failed));
+                    }
+
+                    TwitchClientManager.SpoolMessage(e.ChatMessage.Channel, builder.ToString());
+                });
+        };
+    }
+
+    private Action<(String Element, IEnumerable<String> Next)> AddEmote(OnUserCommandReceivedArgs e)
+    {
+        return value =>
+        {
+            var categoryString = value.Element;
+            var next2 = value.Next;
+
+            categoryString
+                .TryParseEnum<EmoteCategory>()
+                .IfSome(category =>
+                {
+                    // Filter out single character words, such as chatterino message duplicate characters.
+                    var emotes = next2.Where(x => x.Length >= 2);
+                    var results = EmoteManager.AddAll(emotes, category, e.ChatMessage.Channel);
+
+                    StringBuilder builder = new StringBuilder()
+                        .Append(e.ChatMessage.DisplayName)
+                        .Append(',');
+
+                    if (results.Succeeded.Any())
+                    {
+                        builder
+                            .Append(" Added ")
+                            .Append(category)
+                            .Append(" emotes: ")
+                            .Append(String.Join(' ', results.Succeeded));
+                    }
+
+                    if (results.Failed.Any())
+                    {
+                        builder
+                            .Append(" Failed to add ")
+                            .Append(category)
+                            .Append(" emotes: ")
+                            .Append(String.Join(' ', results.Failed));
+                    }
+
+                    TwitchClientManager.SpoolMessage(e.ChatMessage.Channel, builder.ToString());
+                });
+        };
     }
 }

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Chubberino.Common.Services;
+﻿namespace Chubberino.Common.Services;
 
 /// <summary>
 /// Provides support for spin-based waiting.
