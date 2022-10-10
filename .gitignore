@@ -340,3 +340,6 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+
+# Live Unit Testing Configuration
+Chubberino.lutconfig
