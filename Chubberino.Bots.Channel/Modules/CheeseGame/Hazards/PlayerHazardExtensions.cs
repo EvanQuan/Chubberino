@@ -1,5 +1,4 @@
 ﻿using Chubberino.Database.Models;
-using System;
 
 namespace Chubberino.Bots.Channel.Modules.CheeseGame.Hazards;
 
@@ -11,7 +10,5 @@ public static class PlayerHazardExtensions
     /// <param name="player">Player to check if they are infested.</param>
     /// <returns>true if the player is currently infested; false otherwise.</returns>
     public static Boolean IsInfested(this Player player)
-    {
-        return player.RatCount > 0;
-    }
+        => player.RatCount > 0;
 }

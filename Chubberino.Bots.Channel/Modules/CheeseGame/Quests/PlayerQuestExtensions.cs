@@ -1,21 +1,16 @@
 ﻿using Chubberino.Bots.Channel.Modules.CheeseGame.Hazards;
 using Chubberino.Bots.Channel.Modules.CheeseGame.Items;
 using Chubberino.Database.Models;
-using System;
 
 namespace Chubberino.Bots.Channel.Modules.CheeseGame.Quests;
 
 public static class PlayerQuestExtensions
 {
     public static Double GetRareQuestChance(this Player player)
-    {
-        return player.NextQuestUpgradeUnlock.GetRareQuestChance();
-    }
+        => player.NextQuestUpgradeUnlock.GetRareQuestChance();
 
     public static Boolean HasQuestingUnlocked(this Player player)
-    {
-        return player.QuestsUnlockedCount > 0;
-    }
+        => player.QuestsUnlockedCount > 0;
 
     public static Double GetQuestSuccessChance(this Player player, Boolean includeInfestation = true)
     {

@@ -3,7 +3,5 @@
 public sealed class ApplicationContextFactory : IApplicationContextFactory
 {
     public IApplicationContext GetContext()
-    {
-        return new ApplicationContext();
-    }
+        => new ApplicationContext();
 }

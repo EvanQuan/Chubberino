@@ -6,9 +6,7 @@ public sealed class WhenUsingData
 {
     [Fact]
     public void InvisibleCharacterIsNotASpace()
-    {
-        Assert.NotEqual(' ', Data.InvisibleCharacter);
-    }
+        => Data.InvisibleCharacter.Should().NotBe(' ');
 
     [Fact]
     public void InvisibleCharacterShoulCountAsToken()

@@ -11,20 +11,14 @@ public sealed class StaticPriceItem : Item
 
     public override IEnumerable<String> Names { get; } = new String[] { "StaticPriceItem", "s" };
 
-    public override Int32 GetPrice(Player player)
-    {
-        return StaticPrice;
-    }
+    public override Either<Int32, String> GetPrice(Player player)
+        => StaticPrice;
 
     public override String GetSpecificNameForNotEnoughToBuy(Player player)
-    {
-        return "a Static Price Item";
-    }
+        => "a Static Price Item";
 
     public override String GetSpecificNameForSuccessfulBuy(Player player, Int32 quantity)
-    {
-        return quantity == 1 ? "Static Price Item" : "Static Price Items";
-    }
+        => quantity == 1 ? "Static Price Item" : "Static Price Items";
 
     public override Either<Int32, String> TryBuySingleUnit(Player player, Int32 price)
     {

@@ -54,14 +54,10 @@ public sealed class Reply : Setting
     }
 
     public override void Register(ITwitchClient client)
-    {
-        client.OnMessageReceived += TwitchClient_OnMessageReceived;
-    }
+        => client.OnMessageReceived += TwitchClient_OnMessageReceived;
 
     public override void Unregister(ITwitchClient client)
-    {
-        client.OnMessageReceived -= TwitchClient_OnMessageReceived;
-    }
+        => client.OnMessageReceived -= TwitchClient_OnMessageReceived;
 
     private void TwitchClient_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
     {
@@ -161,8 +157,7 @@ public sealed class Reply : Setting
     }
 
     public override String GetHelp()
-    {
-        return @"
+        => @"
 Reply to any message that matches to a specified message, by copying the
 message back.
 
@@ -197,5 +192,4 @@ add:
 remove:
     user        - The users to reply to.
 ";
-    }
 }

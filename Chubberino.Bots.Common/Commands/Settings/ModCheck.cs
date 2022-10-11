@@ -26,14 +26,10 @@ public sealed class ModCheck : Setting
     }
 
     public override void Register(ITwitchClient client)
-    {
-        client.OnMessageReceived += Client_OnMessageReceived;
-    }
+        => client.OnMessageReceived += Client_OnMessageReceived;
 
     public override void Unregister(ITwitchClient client)
-    {
-        client.OnMessageReceived -= Client_OnMessageReceived;
-    }
+        => client.OnMessageReceived -= Client_OnMessageReceived;
 
     public void Client_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
     {

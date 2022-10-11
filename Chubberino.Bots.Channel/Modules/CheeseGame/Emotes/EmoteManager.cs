@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
 using Chubberino.Common.Extensions;
 using Chubberino.Database.Contexts;
 using Chubberino.Database.Models;
-using LanguageExt;
 
 namespace Chubberino.Bots.Channel.Modules.CheeseGame.Emotes;
 
@@ -124,15 +121,12 @@ public sealed class EmoteManager : IEmoteManager
     }
 
 
-    public IReadOnlyList<String> Get(String channel, EmoteCategory category)
-    {
-        return TryGetCachedEmoteList(channel, category)
+    public IReadOnlyList<String> Get(String channel, EmoteCategory category) => TryGetCachedEmoteList(channel, category)
             .Some(cachedEmoteList => cachedEmoteList)
             .None(() =>
                 TryGetAndCacheDatabaseEmoteList(channel, category)
                     .Some(databaseEmoteList => databaseEmoteList)
                     .None(() => DefaultEmotes[category]));
-    }
 
     public Option<IReadOnlyList<String>> TryGetCachedEmoteList(String channelName, EmoteCategory category)
     {

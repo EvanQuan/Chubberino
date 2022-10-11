@@ -1,6 +1,5 @@
 ﻿using Chubberino.Database.Contexts;
 using Chubberino.Database.Models;
-using System;
 using System.Collections.Generic;
 
 namespace Chubberino.Bots.Channel.Modules.CheeseGame.Heists;
@@ -23,5 +22,9 @@ public interface IHeist
     /// <param name="player">Player to add a wager for.</param>
     /// <param name="points">Points wagered by <paramref name="player"/>.</param>
     /// <param name="silent">Indicates if the update should be silent.</param>
-    public void UpdateWager(IApplicationContext context, Player player, Func<Player, Int32> points, Boolean silent = false);
+    public void UpdateWager(
+        IApplicationContext context,
+        Player player,
+        Func<Player, Int32> points,
+        Boolean silent = false);
 }

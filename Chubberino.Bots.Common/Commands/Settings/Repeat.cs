@@ -30,9 +30,7 @@ public sealed class Repeat : Setting
     }
 
     private void SpoolRepeatMessages()
-    {
-        TwitchClientManager.SpoolMessage(RepeatMessage);
-    }
+        => TwitchClientManager.SpoolMessage(RepeatMessage);
 
     public override String Status => base.Status
         + $"\n\tMessage: {RepeatMessage}"
@@ -115,9 +113,7 @@ public sealed class Repeat : Setting
         Writer.WriteLine($"Received repeat message: \"{RepeatMessage}\"");
     }
 
-    public override String GetHelp()
-    {
-        return @"
+    public override String GetHelp() => @"
 interval - the time between each message being sent
 
 variance - the random range of time to add or subtract from each interval
@@ -128,5 +124,4 @@ wait - Indicates that we are waiting for the repeat message to be typed in chat.
        This is useful for messages that contain emojis or characters that
        otherwise cannot be probably encoded by typing them in the command line.
 ";
-    }
 }

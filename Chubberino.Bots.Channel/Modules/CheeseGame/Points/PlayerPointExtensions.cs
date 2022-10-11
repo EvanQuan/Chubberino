@@ -1,5 +1,4 @@
-﻿using System;
-using Chubberino.Bots.Channel.Modules.CheeseGame.Hazards;
+﻿using Chubberino.Bots.Channel.Modules.CheeseGame.Hazards;
 using Chubberino.Bots.Channel.Modules.CheeseGame.Items.Storages;
 using Chubberino.Bots.Channel.Modules.CheeseGame.Items.Workers;
 using Chubberino.Bots.Channel.Modules.CheeseGame.Ranks;
@@ -23,9 +22,7 @@ public static class PlayerPointExtensions
     /// <param name="player"></param>
     /// <param name="points"></param>
     public static void AddPoints(this Player player, Double points)
-    {
-        player.AddPoints((Int32)points);
-    }
+        => player.AddPoints((Int32)points);
 
     /// <summary>
     /// Add or substract points from the player. Does not save the database.
@@ -34,11 +31,9 @@ public static class PlayerPointExtensions
     /// <param name="player"></param>
     /// <param name="points"></param>
     public static void AddPoints(this Player player, Int32 points)
-    {
-        player.Points = (player.Points + points)
+        => player.Points = (player.Points + points)
             .Min(player.GetTotalStorage())
             .Max(0);
-    }
 
     /// <summary>
     /// Modify <paramref name="points"/> by the specified <paramref name="player"/>'s worker and prestige bonus.

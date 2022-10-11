@@ -228,9 +228,7 @@ public sealed class TwitchClientManager : ITwitchClientManager
     }
 
     private void AddMessageToQueue(String channelName, String message)
-    {
-        throw new NotImplementedException();
-    }
+        => throw new NotImplementedException();
 
     private void SendMessageDirectly(String channelName, String message)
     {

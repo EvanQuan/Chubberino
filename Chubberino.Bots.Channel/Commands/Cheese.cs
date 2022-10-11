@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Chubberino.Bots.Channel.Modules.CheeseGame.Heists;
 using Chubberino.Bots.Channel.Modules.CheeseGame.Helping;
 using Chubberino.Bots.Channel.Modules.CheeseGame.Points;

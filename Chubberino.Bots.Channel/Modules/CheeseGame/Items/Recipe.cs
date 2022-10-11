@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Chubberino.Bots.Channel.Modules.CheeseGame.Items.Recipes;
 using Chubberino.Bots.Channel.Modules.CheeseGame.Points;
 using Chubberino.Common.Extensions;
 using Chubberino.Database.Models;
-using LanguageExt;
 
 namespace Chubberino.Bots.Channel.Modules.CheeseGame.Items;
 
@@ -21,9 +19,14 @@ public sealed class Recipe : Item
     /// There are no recipes available to buy right now. All recipes have
     /// already been purchased.
     /// </summary>
-    public const String NoRecipeForSaleMessage = "There is no recipe for sale right now.";
+    public const String NoRecipeForSaleMessage = "You have already purchased every recipe.";
 
-    public override IEnumerable<String> Names => new String[] { "Recipe", "r", "recipes" };
+    public override IEnumerable<String> Names { get; } = new String[]
+    {
+        "Recipe",
+        "r",
+        "recipes"
+    };
 
     public IReadOnlyList<RecipeInfo> RecipeRepository { get; }
 
@@ -34,14 +37,10 @@ public sealed class Recipe : Item
 
 
     public override String GetSpecificNameForNotEnoughToBuy(Player player)
-    {
-        if (RecipeRepository.TryGetNextToUnlock(player, out var cheese))
-        {
-            return $"the {cheese.Name} recipe";
-        }
-
-        return UnexpectedErrorMessage;
-    }
+        => RecipeRepository
+            .TryGetNextToUnlock(player)
+            .Some(cheese => $"the {cheese.Name} recipe")
+            .None(NoRecipeForSaleMessage);
 
     public override String GetSpecificNameForSuccessfulBuy(Player player, Int32 quantity)
     {
@@ -54,80 +53,69 @@ public sealed class Recipe : Item
 
         for (Int32 i = 0; i < quantity; i++, temporaryPlayer.CheeseUnlocked++)
         {
-            RecipeRepository.TryGetNextToUnlock(temporaryPlayer, out var cheese);
-
-            cheeseNamesPurchased.Add(cheese.Name);
+            RecipeRepository
+                .TryGetNextToUnlock(temporaryPlayer)
+                .IfSome(cheese => cheeseNamesPurchased.Add(cheese.Name));
         }
 
         return $"the {String.Join(", ", cheeseNamesPurchased)} recipe{(quantity == 1 ? String.Empty : "s")}";
     }
 
     public override Either<Int32, String> TryBuySingleUnit(Player player, Int32 price)
-    {
-        if (!RecipeRepository.TryGetNextToUnlock(player, out var nextCheeseToUnlock))
-        {
-            return UnexpectedErrorMessage;
-        }
-
-        player.CheeseUnlocked++;
-        if (nextCheeseToUnlock.UnlocksNegativeCheese)
-        {
-            // Increment again so that the next cheese to unlock is not a negative one.
-            player.CheeseUnlocked++;
-        }
-
-        player.Points -= nextCheeseToUnlock.CostToUnlock;
-
-        return 1;
-    }
-
-    public override Boolean IsForSale(Player player, out String reason)
-    {
-        if (RecipeRepository.TryGetNextToUnlock(player, out var cheese))
-        {
-            if (cheese.RankToUnlock > player.Rank)
+        => RecipeRepository
+            .TryGetNextToUnlock(player)
+            .Some(nextCheeseToUnlock =>
             {
-                reason = String.Format(NeedToRankUpMessage, cheese.RankToUnlock, cheese.Name);
-                return false;
-            }
+                player.CheeseUnlocked++;
+                if (nextCheeseToUnlock.UnlocksNegativeCheese)
+                {
+                    // Increment again so that the next cheese to unlock is not a negative one.
+                    player.CheeseUnlocked++;
+                }
 
-            reason = default;
-            return true;
-        }
+                player.Points -= nextCheeseToUnlock.CostToUnlock;
 
-        reason = NoRecipeForSaleMessage;
-        return false;
-    }
+                return Either<Int32, String>.Left(1);
+            })
+            .None(NoRecipeForSaleMessage);
 
-    public override Int32 GetPrice(Player player)
-    {
-        if (RecipeRepository.TryGetNextToUnlock(player, out var cheese))
-        {
-            return cheese.CostToUnlock;
-        }
-
-        return Int32.MaxValue;
-    }
-
-    public override String GetShopPrompt(Player player)
-    {
-        String recipePrompt;
-        if (RecipeRepository.TryGetNextToUnlock(player, out RecipeInfo nextCheeseToUnlock))
-        {
-            var cheesePoints = player.GetModifiedPoints(nextCheeseToUnlock.Points);
-
-            if (nextCheeseToUnlock.RankToUnlock > player.Rank)
+    public override Option<String> IsForSale(Player player)
+        => RecipeRepository
+            .TryGetNextToUnlock(player)
+            .Some(cheese =>
             {
-                recipePrompt = $"{nextCheeseToUnlock.Name} (+{cheesePoints})] unlocked at {player.Rank.Next()} rank";
-            }
-            else
+                if (cheese.RankToUnlock > player.Rank)
+                {
+                    return String.Format(NeedToRankUpMessage, cheese.RankToUnlock, cheese.Name);
+                }
+                return default;
+            })
+            .None(NoRecipeForSaleMessage);
+
+    public override Either<Int32, String> GetPrice(Player player)
+        => RecipeRepository
+            .TryGetNextToUnlock(player)
+            .Some(cheese => Either<Int32, String>.Left(cheese.CostToUnlock))
+            .None(NoRecipeForSaleMessage);
+
+    public override Option<String> GetShopPrompt(Player player)
+        => RecipeRepository
+            .TryGetNextToUnlock(player)
+            .Some(nextCheeseToUnlock =>
             {
-                recipePrompt = $"{nextCheeseToUnlock.Name} (+{cheesePoints})] for {nextCheeseToUnlock.CostToUnlock} cheese";
-            }
+                var cheesePoints = player.GetModifiedPoints(nextCheeseToUnlock.Points);
 
-            return $"{base.GetShopPrompt(player)} [{recipePrompt}";
-        }
+                String recipePrompt;
+                if (nextCheeseToUnlock.RankToUnlock > player.Rank)
+                {
+                    recipePrompt = $"{nextCheeseToUnlock.Name} (+{cheesePoints})] unlocked at {player.Rank.Next()} rank";
+                }
+                else
+                {
+                    recipePrompt = $"{nextCheeseToUnlock.Name} (+{cheesePoints})] for {nextCheeseToUnlock.CostToUnlock} cheese";
+                }
 
-        return null;
-    }
+                return Option<String>.Some($"{base.GetShopPrompt(player)} [{recipePrompt}");
+            })
+            .None(Option<String>.None);
 }

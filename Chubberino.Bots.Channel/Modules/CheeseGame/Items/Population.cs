@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Chubberino.Database.Models;
-using LanguageExt;
 
 namespace Chubberino.Bots.Channel.Modules.CheeseGame.Items;
 
@@ -11,20 +9,14 @@ public sealed class Population : Item
 
     public override IEnumerable<String> Names { get; } = new String[] { "Population", "p", "pop" };
 
-    public override Int32 GetPrice(Player player)
-    {
-        return (Int32)(20 + Math.Pow(player.PopulationCount, 2));
-    }
+    public override Either<Int32, String> GetPrice(Player player)
+        => (Int32)(20 + Math.Pow(player.PopulationCount, 2));
 
     public override String GetSpecificNameForNotEnoughToBuy(Player player)
-    {
-        return ShopUnitQuantity + " population slots";
-    }
+        => ShopUnitQuantity + " population slots";
 
     public override String GetSpecificNameForSuccessfulBuy(Player player, Int32 quantity)
-    {
-        return quantity + " population slots";
-    }
+        => quantity + " population slots";
 
     public override Either<Int32, String> TryBuySingleUnit(Player player, Int32 price)
     {
@@ -34,8 +26,6 @@ public sealed class Population : Item
         return ShopUnitQuantity;
     }
 
-    public override String GetShopPrompt(Player player)
-    {
-        return $"{base.GetShopPrompt(player)} [+{ShopUnitQuantity}] for {GetPrice(player)}";
-    }
+    public override Option<String> GetShopPrompt(Player player)
+        => $"{base.GetShopPrompt(player)} [+{ShopUnitQuantity}] for {GetPrice(player)}";
 }

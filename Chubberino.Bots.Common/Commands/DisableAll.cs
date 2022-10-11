@@ -31,8 +31,7 @@ public sealed class DisableAll : Command
     }
 
     public override String GetHelp()
-    {
-        return @"
+        => @"
 Disables all settings.
 
 usage: disableall [type]
@@ -40,5 +39,4 @@ usage: disableall [type]
     [type]  default - All settings
             u - All user commands
 ";
-    }
 }

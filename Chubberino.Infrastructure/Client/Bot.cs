@@ -80,11 +80,8 @@ public sealed class Bot : IBot
             .None(Option<LoginCredentials>.None);
     }
 
-    public String GetPrompt()
-    {
-        return Environment.NewLine + Environment.NewLine + Commands.GetStatus() + Environment.NewLine
+    public String GetPrompt() => Environment.NewLine + Environment.NewLine + Commands.GetStatus() + Environment.NewLine
             + $"[{LoginCredentials.ConnectionCredentials.TwitchUsername} as {(IsModerator ? "Mod" : "Normal")} in {TwitchClientManager.PrimaryChannelName}]> ";
-    }
 
 
 

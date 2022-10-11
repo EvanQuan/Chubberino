@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Chubberino.Bots.Channel.Modules.CheeseGame.Emotes;
 using Chubberino.Common.Extensions;
 using Chubberino.Common.Services;

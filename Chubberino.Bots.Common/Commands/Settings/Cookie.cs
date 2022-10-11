@@ -41,14 +41,10 @@ public sealed class Cookie : Setting
     }
 
     public override void Register(ITwitchClient client)
-    {
-        client.OnMessageReceived += TwitchClient_OnMessageReceived;
-    }
+        => client.OnMessageReceived += TwitchClient_OnMessageReceived;
 
     public override void Unregister(ITwitchClient client)
-    {
-        client.OnMessageReceived -= TwitchClient_OnMessageReceived;
-    }
+        => client.OnMessageReceived -= TwitchClient_OnMessageReceived;
 
     private void TwitchClient_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
     {
@@ -97,8 +93,7 @@ public sealed class Cookie : Setting
     }
 
     public override Boolean Set(String property, IEnumerable<String> arguments)
-    {
-        return (property?.ToLower()) switch
+        => (property?.ToLower()) switch
         {
             "c" or "channel" => arguments
                 .TryGetFirst()
@@ -110,5 +105,4 @@ public sealed class Cookie : Setting
                 .None(false),
             _ => false,
         };
-    }
 }

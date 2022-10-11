@@ -32,14 +32,10 @@ public class Copy : Setting
     }
 
     public override void Register(ITwitchClient client)
-    {
-        client.OnMessageReceived += TwitchClient_OnMessageReceived;
-    }
+        => client.OnMessageReceived += TwitchClient_OnMessageReceived;
 
     public override void Unregister(ITwitchClient client)
-    {
-        client.OnMessageReceived -= TwitchClient_OnMessageReceived;
-    }
+        => client.OnMessageReceived -= TwitchClient_OnMessageReceived;
 
     private void TwitchClient_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
     {
@@ -112,8 +108,7 @@ public class Copy : Setting
     }
 
     public override String GetHelp()
-    {
-        return @"
+        => @"
 Copy another user's chat messages.
 
 usage: copy <username> [mode] [message prefix]
@@ -126,5 +121,4 @@ usage: copy <username> [mode] [message prefix]
 
     [prefix]    Text to prepend to the copied messages.
 ";
-    }
 }

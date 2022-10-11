@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Chubberino.Client.Commands.Settings.UserCommands;
 using Chubberino.Database.Contexts;
 using Chubberino.Database.Models;
@@ -38,15 +36,13 @@ public sealed class Join : UserCommand
     }
 
     public override String GetHelp()
-    {
-        return @"
+        => @"
 Join a twitch channel.
 
 usage: join <channel name>
 
     <channel name>                      Name of the twitch channel to join.
 ";
-    }
 
     public async override void Invoke(Object sender, OnUserCommandReceivedArgs e)
     {

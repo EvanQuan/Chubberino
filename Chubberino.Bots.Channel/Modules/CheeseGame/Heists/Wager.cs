@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Chubberino.Bots.Channel.Modules.CheeseGame.Heists;
+﻿namespace Chubberino.Bots.Channel.Modules.CheeseGame.Heists;
 
 public sealed class Wager
 {

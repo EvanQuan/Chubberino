@@ -93,9 +93,7 @@ public sealed class AutoChat : Setting
     }
 
     public override void Execute(IEnumerable<String> arguments)
-    {
-        PreviousMessages.Clear();
-    }
+        => PreviousMessages.Clear();
 
     private void TwitchClient_OnHostingStarted(Object sender, OnHostingStartedArgs e)
     {
@@ -173,11 +171,9 @@ public sealed class AutoChat : Setting
     /// <param name="chatMessage">Chat message.</param>
     /// <returns>true if should ignore <paramref name="chatMessage"/>; false otherwise.</returns>
     private Boolean ShouldIgnore(ChatMessage chatMessage)
-    {
-        return chatMessage.Username.Equals(chatMessage.BotUsername) // Don't copy messages from self
+        => chatMessage.Username.Equals(chatMessage.BotUsername) // Don't copy messages from self
             || chatMessage.IsModerator // Ignore channel bot responds, or mod spam (such as for links)
             || chatMessage.IsVip // VIP spam may time you out
             || chatMessage.Message.StartsWith('!') // Ignore channel bot commands
             || chatMessage.Message.Contains(TwitchClientManager.Name.Value, StringComparison.OrdinalIgnoreCase); // If being @'d, don't want to copy @ ing self.
-    }
 }

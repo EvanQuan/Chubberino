@@ -60,14 +60,10 @@ public sealed class TrackJimbox : Setting
     }
 
     public override void Register(ITwitchClient client)
-    {
-        client.OnMessageReceived += TwitchClient_OnMessageReceived;
-    }
+        => client.OnMessageReceived += TwitchClient_OnMessageReceived;
 
     public override void Unregister(ITwitchClient client)
-    {
-        client.OnMessageReceived -= TwitchClient_OnMessageReceived;
-    }
+        => client.OnMessageReceived -= TwitchClient_OnMessageReceived;
 
     public void TwitchClient_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
     {
@@ -132,26 +128,17 @@ public sealed class TrackJimbox : Setting
         }
     }
 
-    private static Boolean IsTop(String[] tokens)
-    {
-        return tokens[1] == tokens[0]
+    private static Boolean IsTop(String[] tokens) => tokens[1] == tokens[0]
             && tokens[2] == tokens[0]
             && tokens[3] == tokens[0];
-    }
 
-    private Boolean IsEyes(String[] tokens)
-    {
-        return tokens[0] == Border
+    private Boolean IsEyes(String[] tokens) => tokens[0] == Border
             && tokens[1] == "yyj1"
             && tokens[2] == "yyj2"
             && tokens[3] == Border;
-    }
 
-    private Boolean IsMouth(String[] tokens)
-    {
-        return tokens[0] == Border
+    private Boolean IsMouth(String[] tokens) => tokens[0] == Border
             && tokens[1] == "yyj3"
             && tokens[2] == "yyj4"
             && tokens[3] == Border;
-    }
 }

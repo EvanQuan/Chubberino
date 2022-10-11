@@ -14,17 +14,11 @@ public sealed class TimeoutAlert : Setting
     }
 
     public override void Register(ITwitchClient client)
-    {
-        client.OnUserTimedout += TwitchClient_OnUserTimedout;
-    }
+        => client.OnUserTimedout += TwitchClient_OnUserTimedout;
 
     public override void Unregister(ITwitchClient client)
-    {
-        client.OnUserTimedout -= TwitchClient_OnUserTimedout;
-    }
+        => client.OnUserTimedout -= TwitchClient_OnUserTimedout;
 
     public void TwitchClient_OnUserTimedout(Object sender, OnUserTimedoutArgs e)
-    {
-        TwitchClientManager.SpoolMessage($"WideHardo FREE MY MAN {e.UserTimeout.Username.ToUpper()}");
-    }
+        => TwitchClientManager.SpoolMessage($"WideHardo FREE MY MAN {e.UserTimeout.Username.ToUpper()}");
 }

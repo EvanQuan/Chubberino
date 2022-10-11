@@ -1,76 +1,69 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Chubberino.Bots.Channel.Modules.CheeseGame.Items.Upgrades;
 using Chubberino.Database.Models;
-using LanguageExt;
 
 namespace Chubberino.Bots.Channel.Modules.CheeseGame.Items;
 
 public sealed class Upgrade : Item
 {
-    public override IEnumerable<String> Names => new String[] { "Upgrade", "u", "up", "upgrades" };
+    private const String NoUpgradesForSaleMessage = "You have already purchased every upgrade.";
 
-    public override Int32 GetPrice(Player player)
+    public override IEnumerable<String> Names { get; } = new String[]
     {
-        if (player.TryGetNextUpgradeToUnlock(out var upgrade))
-        {
-            return upgrade.Price;
-        }
+        "Upgrade",
+        "u",
+        "up",
+        "upgrades"
+    };
 
-        return Int32.MaxValue;
-    }
+    public override Either<Int32, String> GetPrice(Player player)
+        => player
+            .TryGetNextUpgradeToUnlock()
+            .Some(upgrade => Either<Int32, String>.Left(upgrade.Price))
+            .None(NoUpgradesForSaleMessage);
 
     public override String GetSpecificNameForNotEnoughToBuy(Player player)
-    {
-        if (player.TryGetNextUpgradeToUnlock(out var upgrade))
-        {
-            return $"the {upgrade.Description} upgrade";
-        }
-
-        return UnexpectedErrorMessage;
-    }
+        => player
+            .TryGetNextUpgradeToUnlock()
+            .Some(upgrade => $"the {upgrade.Description} upgrade")
+            .None(NoUpgradesForSaleMessage);
 
     public override String GetSpecificNameForSuccessfulBuy(Player player, Int32 quantity)
-    {
-        if (player.TryPreviousUpgradeUnlocked(out var upgrade))
-        {
-            return $"the {upgrade.Description} upgrade{(quantity == 1 ? String.Empty : $" and {quantity - 1} other{(quantity - 1 == 1 ? String.Empty : "s")}")}";
-        }
-
-        return UnexpectedErrorMessage;
-    }
+        => player
+            .TryPreviousUpgradeUnlocked()
+            .Some(upgrade =>
+                $"the {upgrade.Description} upgrade{(quantity == 1 ? String.Empty : $" and {quantity - 1} other{(quantity - 1 == 1 ? String.Empty : "s")}")}")
+            .None(NoUpgradesForSaleMessage);
 
     public override Either<Int32, String> TryBuySingleUnit(Player player, Int32 price)
-    {
-        if (!player.TryGetNextUpgradeToUnlock(out var nextUpgradeToLock))
-        {
-            return UnexpectedErrorMessage;
-        }
-
-        nextUpgradeToLock.UpdatePlayer(player);
-
-        player.Points -= nextUpgradeToLock.Price;
-
-        return 1;
-    }
-
-    public override String GetShopPrompt(Player player)
-    {
-        String upgradePrompt;
-        if (player.TryGetNextUpgradeToUnlock(out var upgrade))
-        {
-            if (upgrade.RankToUnlock > player.Rank)
+        => player
+            .TryGetNextUpgradeToUnlock()
+            .Some(nextUpgradeToLock =>
             {
-                upgradePrompt = $"{upgrade.Description}] unlocked at {upgrade.RankToUnlock} rank";
-            }
-            else
+                nextUpgradeToLock.UpdatePlayer(player);
+
+                player.Points -= nextUpgradeToLock.Price;
+
+                return Either<Int32, String>.Left(1);
+            })
+            .None(NoUpgradesForSaleMessage);
+
+    public override Option<String> GetShopPrompt(Player player)
+        => player
+            .TryGetNextUpgradeToUnlock()
+            .Some(upgrade =>
             {
-                upgradePrompt = $"{upgrade.Description}] for {upgrade.Price} cheese";
-            }
+                String upgradePrompt;
+                if (upgrade.RankToUnlock > player.Rank)
+                {
+                    upgradePrompt = $"{upgrade.Description}] unlocked at {upgrade.RankToUnlock} rank";
+                }
+                else
+                {
+                    upgradePrompt = $"{upgrade.Description}] for {upgrade.Price} cheese";
+                }
 
-            return $"{base.GetShopPrompt(player)} [{upgradePrompt}";
-        }
-
-        return null;
-    }
+                return Option<String>.Some($"{base.GetShopPrompt(player)} [{upgradePrompt}");
+            })
+            .None(Option<String>.None);
 }

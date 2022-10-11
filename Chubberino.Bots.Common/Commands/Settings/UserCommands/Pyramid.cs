@@ -73,8 +73,7 @@ public sealed class Pyramid : UserCommand
     }
 
     public override String GetHelp()
-    {
-        return @"
+        => @"
 Creates a pyramid in chat.
 
 usage: pyramid <height> <message>
@@ -84,5 +83,4 @@ usage: pyramid <height> <message>
     <message> - the text that is repeated within the pyramid.
                 This can be composed of multiple words.
 ";
-    }
 }

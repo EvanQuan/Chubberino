@@ -30,15 +30,15 @@ public abstract class Command : ICommand
 
     public abstract void Execute(IEnumerable<String> arguments);
 
-    public virtual Boolean Set(String property, IEnumerable<String> arguments) { return false; }
+    public virtual Boolean Set(String property, IEnumerable<String> arguments) => false;
 
-    public virtual String Get(IEnumerable<String> arguments) { return null; }
+    public virtual String Get(IEnumerable<String> arguments) => null;
 
     public virtual String GetHelp() => NoHelpImplementedMessage;
 
-    public virtual Boolean Add(String property, IEnumerable<String> arguments) { return false; }
+    public virtual Boolean Add(String property, IEnumerable<String> arguments) => false;
 
-    public virtual Boolean Remove(String property, IEnumerable<String> arguments) { return false; }
+    public virtual Boolean Remove(String property, IEnumerable<String> arguments) => false;
 
     public virtual void Register(ITwitchClient client)
     {

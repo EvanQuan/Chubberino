@@ -12,7 +12,10 @@ public sealed class UserCommandValidator : IUserCommandValidator
     /// </summary>
     public const Char CommandPrefix = '!';
 
-    public Boolean TryValidateCommand(ChatMessage message, out Name userCommandName, out OnUserCommandReceivedArgs args)
+    public Boolean TryValidateCommand(
+        ChatMessage message,
+        out Name userCommandName,
+        out OnUserCommandReceivedArgs args)
     {
         userCommandName = default;
         args = default;
@@ -33,12 +36,8 @@ public sealed class UserCommandValidator : IUserCommandValidator
     }
 
     private static Boolean IsCommand(String firstWord)
-    {
-        return firstWord.StartsWith(CommandPrefix) && firstWord.Length >= 2;
-    }
+        => firstWord.StartsWith(CommandPrefix) && firstWord.Length >= 2;
 
     private static Boolean ShouldIgnoreUser(ChatMessage message)
-    {
-        return TwitchUserIDs.ChannelBots.Contains(message.UserId);
-    }
+        => TwitchUserIDs.ChannelBots.Contains(message.UserId);
 }

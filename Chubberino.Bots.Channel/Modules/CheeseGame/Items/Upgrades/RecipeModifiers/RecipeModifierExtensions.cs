@@ -1,7 +1,6 @@
 ﻿using Chubberino.Bots.Channel.Modules.CheeseGame.Items.Recipes;
 using Chubberino.Bots.Channel.Modules.CheeseGame.Points;
 using Chubberino.Database.Models;
-using System;
 
 namespace Chubberino.Bots.Channel.Modules.CheeseGame.Items.Upgrades.RecipeModifiers;
 
@@ -14,7 +13,5 @@ public static class RecipeModifierExtensions
     }
 
     public static Int32 GetPoints(this RecipeModifier modifier, Player player)
-    {
-        return player.GetModifiedPoints(modifier.Points);
-    }
+        => player.GetModifiedPoints(modifier.Points);
 }

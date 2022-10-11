@@ -1,29 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Chubberino.Bots.Channel.Modules.CheeseGame.Hazards;
 using Chubberino.Database.Models;
-using LanguageExt;
 
 namespace Chubberino.Bots.Channel.Modules.CheeseGame.Items;
 
 public sealed class Mousetrap : Item
 {
-    public override IEnumerable<String> Names { get; } = new String[] { "Mousetrap", "m", "mouse", "mousetraps" };
-
-    public override Int32 GetPrice(Player player)
+    public override IEnumerable<String> Names { get; } = new String[]
     {
-        return player.GetMousetrapPrice();
-    }
+        "Mousetrap",
+        "m",
+        "mouse",
+        "mousetraps"
+    };
+
+    public override Either<Int32, String> GetPrice(Player player)
+        => player.GetMousetrapPrice();
 
     public override String GetSpecificNameForNotEnoughToBuy(Player player)
-    {
-        return "a mousetrap";
-    }
+        => "a mousetrap";
 
-    public override String GetSpecificNameForSuccessfulBuy(Player player, Int32 quantity)
-    {
-        return $"{quantity} mousetrap{(quantity == 1 ? String.Empty : "s")}";
-    }
+    public override String GetSpecificNameForSuccessfulBuy(Player player, Int32 quantity) => $"{quantity} mousetrap{(quantity == 1 ? String.Empty : "s")}";
 
     public override Either<Int32, String> TryBuySingleUnit(Player player, Int32 price)
     {
@@ -33,10 +30,8 @@ public sealed class Mousetrap : Item
         return 1;
     }
 
-    public override String GetShopPrompt(Player player)
-    {
-        return $"{base.GetShopPrompt(player)} [+1] for {GetPrice(player)} cheese";
-    }
+    public override Option<String> GetShopPrompt(Player player)
+        => $"{base.GetShopPrompt(player)} [+1] for {GetPrice(player)} cheese";
 
     public override String OnAfterBuy(Player player, Int32 quantityPurchased, Int32 pointsSpent)
     {

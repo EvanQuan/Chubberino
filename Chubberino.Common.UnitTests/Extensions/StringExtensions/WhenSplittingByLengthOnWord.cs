@@ -10,10 +10,9 @@ public sealed class WhenSplittingByLengthOnWord
     [InlineData(1)]
     public void ShouldThrowNullReferenceException(Int32 segmentLength)
     {
-        Assert.Throws<NullReferenceException>(() =>
-        {
-            ((String)null).SplitByLengthOnWord(segmentLength);
-        });
+        var splitNull = () => ((String)null).SplitByLengthOnWord(segmentLength);
+
+        splitNull.Should().Throw<NullReferenceException>();
     }
 
     [Theory]

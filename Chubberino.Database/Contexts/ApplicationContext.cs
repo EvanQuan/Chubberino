@@ -14,9 +14,7 @@ public sealed class ApplicationContext : DbContext, IApplicationContext
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        optionsBuilder.UseSqlServer(LocalDatabaseConnectionString);
-    }
+        => optionsBuilder.UseSqlServer(LocalDatabaseConnectionString);
 
     public DbSet<Player> Players { get; set; }
 

@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Chubberino.Bots.Channel.Modules.CheeseGame.Ranks;
+﻿using Chubberino.Bots.Channel.Modules.CheeseGame.Ranks;
 using Chubberino.Database.Contexts;
 using Chubberino.Database.Models;
 using Chubberino.Infrastructure.Client.TwitchClients;

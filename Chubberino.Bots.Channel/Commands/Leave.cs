@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Chubberino.Client.Commands.Settings.UserCommands;
 using Chubberino.Database.Contexts;
 using Chubberino.Infrastructure.Client.TwitchClients;
@@ -81,13 +78,11 @@ public sealed class Leave : UserCommand
     }
 
     public override String GetHelp()
-    {
-        return @"
+        => @"
 Leave a twitch channel.
 
 usage: leave <channel name>
 
     <channel name>                      Name of the twitch channel to leave.
 ";
-    }
 }

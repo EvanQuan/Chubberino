@@ -1,5 +1,4 @@
 ﻿using Chubberino.Database.Models;
-using System;
 
 namespace Chubberino.Bots.Channel.Modules.CheeseGame.Quests;
 
@@ -21,7 +20,5 @@ public static class RankQuestUpgradeExtensions
     /// <param name="rank"></param>
     /// <returns></returns>
     public static Double GetRareQuestChance(this Rank rank)
-    {
-        return BaseRareQuestChance + (Int32)rank * RareQuestUpgradePercent;
-    }
+        => BaseRareQuestChance + (Int32)rank * RareQuestUpgradePercent;
 }

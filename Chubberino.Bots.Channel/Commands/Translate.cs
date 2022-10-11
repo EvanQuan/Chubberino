@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using Chubberino.Bots.Channel.Translations;
 using Chubberino.Client.Commands.Settings.UserCommands;
 using Chubberino.Infrastructure.Client.TwitchClients;

@@ -1,8 +1,6 @@
-﻿using Chubberino.Bots.Channel.Modules.CheeseGame.Quests;
+﻿using System.Collections.Generic;
+using Chubberino.Bots.Channel.Modules.CheeseGame.Quests;
 using Chubberino.Database.Models;
-using LanguageExt;
-using System;
-using System.Collections.Generic;
 
 namespace Chubberino.Bots.Channel.Modules.CheeseGame.Items;
 
@@ -15,17 +13,17 @@ public sealed class Gear : Item
 
     public const Int32 MaximumCount = 150;
 
-    public override IEnumerable<String> Names { get; } = new String[] { "Gear", "g", "gears" };
-
-    public override Int32 GetPrice(Player player)
+    public override IEnumerable<String> Names { get; } = new String[]
     {
-        return player.GetGearPrice();
-    }
+        "Gear",
+        "g",
+        "gears"
+    };
 
-    public override String GetSpecificNameForNotEnoughToBuy(Player player)
-    {
-        return "some gear";
-    }
+    public override Either<Int32, String> GetPrice(Player player)
+        => player.GetGearPrice();
+
+    public override String GetSpecificNameForNotEnoughToBuy(Player player) => "some gear";
 
     public override String GetSpecificNameForSuccessfulBuy(Player player, Int32 quantity)
     {
@@ -43,26 +41,22 @@ public sealed class Gear : Item
     }
 
 
-    public override Boolean IsForSale(Player player, out String reason)
+    public override Option<String> IsForSale(Player player)
     {
         if (player.GearCount < 150)
         {
-            reason = default;
-            return true;
+            return Option<String>.None;
         }
 
-        reason = "You cannot buy any more gear.";
-        return false;
+        return "You cannot buy any more gear.";
     }
 
-    public override String GetShopPrompt(Player player)
-    {
-        if (IsForSale(player, out _))
-        {
-            var questSuccessChance = player.GetQuestSuccessChance(includeInfestation: false);
-            return $"{base.GetShopPrompt(player)} [+{String.Format("{0:0.0}", questSuccessChance * 100)}% -> +{String.Format("{0:0.0}", (questSuccessChance + QuestSuccessBonus) * 100)}% quest success] for {GetPrice(player)} cheese";
-        }
-
-        return null;
-    }
+    public override Option<String> GetShopPrompt(Player player)
+        => IsForSale(player)
+            .Some(_ => Option<String>.None)
+            .None(() =>
+            {
+                var questSuccessChance = player.GetQuestSuccessChance(includeInfestation: false);
+                return $"{base.GetShopPrompt(player)} [+{String.Format("{0:0.0}", questSuccessChance * 100)}% -> +{String.Format("{0:0.0}", (questSuccessChance + QuestSuccessBonus) * 100)}% quest success] for {GetPrice(player)} cheese";
+            });
 }

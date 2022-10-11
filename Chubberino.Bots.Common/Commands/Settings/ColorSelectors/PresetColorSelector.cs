@@ -17,7 +17,5 @@ public sealed class PresetColorSelector : IColorSelector
     }
 
     public String GetNextColor()
-    {
-        return ColorPresets.GetValue(Random.Next(ColorPresets.Length)).ToString();
-    }
+        => ColorPresets.GetValue(Random.Next(ColorPresets.Length)).ToString();
 }
