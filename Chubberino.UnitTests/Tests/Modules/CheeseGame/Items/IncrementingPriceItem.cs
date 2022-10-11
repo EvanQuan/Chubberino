@@ -11,12 +11,14 @@ public sealed class IncrementingPriceItem : Item
 
     public Int32 Price { get; private set; } = InitialPrice;
 
-    public override IEnumerable<String> Names { get; } = new String[] { "IncrementingPriceItem", "s" };
-
-    public override Int32 GetPrice(Player player)
+    public override IEnumerable<String> Names { get; } = new String[]
     {
-        return Price++;
-    }
+        "IncrementingPriceItem",
+        "s"
+    };
+
+    public override Either<Int32, String> GetPrice(Player player)
+        => Price++;
 
     public override Either<Int32, String> TryBuySingleUnit(Player player, Int32 price)
     {
@@ -25,13 +27,9 @@ public sealed class IncrementingPriceItem : Item
     }
 
     public override String GetSpecificNameForNotEnoughToBuy(Player player)
-    {
-        return "an Incrementing Price Item";
-    }
+        => "an Incrementing Price Item";
 
 
     public override String GetSpecificNameForSuccessfulBuy(Player player, Int32 quantity)
-    {
-        return quantity == 1 ? "Incrementing Price Item" : "Incrementing Price Items";
-    }
+        => quantity == 1 ? "Incrementing Price Item" : "Incrementing Price Items";
 }

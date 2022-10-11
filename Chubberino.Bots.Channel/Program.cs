@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using Chubberino.Bots.Channel.IoC;
 using Chubberino.Infrastructure.Client;
 

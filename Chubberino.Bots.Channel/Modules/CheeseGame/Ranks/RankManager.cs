@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using Chubberino.Bots.Channel.Modules.CheeseGame.Emotes;
 using Chubberino.Bots.Channel.Modules.CheeseGame.Heists;
 using Chubberino.Bots.Channel.Modules.CheeseGame.Items.Recipes;

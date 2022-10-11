@@ -76,7 +76,5 @@ public sealed class Count : Setting
     }
 
     private void SpoolCount()
-    {
-        TwitchClientManager.SpoolMessage($"{Prefix} {CurrentCount++} {Suffix}");
-    }
+        => TwitchClientManager.SpoolMessage($"{Prefix} {CurrentCount++} {Suffix}");
 }

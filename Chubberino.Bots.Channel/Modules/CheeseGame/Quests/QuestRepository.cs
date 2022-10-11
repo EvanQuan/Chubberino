@@ -1,6 +1,5 @@
 ﻿using Chubberino.Bots.Channel.Modules.CheeseGame.Items;
 using Chubberino.Database.Models;
-using System;
 using System.Collections.Generic;
 
 namespace Chubberino.Bots.Channel.Modules.CheeseGame.Quests;

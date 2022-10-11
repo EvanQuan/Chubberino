@@ -11,9 +11,7 @@ public sealed class MockStreamElements : Copy
     }
 
     public override void Execute(IEnumerable<String> arguments)
-    {
-        base.Execute(arguments.Any()
+        => base.Execute(arguments.Any()
             ? new List<String>() { "StreamElements", "mock" }.Concat(arguments)
             : new List<String>() { });
-    }
 }

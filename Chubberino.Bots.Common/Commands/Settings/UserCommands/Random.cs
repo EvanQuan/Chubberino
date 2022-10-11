@@ -49,14 +49,10 @@ public sealed class Random : UserCommand
     /// </summary>
     /// <param name="min">Minimum value (inclusive)</param>
     /// <param name="max">Maximum value (inclusive)</param>
-    public Int64 GetRandom(Int64 min, Int64 max)
-    {
-        return min + RandomSource.NextInt64() % (max + 1 - min);
-    }
+    public Int64 GetRandom(Int64 min, Int64 max) => min + RandomSource.NextInt64() % (max + 1 - min);
 
     public override String GetHelp()
-    {
-        return @"
+        => @"
 Gets a random integer between a minimum and maximum.
 
 usage: random <minimum> <maximum>
@@ -64,5 +60,4 @@ usage: random <minimum> <maximum>
     <minimum> - the minimum value in the range (inclusive)
     <maximum> - the maximum value in the range (inclusive)
 ";
-    }
 }

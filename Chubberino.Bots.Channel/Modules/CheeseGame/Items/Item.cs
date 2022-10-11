@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
+using Chubberino.Common.Extensions;
 using Chubberino.Database.Models;
-using LanguageExt;
 
 namespace Chubberino.Bots.Channel.Modules.CheeseGame.Items;
 
@@ -15,71 +13,82 @@ public abstract class Item : IItem
     public abstract IEnumerable<String> Names { get; }
 
 
-    public Either<BuyResult, String> TryBuy(Int32 quantity, Player player)
-    {
+    public Either<BuyResult, String> TryBuy(Int32 quantity, Player player) =>
         // Check if the item is for sale.
         // Items that are not for sale are still visible in the shop, but
         // have a special reason why they cannot be purchased when
         // attempting to do so.
-        if (!IsForSale(player, out String reason))
-        {
-            return reason;
-        }
-
-        OnBeforeBuy();
-
-        Int32 quantityPurchased = 0;
-        Int32 unitQuantityPurchased = 0;
-        Int32 pointsSpent = 0;
-        Int32 currentPrice = GetPrice(player);
-
-        String errorMessage = null;
-
-        // Buy item 1 at a time to account for changing prices for each additional purchase.
-        Boolean shouldContinue = false;
-        do
-        {
-            if (player.Points >= currentPrice)
+        IsForSale(player)
+            .Some(reason => Either<BuyResult, String>.Right(reason))
+            .None(() =>
             {
-                Either<Int32, String> result = TryBuySingleUnit(player, currentPrice);
+                OnBeforeBuy();
 
-                result
-                    .Right(error =>
+                return GetPrice(player)
+                    .Right(error => Either<BuyResult, String>.Right(error))
+                    .Left(initialPrice =>
                     {
-                        // Could not buy due to some item-specific non-price restriction.
-                        errorMessage = error;
-                        shouldContinue = false;
-                    })
-                    .Left(count =>
-                    {
-                        quantityPurchased += count;
-                        unitQuantityPurchased++;
-                        pointsSpent += currentPrice;
-                        shouldContinue = unitQuantityPurchased < quantity;
-                        currentPrice = GetPrice(player);
+                        String errorMessage = null;
+
+                        // Buy item 1 at a time to account for changing prices for each additional purchase.
+                        Boolean shouldContinue = false;
+
+                        Int32 quantityPurchased = 0;
+                        Int32 pointsSpent = 0;
+                        var currentPrice = initialPrice;
+                        Int32 unitQuantityPurchased = 0;
+                        do
+                        {
+                            if (player.Points >= currentPrice)
+                            {
+                                Either<Int32, String> result = TryBuySingleUnit(player, currentPrice);
+
+                                result
+                                    .Right(error =>
+                                    {
+                                        // Could not buy due to some item-specific non-price restriction.
+                                        errorMessage = error;
+                                        shouldContinue = false;
+                                    })
+                                    .Left(count =>
+                                    {
+                                        // Successfully purchased count quantity.
+                                        quantityPurchased += count;
+                                        unitQuantityPurchased++;
+                                        pointsSpent += currentPrice;
+                                        shouldContinue = unitQuantityPurchased < quantity;
+                                        GetPrice(player)
+                                            .Right(error =>
+                                            {
+                                                // Could not buy due to some item-specific price restriction.
+                                                // No error because we succesfully purchased some quanity.
+                                                shouldContinue = false;
+                                            })
+                                            .Left(price => currentPrice = price);
+                                    });
+                            }
+                            else if (unitQuantityPurchased == 0)
+                            {
+                                // Don't have enough to by even 1 unit.
+                                errorMessage = String.Format(NotEnoughPointsErrorMessage, currentPrice - player.Points, GetSpecificNameForNotEnoughToBuy(player));
+                                shouldContinue = false;
+                            }
+                            else
+                            {
+                                // Requested more than can buy.
+                                // Return a successful purchase, just buying the maximum
+                                shouldContinue = false;
+                            }
+                        }
+                        while (shouldContinue);
+
+                        var extraMessage = OnAfterBuy(player, quantityPurchased, pointsSpent);
+
+                        return errorMessage is null
+                            ? new BuyResult(quantityPurchased, pointsSpent, extraMessage)
+                            : errorMessage;
                     });
-            }
-            else if (unitQuantityPurchased == 0)
-            {
-                // Don't have enough to by even 1 unit.
-                errorMessage = String.Format(NotEnoughPointsErrorMessage, currentPrice - player.Points, GetSpecificNameForNotEnoughToBuy(player));
-                shouldContinue = false;
-            }
-            else
-            {
-                // Requested more than can buy.
-                // Return a successful purchase, just buying the maximum
-                shouldContinue = false;
-            }
-        }
-        while (shouldContinue);
-
-        var extraMessage = OnAfterBuy(player, quantityPurchased, pointsSpent);
-
-        return errorMessage is null
-            ? new BuyResult(quantityPurchased, pointsSpent, extraMessage)
-            : errorMessage;
-    }
+            });
 
     /// <summary>
     /// Try buying a single unit
@@ -97,7 +106,7 @@ public abstract class Item : IItem
     /// <summary>
     /// Do stuff after buying all quantities of the item.
     /// </summary>
-    public virtual String OnAfterBuy(Player player, Int32 quantityPurchased, Int32 pointsSpent) { return String.Empty; }
+    public virtual String OnAfterBuy(Player player, Int32 quantityPurchased, Int32 pointsSpent) => String.Empty;
 
     /// <summary>
     /// When not able to buy due to lack of points, the error message
@@ -109,23 +118,11 @@ public abstract class Item : IItem
     /// <returns></returns>
     public abstract String GetSpecificNameForNotEnoughToBuy(Player player);
 
-    /// <summary>
-    /// Get the current price based on the specified <paramref name="player"/>.
-    /// </summary>
-    /// <param name="player">Player to get the price for.</param>
-    /// <returns>Current price</returns>
-    public abstract Int32 GetPrice(Player player);
+    public abstract Either<Int32, String> GetPrice(Player player);
 
     public abstract String GetSpecificNameForSuccessfulBuy(Player player, Int32 quantity);
 
-    public virtual Boolean IsForSale(Player player, out String reason)
-    {
-        reason = default;
-        return true;
-    }
+    public virtual Option<String> IsForSale(Player player) => Option<String>.None;
 
-    public virtual String GetShopPrompt(Player player)
-    {
-        return Names.First();
-    }
+    public virtual Option<String> GetShopPrompt(Player player) => Names.TryGetFirst();
 }

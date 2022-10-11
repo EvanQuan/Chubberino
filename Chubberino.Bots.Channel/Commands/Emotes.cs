@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using Chubberino.Bots.Channel.Modules.CheeseGame.Emotes;
 using Chubberino.Client.Commands.Settings.UserCommands;
 using Chubberino.Common.Extensions;
@@ -23,8 +20,7 @@ public sealed class Emotes : UserCommand
     }
 
     public override void Invoke(Object sender, OnUserCommandReceivedArgs e)
-    {
-        e.Words
+        => e.Words
             .TryGetFirstAndNext()
             .IfSome(value =>
             {
@@ -66,11 +62,9 @@ public sealed class Emotes : UserCommand
                         break;
                 }
             });
-    }
 
     private Action<EmoteCategory> DisplayAllEmotesOfCategory(OnUserCommandReceivedArgs e)
-    {
-        return category =>
+        => category =>
         {
             if (category != EmoteCategory.Invalid)
             {
@@ -86,11 +80,9 @@ public sealed class Emotes : UserCommand
                 TwitchClientManager.SpoolMessage(e.ChatMessage.Channel, builder.ToString());
             }
         };
-    }
 
     private Action<(String Element, IEnumerable<String> Next)> DeleteEmote(OnUserCommandReceivedArgs e)
-    {
-        return value =>
+        => value =>
         {
             var categoryString = value.Element;
             var next2 = value.Next;
@@ -128,11 +120,9 @@ public sealed class Emotes : UserCommand
                     TwitchClientManager.SpoolMessage(e.ChatMessage.Channel, builder.ToString());
                 });
         };
-    }
 
     private Action<(String Element, IEnumerable<String> Next)> AddEmote(OnUserCommandReceivedArgs e)
-    {
-        return value =>
+        => value =>
         {
             var categoryString = value.Element;
             var next2 = value.Next;
@@ -170,5 +160,4 @@ public sealed class Emotes : UserCommand
                     TwitchClientManager.SpoolMessage(e.ChatMessage.Channel, builder.ToString());
                 });
         };
-    }
 }

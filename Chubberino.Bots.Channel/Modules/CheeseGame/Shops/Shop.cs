@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using Chubberino.Bots.Channel.Modules.CheeseGame.Emotes;
 using Chubberino.Bots.Channel.Modules.CheeseGame.Items;
 using Chubberino.Common.Extensions;
@@ -44,14 +41,14 @@ public class Shop : IShop
 
         foreach (var item in Items)
         {
-            var prompt = item.GetShopPrompt(player);
-
-            if (prompt != null)
-            {
-                inventoryPrompt
-                    .Append(" | ")
-                    .Append(prompt);
-            }
+            item
+                .GetShopPrompt(player)
+                .IfSome(prompt =>
+                {
+                    inventoryPrompt
+                        .Append(" | ")
+                        .Append(prompt);
+                });
         }
 
         Client.SpoolMessageAsMe(message.Channel, player, inventoryPrompt.ToString(), Priority.Low);
@@ -82,9 +79,13 @@ public class Shop : IShop
         Client.SpoolMessageAsMe(message.Channel, player, outputMessage, Priority.Low);
     }
 
-    private String GetBuyItemMessage(ChatMessage message, IApplicationContext context, Player player, String remainingArguments, String itemToBuy)
-    {
-        return Items
+    private String GetBuyItemMessage(
+        ChatMessage message,
+        IApplicationContext context,
+        Player player,
+        String remainingArguments,
+        String itemToBuy)
+        => Items
             .TryGetFirst(x => x.Names.Contains(itemToBuy, StringComparer.InvariantCultureIgnoreCase))
             .Some(item =>
             {
@@ -113,7 +114,6 @@ public class Shop : IShop
                     });
             })
             .None(() => $"Invalid item \"{itemToBuy}\" to buy. Type \"!cheese shop\" to see the items available for purchase.");
-    }
 
     public IShop AddItem(IItem item)
     {

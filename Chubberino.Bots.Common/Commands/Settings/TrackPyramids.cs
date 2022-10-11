@@ -24,14 +24,10 @@ public sealed class TrackPyramids : Setting
     }
 
     public override void Register(ITwitchClient client)
-    {
-        client.OnMessageReceived += TwitchClient_OnMessageReceived;
-    }
+        => client.OnMessageReceived += TwitchClient_OnMessageReceived;
 
     public override void Unregister(ITwitchClient client)
-    {
-        client.OnMessageReceived -= TwitchClient_OnMessageReceived;
-    }
+        => client.OnMessageReceived -= TwitchClient_OnMessageReceived;
 
     public void TwitchClient_OnMessageReceived(Object sender, OnMessageReceivedArgs e)
     {
@@ -99,10 +95,7 @@ public sealed class TrackPyramids : Setting
         return message.Trim(' ', Data.InvisibleCharacter) == block;
     }
 
-    public override void Execute(IEnumerable<String> arguments)
-    {
-        base.Execute(arguments);
-    }
+    public override void Execute(IEnumerable<String> arguments) => base.Execute(arguments);
 
     private void SpoolPyramidSuccessMessage()
     {
@@ -145,9 +138,6 @@ public sealed class TrackPyramids : Setting
         }
     }
 
-    public override String GetHelp()
-    {
-        return @"
+    public override String GetHelp() => @"
 ";
-    }
 }

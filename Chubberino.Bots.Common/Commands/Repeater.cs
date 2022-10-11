@@ -68,9 +68,7 @@ public sealed class Repeater : IRepeater
     /// Start executing <see cref="Action"/> at the specified <see cref="Interval"/>.
     /// </summary>
     private void Start()
-    {
-        Timer.Start();
-    }
+        => Timer.Start();
 
     private TimeSpan GetVariance()
     {
@@ -86,7 +84,5 @@ public sealed class Repeater : IRepeater
     }
 
     private Boolean HasVariance()
-    {
-        return Variance != TimeSpan.Zero;
-    }
+        => Variance != TimeSpan.Zero;
 }

@@ -15,20 +15,14 @@ public sealed class IncrementingQuantityItem : Item
 
     public override IEnumerable<String> Names { get; } = new String[] { "IncrementingQuantityItem", "q" };
 
-    public override Int32 GetPrice(Player player)
-    {
-        return StaticPrice;
-    }
+    public override Either<Int32, String> GetPrice(Player player)
+        => StaticPrice;
 
     public override String GetSpecificNameForNotEnoughToBuy(Player player)
-    {
-        return "a Multiple Quantity Item";
-    }
+        => "a Multiple Quantity Item";
 
     public override String GetSpecificNameForSuccessfulBuy(Player player, Int32 quantity)
-    {
-        return quantity == 1 ? "Multiple Quantity Item" : "Multiple Quantity Items";
-    }
+        => quantity == 1 ? "Multiple Quantity Item" : "Multiple Quantity Items";
 
     public override Either<Int32, String> TryBuySingleUnit(Player player, Int32 price)
     {

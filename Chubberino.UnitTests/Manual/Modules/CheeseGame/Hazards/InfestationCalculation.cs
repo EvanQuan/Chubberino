@@ -17,10 +17,7 @@ public class InfestationCalculation
     // [Fact]
 #pragma warning disable IDE0051 // Remove unused private members
     private void Test()
-#pragma warning restore IDE0051 // Remove unused private members
-    {
-        DisplayInfestValues();
-    }
+        => DisplayInfestValues();
 
     private void DisplayInfestValues()
     {

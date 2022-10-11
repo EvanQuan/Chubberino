@@ -7,7 +7,5 @@ public sealed class EqualsComparator : IEqualsComparator
     public Name Name { get; } = Name.From("equals");
 
     public Boolean Matches(String left, String right)
-    {
-        return left == right;
-    }
+        => left == right;
 }

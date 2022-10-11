@@ -1,5 +1,4 @@
 ﻿using Chubberino.Database.Models;
-using System;
 using TwitchLib.Client.Models;
 
 namespace Chubberino.Bots.Channel.Modules.CheeseGame.Quests;

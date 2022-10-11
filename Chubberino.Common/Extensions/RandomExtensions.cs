@@ -9,9 +9,7 @@ public static class RandomExtensions
     /// <param name="successChance">Percent chance of success.</param>
     /// <returns>true on success; false otherwise.</returns>
     public static Boolean TryPercentChance(this Random random, Double successChance)
-    {
-        return random.NextDouble() < successChance;
-    }
+        => random.NextDouble() < successChance;
 
     /// <summary>
     /// Gets a random double bounded beetween a <paramref name="minimum"/> and <paramref name="maximum"/> range.
@@ -21,9 +19,7 @@ public static class RandomExtensions
     /// <param name="maximum">Upper bound.</param>
     /// <returns>A random double.</returns>
     public static Double NextDouble(this Random random, Double minimum, Double maximum)
-    {
-        return random.NextDouble() * (maximum - minimum) + minimum;
-    }
+        => random.NextDouble() * (maximum - minimum) + minimum;
 
     /// <summary>
     /// Get a random element from the specified <paramref name="list"/>.
@@ -33,9 +29,7 @@ public static class RandomExtensions
     /// <param name="list">List to get an element from.</param>
     /// <returns>A random element of the <paramref name="list"/>.</returns>
     public static TElement NextElement<TElement>(this Random random, IList<TElement> list)
-    {
-        return list[random.Next(list.Count)];
-    }
+        => list[random.Next(list.Count)];
 
     /// <summary>
     /// Get a random element from the specified <paramref name="list"/>.
@@ -45,9 +39,7 @@ public static class RandomExtensions
     /// <param name="list">List to get an element from.</param>
     /// <returns>A random element of the <paramref name="list"/>.</returns>
     public static TElement NextElement<TElement>(this Random random, IReadOnlyList<TElement> list)
-    {
-        return list[random.Next(list.Count)];
-    }
+        => list[random.Next(list.Count)];
 
     /// <summary>
     /// Get a random element from the specified <paramref name="list"/>,

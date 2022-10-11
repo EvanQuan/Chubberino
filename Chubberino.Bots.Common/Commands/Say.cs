@@ -12,7 +12,5 @@ public sealed class Say : Command
     }
 
     public override void Execute(IEnumerable<String> arguments)
-    {
-        TwitchClientManager.SpoolMessage(String.Join(' ', arguments));
-    }
+        => TwitchClientManager.SpoolMessage(String.Join(' ', arguments));
 }

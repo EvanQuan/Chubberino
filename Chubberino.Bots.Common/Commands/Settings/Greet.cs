@@ -37,15 +37,9 @@ public sealed class Greet : Setting
         Compliments = compliments;
     }
 
-    public override void Register(ITwitchClient client)
-    {
-        client.OnUserJoined += TwitchClient_OnUserJoined;
-    }
+    public override void Register(ITwitchClient client) => client.OnUserJoined += TwitchClient_OnUserJoined;
 
-    public override void Unregister(ITwitchClient client)
-    {
-        client.OnUserJoined -= TwitchClient_OnUserJoined;
-    }
+    public override void Unregister(ITwitchClient client) => client.OnUserJoined -= TwitchClient_OnUserJoined;
 
     private void TwitchClient_OnUserJoined(Object sender, OnUserJoinedArgs e)
     {
@@ -91,8 +85,7 @@ public sealed class Greet : Setting
     }
 
     public override String GetHelp()
-    {
-        return @"
+        => @"
 Message users when they join the channel. Twitch sends this information in
 bunches, so this is not very effective at announcing when a user has joined the
 channel, but instead for tagging random viewers.
@@ -105,5 +98,4 @@ set:
     mode    default - No special effect
             wholesome - Appends a random compliment and emote
 ";
-    }
 }

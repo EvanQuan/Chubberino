@@ -17,7 +17,5 @@ public sealed class Refresh : Command
 
 
     public override void Execute(IEnumerable<String> arguments)
-    {
-        Bot.Refresh();
-    }
+        => Bot.Refresh();
 }

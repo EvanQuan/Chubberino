@@ -1,5 +1,4 @@
 ﻿using Chubberino.Database.Models;
-using System;
 
 namespace Chubberino.Bots.Channel.Modules.CheeseGame.Items.Upgrades;
 
@@ -67,107 +66,65 @@ public static class PlayerUpgradeExtensions
         }
     }
 
-    public static UpgradeInfo GetNextCheeseModifierUpgrade(this Player player)
+    public static Option<UpgradeInfo> GetNextCheeseModifierUpgrade(this Player player)
+        => player.NextCheeseModifierUpgradeUnlock.GetCheeseModifierUpgrade();
+
+    public static Option<UpgradeInfo> GetNextCriticalCheeseUpgrade(this Player player)
+        => player.NextCriticalCheeseUpgradeUnlock.GetCriticalCheeseUpgrade();
+
+    public static Option<UpgradeInfo> GetNextQuestUpgrade(this Player player)
+        => player.NextQuestUpgradeUnlock.GetQuestUpgrade();
+
+    public static Option<UpgradeInfo> GetNextWorkerProductionUpgrade(this Player player)
+        => player.NextWorkerProductionUpgradeUnlock.GetWorkerProductionUpgrade();
+
+    public static Option<UpgradeInfo> GetNextStorageUpgrade(this Player player)
+        => player.NextStorageUpgradeUnlock.GetStorageUpgrade();
+
+    public static Option<UpgradeInfo> GetPreviousCheeseModifierUpgrade(this Player player)
+        => (player.NextCheeseModifierUpgradeUnlock - 1).GetCheeseModifierUpgrade();
+
+    public static Option<UpgradeInfo> GetPreviousCriticalCheeseUpgrade(this Player player)
+        => (player.NextCriticalCheeseUpgradeUnlock - 1).GetCriticalCheeseUpgrade();
+
+    public static Option<UpgradeInfo> GetPreviousQuestUpgrade(this Player player)
+        => (player.NextQuestUpgradeUnlock - 1).GetQuestUpgrade();
+
+    public static Option<UpgradeInfo> GetPreviousWorkerProductionUpgrade(this Player player)
+        => (player.NextWorkerProductionUpgradeUnlock - 1).GetWorkerProductionUpgrade();
+
+    public static Option<UpgradeInfo> GetPreviousStorageUpgrade(this Player player)
+        => (player.NextStorageUpgradeUnlock - 1).GetStorageUpgrade();
+
+    private static Option<Func<Player, Option<UpgradeInfo>>> TryGetTypeToNextUpgrade(UpgradeType type) => type switch
     {
-        return player.NextCheeseModifierUpgradeUnlock.GetCheeseModifierUpgrade();
-    }
+        UpgradeType.CheeseModifier => Option<Func<Player, Option<UpgradeInfo>>>.Some(GetNextCheeseModifierUpgrade),
+        UpgradeType.CriticalCheese => Option<Func<Player, Option<UpgradeInfo>>>.Some(GetNextCriticalCheeseUpgrade),
+        UpgradeType.Quest => Option<Func<Player, Option<UpgradeInfo>>>.Some(GetNextQuestUpgrade),
+        UpgradeType.WorkerProduction => Option<Func<Player, Option<UpgradeInfo>>>.Some(GetNextWorkerProductionUpgrade),
+        UpgradeType.Storage => Option<Func<Player, Option<UpgradeInfo>>>.Some(GetNextStorageUpgrade),
+        _ => Option<Func<Player, Option<UpgradeInfo>>>.None,
+    };
 
-    public static UpgradeInfo GetNextCriticalCheeseUpgrade(this Player player)
+    private static Option<Func<Player, Option<UpgradeInfo>>> TryGetTypeToPreviousUpgrade(UpgradeType type) => type switch
     {
-        return player.NextCriticalCheeseUpgradeUnlock.GetCriticalCheeseUpgrade();
-    }
+        UpgradeType.CheeseModifier => Option<Func<Player, Option<UpgradeInfo>>>.Some(GetPreviousCheeseModifierUpgrade),
+        UpgradeType.CriticalCheese => Option<Func<Player, Option<UpgradeInfo>>>.Some(GetPreviousCriticalCheeseUpgrade),
+        UpgradeType.Quest => Option<Func<Player, Option<UpgradeInfo>>>.Some(GetPreviousQuestUpgrade),
+        UpgradeType.WorkerProduction => Option<Func<Player, Option<UpgradeInfo>>>.Some(GetPreviousWorkerProductionUpgrade),
+        UpgradeType.Storage => Option<Func<Player, Option<UpgradeInfo>>>.Some(GetPreviousStorageUpgrade),
+        _ => Option<Func<Player, Option<UpgradeInfo>>>.None
+    };
 
-    public static UpgradeInfo GetNextQuestUpgrade(this Player player)
-    {
-        return player.NextQuestUpgradeUnlock.GetQuestUpgrade();
-    }
-
-    public static UpgradeInfo GetNextWorkerProductionUpgrade(this Player player)
-    {
-        return player.NextWorkerProductionUpgradeUnlock.GetWorkerProductionUpgrade();
-    }
-
-    public static UpgradeInfo GetNextStorageUpgrade(this Player player)
-    {
-        return player.NextStorageUpgradeUnlock.GetStorageUpgrade();
-    }
-
-    public static UpgradeInfo GetPreviousCheeseModifierUpgrade(this Player player)
-    {
-        return (player.NextCheeseModifierUpgradeUnlock - 1).GetCheeseModifierUpgrade();
-    }
-
-    public static UpgradeInfo GetPreviousCriticalCheeseUpgrade(this Player player)
-    {
-        return (player.NextCriticalCheeseUpgradeUnlock - 1).GetCriticalCheeseUpgrade();
-    }
-
-    public static UpgradeInfo GetPreviousQuestUpgrade(this Player player)
-    {
-        return (player.NextQuestUpgradeUnlock - 1).GetQuestUpgrade();
-    }
-
-    public static UpgradeInfo GetPreviousWorkerProductionUpgrade(this Player player)
-    {
-        return (player.NextWorkerProductionUpgradeUnlock - 1).GetWorkerProductionUpgrade();
-    }
-
-    public static UpgradeInfo GetPreviousStorageUpgrade(this Player player)
-    {
-        return (player.NextStorageUpgradeUnlock - 1).GetStorageUpgrade();
-    }
-
-    private static Boolean TryGetTypeToNextUpgrade(UpgradeType type, out Func<Player, UpgradeInfo> upgrade)
-    {
-        upgrade = type switch
-        {
-            UpgradeType.CheeseModifier => GetNextCheeseModifierUpgrade,
-            UpgradeType.CriticalCheese => GetNextCriticalCheeseUpgrade,
-            UpgradeType.Quest => GetNextQuestUpgrade,
-            UpgradeType.WorkerProduction => GetNextWorkerProductionUpgrade,
-            UpgradeType.Storage => GetNextStorageUpgrade,
-            _ => default,
-        };
-
-        return upgrade != default;
-    }
-
-    private static Boolean TryGetTypeToPreviousUpgrade(UpgradeType type, out Func<Player, UpgradeInfo> upgrade)
-    {
-        upgrade = type switch
-        {
-            UpgradeType.CheeseModifier => GetPreviousCheeseModifierUpgrade,
-            UpgradeType.CriticalCheese => GetPreviousCriticalCheeseUpgrade,
-            UpgradeType.Quest => GetPreviousQuestUpgrade,
-            UpgradeType.WorkerProduction => GetPreviousWorkerProductionUpgrade,
-            UpgradeType.Storage => GetPreviousStorageUpgrade,
-            _ => default,
-        };
-
-        return upgrade != default;
-    }
-
-    public static Boolean TryPreviousUpgradeUnlocked(this Player player, out UpgradeInfo upgrade)
-    {
-        if (TryGetTypeToPreviousUpgrade(player.GetPreviousUpgradeUnlocked(), out var playerToUpgrade))
-        {
-            upgrade = playerToUpgrade(player);
-            return true;
-        }
-        upgrade = default;
-        return false;
-    }
+    public static Option<UpgradeInfo> TryPreviousUpgradeUnlocked(this Player player)
+        => TryGetTypeToPreviousUpgrade(player.GetPreviousUpgradeUnlocked())
+            .Some(applyUpgrade => applyUpgrade(player))
+            .None(Option<UpgradeInfo>.None);
 
 
-    public static Boolean TryGetNextUpgradeToUnlock(this Player player, out UpgradeInfo upgrade)
-    {
-        if (TryGetTypeToNextUpgrade(player.GetNextUpgradeToUnlock(), out var playerToUpgrade))
-        {
-            upgrade = playerToUpgrade(player);
-            return true;
-        }
-        upgrade = default;
-        return false;
-    }
+    public static Option<UpgradeInfo> TryGetNextUpgradeToUnlock(this Player player)
+        => TryGetTypeToNextUpgrade(player.GetNextUpgradeToUnlock())
+            .Some(applyUpgrade => applyUpgrade(player))
+            .None(Option<UpgradeInfo>.None);
 
 }

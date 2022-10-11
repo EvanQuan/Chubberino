@@ -50,8 +50,7 @@ public sealed class AtAll : Command
     }
 
     public override String GetHelp()
-    {
-        return @"
+        => @"
 @'s all chatters in the channel.
 
 usage: atall [user type] <message>
@@ -60,5 +59,4 @@ usage: atall [user type] <message>
                 - [v]ips, mods and staff
                 - Defaults to all users
 ";
-    }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Chubberino.Common.Extensions;
 using Chubberino.Database.Models;
 

@@ -206,9 +206,7 @@ public sealed class CommandRepository : ICommandRepository
     }
 
     private void Get(Name commandName, IEnumerable<String> arguments)
-    {
-        Writer.WriteLine(GetGetMessage(commandName, arguments));
-    }
+        => Writer.WriteLine(GetGetMessage(commandName, arguments));
 
     private String GetGetMessage(Name commandName, IEnumerable<String> arguments)
     {
@@ -229,37 +227,31 @@ public sealed class CommandRepository : ICommandRepository
     }
 
     private void Set(Name commandName, IEnumerable<String> arguments)
-    {
-        ApplyMetaCommand(
+        => ApplyMetaCommand(
             commandName,
             arguments,
             (command, property, arguments) => command.Set(property, arguments),
             commandName => $"Command \"{commandName.Value}\" not found to set.",
             (commandName, property, arguments) => $"Command \"{commandName.Value}\" property \"{property}\" set to \"{arguments}\".",
             (commandName, property) => $"Command \"{commandName.Value}\" property \"{property}\" not set.");
-    }
 
     private void Add(Name commandName, IEnumerable<String> arguments)
-    {
-        ApplyMetaCommand(
+        => ApplyMetaCommand(
             commandName,
             arguments,
             (command, property, arguments) => command.Add(property, arguments),
             commandName => $"Command \"{commandName.Value}\" not found to add to.",
             (commandName, property, arguments) => $"Command \"{commandName.Value}\" property \"{property}\" added \"{arguments}\".",
             (commandName, property) => $"Command \"{commandName.Value}\" property \"{property}\" not added to.");
-    }
 
     private void Remove(Name commandName, IEnumerable<String> arguments)
-    {
-        ApplyMetaCommand(
+        => ApplyMetaCommand(
             commandName,
             arguments,
             (command, property, arguments) => command.Remove(property, arguments),
             commandName => $"Command \"{commandName.Value}\" not found to remove from.",
             (commandName, property, arguments) => $"Command \"{commandName.Value}\" property \"{property}\" removed \"{arguments}\".",
             (commandName, property) => $"Command \"{commandName.Value}\" property \"{property}\" not removed from.");
-    }
 
     private void ApplyMetaCommand(
         Name commandName,
@@ -323,7 +315,5 @@ public sealed class CommandRepository : ICommandRepository
     }
 
     public void Configure(LoginCredentials loginCredentials)
-    {
-        CommandConfigurationStrategy.Configure(this, loginCredentials);
-    }
+        => CommandConfigurationStrategy.Configure(this, loginCredentials);
 }

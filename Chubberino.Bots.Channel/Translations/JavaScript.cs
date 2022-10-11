@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Chubberino.Bots.Channel.Translations;
+﻿namespace Chubberino.Bots.Channel.Translations;
 
 public static class JavaScript
 {

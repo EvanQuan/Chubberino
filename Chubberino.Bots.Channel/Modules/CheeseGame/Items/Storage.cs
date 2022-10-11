@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Chubberino.Bots.Channel.Modules.CheeseGame.Items.Storages;
 using Chubberino.Database.Models;
-using LanguageExt;
 
 namespace Chubberino.Bots.Channel.Modules.CheeseGame.Items;
 
@@ -15,10 +13,8 @@ public sealed class Storage : Item
 
     public override IEnumerable<String> Names { get; } = new String[] { "Storage", "s" };
 
-    public override Int32 GetPrice(Player player)
-    {
-        return player.GetStoragePrice();
-    }
+    public override Either<Int32, String> GetPrice(Player player)
+        => player.GetStoragePrice();
 
     public override String GetSpecificNameForNotEnoughToBuy(Player player)
     {
@@ -27,10 +23,7 @@ public sealed class Storage : Item
         return $"{storageGain} storage units";
     }
 
-    public override String GetSpecificNameForSuccessfulBuy(Player player, Int32 quantity)
-    {
-        return $"{quantity} storage units";
-    }
+    public override String GetSpecificNameForSuccessfulBuy(Player player, Int32 quantity) => $"{quantity} storage units";
 
     public override Either<Int32, String> TryBuySingleUnit(Player player, Int32 price)
     {
@@ -42,7 +35,7 @@ public sealed class Storage : Item
         return storageGain;
     }
 
-    public override String GetShopPrompt(Player player)
+    public override Option<String> GetShopPrompt(Player player)
     {
         Int32 storageGain = (Int32)(BaseQuantity * player.GetStorageUpgradeMultiplier());
 

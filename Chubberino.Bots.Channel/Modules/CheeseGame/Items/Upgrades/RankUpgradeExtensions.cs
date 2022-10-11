@@ -1,5 +1,4 @@
-﻿using System;
-using Chubberino.Bots.Channel.Modules.CheeseGame.Items.Upgrades.RecipeModifiers;
+﻿using Chubberino.Bots.Channel.Modules.CheeseGame.Items.Upgrades.RecipeModifiers;
 using Chubberino.Bots.Channel.Modules.CheeseGame.Items.Workers;
 using Chubberino.Bots.Channel.Modules.CheeseGame.Quests;
 using Chubberino.Common.Extensions;
@@ -30,20 +29,21 @@ public static class RankUpgradeExtensions
 
     private const String QuestDescription = "{0}% -> {1}% rare quest chance";
 
-    public static UpgradeInfo GetCheeseModifierUpgrade(this Rank rank)
-    {
-        if (RecipeModifierRepository.Modifiers.TryGet((Int32)(rank + 1), out var cheeseModifier))
-        {
-            return new UpgradeInfo(
-                String.Format(ModifierDescription, cheeseModifier.Name, cheeseModifier.Points),
-                rank,
-                0.25,
-                x => x.NextCheeseModifierUpgradeUnlock++);
-        }
-        return null;
-    }
+    public static Option<UpgradeInfo> GetCheeseModifierUpgrade(this Rank rank)
+        => RecipeModifierRepository
+            .Modifiers
+            .TryGet((Int32)(rank + 1))
+            .Some(cheeseModifier =>
+            {
+                return Option<UpgradeInfo>.Some(new UpgradeInfo(
+                    String.Format(ModifierDescription, cheeseModifier.Name, cheeseModifier.Points),
+                    rank,
+                    0.25,
+                    x => x.NextCheeseModifierUpgradeUnlock++));
+            })
+            .None(Option<UpgradeInfo>.None);
 
-    public static UpgradeInfo GetCriticalCheeseUpgrade(this Rank rank)
+    public static Option<UpgradeInfo> GetCriticalCheeseUpgrade(this Rank rank)
     {
         Double currentUpgradePercent = (Int32)rank * CriticalCheeseUpgradePercent * 100;
         Double nextUpgradePercent = (Int32)(rank + 1) * CriticalCheeseUpgradePercent * 100;
@@ -54,7 +54,7 @@ public static class RankUpgradeExtensions
             x => x.NextCriticalCheeseUpgradeUnlock++);
     }
 
-    public static UpgradeInfo GetQuestUpgrade(this Rank rank)
+    public static Option<UpgradeInfo> GetQuestUpgrade(this Rank rank)
     {
         String currentUpgradePercent = String.Format("{0:0.0}", rank.GetRareQuestChance() * 100);
         String nextUpgradePercent = String.Format("{0:0.0}", rank.Next().GetRareQuestChance() * 100);
@@ -65,7 +65,7 @@ public static class RankUpgradeExtensions
             x => x.NextQuestUpgradeUnlock++);
     }
 
-    public static UpgradeInfo GetWorkerProductionUpgrade(this Rank rank)
+    public static Option<UpgradeInfo> GetWorkerProductionUpgrade(this Rank rank)
     {
         Int32 currentUpgradePercent = (Int32)(rank.GetWorkerPointMultiplier() * 100);
         Int32 nextUpgradePercent = (Int32)(rank.Next().GetWorkerPointMultiplier() * 100);
@@ -76,7 +76,7 @@ public static class RankUpgradeExtensions
             x => x.NextWorkerProductionUpgradeUnlock++);
     }
 
-    public static UpgradeInfo GetStorageUpgrade(this Rank rank)
+    public static Option<UpgradeInfo> GetStorageUpgrade(this Rank rank)
     {
         Double currentUpgradePercent = (Int32)rank * StorageUpgradePercent * 100;
         Double nextUpgradePercent = (Int32)(rank + 1) * StorageUpgradePercent * 100;
@@ -86,5 +86,4 @@ public static class RankUpgradeExtensions
             0.85,
             x => x.NextStorageUpgradeUnlock++);
     }
-
 }

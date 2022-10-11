@@ -1,5 +1,4 @@
 ﻿using Chubberino.Database.Models;
-using System;
 
 namespace Chubberino.Bots.Channel.Modules.CheeseGame.Items.Workers;
 
@@ -16,7 +15,5 @@ public static class RankWorkerUpgradeExtensions
     public const Double BaseWorkerPointPercent = 0.1;
 
     public static Double GetWorkerPointMultiplier(this Rank rank)
-    {
-        return BaseWorkerPointPercent + (Int32)rank * WorkerUpgradePercent;
-    }
+        => BaseWorkerPointPercent + (Int32)rank * WorkerUpgradePercent;
 }

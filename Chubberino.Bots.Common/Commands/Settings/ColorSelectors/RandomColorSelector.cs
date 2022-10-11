@@ -14,7 +14,5 @@ public sealed class RandomColorSelector : IColorSelector
     }
 
     public String GetNextColor()
-    {
-        return $"#{Random.Next(0x1000000):X6}";
-    }
+        => $"#{Random.Next(0x1000000):X6}";
 }

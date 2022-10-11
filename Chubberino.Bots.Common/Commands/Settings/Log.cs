@@ -14,17 +14,11 @@ public sealed class Log : Setting
     }
 
     public override void Register(ITwitchClient client)
-    {
-        client.OnLog += TwitchClient_OnLog;
-    }
+        => client.OnLog += TwitchClient_OnLog;
 
     public override void Unregister(ITwitchClient client)
-    {
-        client.OnLog -= TwitchClient_OnLog;
-    }
+        => client.OnLog -= TwitchClient_OnLog;
 
     public void TwitchClient_OnLog(Object sender, OnLogArgs e)
-    {
-        Writer.WriteLine($"{e.DateTime}: {e.BotUsername} - {e.Data}");
-    }
+        => Writer.WriteLine($"{e.DateTime}: {e.BotUsername} - {e.Data}");
 }

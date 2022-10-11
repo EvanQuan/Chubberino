@@ -1,6 +1,4 @@
-﻿using System;
-using System.Text;
-using Chubberino.Bots.Channel.Modules.CheeseGame.Emotes;
+﻿using Chubberino.Bots.Channel.Modules.CheeseGame.Emotes;
 using Chubberino.Bots.Channel.Modules.CheeseGame.Hazards;
 using Chubberino.Bots.Channel.Modules.CheeseGame.Quests;
 using Chubberino.Common.Extensions;
@@ -125,12 +123,10 @@ public sealed class QuestManager : IQuestManager
     }
 
     private static String GetPlayerWithWorkers(Player player)
-    {
-        return (player.IsInfested() ? 0 : player.WorkerCount) switch
+        => (player.IsInfested() ? 0 : player.WorkerCount) switch
         {
             0 => "You",
             1 => "You and your worker",
             _ => $"You and your workers",
         };
-    }
 }

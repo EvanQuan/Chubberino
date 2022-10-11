@@ -1,5 +1,4 @@
 ﻿using Chubberino.Database.Models;
-using System;
 using System.Collections.Generic;
 
 namespace Chubberino.Bots.Channel.Modules.CheeseGame.Emotes;

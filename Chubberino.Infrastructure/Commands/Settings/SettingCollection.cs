@@ -54,8 +54,6 @@ public sealed class SettingCollection<TElement>
     }
 
     public TElement GetValueOrDefault(Name name)
-    {
-        return EnabledEntries.GetValueOrDefault(name)
+        => EnabledEntries.GetValueOrDefault(name)
             ?? DisabledEntries.GetValueOrDefault(name);
-    }
 }

@@ -13,7 +13,5 @@ public readonly record struct Name
     public String Value { get; }
 
     public override String ToString()
-    {
-        return Value;
-    }
+        => Value;
 }

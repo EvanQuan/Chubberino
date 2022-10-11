@@ -1,5 +1,4 @@
-﻿using System;
-using Chubberino.Common.Extensions;
+﻿using Chubberino.Common.Extensions;
 using Chubberino.Database.Models;
 
 namespace Chubberino.Bots.Channel.Modules.CheeseGame.Items;
@@ -28,17 +27,11 @@ public static class PlayerItemPriceExtensions
     }
 
     public static Int32 GetMousetrapPrice(this Player _)
-    {
-        return 25;
-    }
+        => 25;
 
     public static Int32 GetStoragePrice(this Player player)
-    {
-        return 25 + player.MaximumPointStorage / 2;
-    }
+        => 25 + player.MaximumPointStorage / 2;
 
     public static Int32 GetWorkerPrice(this Player player)
-    {
-        return (Int32)(100 + 10 * Math.Pow(player.WorkerCount, 1.4));
-    }
+        => (Int32)(100 + 10 * Math.Pow(player.WorkerCount, 1.4));
 }

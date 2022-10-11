@@ -1,5 +1,4 @@
-﻿using System;
-using TwitchLib.Client.Models;
+﻿using TwitchLib.Client.Models;
 
 namespace Chubberino.Bots.Channel.Modules.CheeseGame.Points;
 

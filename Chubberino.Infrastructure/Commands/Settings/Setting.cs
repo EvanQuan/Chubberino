@@ -17,12 +17,8 @@ public abstract class Setting : Command, ISetting
     public event EventHandler<OnSettingStateChangeArgs> OnSettingStateChange;
 
     public override void Execute(IEnumerable<String> arguments)
-    {
-        UpdateState(SettingState.Toggle);
-    }
+        => UpdateState(SettingState.Toggle);
 
     protected void UpdateState(SettingState state)
-    {
-        OnSettingStateChange?.Invoke(this, new(state));
-    }
+        => OnSettingStateChange?.Invoke(this, new(state));
 }
