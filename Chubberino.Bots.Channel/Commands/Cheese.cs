@@ -12,7 +12,7 @@ using Chubberino.Infrastructure.Commands.Settings.UserCommands;
 
 namespace Chubberino.Bots.Channel.Commands;
 
-public sealed class Cheese : UserCommand
+public class Cheese : UserCommand
 {
     public Cheese(
         ITwitchClientManager client,
