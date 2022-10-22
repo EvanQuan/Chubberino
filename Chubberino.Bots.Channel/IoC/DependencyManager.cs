@@ -87,6 +87,7 @@ internal sealed class DependencyManager
             .AddCommand(scope.Resolve<AutoPogO>())
             .AddCommand(scope.Resolve<ChannelCommand>(), true)
             .AddCommand(scope.Resolve<Cheese>(), true)
+            .AddCommand(scope.Resolve<Cheese2>(), true)
             .AddCommand(scope.Resolve<Color>())
             .AddCommand(scope.Resolve<Cookie>())
             .AddCommand(scope.Resolve<Copy>())
@@ -211,6 +212,7 @@ internal sealed class DependencyManager
         builder.RegisterType<AutoPogO>().AsSelf().SingleInstance();
         builder.RegisterType<ChannelCommand>().AsSelf().SingleInstance();
         builder.RegisterType<Cheese>().AsSelf().SingleInstance();
+        builder.RegisterType<Cheese2>().AsSelf().SingleInstance();
         builder.RegisterType<Color>().AsSelf().SingleInstance();
         builder.RegisterType<Cookie>().AsSelf().SingleInstance();
         builder.RegisterType<Copy>().AsSelf().SingleInstance();
