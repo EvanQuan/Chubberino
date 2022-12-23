@@ -101,21 +101,14 @@ public sealed class Recipe : Item
     public override Option<String> GetShopPrompt(Player player)
         => RecipeRepository
             .TryGetNextToUnlock(player)
-            .Some(nextCheeseToUnlock =>
+            .Bind(nextCheeseToUnlock =>
             {
                 var cheesePoints = player.GetModifiedPoints(nextCheeseToUnlock.Points);
 
-                String recipePrompt;
-                if (nextCheeseToUnlock.RankToUnlock > player.Rank)
-                {
-                    recipePrompt = $"{nextCheeseToUnlock.Name} (+{cheesePoints})] unlocked at {player.Rank.Next()} rank";
-                }
-                else
-                {
-                    recipePrompt = $"{nextCheeseToUnlock.Name} (+{cheesePoints})] for {nextCheeseToUnlock.CostToUnlock} cheese";
-                }
+                String recipePrompt = nextCheeseToUnlock.RankToUnlock > player.Rank
+                    ? $"{nextCheeseToUnlock.Name} (+{cheesePoints})] unlocked at {player.Rank.Next()} rank"
+                    : $"{nextCheeseToUnlock.Name} (+{cheesePoints})] for {nextCheeseToUnlock.CostToUnlock} cheese";
 
                 return Option<String>.Some($"{base.GetShopPrompt(player)} [{recipePrompt}");
-            })
-            .None(Option<String>.None);
+            });
 }

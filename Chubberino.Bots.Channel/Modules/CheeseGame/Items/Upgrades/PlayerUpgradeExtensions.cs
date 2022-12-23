@@ -118,13 +118,11 @@ public static class PlayerUpgradeExtensions
 
     public static Option<UpgradeInfo> TryPreviousUpgradeUnlocked(this Player player)
         => TryGetTypeToPreviousUpgrade(player.GetPreviousUpgradeUnlocked())
-            .Some(applyUpgrade => applyUpgrade(player))
-            .None(Option<UpgradeInfo>.None);
+            .Bind(applyUpgrade => applyUpgrade(player));
 
 
     public static Option<UpgradeInfo> TryGetNextUpgradeToUnlock(this Player player)
         => TryGetTypeToNextUpgrade(player.GetNextUpgradeToUnlock())
-            .Some(applyUpgrade => applyUpgrade(player))
-            .None(Option<UpgradeInfo>.None);
+            .Bind(applyUpgrade => applyUpgrade(player));
 
 }
