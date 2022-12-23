@@ -77,7 +77,7 @@ public sealed class QuestLocation : Item
                     ? $"{nextQuestToUnlock.Location} ({nextQuestToUnlock.RewardDescription(player)})] unlocked at {player.Rank.Next()} rank"
                     : $"{nextQuestToUnlock.Location} ({nextQuestToUnlock.RewardDescription(player)})] for {nextQuestToUnlock.Price} cheese";
 
-                return Option<String>.Some($"{base.GetShopPrompt(player)} [{questPrompt}");
+                return Option<String>.Some($"{GetBaseShopPrompt(player)} [{questPrompt}");
             })
             .None(Option<String>.None);
 }

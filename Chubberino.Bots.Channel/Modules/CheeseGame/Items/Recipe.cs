@@ -115,7 +115,7 @@ public sealed class Recipe : Item
                     recipePrompt = $"{nextCheeseToUnlock.Name} (+{cheesePoints})] for {nextCheeseToUnlock.CostToUnlock} cheese";
                 }
 
-                return Option<String>.Some($"{base.GetShopPrompt(player)} [{recipePrompt}");
+                return Option<String>.Some($"{GetBaseShopPrompt(player)} [{recipePrompt}");
             })
             .None(Option<String>.None);
 }

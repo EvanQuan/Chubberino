@@ -57,6 +57,6 @@ public sealed class Gear : Item
             .None(() =>
             {
                 var questSuccessChance = player.GetQuestSuccessChance(includeInfestation: false);
-                return $"{base.GetShopPrompt(player)} [+{String.Format("{0:0.0}", questSuccessChance * 100)}% -> +{String.Format("{0:0.0}", (questSuccessChance + QuestSuccessBonus) * 100)}% quest success] for {GetPrice(player)} cheese";
+                return $"{GetBaseShopPrompt(player)} [+{String.Format("{0:0.0}", questSuccessChance * 100)}% -> +{String.Format("{0:0.0}", (questSuccessChance + QuestSuccessBonus) * 100)}% quest success] for {GetPriceString(player)} cheese";
             });
 }

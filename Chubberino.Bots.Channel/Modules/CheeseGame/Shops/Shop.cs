@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Chubberino.Bots.Channel.Modules.CheeseGame.Emotes;
+﻿using Chubberino.Bots.Channel.Modules.CheeseGame.Emotes;
 using Chubberino.Bots.Channel.Modules.CheeseGame.Items;
 using Chubberino.Common.Extensions;
 using Chubberino.Database.Contexts;
@@ -10,9 +9,9 @@ using TwitchLib.Client.Models;
 
 namespace Chubberino.Bots.Channel.Modules.CheeseGame.Shops;
 
-public class Shop : IShop
+public sealed class Shop : IShop
 {
-    public IList<IItem> Items { get; }
+    public IItem[] Items { get; set; } = Array.Empty<Item>();
     public IApplicationContextFactory ContextFactory { get; }
     public ITwitchClientManager Client { get; }
     public Random Random { get; }
@@ -24,7 +23,6 @@ public class Shop : IShop
         Random random,
         IEmoteManager emoteManager)
     {
-        Items = new List<IItem>();
         ContextFactory = contextFactory;
         Client = client;
         Random = random;
@@ -37,21 +35,12 @@ public class Shop : IShop
 
         Player player = context.GetPlayer(Client, message);
 
-        StringBuilder inventoryPrompt = new();
+        var itemDescriptions = Items
+            .SelectMany(item => item.GetShopPrompt(player));
 
-        foreach (var item in Items)
-        {
-            item
-                .GetShopPrompt(player)
-                .IfSome(prompt =>
-                {
-                    inventoryPrompt
-                        .Append(" | ")
-                        .Append(prompt);
-                });
-        }
+        var inventoryPrompt = String.Join(" | ", itemDescriptions);
 
-        Client.SpoolMessageAsMe(message.Channel, player, inventoryPrompt.ToString(), Priority.Low);
+        Client.SpoolMessageAsMe(message.Channel, player, inventoryPrompt, Priority.Low);
     }
 
     public void BuyItem(ChatMessage message)
@@ -114,11 +103,4 @@ public class Shop : IShop
                     });
             })
             .None(() => $"Invalid item \"{itemToBuy}\" to buy. Type \"!cheese shop\" to see the items available for purchase.");
-
-    public IShop AddItem(IItem item)
-    {
-        Items.Add(item);
-
-        return this;
-    }
 }
