@@ -39,6 +39,6 @@ public sealed class Storage : Item
     {
         Int32 storageGain = (Int32)(BaseQuantity * player.GetStorageUpgradeMultiplier());
 
-        return $"{base.GetShopPrompt(player)} [+{storageGain}] for {GetPrice(player)} cheese";
+        return $"{GetBaseShopPrompt(player)} [+{storageGain}] for {GetPriceString(player)} cheese";
     }
 }

@@ -58,6 +58,6 @@ public sealed class Upgrade : Item
                     ? $"{upgrade.Description}] unlocked at {upgrade.RankToUnlock} rank"
                     : $"{upgrade.Description}] for {upgrade.Price} cheese";
 
-                return Option<String>.Some($"{base.GetShopPrompt(player)} [{upgradePrompt}");
+                return Option<String>.Some($"{GetBaseShopPrompt(player)} [{upgradePrompt}");
             });
 }

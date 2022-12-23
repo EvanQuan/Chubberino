@@ -31,7 +31,7 @@ public sealed class Mousetrap : Item
     }
 
     public override Option<String> GetShopPrompt(Player player)
-        => $"{base.GetShopPrompt(player)} [+1] for {GetPrice(player)} cheese";
+        => $"{GetBaseShopPrompt(player)} [+1] for {GetPriceString(player)} cheese";
 
     public override String OnAfterBuy(Player player, Int32 quantityPurchased, Int32 pointsSpent)
     {
