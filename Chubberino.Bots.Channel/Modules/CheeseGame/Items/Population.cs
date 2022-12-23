@@ -27,5 +27,5 @@ public sealed class Population : Item
     }
 
     public override Option<String> GetShopPrompt(Player player)
-        => $"{base.GetShopPrompt(player)} [+{ShopUnitQuantity}] for {GetPrice(player)}";
+        => $"{GetBaseShopPrompt(player)} [+{ShopUnitQuantity}] for {GetPriceString(player)}";
 }

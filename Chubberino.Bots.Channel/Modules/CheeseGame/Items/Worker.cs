@@ -38,5 +38,5 @@ public sealed class Worker : Item
     }
 
     public override Option<String> GetShopPrompt(Player player)
-        => $"{base.GetShopPrompt(player)} [+1] for {GetPrice(player)}";
+        => $"{GetBaseShopPrompt(player)} [+1] for {GetPriceString(player)}";
 }

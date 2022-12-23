@@ -123,16 +123,19 @@ internal sealed class DependencyManager
             .AddColorSelector(scope.Resolve<RainbowColorSelector>());
 
 
-        scope
-            .Resolve<IShop>()
-            .AddItem(scope.Resolve<Recipe>())
-            .AddItem(scope.Resolve<Storage>())
-            .AddItem(scope.Resolve<QuestLocation>())
-            .AddItem(scope.Resolve<Upgrade>())
-            .AddItem(scope.Resolve<Worker>())
-            .AddItem(scope.Resolve<Population>())
-            .AddItem(scope.Resolve<Gear>())
-            .AddItem(scope.Resolve<Mousetrap>());
+        var shop = scope.Resolve<IShop>();
+
+        shop.Items = new IItem[]
+        {
+            scope.Resolve<Recipe>(),
+            scope.Resolve<Storage>(),
+            scope.Resolve<QuestLocation>(),
+            scope.Resolve<Upgrade>(),
+            scope.Resolve<Worker>(),
+            scope.Resolve<Population>(),
+            scope.Resolve<Gear>(),
+            scope.Resolve<Mousetrap>()
+        };
     }
 
     private static IContainer RegisterTypes()

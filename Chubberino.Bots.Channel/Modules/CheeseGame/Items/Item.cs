@@ -119,10 +119,14 @@ public abstract class Item : IItem
     public abstract String GetSpecificNameForNotEnoughToBuy(Player player);
 
     public abstract Either<Int32, String> GetPrice(Player player);
+    public String GetPriceString(Player player) => GetPrice(player)
+        .Right(error => error)
+        .Left(price => price.ToString());
 
     public abstract String GetSpecificNameForSuccessfulBuy(Player player, Int32 quantity);
 
     public virtual Option<String> IsForSale(Player player) => Option<String>.None;
 
     public virtual Option<String> GetShopPrompt(Player player) => Names.TryGetFirst();
+    protected String GetBaseShopPrompt(Player player) => Names.First();
 }
