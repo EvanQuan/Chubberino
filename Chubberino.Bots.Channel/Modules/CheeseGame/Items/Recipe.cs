@@ -88,7 +88,7 @@ public sealed class Recipe : Item
                 {
                     return String.Format(NeedToRankUpMessage, cheese.RankToUnlock, cheese.Name);
                 }
-                return default;
+                return Option<String>.None;
             })
             .None(NoRecipeForSaleMessage);
 
