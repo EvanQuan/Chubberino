@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Chubberino.Bots.Channel.Modules.CheeseGame.Items.Upgrades;
 using Chubberino.Database.Models;
+using LanguageExt.Common;
 
 namespace Chubberino.Bots.Channel.Modules.CheeseGame.Items;
 
@@ -51,19 +52,12 @@ public sealed class Upgrade : Item
     public override Option<String> GetShopPrompt(Player player)
         => player
             .TryGetNextUpgradeToUnlock()
-            .Some(upgrade =>
+            .Bind(upgrade =>
             {
-                String upgradePrompt;
-                if (upgrade.RankToUnlock > player.Rank)
-                {
-                    upgradePrompt = $"{upgrade.Description}] unlocked at {upgrade.RankToUnlock} rank";
-                }
-                else
-                {
-                    upgradePrompt = $"{upgrade.Description}] for {upgrade.Price} cheese";
-                }
+                String upgradePrompt = upgrade.RankToUnlock > player.Rank
+                    ? $"{upgrade.Description}] unlocked at {upgrade.RankToUnlock} rank"
+                    : $"{upgrade.Description}] for {upgrade.Price} cheese";
 
                 return Option<String>.Some($"{GetBaseShopPrompt(player)} [{upgradePrompt}");
-            })
-            .None(Option<String>.None);
+            });
 }

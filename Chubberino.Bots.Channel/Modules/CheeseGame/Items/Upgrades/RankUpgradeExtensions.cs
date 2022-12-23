@@ -33,15 +33,15 @@ public static class RankUpgradeExtensions
         => RecipeModifierRepository
             .Modifiers
             .TryGet((Int32)(rank + 1))
-            .Some(cheeseModifier =>
+            .Bind(maybeModifier => maybeModifier)
+            .Bind(cheeseModifier =>
             {
                 return Option<UpgradeInfo>.Some(new UpgradeInfo(
                     String.Format(ModifierDescription, cheeseModifier.Name, cheeseModifier.Points),
                     rank,
                     0.25,
                     x => x.NextCheeseModifierUpgradeUnlock++));
-            })
-            .None(Option<UpgradeInfo>.None);
+            });
 
     public static Option<UpgradeInfo> GetCriticalCheeseUpgrade(this Rank rank)
     {

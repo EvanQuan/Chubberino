@@ -21,7 +21,6 @@ public sealed class PointManager : IPointManager
     public IApplicationContextFactory ContextFactory { get; }
     public ITwitchClientManager Client { get; }
     public IReadOnlyList<RecipeInfo> RecipeRepository { get; }
-    public IReadOnlyList<RecipeModifier> RecipeModifierManager { get; }
     public Random Random { get; }
     public IEmoteManager EmoteManager { get; }
     public IHazardManager HazardManager { get; }
@@ -31,7 +30,6 @@ public sealed class PointManager : IPointManager
         IApplicationContextFactory contextFactory,
         ITwitchClientManager client,
         IReadOnlyList<RecipeInfo> recipeRepository,
-        IReadOnlyList<RecipeModifier> recipeModifierRepository,
         Random random,
         IEmoteManager emoteManager,
         IHazardManager hazardManager,
@@ -40,14 +38,13 @@ public sealed class PointManager : IPointManager
         ContextFactory = contextFactory;
         Client = client;
         RecipeRepository = recipeRepository;
-        RecipeModifierManager = recipeModifierRepository;
         Random = random;
         EmoteManager = emoteManager;
         HazardManager = hazardManager;
         DateTime = dateTime;
     }
 
-    public async void AddPoints(ChatMessage message)
+    public async void AddPoints(ChatMessage message, Option<RecipeModifier>[] modifiers)
     {
         DateTime now = DateTime.Now;
 
@@ -69,9 +66,11 @@ public sealed class PointManager : IPointManager
 
             RecipeInfo initialCheese = Random.NextElement(RecipeRepository, player.CheeseUnlocked);
 
-            RecipeModifier modifier = Random.NextElement(RecipeModifierManager, (Int32)player.NextCheeseModifierUpgradeUnlock);
+            var modifier = Random.NextElement(modifiers, (Int32)player.NextCheeseModifierUpgradeUnlock);
 
-            RecipeInfo cheese = modifier.Modify(initialCheese);
+            RecipeInfo cheese = modifier
+                .Some(x => x.Modify(initialCheese))
+                .None(initialCheese);
 
             StringBuilder outputMessage = new();
 

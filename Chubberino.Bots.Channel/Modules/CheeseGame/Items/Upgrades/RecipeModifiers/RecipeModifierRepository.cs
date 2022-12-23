@@ -4,9 +4,9 @@ namespace Chubberino.Bots.Channel.Modules.CheeseGame.Items.Upgrades.RecipeModifi
 
 public static class RecipeModifierRepository
 {
-    public static IReadOnlyList<RecipeModifier> Modifiers { get; } = new List<RecipeModifier>()
+    public static Option<RecipeModifier>[] Modifiers { get; } = new Option<RecipeModifier>[]
     {
-        null,
+        Option<RecipeModifier>.None,
         new RecipeModifier("fresh", 1),
         new RecipeModifier("sharp", 2),
         new RecipeModifier("extra-salted", 3),

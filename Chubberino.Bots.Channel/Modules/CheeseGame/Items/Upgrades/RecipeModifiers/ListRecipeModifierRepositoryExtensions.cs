@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Chubberino.Common.Extensions;
+﻿using Chubberino.Common.Extensions;
 using Chubberino.Database.Models;
 
 namespace Chubberino.Bots.Channel.Modules.CheeseGame.Items.Upgrades.RecipeModifiers;
@@ -7,10 +6,12 @@ namespace Chubberino.Bots.Channel.Modules.CheeseGame.Items.Upgrades.RecipeModifi
 public static class ListRecipeModifierRepositoryExtensions
 {
     public static Option<RecipeModifier> TryGetNextToUnlock(
-        this IReadOnlyList<RecipeModifier> repository,
+        this Option<RecipeModifier>[] repository,
         Player player) =>
-        // The default modifier is null, the 0th element of the repository,
+        // The default modifier is None, the 0th element of the repository,
         // which is always a possibility.
         // We add 1 to ensure this can be picked.
-        repository.TryGet((Int32)(player.NextCheeseModifierUpgradeUnlock + 1));
+        repository
+            .TryGet((Int32)(player.NextCheeseModifierUpgradeUnlock + 1))
+            .Bind(modifier => modifier);
 }

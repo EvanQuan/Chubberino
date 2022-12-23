@@ -28,6 +28,16 @@ public static class RandomExtensions
     /// <param name="random">Source.</param>
     /// <param name="list">List to get an element from.</param>
     /// <returns>A random element of the <paramref name="list"/>.</returns>
+    public static TElement NextElement<TElement>(this Random random, TElement[] list)
+        => list[random.Next(list.Length)];
+
+    /// <summary>
+    /// Get a random element from the specified <paramref name="list"/>.
+    /// </summary>
+    /// <typeparam name="TElement">The type of elements in the list.</typeparam>
+    /// <param name="random">Source.</param>
+    /// <param name="list">List to get an element from.</param>
+    /// <returns>A random element of the <paramref name="list"/>.</returns>
     public static TElement NextElement<TElement>(this Random random, IList<TElement> list)
         => list[random.Next(list.Count)];
 
@@ -40,6 +50,23 @@ public static class RandomExtensions
     /// <returns>A random element of the <paramref name="list"/>.</returns>
     public static TElement NextElement<TElement>(this Random random, IReadOnlyList<TElement> list)
         => list[random.Next(list.Count)];
+
+    /// <summary>
+    /// Get a random element from the specified <paramref name="list"/>,
+    /// with an inclusive upper bound on the <paramref name="maximumIndex"/>
+    /// of that list.
+    /// </summary>
+    /// <typeparam name="TElement">The type of elements in the list.</typeparam>
+    /// <param name="random">Source.</param>
+    /// <param name="list">List to get an element from.</param>
+    /// <param name="maximumIndex">Maximum index of the list, inclusive.</param>
+    /// <returns>A random element of the <paramref name="list"/>.</returns>
+    public static TElement NextElement<TElement>(this Random random, TElement[] list, Int32 maximumIndex)
+    {
+        var exclusiveMax = (maximumIndex + 1).Max(0).Min(list.Length);
+        var finalIndex = random.Next(0, exclusiveMax);
+        return list[finalIndex];
+    }
 
     /// <summary>
     /// Get a random element from the specified <paramref name="list"/>,

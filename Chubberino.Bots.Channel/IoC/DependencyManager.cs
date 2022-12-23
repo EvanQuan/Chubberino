@@ -256,7 +256,6 @@ internal sealed class DependencyManager
         builder.RegisterType<HeistManager>().As<IHeistManager>().SingleInstance();
         builder.RegisterType<EmoteManager>().As<IEmoteManager>().SingleInstance();
         builder.Register(x => RecipeRepository.Recipes).As<IReadOnlyList<RecipeInfo>>().SingleInstance();
-        builder.Register(x => RecipeModifierRepository.Modifiers).As<IReadOnlyList<RecipeModifier>>().SingleInstance();
         builder.RegisterType<HazardManager>().As<IHazardManager>().SingleInstance();
 
         // Items
