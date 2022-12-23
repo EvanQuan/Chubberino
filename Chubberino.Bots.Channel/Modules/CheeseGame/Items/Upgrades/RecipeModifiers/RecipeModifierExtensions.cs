@@ -6,12 +6,9 @@ namespace Chubberino.Bots.Channel.Modules.CheeseGame.Items.Upgrades.RecipeModifi
 
 public static class RecipeModifierExtensions
 {
-    public static RecipeInfo Modify(this RecipeModifier modifier, RecipeInfo cheeseType)
-    {
-        if (modifier is null) { return cheeseType; }
-        return new RecipeInfo(modifier.Name + " " + cheeseType.Name, Math.Sign(cheeseType.Points) * modifier.Points + cheeseType.Points);
-    }
+    public static RecipeInfo Modify(this in RecipeModifier modifier, RecipeInfo cheeseType)
+        => new(modifier.Name + " " + cheeseType.Name, (Math.Sign(cheeseType.Points) * modifier.Points) + cheeseType.Points);
 
-    public static Int32 GetPoints(this RecipeModifier modifier, Player player)
+    public static Int32 GetPoints(this in RecipeModifier modifier, Player player)
         => player.GetModifiedPoints(modifier.Points);
 }

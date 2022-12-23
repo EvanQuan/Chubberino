@@ -2,6 +2,7 @@
 using System.IO;
 using Chubberino.Bots.Channel.Modules.CheeseGame.Heists;
 using Chubberino.Bots.Channel.Modules.CheeseGame.Helping;
+using Chubberino.Bots.Channel.Modules.CheeseGame.Items.Upgrades.RecipeModifiers;
 using Chubberino.Bots.Channel.Modules.CheeseGame.Points;
 using Chubberino.Bots.Channel.Modules.CheeseGame.Quests;
 using Chubberino.Bots.Channel.Modules.CheeseGame.Ranks;
@@ -56,7 +57,7 @@ public class Cheese : UserCommand
     {
         if (!e.Words.Any())
         {
-            PointManager.AddPoints(e.ChatMessage);
+            PointManager.AddPoints(e.ChatMessage, RecipeModifierRepository.Modifiers);
             return;
         }
 
@@ -91,7 +92,7 @@ public class Cheese : UserCommand
                 HeistManager.Heist(e.ChatMessage);
                 break;
             default:
-                PointManager.AddPoints(e.ChatMessage);
+                PointManager.AddPoints(e.ChatMessage, RecipeModifierRepository.Modifiers);
                 break;
         }
     }

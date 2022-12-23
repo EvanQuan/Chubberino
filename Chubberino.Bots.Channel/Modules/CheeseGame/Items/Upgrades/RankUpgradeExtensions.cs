@@ -33,6 +33,7 @@ public static class RankUpgradeExtensions
         => RecipeModifierRepository
             .Modifiers
             .TryGet((Int32)(rank + 1))
+            .Bind(maybeModifier => maybeModifier)
             .Bind(cheeseModifier =>
             {
                 return Option<UpgradeInfo>.Some(new UpgradeInfo(
