@@ -18,7 +18,7 @@ public abstract class Command : ICommand
     {
         TwitchClientManager = client;
         Writer = writer;
-        Name = Name.From(GetType().Name.ToLowerInvariant());
+        Name = GetType().Name;
         TwitchClientManager.OnTwitchClientRefreshed += TwitchClientManager_OnTwitchClientRefreshed;
     }
 

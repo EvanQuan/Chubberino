@@ -1,5 +1,4 @@
-﻿using Chubberino.Common.ValueObjects;
-using Chubberino.Infrastructure.Commands.Settings;
+﻿using Chubberino.Infrastructure.Commands.Settings;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands.Groups.SettingCollections;
 
@@ -25,8 +24,8 @@ public abstract class UsingSettingCollection
 
         Sut = new();
 
-        Element1.Setup(x => x.Name).Returns(Name.From("1"));
-        Element2.Setup(x => x.Name).Returns(Name.From("2"));
-        Element3.Setup(x => x.Name).Returns(Name.From("3"));
+        Element1.Setup(x => x.Name).Returns("1");
+        Element2.Setup(x => x.Name).Returns("2");
+        Element3.Setup(x => x.Name).Returns("3");
     }
 }

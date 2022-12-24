@@ -41,7 +41,7 @@ public sealed class WhenSettingProperty : UsingCommandRepository
         List<String> commandWithArguments = new() { validCommandName.Value };
         commandWithArguments.AddRange(arguments);
 
-        Sut.Execute(Name.From("set"), commandWithArguments);
+        Sut.Execute("set", commandWithArguments);
 
         MockedWriter.Verify(x => x.WriteLine($"Command \"{validCommandName.Value}\" property \"{propertyName}\" not set."), Times.Once());
     }
@@ -61,7 +61,7 @@ public sealed class WhenSettingProperty : UsingCommandRepository
         List<String> commandWithArguments = new() { invalidCommandName };
         commandWithArguments.AddRange(arguments);
 
-        Sut.Execute(Name.From("set"), commandWithArguments);
+        Sut.Execute("set", commandWithArguments);
 
         MockedWriter.Verify(x => x.WriteLine($"Command \"{invalidCommandName}\" not found to set."), Times.Once());
     }
@@ -81,7 +81,7 @@ public sealed class WhenSettingProperty : UsingCommandRepository
         List<String> commandWithArguments = new() { validCommandName.Value };
         commandWithArguments.AddRange(arguments);
 
-        Sut.Execute(Name.From("set"), commandWithArguments);
+        Sut.Execute("set", commandWithArguments);
 
         MockedWriter.Verify(x => x.WriteLine($"Command \"{validCommandName.Value}\" property \"{propertyName}\" set to \"{String.Join(" ", propertyValue)}\"."), Times.Once());
     }

@@ -92,7 +92,7 @@ public sealed class TwitchClientManager : ITwitchClientManager
             {
                 ConnectionCredentials = updatedCredentials.ConnectionCredentials;
                 bot.LoginCredentials = updatedCredentials;
-                Name = Name.From(updatedCredentials.ConnectionCredentials.TwitchUsername);
+                Name = updatedCredentials.ConnectionCredentials.TwitchUsername;
                 IsBot = updatedCredentials.IsBot;
 
                 PrimaryChannelName ??= CredentialsManager.ApplicationCredentials.InitialTwitchPrimaryChannelName;

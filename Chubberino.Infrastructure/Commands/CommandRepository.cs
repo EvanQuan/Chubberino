@@ -168,23 +168,23 @@ public sealed class CommandRepository : ICommandRepository
             // Meta commands
             case "g":
             case "get":
-                Get(Name.From(arguments.FirstOrDefault()), arguments.Skip(1));
+                Get(arguments.FirstOrDefault(), arguments.Skip(1));
                 break;
             case "s":
             case "set":
-                Set(Name.From(arguments.FirstOrDefault()), arguments.Skip(1));
+                Set(arguments.FirstOrDefault(), arguments.Skip(1));
                 break;
             case "a":
             case "add":
-                Add(Name.From(arguments.FirstOrDefault()), arguments.Skip(1));
+                Add(arguments.FirstOrDefault(), arguments.Skip(1));
                 break;
             case "r":
             case "remove":
-                Remove(Name.From(arguments.FirstOrDefault()), arguments.Skip(1));
+                Remove(arguments.FirstOrDefault(), arguments.Skip(1));
                 break;
             case "h":
             case "help":
-                Help(Name.From(arguments.FirstOrDefault()));
+                Help(arguments.FirstOrDefault());
                 break;
 
 

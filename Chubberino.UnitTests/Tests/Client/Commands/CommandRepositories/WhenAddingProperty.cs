@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Chubberino.Common.ValueObjects;
 using Chubberino.Infrastructure.Commands.Settings;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories;
@@ -15,7 +14,7 @@ public sealed class WhenAddingProperty : UsingCommandRepository
 
         MockedSetting
             .Setup(x => x.Name)
-            .Returns(Name.From(Guid.NewGuid().ToString()));
+            .Returns(Guid.NewGuid().ToString());
 
         Sut.AddCommand(MockedSetting.Object);
     }
@@ -41,7 +40,7 @@ public sealed class WhenAddingProperty : UsingCommandRepository
         List<String> commandWithArguments = new() { validCommandName.Value };
         commandWithArguments.AddRange(arguments);
 
-        Sut.Execute(Name.From("add"), commandWithArguments);
+        Sut.Execute("add", commandWithArguments);
 
         MockedWriter.Verify(x => x.WriteLine($"Command \"{validCommandName}\" property \"{propertyName}\" not added to."), Times.Once());
     }
@@ -57,7 +56,7 @@ public sealed class WhenAddingProperty : UsingCommandRepository
         List<String> commandWithArguments = new() { invalidCommandName };
         commandWithArguments.AddRange(arguments);
 
-        Sut.Execute(Name.From("add"), commandWithArguments);
+        Sut.Execute("add", commandWithArguments);
 
         MockedWriter.Verify(x => x.WriteLine($"Command \"{invalidCommandName}\" not found to add to."), Times.Once());
     }
@@ -77,7 +76,7 @@ public sealed class WhenAddingProperty : UsingCommandRepository
         List<String> commandWithArguments = new() { validCommandName.Value };
         commandWithArguments.AddRange(arguments);
 
-        Sut.Execute(Name.From("add"), commandWithArguments);
+        Sut.Execute("add", commandWithArguments);
 
         MockedWriter.Verify(x => x.WriteLine($"Command \"{validCommandName}\" property \"{propertyName}\" added \"{String.Join(" ", propertyValue)}\"."), Times.Once());
     }

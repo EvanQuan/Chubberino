@@ -55,7 +55,7 @@ public abstract class UsingTwitchClientManager
         TwitchUsername = Guid.NewGuid().ToString();
         TwitchOAuth = Guid.NewGuid().ToString();
 
-        PrimaryChannelName = Name.From("p");
+        PrimaryChannelName = "p";
 
         MockedBot = new();
         ApplicationCredentials = new();

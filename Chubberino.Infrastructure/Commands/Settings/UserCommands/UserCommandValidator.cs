@@ -27,7 +27,7 @@ public sealed class UserCommandValidator : IUserCommandValidator
 
         if (!IsCommand(firstWord)) { return false; }
 
-        userCommandName = Name.From(firstWord[1..].ToLower());
+        userCommandName = firstWord[1..];
 
         var words = allWords.Skip(1).ToArray();
         args = new OnUserCommandReceivedArgs(message, words);

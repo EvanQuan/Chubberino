@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Chubberino.Common.ValueObjects;
 using Chubberino.Infrastructure.Commands.Settings;
 
 namespace Chubberino.UnitTests.Tests.Client.Commands.CommandRepositories;
@@ -13,7 +12,7 @@ public sealed class WhenGettingProperty : UsingCommandRepository
         MockedSetting = new Mock<ISetting>().SetupAllProperties();
         MockedSetting
             .Setup(x => x.Name)
-            .Returns(Name.From(Guid.NewGuid().ToString()));
+            .Returns(Guid.NewGuid().ToString());
 
         Sut.AddCommand(MockedSetting.Object);
     }
@@ -33,7 +32,7 @@ public sealed class WhenGettingProperty : UsingCommandRepository
         List<String> commandWithArguments = new() { invalidCommandName };
         commandWithArguments.AddRange(arguments);
 
-        Sut.Execute(Name.From("get"), commandWithArguments);
+        Sut.Execute("get", commandWithArguments);
 
         MockedWriter.Verify(x => x.WriteLine($"Command \"{invalidCommandName}\" not found to get."), Times.Once());
     }
@@ -53,7 +52,7 @@ public sealed class WhenGettingProperty : UsingCommandRepository
         List<String> commandWithArguments = new() { validCommandName.Value };
         commandWithArguments.AddRange(arguments);
 
-        Sut.Execute(Name.From("get"), commandWithArguments);
+        Sut.Execute("get", commandWithArguments);
 
         MockedWriter.Verify(x => x.WriteLine($"Command \"{validCommandName}\" value \"{String.Join(" ", arguments)}\" is \"valid\"."), Times.Once());
     }
