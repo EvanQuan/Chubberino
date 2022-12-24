@@ -79,7 +79,7 @@ public abstract class UsingBot
             }
         };
 
-        PrimaryChannelName = Name.From("p");
+        PrimaryChannelName = "p";
         CommandStatus = "s";
 
         MockedContext = new Mock<IApplicationContext>();

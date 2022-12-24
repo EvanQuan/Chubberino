@@ -52,7 +52,7 @@ public sealed class CrendentialsManager : ICredentialsManager
 
         PrimaryChannelName = new(() =>
         {
-            return Name.From(ApplicationCredentials.InitialTwitchPrimaryChannelName);
+            return ApplicationCredentials.InitialTwitchPrimaryChannelName;
         });
     }
 

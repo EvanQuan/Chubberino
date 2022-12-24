@@ -9,7 +9,7 @@ public sealed class PresetColorSelector : IColorSelector
 
     private Random Random { get; }
 
-    public Name Name { get; } = Name.From("preset");
+    public Name Name { get; } = "preset";
 
     public PresetColorSelector(Random random)
     {

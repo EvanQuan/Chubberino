@@ -42,7 +42,7 @@ public sealed class WhenReadingCommand : UsingBot
         Assert.Equal(BotState.ShouldContinue, Sut.State);
         MockedCommandRepository.Verify(x => x
             .Execute(
-                Name.From("a"),
+                "a",
                 It.Is<IEnumerable<String>>(args => !args.Any(String.IsNullOrWhiteSpace))),
             Times.Once);
     }

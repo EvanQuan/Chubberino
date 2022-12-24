@@ -111,7 +111,7 @@ public sealed class Bot : IBot
 
             if (arguments.Length == 0) { return; }
 
-            var commandName = Name.From(arguments[0].ToLower());
+            Name commandName = arguments[0];
 
             switch (commandName.Value)
             {

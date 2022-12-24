@@ -2,9 +2,6 @@
 
 public readonly record struct Name
 {
-    public static Name From(String value)
-        => new(value);
-
     private Name(String value)
         => Value = value.Any(Char.IsUpper)
             ? value.ToLower()
@@ -14,4 +11,14 @@ public readonly record struct Name
 
     public override String ToString()
         => Value;
+
+    public static implicit operator String(Name value)
+    {
+        return value.Value;
+    }
+
+    public static implicit operator Name(String value)
+    {
+        return new(value);
+    }
 }

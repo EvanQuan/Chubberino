@@ -42,7 +42,8 @@ public sealed class Heist : IHeist
     {
         if (Wagers.Count == 0)
         {
-            TwitchClient.SpoolMessageAsMe(InitiatorMessage.Channel, "[Heist] No one joined the heist.");
+            TwitchClient.SpoolMessageAsMe(InitiatorMessage.Channel,
+                "[Heist] No one joined the heist.");
             return false;
         }
 
@@ -55,7 +56,6 @@ public sealed class Heist : IHeist
             _ => $"{Wagers.Count} people go"
         });
 
-
         intro.Append(" into the lair of the great cheese dragon. ");
 
         Double winnerPercent = Random.NextDouble(0, 1.4).Min(1);
@@ -67,21 +67,17 @@ public sealed class Heist : IHeist
 
         if (winnerCount == 0)
         {
-            intro.Append("Unfortunately the cheese dragon prevented anyone from getting anything.");
+            intro.Append(
+                "Unfortunately the cheese dragon prevented anyone from getting anything.");
             TwitchClient.SpoolMessageAsMe(InitiatorMessage.Channel, intro.ToString());
             return true;
         }
 
-        if (winnerCount >= Wagers.Count)
-        {
-            intro.Append("Everyone made it out with the spoils! ");
-        }
-        else
-        {
-            intro
-                .Append(winnerCount)
-                .Append(" made it out with the spoils! ");
-        }
+        var result = winnerCount >= Wagers.Count
+            ? "Everyone made it out with the spoils! "
+            : winnerCount + " made it out with the spoils! ";
+
+        intro.Append(result);
 
         var winners = new List<Wager>();
 
@@ -93,15 +89,14 @@ public sealed class Heist : IHeist
 
         foreach (Wager wager in winners)
         {
-            var player = context.Players.FirstOrDefault(x => x.TwitchUserID == wager.PlayerTwitchID);
-            Int32 winnerPoints = (Int32)((1.0 / winnerPercent + 0.5) * wager.WageredPoints).Max(2);
+            var player = context
+                .Players
+                .FirstOrDefault(x => x.TwitchUserID == wager.PlayerTwitchID);
+
+            Int32 winnerPoints = (Int32)((1.0 / winnerPercent + 0.5)* wager.WageredPoints).Max(2);
             player.AddPoints(winnerPoints);
             context.SaveChanges();
-            intro
-                .Append(player.Name)
-                .Append(" (+")
-                .Append(winnerPoints)
-                .Append(") ");
+            intro.Append($"{player.Name} (+{winnerPoints}) ");
         }
 
         TwitchClient.SpoolMessageAsMe(InitiatorMessage.Channel, intro.ToString());
@@ -109,7 +104,11 @@ public sealed class Heist : IHeist
         return true;
     }
 
-    public void UpdateWager(IApplicationContext context, Player player, Func<Player, Int32> points, Boolean silent = false)
+    public void UpdateWager(
+        IApplicationContext context,
+        Player player,
+        Func<Player, Int32> points,
+        Boolean silent = false)
     {
         var updateMessage = new StringBuilder("[Heist] ");
 

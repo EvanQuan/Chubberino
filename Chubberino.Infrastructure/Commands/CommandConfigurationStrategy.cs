@@ -1,5 +1,4 @@
-﻿using Chubberino.Common.ValueObjects;
-using Chubberino.Infrastructure.Credentials;
+﻿using Chubberino.Infrastructure.Credentials;
 
 namespace Chubberino.Infrastructure.Commands;
 
@@ -9,7 +8,7 @@ public sealed class CommandConfigurationStrategy : ICommandConfigurationStrategy
     {
         if (loginCredentials.IsBot)
         {
-            repository.Enable(Name.From("cheese"));
+            repository.Enable("cheese");
         }
     }
 }

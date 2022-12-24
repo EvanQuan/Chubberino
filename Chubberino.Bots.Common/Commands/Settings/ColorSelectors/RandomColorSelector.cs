@@ -6,7 +6,7 @@ public sealed class RandomColorSelector : IColorSelector
 {
     private Random Random { get; }
 
-    public Name Name { get; } = Name.From("random");
+    public Name Name { get; } = "random";
 
     public RandomColorSelector(Random random)
     {

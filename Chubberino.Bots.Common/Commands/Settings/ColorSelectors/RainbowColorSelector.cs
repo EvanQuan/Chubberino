@@ -15,7 +15,7 @@ public sealed class RainbowColorSelector : IColorSelector
         "#9400D3",
     };
 
-    public Name Name { get; } = Name.From("rainbow");
+    public Name Name { get; } = "rainbow";
 
     private Int32 ColorIndex { get; set; }
 

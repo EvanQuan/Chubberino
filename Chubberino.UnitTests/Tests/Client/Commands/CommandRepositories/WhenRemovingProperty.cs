@@ -38,7 +38,7 @@ public sealed class WhenRemovingProperty : UsingCommandRepository
         List<String> commandWithArguments = new() { validCommandName.Value };
         commandWithArguments.AddRange(arguments);
 
-        Sut.Execute(Name.From("remove"), commandWithArguments);
+        Sut.Execute("remove", commandWithArguments);
 
         MockedWriter.Verify(x => x.WriteLine($"Command \"{validCommandName}\" property \"{propertyName}\" not removed from."), Times.Once());
     }
@@ -58,7 +58,7 @@ public sealed class WhenRemovingProperty : UsingCommandRepository
         List<String> commandWithArguments = new() { invalidCommandName };
         commandWithArguments.AddRange(arguments);
 
-        Sut.Execute(Name.From("remove"), commandWithArguments);
+        Sut.Execute("remove", commandWithArguments);
 
         MockedWriter.Verify(x => x.WriteLine($"Command \"{invalidCommandName}\" not found to remove from."), Times.Once());
     }
@@ -78,7 +78,7 @@ public sealed class WhenRemovingProperty : UsingCommandRepository
         List<String> commandWithArguments = new() { validCommandName.Value };
         commandWithArguments.AddRange(arguments);
 
-        Sut.Execute(Name.From("remove"), commandWithArguments);
+        Sut.Execute("remove", commandWithArguments);
 
         MockedWriter.Verify(x => x.WriteLine($"Command \"{validCommandName}\" property \"{propertyName}\" removed \"{String.Join(" ", propertyValue)}\"."), Times.Once());
     }

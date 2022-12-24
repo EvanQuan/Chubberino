@@ -15,7 +15,7 @@ public sealed class When_creating_name_from_string
         [InlineData("q *")]
         public void Then_string_reference_is_directly_used(String value)
         {
-            var result = Name.From(value);
+            Name result = value;
 
             result.Value.Should().BeSameAs(value);
         }
@@ -26,7 +26,7 @@ public sealed class When_creating_name_from_string
         [Fact]
         public void Then_argument_null_exception_is_thrown()
         {
-            var createName = () => Name.From(null);
+            var createName = () => (Name)null;
 
             createName.Should().Throw<ArgumentNullException>();
         }
@@ -41,7 +41,7 @@ public sealed class When_creating_name_from_string
         [InlineData("a B$", "a b$")]
         public void Then_lowercase_string_is_used(String value, String expectedResult)
         {
-            var result = Name.From(value);
+            Name result = value;
 
             result.Value.Should().Be(expectedResult);
         }
